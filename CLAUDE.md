@@ -27,7 +27,7 @@ Leia `.specs/init-spec/README.md` primeiro. Os seis arquivos não são redundant
 
 Ordem de trabalho ao implementar uma tela: regra (`03`) → tokens/componentes (`02`) → layout e copy (`04` mobile / `06` web) → validar contra o aceite do UC correspondente (`05`).
 
-**Nunca duplique uma fórmula em componente de UI.** Toda aritmética vive numa camada de cálculo referenciada por `RN-xx`; a tela só consome o resultado. Ao mudar comportamento, cite a regra (`RN-14`) ou o caso de uso (`UC-20`) no commit — a matriz de rastreabilidade em `05` liga tela ↔ regra ↔ caso de uso, e ela deve continuar verdadeira.
+**Nunca duplique uma fórmula em componente de UI.** Toda aritmética vive numa camada de cálculo referenciada por `RN-xx`; a tela só consome o resultado. Ao mudar comportamento, cite a regra (`RN-14`) ou o caso de uso (`UC-20`) no corpo do commit — a matriz de rastreabilidade em `05` liga tela ↔ regra ↔ caso de uso, e ela deve continuar verdadeira.
 
 O protótipo visual original (`Bora - Revisão e Novas Direções.dc.html`) é citado como fonte da verdade visual mas **não está no repositório**; o arquivo `02` foi escrito para ser suficiente sozinho.
 
@@ -49,6 +49,40 @@ O protótipo visual original (`Bora - Revisão e Novas Direções.dc.html`) é c
 - Toast: 1 por vez, 2200ms, some sozinho. Os textos canônicos estão em RN-29 — use-os literalmente.
 
 **Copy:** títulos, labels, botões e toasts em CAIXA ALTA; corpo em sentence case; a copy nas specs é literal, não paráfrase.
+
+## Decisões de engenharia
+
+Decididas antes de o código existir. Valem como default: se uma delas atrapalhar a implementação, levante a questão em vez de divergir em silêncio.
+
+**Stack:** Flutter (mobile + web, um codebase). Estado com **BLoC** — eventos e estados explícitos, nada de lógica de negócio dentro de widget. Backend **Firebase**: Auth (Google + telefone; o convidado do link continua **sem conta**, via auth anônima), Firestore (banco principal, realtime — a confirmação do convidado reflete na Home do anfitrião sem refresh), Hosting (deploy do Flutter Web, servindo também o link público `bora.app/c/xxx`) e Functions (lógica servidora: gerar link, notificar, integrações).
+
+**Arquitetura:** Clean Architecture, feature-first, com as camadas dentro de cada feature.
+
+```
+lib/
+  core/
+    design_system/     # tokens e componentes do arquivo 02
+    calculo/           # camada de cálculo — TODAS as RN-xx
+  features/<feature>/  # montar, galera, lista, convite, custos, convidado
+    domain/            # entidades, repositories (abstratos), usecases
+    data/              # models, datasources (Firestore), repositories (impl)
+    presentation/      # bloc/, pages/, widgets/
+```
+
+`core/calculo/` é Dart puro: **sem import de Flutter e sem import de Firebase**. É o que torna as RN-xx testáveis sozinhas e o que impede a fórmula de vazar para a UI. As features consomem o resultado; nenhuma outra camada recalcula.
+
+**Idioma do código:** domínio em **PT-BR**, resto em inglês. Entidades e regras de negócio usam o vocabulário da spec (`Festa`, `Pessoa`, `ItemDeLista`, `Despesa`, `calcularRacha`, `fatorDuracao`) — o mesmo nome que aparece em `01` e `03`, para o código e a spec falarem a mesma língua. Infra, blocs, widgets, datasources e utilitários em inglês (`PartyRepository` não; `FestaRepository` sim — a entidade manda; mas `FirestoreDataSource`, `AppRouter`, `MoneyFormatter` ficam em inglês).
+
+**Testes:** pirâmide completa.
+- **Unit** — cobrem toda `RN-xx` em `core/calculo/`. Os exemplos numéricos de `03` entram como casos de teste **literais** (o padrão R$ 211/≈R$ 30, os R$ 271/≈R$ 45 com essenciais, os testes A e B de RN-16). Se um desses falhar, o errado é o código.
+- **Widget** — cada critério de aceite de `UC-xx` vira widget test.
+- **Integration** (`integration_test/`) — fluxos ponta-a-ponta: montar → convidar → convidado confirma → acerto.
+
+Teste sai do critério de aceite, nunca da implementação. `test/` espelha a estrutura de `lib/`.
+
+**Lint:** `flutter_lints` no `pubspec.yaml`, rodando local. Sem CI por enquanto — não crie pipeline sem pedido.
+
+**Commits:** Conventional Commits em português, assunto simples (`feat(montar): calcula custo ao vivo`). A referência `RN-xx`/`UC-xx` vai no **corpo**, não no assunto. Branches `feature/nome`.
 
 ## Workflow
 
