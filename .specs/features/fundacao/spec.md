@@ -2,6 +2,7 @@
 
 **ID prefix:** `FUND` · **Porte:** Grande (revisado — o roadmap previa Médio; ver §Porte)
 **Contexto de decisões:** `.specs/features/fundacao/context.md`
+**Design:** `.specs/features/fundacao/design.md` (AD-002..AD-007)
 **Roadmap:** `.specs/ROADMAP.md` — spec 00, marco M0
 
 ## Problem Statement
@@ -218,30 +219,30 @@ Cada dimensão resolve em requisito ou em `N/A porque…`. Sem campo em branco.
 
 | Requirement ID | Story | Fonte | Fase | Status |
 |---|---|---|---|---|
-| FUND-01 | P1-1 | CLAUDE.md (um codebase, mobile + web) | Design | Pending |
-| FUND-02 | P1-1 | CLAUDE.md (`flutter_lints` local) | Design | Pending |
-| FUND-03 | P1-1 | CLAUDE.md (pirâmide de testes) | Design | Pending |
-| FUND-04 | P1-2 | CLAUDE.md (árvore `lib/`) | Design | Pending |
-| FUND-05 | P1-2 | CLAUDE.md (`test/` espelha `lib/`) | Design | Pending |
-| FUND-06 | P1-2 | CLAUDE.md (`core/calculo` Dart puro) | Design | Pending |
-| FUND-07 | P1-3 | arquivo 01 §4 (mapa de telas) | Design | Pending |
-| FUND-08 | P1-3 | arquivo 01 §4, RN-23, RN-24 | Design | Pending |
-| FUND-09 | P1-3 | dimensão input validation | Design | Pending |
-| FUND-10 | P1-3 | W-R5 | Design | Pending |
-| FUND-11 | P1-3 | W-R3 | Design | Pending |
-| FUND-12 | P1-4 | dimensão idempotência | Design | Pending |
-| FUND-13 | P1-4 | CLAUDE.md (BLoC) + dimensão observabilidade | Design | Pending |
-| FUND-14 | P1-4 | dimensão observabilidade | Design | Pending |
-| FUND-15 | P1-5 | dimensão ordering | Design | Pending |
-| FUND-16 | P1-5 | context.md (emulator-first) | Design | Pending |
-| FUND-17 | P1-5 | dimensão falha de dependência externa | Design | Pending |
-| FUND-18 | P1-6 | RN-30 | Design | Pending |
-| FUND-19 | P1-6 | CLAUDE.md + context.md (fixture bruta) | Design | Pending |
-| FUND-20 | P1-7 | context.md (SDK não versionado) | Design | Pending |
+| FUND-01 | P1-1 | CLAUDE.md (um codebase, mobile + web) | Execute | In Tasks |
+| FUND-02 | P1-1 | CLAUDE.md (`flutter_lints` local) | Execute | In Tasks |
+| FUND-03 | P1-1 | CLAUDE.md (pirâmide de testes) | Execute | In Tasks |
+| FUND-04 | P1-2 | CLAUDE.md (árvore `lib/`) | Execute | In Tasks |
+| FUND-05 | P1-2 | CLAUDE.md (`test/` espelha `lib/`) | Execute | In Tasks |
+| FUND-06 | P1-2 | CLAUDE.md (`core/calculo` Dart puro) | Execute | In Tasks |
+| FUND-07 | P1-3 | arquivo 01 §4 (mapa de telas) | Execute | In Tasks |
+| FUND-08 | P1-3 | arquivo 01 §4, RN-23, RN-24 | Execute | In Tasks |
+| FUND-09 | P1-3 | dimensão input validation | Execute | In Tasks |
+| FUND-10 | P1-3 | W-R5 | Execute | In Tasks |
+| FUND-11 | P1-3 | W-R3 | Execute | In Tasks |
+| FUND-12 | P1-4 | dimensão idempotência | Execute | In Tasks |
+| FUND-13 | P1-4 | CLAUDE.md (BLoC) + dimensão observabilidade | Execute | In Tasks |
+| FUND-14 | P1-4 | dimensão observabilidade | Execute | In Tasks |
+| FUND-15 | P1-5 | dimensão ordering | Execute | In Tasks |
+| FUND-16 | P1-5 | context.md (emulator-first) | Execute | In Tasks |
+| FUND-17 | P1-5 | dimensão falha de dependência externa | Execute | In Tasks |
+| FUND-18 | P1-6 | RN-30 | Execute | In Tasks |
+| FUND-19 | P1-6 | CLAUDE.md + context.md (fixture bruta) | Execute | In Tasks |
+| FUND-20 | P1-7 | context.md (SDK não versionado) | Execute | In Tasks |
 
 **ID format:** `FUND-NN`
 **Status:** Pending → In Design → In Tasks → Implementing → Verified
-**Coverage:** 20 requisitos, 0 mapeados a tasks (Tasks ainda não rodou), 0 órfãos.
+**Coverage:** 20 requisitos, 20 mapeados a componente + verificação no `design.md`, 20 mapeados a task no `tasks.md` (T1–T18), 0 órfãos.
 
 ---
 

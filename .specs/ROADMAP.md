@@ -61,7 +61,7 @@ Notas de recorte:
 
 ## 3. Detalhe por spec
 
-### 00 · `fundacao` — Grande · **Specify concluído** → `.specs/features/fundacao/`
+### 00 · `fundacao` — Grande · **Specify + Design + Tasks concluídos** (T1–T18) → `.specs/features/fundacao/`
 Scaffold do projeto: Flutter multi-plataforma (mobile + web), `pubspec.yaml` com `flutter_lints`, estrutura de pastas da Clean Architecture (CLAUDE.md) com o isolamento de `core/calculo/` **policiado por teste**, navegação com todas as rotas em placeholder (incluindo a pública `/c/:codigo` fora do shell autenticado) e o breakpoint de W-R3, DI + BlocObserver, wiring do Firebase **emulator-first**, fixture RN-30 como dado bruto e README de setup. Sem tela de produto, sem token, sem fórmula. 20 requisitos (FUND-01..20).
 
 Decisões do Discuss: SDK Flutter é pré-requisito externo (instalado à mão, versão registrada no README) · Firebase emulator-first, projeto na nuvem adiado · RN-30 é fixture de teste/demo, **não** seed de onboarding (resolve G7).

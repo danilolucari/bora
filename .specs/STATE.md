@@ -10,13 +10,61 @@
 - **Date**: 2026-08-12
 - **Status**: active
 
+### AD-002
+- **Decision**: Navegação com **`go_router`** e injeção de dependência com **`get_it` manual — zero codegen** no projeto (sem `injectable`, sem `auto_route`, sem `build_runner`). Container único em `lib/core/di/injector.dart`: `configureDependencies()` idempotente por flag privada + `resetDependencies()` sobre `GetIt.reset()`.
+- **Reason**: `go_router` é do time do Flutter e entrega `errorBuilder`, path params e URL limpa no web sem código nosso; `get_it.reset()` satisfaz FUND-12 direto. Zero codegen mantém o ciclo de teste das dez specs seguintes sem `dart run build_runner` obrigatório.
+- **Trade-off**: mais boilerplate de registro manual por feature e navegação por string (não tipada) — aceito em troca de diff limpo e teste sem etapa de geração.
+- **Scope**: todas as features; nenhuma cria seu próprio container.
+- **Date**: 2026-08-13
+- **Status**: active
+
+### AD-003
+- **Decision**: Esqueleto de navegação em três zonas — `/entrar`, `/c/:codigo` e `/erro` **fora de qualquer shell**; `ShellRoute` (chrome do app) em volta de `/roles`, `/roles/novo` e `/roles/:festaId/montar`; e, aninhado, `StatefulShellRoute.indexedStack` para as quatro abas permanentes da festa (`/roles/:festaId/{lista,galera,whatsapp,custos}`). Mapa de rotas canônico em `.specs/features/fundacao/design.md`.
+- **Reason**: `/c/:codigo` sem auth e sem chrome é estrutural (RN-24: o convidado não tem conta) e caro de retrofitar; o `indexedStack` preserva o estado de cada aba, que é o que as specs 06–10 exigem. Base `/roles` vem de W-R5.
+- **Trade-off**: mais estrutura do que a fundação precisa hoje (todas as telas são placeholder); em troca as specs 03–10 só trocam o corpo de `features/<x>/presentation/pages/<x>_page.dart` sem tocar em `app_router.dart`.
+- **Scope**: todas as specs de tela.
+- **Date**: 2026-08-13
+- **Status**: active
+
+### AD-004
+- **Decision**: Firebase **emulator-first com opções sintéticas**: `FirebaseOptions` de projeto `demo-bora` escritas à mão (sem `flutterfire configure`), emuladores declarados em `firebase.json` e cruzados por teste com as constantes de `EmulatorConfig` (host `10.0.2.2` no emulador Android, `localhost` no resto). Em **release sem** `--dart-define=BORA_FIREBASE_PROJECT_ID` real, `FirebaseEnvironment.resolve` lança `StateError` explícito. Falha do Firebase ou do emulador é **degradação**: o app abre e o erro vai para o logger global.
+- **Reason**: mantém toda a fundação verificável offline, sem credencial e sem custo (context.md), e evita que um build de release alcance silenciosamente um projeto inexistente.
+- **Trade-off**: projeto `demo-` com FlutterFire é área de atrito conhecido no nativo (flutterfire#9507, #12965) e não pôde ser verificado sem SDK — a task de Firebase verifica empiricamente em mobile e web antes de seguir; se o SDK nativo rejeitar, o fallback (opções reais por `--dart-define`) contraria o emulator-first e volta como decisão do usuário.
+- **Scope**: todo acesso a Auth/Firestore até a feature que primeiro precisar publicar.
+- **Date**: 2026-08-13
+- **Status**: active
+
+### AD-005
+- **Decision**: Observabilidade atrás de uma interface própria — `AppLogger` (`logEvent` / `logError`) com `DebugAppLogger` em produção e duplo de gravação em teste; `AppBlocObserver` e `installGlobalErrorHandlers` (`FlutterError.onError` + `platformDispatcher.onError`, sem `runZonedGuarded`) escrevem **só** nela. A instalação acontece logo após o binding, antes do Firebase.
+- **Reason**: sem a interface, "o observador registrou" não é afirmável em teste — e FUND-13/14/17 dependem exatamente dessa afirmação. Armar os handlers antes do Firebase é o que torna a queda do emulador observável.
+- **Trade-off**: uma indireção a mais em vez de `print`/`debugPrint` direto.
+- **Scope**: todo log de bloc e todo erro não capturado do app.
+- **Date**: 2026-08-13
+- **Status**: active
+
+### AD-006
+- **Decision**: `entrar` e `home` existem como **features próprias** em `lib/features/`, ao lado das seis do CLAUDE.md (`montar`, `lista`, `galera`, `convite`, `convidado`, `custos`) — oito pastas, cada uma com `domain/`, `data/`, `presentation/`.
+- **Reason**: materializa em código o recorte do AD-001, que já as tratava como specs 03 e 04.
+- **Trade-off**: diverge da lista literal de features do CLAUDE.md (que não dizia onde T-01/T-02 morariam); a alternativa (fundir `home` numa feature `festa`) foi descartada por afastar código e spec.
+- **Scope**: árvore de `lib/features/` e o espelho em `test/`.
+- **Date**: 2026-08-13
+- **Status**: active
+
+### AD-007
+- **Decision**: O breakpoint de W-R3 mora em `lib/core/responsive/` (`kCompactBreakpoint = 900.0`, `enum LayoutMode { compact, expanded }`, `layoutModeForWidth`), **não** em `core/design_system/`. Fronteira: `< 900.0` compacto, `>= 900.0` expandido.
+- **Reason**: `core/design_system/` é território da spec 01, e o modo de layout precisa ser consumível (e testável) sem depender de tema. O `~900px` do arquivo 06 era prosa; um AC precisa de fronteira única.
+- **Trade-off**: mais uma pasta em `core/`; a spec 01 reexporta se quiser tratar o breakpoint como token.
+- **Scope**: toda decisão de layout responsivo do produto.
+- **Date**: 2026-08-13
+- **Status**: active
+
 ## Handoff
 
 - **Feature**: `fundacao` (`.specs/features/fundacao/`)
-- **Phase / Task**: Specify **concluído** (spec.md com FUND-01..20 + context.md com as decisões do Discuss). Design ainda não iniciado.
-- **Completed**: ROADMAP.md, STATE.md (AD-001), fundacao/context.md, fundacao/spec.md
+- **Phase / Task**: **Tasks concluído** (`tasks.md`, T1–T18 em 5 fases) — Specify, Design e Tasks fechados; Execute não iniciado (bloqueado pela pré-condição de SDK).
+- **Completed**: ROADMAP.md, STATE.md (AD-001..AD-007), fundacao/context.md, fundacao/spec.md, fundacao/design.md, fundacao/tasks.md
 - **In-progress** (file:line): none
-- **Next step**: rodar o **Design** da `fundacao` — escolher pacote de rotas, container de DI, forma do BlocObserver e wiring do emulador, promovendo as decisões do context.md a AD-002+ no log de Decisions (são herdadas pelas dez specs seguintes).
+- **Next step**: **Execute** da `fundacao` a partir de T1 — 18 tasks empacotam em 3 lotes (T1–T8 · T9–T16 · T17–T18), então a oferta de sub-agentes é apresentada antes do primeiro despacho. Verifier roda automático depois de T18.
 - **Blockers**: ⚠️ **SDK Flutter/Dart não instalado nesta máquina** (verificado 2026-08-12: `flutter`, `dart`, `firebase` ausentes do PATH; presentes Node, Python 3.14, Git, JDK 17). Design pode prosseguir; **Execute não pode começar** antes de `flutter --version` responder. Por decisão do Discuss, instalar o SDK é responsabilidade externa, fora do escopo da spec.
-- **Uncommitted files**: `.specs/ROADMAP.md`, `.specs/STATE.md`, `.specs/features/fundacao/spec.md`, `.specs/features/fundacao/context.md`
+- **Uncommitted files**: `.specs/STATE.md`, `.specs/ROADMAP.md`, `.specs/features/fundacao/spec.md`, `.specs/features/fundacao/design.md`, `.specs/features/fundacao/tasks.md`
 - **Branch**: main
