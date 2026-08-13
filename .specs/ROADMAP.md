@@ -36,7 +36,7 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 
 | ID | Spec (pasta em `.specs/features/`) | Camada alvo em `lib/` | Escopo (telas · UCs · RNs) | Porte | Discuss | Design | Tasks | Depende de |
 |---|---|---|---|---|---|---|---|---|
-| 00 | `fundacao` | raiz do projeto | scaffold Flutter + Firebase + rotas + lint + fixtures (RN-30) | Médio | — | skip | inline | — |
+| 00 | `fundacao` | raiz do projeto | scaffold Flutter + Firebase (emulador) + rotas + DI/BlocObserver + lint + fixture RN-30 + README | **Grande** ✱ | ✅ feito | sim | sim | — |
 | 01 | `design-system` | `core/design_system/` | arquivo 02 inteiro: tokens, tipografia, formas, sombras, ~18 componentes, motion · RN-29 (componente toast) | Grande | — | sim | sim | 00 |
 | 02 | `calculo` | `core/calculo/` | RN-01..RN-21 (fórmulas, overrides, saldos, quem-paga-quem, efeitos de preferência) · RN-13 (formatação) · entidades de domínio compartilhadas | Grande | — | sim | sim | 00 |
 | 03 | `entrar` | `features/entrar/` | T-01, W-01 · UC-01 | Médio | **sim** | inline | inline | 00, 01 |
@@ -47,6 +47,8 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 | 08 | `convite` | `features/convite/` | T-06, T-07, W-04 · UC-07, UC-17, UC-18 · RN-25, RN-26, RN-26b | **Complexo** | **sim** | sim + pesquisa | sim | 06, 07 |
 | 09 | `convidado` | `features/convidado/` | T-08, W-04 (standalone) · UC-08, UC-09, UC-10 · RN-20, RN-23 (consumo), RN-24, RN-28 | **Complexo** | **sim** | sim + pesquisa | sim | 02, 06, 07 |
 | 10 | `custos` | `features/custos/` | T-09, W-04 · UC-19..UC-23 · RN-14..RN-19 (consumo), RN-20 | Grande | **sim** | sim | sim | 02, 09 |
+
+✱ **Revisão pós-Specify (2026-08-12):** a spec 00 subiu de Médio para Grande. O Discuss ampliou o "pronto" da fundação para incluir navegação, DI + BlocObserver, README e espelho de testes (~10 tasks), e essas escolhas — pacote de rotas, container de DI, wiring do emulador — são herdadas por todas as dez specs seguintes. Escolha herdada por dez specs é decisão de arquitetura, então **Design deixou de ser pulado**. Ver `.specs/features/fundacao/spec.md` §Porte.
 
 Notas de recorte:
 
@@ -59,8 +61,12 @@ Notas de recorte:
 
 ## 3. Detalhe por spec
 
-### 00 · `fundacao` — Médio
-Scaffold do projeto: Flutter multi-plataforma (mobile + web), `pubspec.yaml` com `flutter_lints`, estrutura de pastas da Clean Architecture (CLAUDE.md), inicialização Firebase (Auth, Firestore, Hosting, Functions — só o wiring), `AppRouter`, fixture do estado inicial (RN-30) para testes e demo. Sem tela de produto. Design skip — as decisões já estão no CLAUDE.md; tasks inline.
+### 00 · `fundacao` — Grande · **Specify concluído** → `.specs/features/fundacao/`
+Scaffold do projeto: Flutter multi-plataforma (mobile + web), `pubspec.yaml` com `flutter_lints`, estrutura de pastas da Clean Architecture (CLAUDE.md) com o isolamento de `core/calculo/` **policiado por teste**, navegação com todas as rotas em placeholder (incluindo a pública `/c/:codigo` fora do shell autenticado) e o breakpoint de W-R3, DI + BlocObserver, wiring do Firebase **emulator-first**, fixture RN-30 como dado bruto e README de setup. Sem tela de produto, sem token, sem fórmula. 20 requisitos (FUND-01..20).
+
+Decisões do Discuss: SDK Flutter é pré-requisito externo (instalado à mão, versão registrada no README) · Firebase emulator-first, projeto na nuvem adiado · RN-30 é fixture de teste/demo, **não** seed de onboarding (resolve G7).
+
+⚠️ **Pré-condição bloqueante:** o SDK Flutter/Dart não está instalado na máquina (verificado em 2026-08-12). O Execute não começa antes de `flutter --version` responder.
 
 ### 01 · `design-system` — Grande
 `core/design_system/`: todos os tokens do arquivo 02 (cores, tipografia Archivo/Archivo Black, formas radius-0, sombras duras) como tema Flutter, mais o catálogo de componentes: botões primário/secundário (com press que afunda), chip de seleção, segmented, stepper, card de lista, accordion (1 aberto por vez), avatares empilhados, tag de status, **toast (RN-29: 2200 ms, 1 por vez)**, rodapé CTA, card-herói escuro, bottom sheet, barra de faixa de preço, opção de enquete, barra de progresso, inputs, frame do celular. Critério: página-catálogo (widgetbook ou similar interno) onde cada componente é conferível contra o arquivo 02. Nenhuma RN de cálculo aqui.
@@ -106,7 +112,8 @@ Registradas aqui para nenhuma se perder; cada uma é resolvida no Discuss da spe
 | G4 | WhatsApp (RN-25/26): grupo e enquete não são criáveis por API pública — o que é real no produto? | `convite` |
 | G5 | Segurança do link público: expiração, revogação, mudança de nível pós-abertura, identidade do anônimo | `convidado` |
 | G6 | Origem das despesas (não há UC de criação) e mecânica real da cobrança Pix | `custos` |
-| G7 | RN-30 (estado inicial "Churras do Rafa"): fixture de demo/teste ou seed de onboarding do produto? | `fundacao` |
+| ~~G7~~ | ✅ **Resolvida** (2026-08-12): RN-30 é **fixture de teste/demo** em Dart puro, não seed de onboarding — nenhum usuário novo ganha festa de exemplo. Nasce como dado bruto na `fundacao` e é tipada pela spec `calculo`. | `fundacao` |
+| G8 | *(nova, surgida no Specify da fundação)* Quando criar o projeto Firebase real na nuvem — a decisão emulator-first adiou `flutterfire configure`, Hosting e Functions para a primeira feature que precise publicar | `home` ou `convidado` |
 
 ---
 

@@ -12,11 +12,11 @@
 
 ## Handoff
 
-- **Feature**: roadmap (`.specs/ROADMAP.md`)
-- **Phase / Task**: planejamento — roadmap concluído; nenhuma spec de feature iniciada
-- **Completed**: ROADMAP.md, STATE.md (AD-001)
+- **Feature**: `fundacao` (`.specs/features/fundacao/`)
+- **Phase / Task**: Specify **concluído** (spec.md com FUND-01..20 + context.md com as decisões do Discuss). Design ainda não iniciado.
+- **Completed**: ROADMAP.md, STATE.md (AD-001), fundacao/context.md, fundacao/spec.md
 - **In-progress** (file:line): none
-- **Next step**: iniciar o Specify da spec 00 `fundacao` (resolver G7 no Discuss) ou, em paralelo, 01 `design-system` / 02 `calculo`.
-- **Blockers**: none
-- **Uncommitted files**: `.specs/ROADMAP.md`, `.specs/STATE.md`
+- **Next step**: rodar o **Design** da `fundacao` — escolher pacote de rotas, container de DI, forma do BlocObserver e wiring do emulador, promovendo as decisões do context.md a AD-002+ no log de Decisions (são herdadas pelas dez specs seguintes).
+- **Blockers**: ⚠️ **SDK Flutter/Dart não instalado nesta máquina** (verificado 2026-08-12: `flutter`, `dart`, `firebase` ausentes do PATH; presentes Node, Python 3.14, Git, JDK 17). Design pode prosseguir; **Execute não pode começar** antes de `flutter --version` responder. Por decisão do Discuss, instalar o SDK é responsabilidade externa, fora do escopo da spec.
+- **Uncommitted files**: `.specs/ROADMAP.md`, `.specs/STATE.md`, `.specs/features/fundacao/spec.md`, `.specs/features/fundacao/context.md`
 - **Branch**: main
