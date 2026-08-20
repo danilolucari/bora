@@ -550,12 +550,12 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] A fixture reproduz RN-30 **literalmente**: "CHURRAS DO RAFA 🔥", "SÁB · 18 JUL", "14H", "Laje do Rafa — Vila Madalena", duração 4h, 5 pessoas nomeadas (4 confirmadas + Duda), 4 confirmados / 2 pendentes na Home, e os itens bovina, frango, pão de alho, refrigerante, água, cerveja, cachaça
-- [ ] Dados **brutos** (`Map`/`List` de primitivos): nenhuma entidade `Festa`/`Pessoa`/`ItemDeLista` — a tipagem é da spec 02 (FUND-19)
-- [ ] Sem import de Flutter e sem import de Firebase, verificado por varredura no próprio teste
-- [ ] Os números `4 confirmados / 2 pendentes` convivem com as 5 pessoas nomeadas **sem reconciliação** — são o texto literal de RN-30
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥5 (campos da festa · contagem e nomes das pessoas · status de Duda · lista de itens padrão · varredura de import)
+- [x] A fixture reproduz RN-30 **literalmente**: "CHURRAS DO RAFA 🔥", "SÁB · 18 JUL", "14H", "Laje do Rafa — Vila Madalena", duração 4h, 5 pessoas nomeadas (4 confirmadas + Duda), 4 confirmados / 2 pendentes na Home, e os itens bovina, frango, pão de alho, refrigerante, água, cerveja, cachaça
+- [x] Dados **brutos** (`Map`/`List` de primitivos): nenhuma entidade `Festa`/`Pessoa`/`ItemDeLista` — a tipagem é da spec 02 (FUND-19)
+- [x] Sem import de Flutter e sem import de Firebase, verificado por varredura no próprio teste (reusa `importsProibidosEm` de T3)
+- [x] Os números `4 confirmados / 2 pendentes` convivem com as 5 pessoas nomeadas **sem reconciliação** — são o texto literal de RN-30
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: 11 (campos da festa · contadores da Home · nomes das 5 pessoas · as 4 confirmadas · status de Duda · personas do arquivo 01 §7 · Rafa é o "você" · itens padrão · não reconciliação · varredura de import · só primitivos)
 
 **Tests**: unit
 **Gate**: quick
@@ -576,11 +576,11 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] Documenta: versão do Flutter usada no scaffold (+ a `sdk:` constraint do `pubspec.yaml`), como rodar em mobile, como rodar em web, como subir o Emulator Suite e como executar `flutter analyze` e `flutter test`
-- [ ] Inclui a checklist das verificações **manuais** desta spec: URL sem `#` no navegador, título da aba, e o par emulador no ar / emulador derrubado (FUND-17)
-- [ ] Diz que o SDK **não** é versionado no repositório e que essa é a razão de a versão estar aqui (decisão do Discuss)
-- [ ] Gate: `flutter analyze && flutter test` passa
-- [ ] **M** — seguir o README do zero, sem consultar a spec, e chegar ao app rodando
+- [x] Documenta: versão do Flutter usada no scaffold (+ a `sdk:` constraint do `pubspec.yaml`), como rodar em mobile, como rodar em web, como subir o Emulator Suite e como executar `flutter analyze` e `flutter test`
+- [x] Inclui a checklist das verificações **manuais** desta spec — **três**, não duas: (1) FUND-01 + R-1, `flutter run` em mobile e web a partir do mesmo `main.dart` mais a validação empírica das opções sintéticas `demo-bora`; (2) URL sem `#` no navegador e título da aba; (3) o par emulador no ar / emulador derrubado (FUND-17)
+- [x] Diz que o SDK **não** é versionado no repositório e que essa é a razão de a versão estar aqui (decisão do Discuss)
+- [x] Gate: `flutter analyze && flutter test` passa
+- [ ] **M** — seguir o README do zero, sem consultar a spec, e chegar ao app rodando — **pendente com o usuário**: exige device/navegador e o CLI `firebase`, ausentes do ambiente de execução
 
 **Tests**: none (documentação)
 **Gate**: build
