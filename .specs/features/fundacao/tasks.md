@@ -344,10 +344,10 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `isWellFormedInviteCode(String?)` aceita `[A-Za-z0-9_-]{1,64}` e recusa `null`, vazio, caractere inesperado e tamanho absurdo
-- [ ] Documentado no arquivo que "existe? expirou?" é da spec 09 — aqui só a forma
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6 (`rafa18` válido · `null` · vazio · caractere inesperado · 64 chars válido · 65 chars inválido)
+- [x] `isWellFormedInviteCode(String?)` aceita `[A-Za-z0-9_-]{1,64}` e recusa `null`, vazio, caractere inesperado e tamanho absurdo
+- [x] Documentado no arquivo que "existe? expirou?" é da spec 09 — aqui só a forma
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6 (`rafa18` válido · `null` · vazio · caractere inesperado · 64 chars válido · 65 chars inválido)
 
 **Tests**: unit
 **Gate**: quick
@@ -368,11 +368,11 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `PlaceholderPage({required String id, required String titulo})` renderiza texto identificável e expõe `Key('placeholder:$id')`
-- [ ] `RouteErrorPage({required String location})` renderiza mensagem **legível** com a URL tentada e `Key('route-error')` — nunca tela em branco
-- [ ] Sem cor, fonte ou sombra fora do default do framework — a spec 01 reveste depois
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥3 (placeholder mostra id e título · chave presente · erro mostra a location)
+- [x] `PlaceholderPage({required String id, required String titulo})` renderiza texto identificável e expõe `Key('placeholder:$id')`
+- [x] `RouteErrorPage({required String location})` renderiza mensagem **legível** com a URL tentada e `Key('route-error')` — nunca tela em branco
+- [x] Sem cor, fonte ou sombra fora do default do framework — a spec 01 reveste depois
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥3 (placeholder mostra id e título · chave presente · erro mostra a location)
 
 **Tests**: widget
 **Gate**: quick
@@ -393,14 +393,14 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `Routes` declara os caminhos do mapa canônico do design (`/entrar`, `/roles`, `/roles/novo`, `/roles/:festaId/…`, `/c/:codigo`, `/erro`) com construtores para os que têm parâmetro
-- [ ] `buildAppRouter({String initialLocation})` registra `/entrar`, `/c/:codigo` e `/erro`, com `errorBuilder` → `RouteErrorPage`
-- [ ] `/c/:codigo` com código válido renderiza o placeholder do convidado **sem exigir autenticação**
-- [ ] `/c/<malformado>` cai no destino de erro via `redirect`; `/c/` (sem código) cai no mesmo destino via `errorBuilder`
-- [ ] Rota inexistente cai no destino de erro — sem exceção não tratada
-- [ ] `app.dart` usa `MaterialApp.router` com `title: 'bora — a conta do rolê'` (literal de W-R5) e recebe o `GoRouter` por parâmetro (testável sem DI)
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6 (`/entrar` · `/c/rafa18` renderiza convidado · `/c/` → erro · `/c/@@@` → erro · `/rota-que-nao-existe` → erro · título literal do `MaterialApp`)
+- [x] `Routes` declara os caminhos do mapa canônico do design (`/entrar`, `/roles`, `/roles/novo`, `/roles/:festaId/…`, `/c/:codigo`, `/erro`) com construtores para os que têm parâmetro
+- [x] `buildAppRouter({String initialLocation})` registra `/entrar`, `/c/:codigo` e `/erro`, com `errorBuilder` → `RouteErrorPage`
+- [x] `/c/:codigo` com código válido renderiza o placeholder do convidado **sem exigir autenticação**
+- [x] `/c/<malformado>` cai no destino de erro via `redirect`; `/c/` (sem código) cai no mesmo destino via `errorBuilder`
+- [x] Rota inexistente cai no destino de erro — sem exceção não tratada
+- [x] `app.dart` usa `MaterialApp.router` com `title: 'bora — a conta do rolê'` (literal de W-R5) e recebe o `GoRouter` por parâmetro (testável sem DI)
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6 (`/entrar` · `/c/rafa18` renderiza convidado · `/c/` → erro · `/c/@@@` → erro · `/rota-que-nao-existe` → erro · título literal do `MaterialApp`)
 
 **Tests**: widget
 **Gate**: quick
@@ -421,12 +421,12 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `AppShell` expõe `static const chromeKey = Key('app-shell-chrome')` e envolve `/roles`, `/roles/novo` e `/roles/:festaId/montar`
-- [ ] `FestaTabsShell` envolve as quatro abas (`lista`, `galera`, `whatsapp`, `custos`) em `StatefulShellRoute.indexedStack` (AD-003)
-- [ ] Cada uma das sete rotas do shell renderiza o placeholder identificável da sua tela, sem erro
-- [ ] Teste afirma o par discriminante de FUND-08: `chromeKey` **presente** em `/roles` e **ausente** em `/c/rafa18`
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥8 (uma navegação por rota do shell + o par presente/ausente do chrome)
+- [x] `AppShell` expõe `static const chromeKey = Key('app-shell-chrome')` e envolve `/roles`, `/roles/novo` e `/roles/:festaId/montar`
+- [x] `FestaTabsShell` envolve as quatro abas (`lista`, `galera`, `whatsapp`, `custos`) em `StatefulShellRoute.indexedStack` (AD-003)
+- [x] Cada uma das sete rotas do shell renderiza o placeholder identificável da sua tela, sem erro
+- [x] Teste afirma o par discriminante de FUND-08: `chromeKey` **presente** em `/roles` e **ausente** em `/c/rafa18`
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥8 (uma navegação por rota do shell + o par presente/ausente do chrome)
 
 **Tests**: widget
 **Gate**: quick
@@ -447,11 +447,11 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `configureDependencies({AppLogger? logger, GoRouter Function()? routerFactory})` registra `AppLogger` (singleton), `GoRouter` (lazy) e `FirebaseAuth`/`FirebaseFirestore` (lazy — resolução tardia, para que Firebase caído não derrube o boot)
-- [ ] Chamada **duas vezes** no mesmo processo: sem exceção e sem registro duplicado (guarda por flag privada, não por `isRegistered<T>` — um teste pode pré-registrar um duplo)
-- [ ] `resetDependencies()` devolve o container ao estado vazio **e** zera a flag, permitindo testes em qualquer ordem
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4 (registra · dupla chamada não lança · dupla chamada não duplica a instância · após reset o container está vazio e reconfigurável)
+- [x] `configureDependencies({AppLogger? logger, GoRouter Function()? routerFactory})` registra `AppLogger` (singleton), `GoRouter` (lazy) e `FirebaseAuth`/`FirebaseFirestore` (lazy — resolução tardia, para que Firebase caído não derrube o boot)
+- [x] Chamada **duas vezes** no mesmo processo: sem exceção e sem registro duplicado (guarda por flag privada, não por `isRegistered<T>` — um teste pode pré-registrar um duplo)
+- [x] `resetDependencies()` devolve o container ao estado vazio **e** zera a flag, permitindo testes em qualquer ordem
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4 (registra · dupla chamada não lança · dupla chamada não duplica a instância · após reset o container está vazio e reconfigurável)
 
 **Tests**: unit
 **Gate**: quick
@@ -472,12 +472,12 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `AppBootstrap.run(startApp)` executa na ordem: binding → observabilidade → Firebase → emuladores → DI → `startApp` (a inserção da observabilidade entre binding e Firebase está justificada no design: sem handler armado, FUND-17 não teria onde registrar)
-- [ ] `startApp` é **sempre o último** — nenhum widget monta antes de as dependências existirem (FUND-15 AC1)
-- [ ] Apenas os passos de Firebase e emulador ficam sob `try/catch`; a exceção vai para o `AppLogger` e o boot **continua** (FUND-17)
-- [ ] Nenhum import de Firebase neste arquivo — todos os passos entram como closures
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4 (ordem exata dos seis passos · Firebase lança → app abre mesmo assim · falha registrada no logger · emulador lança → mesmo comportamento)
+- [x] `AppBootstrap.run(startApp)` executa na ordem: binding → observabilidade → Firebase → emuladores → DI → `startApp` (a inserção da observabilidade entre binding e Firebase está justificada no design: sem handler armado, FUND-17 não teria onde registrar)
+- [x] `startApp` é **sempre o último** — nenhum widget monta antes de as dependências existirem (FUND-15 AC1)
+- [x] Apenas os passos de Firebase e emulador ficam sob `try/catch`; a exceção vai para o `AppLogger` e o boot **continua** (FUND-17)
+- [x] Nenhum import de Firebase neste arquivo — todos os passos entram como closures
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4 (ordem exata dos seis passos · Firebase lança → app abre mesmo assim · falha registrada no logger · emulador lança → mesmo comportamento)
 
 **Tests**: unit
 **Gate**: quick
@@ -498,12 +498,12 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `initialize()` chama `Firebase.initializeApp(options: FirebaseEnvironment.resolve(...))`
-- [ ] `connectEmulators()` chama `useAuthEmulator` e `useFirestoreEmulator` com host e portas de `EmulatorConfig`, **só** em debug/teste — nunca contra infraestrutura remota (FUND-16 AC2)
-- [ ] Nenhuma decisão nova mora aqui: qual opção, qual host e qual porta já foram decididos (e testados) em T7/T8 — este arquivo só chama
-- [ ] `Tests: none` conforme a matriz (adaptador fino sobre singleton); a verificação é o gate de build + a checagem manual de T18
-- [ ] Gate: `flutter analyze && flutter test` passa
-- [ ] **M** — risco R-1: verificar empiricamente que `Firebase.initializeApp` com as opções sintéticas sobe em **mobile e web**. Se o SDK nativo rejeitar (`invalid GOOGLE_APP_ID`), **parar e escalar** — o fallback (opções reais por `--dart-define`) contraria o emulator-first e é decisão do usuário, não do executor
+- [x] `initialize()` chama `Firebase.initializeApp(options: FirebaseEnvironment.resolve(...))`
+- [x] `connectEmulators()` chama `useAuthEmulator` e `useFirestoreEmulator` com host e portas de `EmulatorConfig`, **só** em debug/teste — nunca contra infraestrutura remota (FUND-16 AC2)
+- [x] Nenhuma decisão nova mora aqui: qual opção, qual host e qual porta já foram decididos (e testados) em T7/T8 — este arquivo só chama
+- [x] `Tests: none` conforme a matriz (adaptador fino sobre singleton); a verificação é o gate de build + a checagem manual de T18
+- [x] Gate: `flutter analyze && flutter test` passa
+- [ ] **M** — risco R-1: verificar empiricamente que `Firebase.initializeApp` com as opções sintéticas sobe em **mobile e web**. Se o SDK nativo rejeitar (`invalid GOOGLE_APP_ID`), **parar e escalar** — o fallback (opções reais por `--dart-define`) contraria o emulator-first e é decisão do usuário, não do executor — **pendente com o usuário**: sem device, emulador Android ou navegador no ambiente de execução, não foi possível nem tentar; R-1 fica **não verificado**
 
 **Tests**: none (matriz: adaptador fino de SDK externo)
 **Gate**: build
@@ -524,12 +524,12 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `configureUrlStrategy()` sai de um **import condicional** (`export … if (dart.library.js_interop) …`) — risco R-2: a doc oficial não garante que `flutter_web_plugins` compile no alvo mobile, e FUND-01 exige o mesmo `main.dart` nas duas plataformas
-- [ ] `main.dart` compõe `AppBootstrap` com os passos reais e roda `BoraApp(router: getIt<GoRouter>())`
-- [ ] Smoke test atualizado: o app monta com o roteador real e cai em `/roles`
-- [ ] Gate: `flutter analyze && flutter test` passa
-- [ ] Novos testes: ≥2 (stub não lança na VM · smoke com roteador real)
-- [ ] **M** — `flutter run` em mobile **e** `flutter run -d chrome`; no navegador, a URL reflete a rota **sem `#`** e a aba mostra `bora — a conta do rolê` (metade não automatizável de FUND-10, risco R-9)
+- [x] `configureUrlStrategy()` sai de um **import condicional** (`export … if (dart.library.js_interop) …`) — risco R-2: a doc oficial não garante que `flutter_web_plugins` compile no alvo mobile, e FUND-01 exige o mesmo `main.dart` nas duas plataformas
+- [x] `main.dart` compõe `AppBootstrap` com os passos reais e roda `BoraApp(router: getIt<GoRouter>())`
+- [x] Smoke test atualizado: o app monta com o roteador real e cai em `/roles`
+- [x] Gate: `flutter analyze && flutter test` passa
+- [x] Novos testes: ≥2 (stub não lança na VM · smoke com roteador real)
+- [ ] **M** — `flutter run` em mobile **e** `flutter run -d chrome`; no navegador, a URL reflete a rota **sem `#`** e a aba mostra `bora — a conta do rolê` (metade não automatizável de FUND-10, risco R-9) — **pendente com o usuário**: sem device, emulador Android ou navegador no ambiente de execução
 
 **Tests**: unit + widget
 **Gate**: build
