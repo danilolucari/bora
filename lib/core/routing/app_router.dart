@@ -1,10 +1,29 @@
 import 'package:go_router/go_router.dart';
 
 import '../../features/convidado/presentation/pages/convidado_page.dart';
+import '../../features/convite/presentation/pages/convite_page.dart';
+import '../../features/custos/presentation/pages/custos_page.dart';
 import '../../features/entrar/presentation/pages/entrar_page.dart';
+import '../../features/galera/presentation/pages/galera_page.dart';
+import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/lista/presentation/pages/lista_page.dart';
+import '../../features/montar/presentation/pages/montar_page.dart';
+import 'app_shell.dart';
+import 'festa_tabs_shell.dart';
 import 'invite_code_format.dart';
 import 'route_error_page.dart';
 import 'routes.dart';
+
+// SPEC_DEVIATION: o `design.md` desenha `/roles/:festaId/montar` e as quatro
+// abas como rotas irmãs e planas dentro do `ShellRoute`. Aqui elas são
+// sub-rotas de um nó `/roles/:festaId` que não é tela — só carrega o parâmetro.
+// Reason: `go_router` proíbe que a rota padrão de um `StatefulShellBranch`
+// tenha parâmetro de caminho (`configuration.dart:149`,
+// 'The default location of a StatefulShellBranch cannot be a parameterized
+// route'), então o `:festaId` precisa morar num ancestral do shell de abas.
+// Nenhuma URL do mapa canônico muda: `/roles/:festaId/lista` continua sendo
+// `/roles/:festaId/lista`.
+const String _festaPattern = '/roles/:${Routes.paramFestaId}';
 
 /// Monta a tabela de rotas do app.
 ///
@@ -37,6 +56,73 @@ GoRouter buildAppRouter({String initialLocation = Routes.roles}) {
         builder: (context, state) => ConvidadoPage(
           codigo: state.pathParameters[Routes.paramCodigo]!,
         ),
+      ),
+      ShellRoute(
+        builder: (context, state, child) => AppShell(child: child),
+        routes: [
+          GoRoute(
+            path: Routes.roles,
+            builder: (context, state) => const HomePage(),
+          ),
+          // Declarada antes de `/roles/:festaId` de propósito: `novo` é uma
+          // palavra reservada da rota, não um id de festa.
+          GoRoute(
+            path: Routes.novoRole,
+            builder: (context, state) => const MontarPage(),
+          ),
+          GoRoute(
+            path: _festaPattern,
+            // Sem `builder`: este nó não é tela. Só quando ele **é** o destino
+            // final é que vale abrir a festa na primeira aba.
+            redirect: (context, state) => state.fullPath == _festaPattern
+                ? Routes.lista(state.pathParameters[Routes.paramFestaId]!)
+                : null,
+            routes: [
+              GoRoute(
+                path: 'montar',
+                builder: (context, state) => const MontarPage(),
+              ),
+              StatefulShellRoute.indexedStack(
+                builder: (context, state, navigationShell) =>
+                    FestaTabsShell(navigationShell: navigationShell),
+                branches: [
+                  StatefulShellBranch(
+                    routes: [
+                      GoRoute(
+                        path: 'lista',
+                        builder: (context, state) => const ListaPage(),
+                      ),
+                    ],
+                  ),
+                  StatefulShellBranch(
+                    routes: [
+                      GoRoute(
+                        path: 'galera',
+                        builder: (context, state) => const GaleraPage(),
+                      ),
+                    ],
+                  ),
+                  StatefulShellBranch(
+                    routes: [
+                      GoRoute(
+                        path: 'whatsapp',
+                        builder: (context, state) => const ConvitePage(),
+                      ),
+                    ],
+                  ),
+                  StatefulShellBranch(
+                    routes: [
+                      GoRoute(
+                        path: 'custos',
+                        builder: (context, state) => const CustosPage(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     ],
   );
