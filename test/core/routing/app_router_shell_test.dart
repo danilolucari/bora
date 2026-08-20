@@ -87,6 +87,17 @@ void main() {
     });
   });
 
+  group('FUND-09 — /roles/:festaId sem sufixo tem destino', () {
+    // O nó `/roles/:festaId` é redirect-only (ver SPEC_DEVIATION em
+    // app_router.dart): sem o redirect, o go_router lança e a tela fica branca.
+    testWidgets('cai na primeira aba da festa', (tester) async {
+      await _abrir(tester, '/roles/$_festaId');
+
+      _apenas('lista', outras: ['galera', 'convite', 'custos', 'home']);
+      expect(tester.takeException(), isNull);
+    });
+  });
+
   group('AD-003 — as quatro abas vivem sob o sub-shell da festa', () {
     testWidgets('rota de aba monta o FestaTabsShell', (tester) async {
       await _abrir(tester, Routes.lista(_festaId));
