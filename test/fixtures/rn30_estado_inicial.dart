@@ -28,6 +28,13 @@ const Map<String, Object?> festaRn30 = {
 /// `papel`, `dieta` e `bebe` são as personas do arquivo 01 §7; existem porque
 /// RN-21 vai consumi-los na spec 02. Cor de avatar fica de fora: é token, e
 /// token é território da spec 01.
+///
+/// Lacuna de precisão da spec: o arquivo 01 §7 descreve Duda apenas como
+/// "só-vê (viewer)" — não diz o que ela come nem se bebe. As chaves ficam
+/// **ausentes** no mapa dela, em vez de receberem um default inventado,
+/// porque RN-21 dimensiona a cerveja por quem bebe: um `false` fabricado aqui
+/// viraria número errado na spec 02. Quem preencher precisa da decisão do
+/// produto, não de um palpite desta fixture.
 const List<Map<String, Object?>> pessoasRn30 = [
   {
     'nome': 'Rafa',
@@ -64,8 +71,7 @@ const List<Map<String, Object?>> pessoasRn30 = [
   {
     'nome': 'Duda',
     'papel': 'viewer',
-    'dieta': 'tudo',
-    'bebe': false,
+    // `dieta` e `bebe` ausentes de propósito — ver a nota acima.
     'status': 'pendente',
     'voce': false,
   },

@@ -56,7 +56,9 @@ void main() {
           ['cohost', 'tudo', true],
           ['guest', 'veggie', true],
           ['guest', 'semporco', false],
-          ['viewer', 'tudo', false],
+          // O arquivo 01 §7 só diz "Duda — só-vê (viewer)": dieta e bebida
+          // dela não estão especificadas, então a fixture não as inventa.
+          ['viewer', null, null],
         ],
       );
     });
