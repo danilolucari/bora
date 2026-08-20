@@ -60,11 +60,12 @@
 
 ## Handoff
 
-- **Feature**: `fundacao` (`.specs/features/fundacao/`)
-- **Phase / Task**: **Tasks concluído** (`tasks.md`, T1–T18 em 5 fases) — Specify, Design e Tasks fechados; Execute não iniciado (bloqueado pela pré-condição de SDK).
-- **Completed**: ROADMAP.md, STATE.md (AD-001..AD-007), fundacao/context.md, fundacao/spec.md, fundacao/design.md, fundacao/tasks.md
+- **Feature**: `fundacao` (`.specs/features/fundacao/`) — **CONCLUÍDA** ✅
+- **Phase / Task**: **Execute concluído** — T1–T18 implementadas e commitadas (3 lotes de sub-agentes), mais 2 tasks de correção vindas do Verifier. Validação independente **PASS** na iteração 2.
+- **Completed**: ROADMAP.md, STATE.md (AD-001..AD-007), fundacao/{context,spec,design,tasks,validation}.md, e o código: `pubspec.yaml`, árvore Clean Architecture (`lib/core/` + 8 features), `core/observability/`, `core/responsive/`, `core/firebase/`, `core/routing/` (rotas públicas + shell + abas), `core/di/`, `bootstrap/`, `main.dart`, fixture RN-30 e README de setup.
 - **In-progress** (file:line): none
-- **Next step**: **Execute** da `fundacao` a partir de T1 — 18 tasks empacotam em 3 lotes (T1–T8 · T9–T16 · T17–T18), então a oferta de sub-agentes é apresentada antes do primeiro despacho. Verifier roda automático depois de T18.
-- **Blockers**: ⚠️ **SDK Flutter/Dart não instalado nesta máquina** (verificado 2026-08-12: `flutter`, `dart`, `firebase` ausentes do PATH; presentes Node, Python 3.14, Git, JDK 17). Design pode prosseguir; **Execute não pode começar** antes de `flutter --version` responder. Por decisão do Discuss, instalar o SDK é responsabilidade externa, fora do escopo da spec.
-- **Uncommitted files**: `.specs/STATE.md`, `.specs/ROADMAP.md`, `.specs/features/fundacao/spec.md`, `.specs/features/fundacao/design.md`, `.specs/features/fundacao/tasks.md`
-- **Branch**: main
+- **Next step**: **spec 01 `design-system`** (tokens e componentes do arquivo 02) ou **spec 02 `calculo`** (RN-xx em Dart puro) — as duas destravam todas as telas. Ver `.specs/ROADMAP.md`, marco M1.
+- **Blockers**: nenhum para código. Pendências **externas**, todas de verificação manual (M): (a) `flutter run` em mobile e `flutter run -d chrome` — FUND-01; (b) URL sem `#` e título da aba — FUND-10 AC5; (c) risco **R-1**: confirmar que `Firebase.initializeApp` aceita as opções sintéticas `demo-bora` no SDK nativo — FUND-16 AC2; (d) par emulador no ar / derrubado — FUND-17; (e) seguir o README num clone limpo — FUND-20 AC2. O CLI `firebase` não está no PATH. A checklist está no `README.md`.
+- **Decisão pendente do usuário**: **FUND-17 AC4** diz que o erro do Firebase é registrado "pelo handler global", mas a implementação o registra pelo `try/catch` do `AppBootstrap`, no mesmo `AppLogger` (mecanismo prescrito por T14). O resultado observável do AC está afirmado em teste. O Verifier apontou que a leitura literal do AC colide consigo mesma — uma exceção que chegasse ao handler global abortaria o boot, violando o "app abre mesmo assim" do próprio AC. Alinhar o texto do AC é decisão do usuário; o código não foi tocado.
+- **Uncommitted files**: none
+- **Branch**: main (os 23 commits da fundação foram para `main`, seguindo o histórico já existente; o `CLAUDE.md` prescreve `feature/nome` — divergência declarada, não corrigida por conta própria)

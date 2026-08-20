@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "promote_threshold": 2,
+  "window_days": 45,
+  "quarantine_threshold": 2,
+  "next_id": 6,
+  "lessons": [
+    {
+      "id": "L-001",
+      "key": "surviving_mutant::toda rota alcan vel que existe s como redirect precisa de um teste que a abra e afirme o destino final",
+      "text": "Toda rota alcançável que existe só como redirect precisa de um teste que a abra e afirme o destino final",
+      "signal": "surviving_mutant",
+      "scope": "routing",
+      "status": "candidate",
+      "features": [
+        "fundacao"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md Sensor mutação 12 — lib/core/routing/app_router.dart:77 (routing)"
+      ],
+      "created": "2026-08-20T14:20:00Z",
+      "last_seen": "2026-08-20T14:20:00Z"
+    },
+    {
+      "id": "L-002",
+      "key": "spec_precision_gap::n o afirme como literal de spec um valor que a spec n o define registre o default como assumption antes de congel lo em teste",
+      "text": "Não afirme como literal de spec um valor que a spec não define; registre o default como assumption antes de congelá-lo em teste",
+      "signal": "spec_precision_gap",
+      "scope": "fixtures",
+      "status": "candidate",
+      "features": [
+        "fundacao"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md gap #1 — test/fixtures/rn30_estado_inicial_test.dart:59 (fixtures)"
+      ],
+      "created": "2026-08-20T14:20:13Z",
+      "last_seen": "2026-08-20T14:20:13Z"
+    },
+    {
+      "id": "L-003",
+      "key": "spec_precision_gap::adaptador declarado sem teste unit rio deixa o efeito do ac sem prova declare qual ac fica dependente de verifica o manual",
+      "text": "Adaptador declarado sem teste unitário deixa o efeito do AC sem prova; declare qual AC fica dependente de verificação manual",
+      "signal": "spec_precision_gap",
+      "scope": "firebase",
+      "status": "candidate",
+      "features": [
+        "fundacao"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md gap #2 — FUND-16 AC2, lib/core/firebase/firebase_bootstrap.dart:45 (firebase)"
+      ],
+      "created": "2026-08-20T14:20:13Z",
+      "last_seen": "2026-08-20T14:20:13Z"
+    },
+    {
+      "id": "L-004",
+      "key": "spec_precision_gap::quando a implementa o alcan a o resultado do ac por outro mecanismo que n o o nomeado alinhe o texto do ac em vez de deixar a diverg ncia s no design",
+      "text": "Quando a implementação alcança o resultado do AC por outro mecanismo que não o nomeado, alinhe o texto do AC em vez de deixar a divergência só no design",
+      "signal": "spec_precision_gap",
+      "scope": "observability",
+      "status": "candidate",
+      "features": [
+        "fundacao"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md gap #3 — FUND-17 AC4, lib/bootstrap/app_bootstrap.dart:46 (observability)"
+      ],
+      "created": "2026-08-20T14:20:13Z",
+      "last_seen": "2026-08-20T14:20:13Z"
+    },
+    {
+      "id": "L-005",
+      "key": "spec_deviation::desvio que acrescenta um n de rota deve vir acompanhado do teste que cobre o n acrescentado n o s da prova de que as urls antigas n o mudaram",
+      "text": "Desvio que acrescenta um nó de rota deve vir acompanhado do teste que cobre o nó acrescentado, não só da prova de que as URLs antigas não mudaram",
+      "signal": "spec_deviation",
+      "scope": "routing",
+      "status": "candidate",
+      "features": [
+        "fundacao"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md SPEC_DEVIATION 2 — lib/core/routing/app_router.dart:17-26 (routing)"
+      ],
+      "created": "2026-08-20T14:20:20Z",
+      "last_seen": "2026-08-20T14:20:20Z"
+    }
+  ]
+}
