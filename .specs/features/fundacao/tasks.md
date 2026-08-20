@@ -20,6 +20,10 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 
 **O SDK Flutter/Dart não está instalado nesta máquina** (verificado 2026-08-12: `flutter`, `dart` e `firebase` fora do PATH). T1 começa verificando `flutter --version`; **se não responder, o Execute para na primeira task** — instalar o SDK é responsabilidade externa, fora do escopo da spec.
 
+> ✅ **Resolvida em 2026-08-20**: `flutter --version` responde — **Flutter 3.47.0 · channel stable · Dart 3.13.0 · DevTools 2.60.0** (`/home/lucari/SDKs/flutter/bin/flutter`). É esta a versão do scaffold, e é ela que T18 documenta no README. O `pubspec.yaml` gerado fixou `environment: sdk: ^3.13.0`.
+>
+> ⚠️ **O CLI `firebase` continua fora do PATH**: `firebase emulators:start` não é executável neste ambiente, então toda verificação que dependa dele (T15 e T18) fica com o usuário.
+
 Consequências para este plano, declaradas em vez de escondidas:
 
 - Nenhum comando de gate abaixo pôde ser executado para validação. Eles vêm dos requisitos FUND-01/02/03 e do `CLAUDE.md`, **não** de um manifesto lido do repositório (não existe `pubspec.yaml` ainda).
@@ -127,16 +131,16 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `flutter --version` responde (**se não responder, PARAR** — pré-condição da spec) e a versão é anotada para o README de T18
-- [ ] `flutter create --org app --project-name bora --platforms=android,ios,web .` executado na raiz (applicationId `app.bora`, assumption confirmada da spec)
-- [ ] Dependências adicionadas via `flutter pub add` (nunca versão digitada à mão — risco R-7): `flutter_bloc`, `go_router`, `get_it`, `firebase_core`, `firebase_auth`, `cloud_firestore`; `flutter_web_plugins` declarado como `sdk: flutter` no `pubspec.yaml` (não é instalável por `pub add`)
-- [ ] `pubspec.lock` versionado (não entra no `.gitignore`)
-- [ ] `analysis_options.yaml` inclui `package:flutter_lints/flutter.yaml`
-- [ ] O contador gerado por `flutter create` foi **removido**: `lib/app.dart` expõe `BoraApp` mínimo e `lib/main.dart` só chama `runApp`; `test/widget_test.dart` gerado foi substituído por `test/app_test.dart`
-- [ ] `flutter analyze` → **zero issues**
-- [ ] Gate: `flutter analyze && flutter test` passa
-- [ ] Novos testes: ≥1 (smoke: `BoraApp` monta sem exceção)
-- [ ] **M** — `flutter run` sobe em mobile e `flutter run -d chrome` sobe em web, a partir do mesmo `lib/main.dart`
+- [x] `flutter --version` responde (**se não responder, PARAR** — pré-condição da spec) e a versão é anotada para o README de T18
+- [x] `flutter create --org app --project-name bora --platforms=android,ios,web .` executado na raiz (applicationId `app.bora`, assumption confirmada da spec)
+- [x] Dependências adicionadas via `flutter pub add` (nunca versão digitada à mão — risco R-7): `flutter_bloc`, `go_router`, `get_it`, `firebase_core`, `firebase_auth`, `cloud_firestore`; `flutter_web_plugins` declarado como `sdk: flutter` no `pubspec.yaml` (não é instalável por `pub add`)
+- [x] `pubspec.lock` versionado (não entra no `.gitignore`)
+- [x] `analysis_options.yaml` inclui `package:flutter_lints/flutter.yaml`
+- [x] O contador gerado por `flutter create` foi **removido**: `lib/app.dart` expõe `BoraApp` mínimo e `lib/main.dart` só chama `runApp`; `test/widget_test.dart` gerado foi substituído por `test/app_test.dart`
+- [x] `flutter analyze` → **zero issues**
+- [x] Gate: `flutter analyze && flutter test` passa
+- [x] Novos testes: ≥1 (smoke: `BoraApp` monta sem exceção)
+- [ ] **M** — `flutter run` sobe em mobile e `flutter run -d chrome` sobe em web, a partir do mesmo `lib/main.dart` — **pendente com o usuário**: sem device, emulador Android ou navegador no ambiente de execução
 
 **Tests**: widget
 **Gate**: build
@@ -157,13 +161,13 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `lib/core/design_system/` e `lib/core/calculo/` existem, mais as quatro pastas de infraestrutura do design
-- [ ] As **oito** features existem, cada uma com `domain/`, `data/` e `presentation/` (seis do CLAUDE.md + `entrar` e `home` por AD-006)
-- [ ] `test/` espelha `lib/` (exceto `test/architecture/`, `test/support/` e `test/fixtures/`, que são transversais — desvio declarado no design)
-- [ ] `.gitkeep` em toda pasta sem `.dart` — risco R-4: sem isso a árvore some no clone limpo, que é exatamente onde FUND-04/05 são verificados
-- [ ] `project_structure_test.dart` falha se qualquer pasta exigida sumir, e nomeia a pasta faltante
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥3 (pastas de `core/`, oito features com as três camadas, espelho de `test/`)
+- [x] `lib/core/design_system/` e `lib/core/calculo/` existem, mais as quatro pastas de infraestrutura do design
+- [x] As **oito** features existem, cada uma com `domain/`, `data/` e `presentation/` (seis do CLAUDE.md + `entrar` e `home` por AD-006)
+- [x] `test/` espelha `lib/` (exceto `test/architecture/`, `test/support/` e `test/fixtures/`, que são transversais — desvio declarado no design)
+- [x] `.gitkeep` em toda pasta sem `.dart` — risco R-4: sem isso a árvore some no clone limpo, que é exatamente onde FUND-04/05 são verificados
+- [x] `project_structure_test.dart` falha se qualquer pasta exigida sumir, e nomeia a pasta faltante
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥3 (pastas de `core/`, oito features com as três camadas, espelho de `test/`)
 
 **Tests**: unit
 **Gate**: quick
@@ -184,12 +188,12 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `lib/core/calculo/calculo.dart` existe como barrel com doc comment — **nenhuma fórmula** (território da spec 02); serve para a varredura não rodar vazia
-- [ ] O teste falha quando encontra `package:flutter/…`, `dart:ui`, `package:firebase…`, `cloud_firestore` ou `package:flutter_bloc` sob `lib/core/calculo/`, e a mensagem **nomeia o arquivo infrator**
-- [ ] O teste afirma que o diretório existe **e** que varreu ≥1 arquivo `.dart` — sem isso passaria vacuamente (risco R-5)
-- [ ] Verificado à mão nos dois sentidos: injetar `import 'package:flutter/material.dart';` faz falhar; remover faz passar
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥3 (sem infrator passa · com infrator falha nomeando · varredura não vazia)
+- [x] `lib/core/calculo/calculo.dart` existe como barrel com doc comment — **nenhuma fórmula** (território da spec 02); serve para a varredura não rodar vazia
+- [x] O teste falha quando encontra `package:flutter/…`, `dart:ui`, `package:firebase…`, `cloud_firestore` ou `package:flutter_bloc` sob `lib/core/calculo/`, e a mensagem **nomeia o arquivo infrator**
+- [x] O teste afirma que o diretório existe **e** que varreu ≥1 arquivo `.dart` — sem isso passaria vacuamente (risco R-5)
+- [x] Verificado à mão nos dois sentidos: injetar `import 'package:flutter/material.dart';` faz falhar; remover faz passar
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥3 (sem infrator passa · com infrator falha nomeando · varredura não vazia)
 
 **Tests**: unit
 **Gate**: quick
@@ -210,13 +214,13 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `AppLogger` define `logEvent` e `logError(Object, StackTrace?)`; `DebugAppLogger` usa `dart:developer`
-- [ ] `AppBlocObserver` registra transição identificando **bloc, evento e estado resultante** (FUND-13 AC3) e cobre `Cubit` via `onChange`
-- [ ] `AppBlocObserver.onError` registra **exceção e stack trace** (FUND-13 AC4)
-- [ ] `RecordingAppLogger` (duplo de teste) guarda o que foi registrado — é a costura que torna o AC afirmável
-- [ ] Teste usa um bloc de mentira que emite estado e depois lança, como manda o Independent Test da spec
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4 (transição com os três dados · `onChange` de cubit · erro com exceção · erro com stack)
+- [x] `AppLogger` define `logEvent` e `logError(Object, StackTrace?)`; `DebugAppLogger` usa `dart:developer`
+- [x] `AppBlocObserver` registra transição identificando **bloc, evento e estado resultante** (FUND-13 AC3) e cobre `Cubit` via `onChange`
+- [x] `AppBlocObserver.onError` registra **exceção e stack trace** (FUND-13 AC4)
+- [x] `RecordingAppLogger` (duplo de teste) guarda o que foi registrado — é a costura que torna o AC afirmável
+- [x] Teste usa um bloc de mentira que emite estado e depois lança, como manda o Independent Test da spec
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4 (transição com os três dados · `onChange` de cubit · erro com exceção · erro com stack)
 
 **Tests**: unit
 **Gate**: quick
@@ -237,11 +241,11 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `installGlobalErrorHandlers(AppLogger)` atribui os dois handlers; o do `platformDispatcher` retorna `true`
-- [ ] Teste dispara `FlutterError.onError!(details)` e `platformDispatcher.onError!(erro, stack)` e afirma que o `RecordingAppLogger` recebeu ambos com exceção e stack
-- [ ] Teste restaura os handlers originais no `tearDown` (não vaza estado global para os outros testes)
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥3 (erro de framework · erro assíncrono da plataforma · handler retorna `true`)
+- [x] `installGlobalErrorHandlers(AppLogger)` atribui os dois handlers; o do `platformDispatcher` retorna `true`
+- [x] Teste dispara `FlutterError.onError!(details)` e `platformDispatcher.onError!(erro, stack)` e afirma que o `RecordingAppLogger` recebeu ambos com exceção e stack
+- [x] Teste restaura os handlers originais no `tearDown` (não vaza estado global para os outros testes)
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥3 (erro de framework · erro assíncrono da plataforma · handler retorna `true`)
 
 **Tests**: unit
 **Gate**: quick
@@ -262,12 +266,12 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `kCompactBreakpoint = 900.0`, `enum LayoutMode { compact, expanded }`, `layoutModeForWidth(double)` — `layout_mode.dart` é Dart puro (sem import de Flutter)
-- [ ] Fronteira exata: `899.9` → compacto, `900.0` → **expandido**, `900.1` → expandido (edge case literal da spec: 900.0 é expandido, sem oscilação)
-- [ ] `ResponsiveBuilder` entrega o modo correto ao redimensionar cruzando 900
-- [ ] Mora em `core/responsive/`, **não** em `core/design_system/` (AD-007) — nenhuma cor, fonte ou token aqui
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥5 (três da fronteira + largura pequena/grande no widget)
+- [x] `kCompactBreakpoint = 900.0`, `enum LayoutMode { compact, expanded }`, `layoutModeForWidth(double)` — `layout_mode.dart` é Dart puro (sem import de Flutter)
+- [x] Fronteira exata: `899.9` → compacto, `900.0` → **expandido**, `900.1` → expandido (edge case literal da spec: 900.0 é expandido, sem oscilação)
+- [x] `ResponsiveBuilder` entrega o modo correto ao redimensionar cruzando 900
+- [x] Mora em `core/responsive/`, **não** em `core/design_system/` (AD-007) — nenhuma cor, fonte ou token aqui
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥5 (três da fronteira + largura pequena/grande no widget)
 
 **Tests**: unit + widget
 **Gate**: quick
@@ -288,12 +292,12 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `firebase.json` declara os emuladores de auth e firestore (a spec fixa o arquivo como fonte, não os números)
-- [ ] `.firebaserc` aponta para o projeto `demo-bora` (AD-004)
-- [ ] `EmulatorConfig` expõe as portas e `host({required bool isAndroid, required bool isWeb})` → `10.0.2.2` no emulador Android, `localhost` no resto (risco R-8)
-- [ ] Teste **lê `firebase.json`** e afirma que as portas batem com as constantes Dart (risco R-6)
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4 (porta auth ↔ json · porta firestore ↔ json · host Android · host web/iOS)
+- [x] `firebase.json` declara os emuladores de auth e firestore (a spec fixa o arquivo como fonte, não os números)
+- [x] `.firebaserc` aponta para o projeto `demo-bora` (AD-004)
+- [x] `EmulatorConfig` expõe as portas e `host({required bool isAndroid, required bool isWeb})` → `10.0.2.2` no emulador Android, `localhost` no resto (risco R-8)
+- [x] Teste **lê `firebase.json`** e afirma que as portas batem com as constantes Dart (risco R-6)
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4 (porta auth ↔ json · porta firestore ↔ json · host Android · host web/iOS)
 
 **Tests**: unit
 **Gate**: quick
@@ -314,12 +318,12 @@ T16 → T18
 - Skill: NONE
 
 **Done when**:
-- [ ] `demoFirebaseOptions` usa `projectId: 'demo-bora'` e valores sintéticos **bem formados** (`appId` no formato `1:<sender>:<plataforma>:<hash>`) — risco R-1
-- [ ] `FirebaseEnvironment.resolve({required bool isRelease, String? projectIdFromEnv})` devolve as opções demo fora de release
-- [ ] Em release sem `--dart-define=BORA_FIREBASE_PROJECT_ID` (ou com valor `demo-*`) **lança `StateError` com mensagem explícita** apontando o README (FUND-16 AC3)
-- [ ] O flag de release é **parâmetro**, nunca `kReleaseMode` lido direto — é o que torna os dois ramos testáveis
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4 (debug devolve demo · release sem env lança · release com `demo-` lança · release com projeto real devolve opções)
+- [x] `demoFirebaseOptions` usa `projectId: 'demo-bora'` e valores sintéticos **bem formados** (`appId` no formato `1:<sender>:<plataforma>:<hash>`) — risco R-1
+- [x] `FirebaseEnvironment.resolve({required bool isRelease, String? projectIdFromEnv})` devolve as opções demo fora de release
+- [x] Em release sem `--dart-define=BORA_FIREBASE_PROJECT_ID` (ou com valor `demo-*`) **lança `StateError` com mensagem explícita** apontando o README (FUND-16 AC3)
+- [x] O flag de release é **parâmetro**, nunca `kReleaseMode` lido direto — é o que torna os dois ramos testáveis
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4 (debug devolve demo · release sem env lança · release com `demo-` lança · release com projeto real devolve opções)
 
 **Tests**: unit
 **Gate**: quick
