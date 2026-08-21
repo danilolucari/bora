@@ -6,6 +6,7 @@ import '../components/bora_expandable_row.dart';
 import '../components/bora_footer_bar.dart';
 import '../components/bora_hero_card.dart';
 import '../components/bora_list_card.dart';
+import '../components/bora_poll_option.dart';
 import '../components/bora_press_sink.dart';
 import '../components/bora_price_range_bar.dart';
 import '../components/bora_primary_button.dart';
@@ -135,6 +136,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'BARRA DE PROGRESSO',
     referencia: '§5 · barra de progresso (quitação) · §6',
     builder: _construirProgresso,
+  ),
+  (
+    titulo: 'OPÇÃO DE ENQUETE',
+    referencia: '§5 · opção de enquete (estilo WhatsApp)',
+    builder: _construirEnquete,
   ),
 ];
 
@@ -674,5 +680,35 @@ Widget _construirProgresso(BuildContext context) {
         ],
       ),
     ),
+  );
+}
+
+/// As duas opções da enquete do catálogo: a votada e a outra. Percentual,
+/// contagem e fração chegam prontos (DS-34).
+const List<(String, double, String, String, bool)> _opcoesDeEnquete =
+    <(String, double, String, String, bool)>[
+  ('sábado 20h', 0.66, '66%', '6 votos', true),
+  ('domingo 13h', 0.34, '34%', '3 votos', false),
+];
+
+Widget _construirEnquete(BuildContext context) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      for (final opcao in _opcoesDeEnquete)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: SizedBox(
+            width: _larguraDeLista,
+            child: BoraPollOption(
+              texto: opcao.$1,
+              fracao: opcao.$2,
+              percentualFormatado: opcao.$3,
+              contagemFormatada: opcao.$4,
+              meuVoto: opcao.$5,
+            ),
+          ),
+        ),
+    ],
   );
 }

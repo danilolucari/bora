@@ -10,6 +10,7 @@ export 'components/bora_expandable_row.dart';
 export 'components/bora_footer_bar.dart';
 export 'components/bora_hero_card.dart';
 export 'components/bora_list_card.dart';
+export 'components/bora_poll_option.dart';
 export 'components/bora_press_sink.dart';
 export 'components/bora_price_range_bar.dart';
 export 'components/bora_primary_button.dart';

@@ -935,16 +935,16 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Borda 2px `ink`; `waGreen` quando `meuVoto` é verdadeiro
-- [ ] Barra de % preenchendo o fundo com `pollFill` (`rgba(37,211,102,.18)`), largura pela fração recebida
-- [ ] Radio **circular** de 15px, verde quando votado — **exceção de forma autorizada por §3** ("dots"), e o arquivo está na allowlist de T7
-- [ ] Percentual à direita e contagem "n votos" abaixo, ambos chegando como **`String` já formatada** (DS-34)
-- [ ] A fração sofre o mesmo clamp de T27/T28
-- [ ] O teste afirma a borda nos dois estados, a largura do preenchimento e a forma circular do radio
-- [ ] A guarda de T7 continua passando
-- [ ] Seção registrada no catálogo (votado e não votado) e export no barrel
-- [ ] Gate: `flutter analyze && flutter test` passa (fim da Phase 6)
-- [ ] Novos testes: ≥5
+- [x] Borda 2px `ink`; `waGreen` quando `meuVoto` é verdadeiro
+- [x] Barra de % preenchendo o fundo com `pollFill` (`rgba(37,211,102,.18)`), largura pela fração recebida
+- [x] Radio **circular** de 15px, verde quando votado — **exceção de forma autorizada por §3** ("dots"), e o arquivo está na allowlist de T7
+- [x] Percentual à direita e contagem "n votos" abaixo, ambos chegando como **`String` já formatada** (DS-34)
+- [x] A fração sofre o mesmo clamp de T27/T28
+- [x] O teste afirma a borda nos dois estados, a largura do preenchimento e a forma circular do radio
+- [x] A guarda de T7 continua passando
+- [x] Seção registrada no catálogo (votado e não votado) e export no barrel
+- [x] Gate: `flutter analyze && flutter test` passa (fim da Phase 6)
+- [x] Novos testes: ≥5
 
 **Tests**: widget
 **Gate**: build
