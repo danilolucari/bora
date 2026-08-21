@@ -188,12 +188,12 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `ContagemDePessoas({int homens = 0, int mulheres = 0, int criancas = 0})` com `int get adultos => homens + mulheres` e `int get pessoas => adultos + criancas`
-- [ ] Valor negativo em qualquer campo **lança `ArgumentError`** nomeando o campo — por isso o construtor **não é `const`** (construtor `const` não lança); o doc comment registra a troca
-- [ ] `copyWith` e `==`/`hashCode` presentes
-- [ ] Doc comment declara A-05/A-22: é **um tipo só**, cobrindo confirmados **e** extras sem app; pessoas nomeadas entram com preferências, não com cabeça, porque `Pessoa` não tem sexo
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6 (3H+3M+1C → 6 adultos e 7 pessoas · zeros → 0 · só crianças → 0 adultos · negativo em homens/mulheres/crianças lança)
+- [x] `ContagemDePessoas({int homens = 0, int mulheres = 0, int criancas = 0})` com `int get adultos => homens + mulheres` e `int get pessoas => adultos + criancas`
+- [x] Valor negativo em qualquer campo **lança `ArgumentError`** nomeando o campo — por isso o construtor **não é `const`** (construtor `const` não lança); o doc comment registra a troca
+- [x] `copyWith` e `==`/`hashCode` presentes
+- [x] Doc comment declara A-05/A-22: é **um tipo só**, cobrindo confirmados **e** extras sem app; pessoas nomeadas entram com preferências, não com cabeça, porque `Pessoa` não tem sexo
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6 (3H+3M+1C → 6 adultos e 7 pessoas · zeros → 0 · só crianças → 0 adultos · negativo em homens/mulheres/crianças lança)
 
 **Tests**: unit
 **Gate**: quick
