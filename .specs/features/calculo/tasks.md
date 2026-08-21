@@ -237,13 +237,13 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `double kgArredondadoEmDecimos(double gramas)` → `(gramas / 100).round() / 10` — arredonda **em gramas**, nunca em kg
-- [ ] O doc comment registra o porquê: `(1.15 * 10).round()` devolve **11** (o binário guarda 11,499999…) e daria 1,1 kg, quebrando o R$ 211 (risco R-1 do design)
-- [ ] `int unidadesComPisoDeUm(double bruto)` → `math.max(1, bruto.ceil())`
-- [ ] `const double toleranciaDeCentavo = 0.01` e `bool ehZeroNaTolerancia(double valor)`
-- [ ] Nenhum outro arquivo da camada usa literal `0.01`, `100` de arredondamento ou `.round()` de quantidade — tudo passa por aqui
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥9 (1149 g→1,1 · **1150 g→1,2** · 1151 g→1,2 · 0 g→0,0 · piso: 0,1→1, 1,0→1, 1,45→2, 17,14→18 · tolerância: 0,01 é zero, 0,011 não é)
+- [x] `double kgArredondadoEmDecimos(double gramas)` → `(gramas / 100).round() / 10` — arredonda **em gramas**, nunca em kg
+- [x] O doc comment registra o porquê: `(1.15 * 10).round()` devolve **11** (o binário guarda 11,499999…) e daria 1,1 kg, quebrando o R$ 211 (risco R-1 do design)
+- [x] `int unidadesComPisoDeUm(double bruto)` → `math.max(1, bruto.ceil())`
+- [x] `const double toleranciaDeCentavo = 0.01` e `bool ehZeroNaTolerancia(double valor)`
+- [x] Nenhum outro arquivo da camada usa literal `0.01`, `100` de arredondamento ou `.round()` de quantidade — tudo passa por aqui
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥9 (1149 g→1,1 · **1150 g→1,2** · 1151 g→1,2 · 0 g→0,0 · piso: 0,1→1, 1,0→1, 1,45→2, 17,14→18 · tolerância: 0,01 é zero, 0,011 não é)
 
 **Tests**: unit
 **Gate**: quick
