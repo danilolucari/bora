@@ -28,6 +28,14 @@ abstract final class BoraShadows {
   // spec deixa em aberto; o que §4 fixa aqui é a distância.
   static const double distanciaCta = 4;
 
+  /// §4, "Hover/press de CTA (**obrigatório**)": no afundamento a sombra
+  /// encolhe de `4px 4px` para `2px 2px`.
+  ///
+  /// É o mesmo 2px do `transform: translate(2px,2px)` da mesma frase de §4 —
+  /// o CTA desce exatamente o quanto a sombra encolhe, que é o que produz o
+  /// efeito de afundar.
+  static const double distanciaCtaAfundado = 2;
+
   /// §4, CTA grande do login: `5px 5px 0 #FF4D2E`.
   static final BoxShadow loginGrande = hard(BoraColors.primary, 5);
 

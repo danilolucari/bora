@@ -48,18 +48,39 @@ class BoraSurface extends StatelessWidget {
 
   final Widget child;
 
+  /// A decoração de §3 e §4 em forma de valor.
+  ///
+  /// Existe separada do widget porque o afundamento do CTA precisa **animar**
+  /// esta mesma decoração: sem isto, o press reimplementaria a borda e a
+  /// sombra por conta própria — que é exatamente o que a superfície comum
+  /// existe para impedir.
+  static BoxDecoration decoracaoDe({
+    Color fundo = BoraColors.white,
+    Color corDaBorda = BoraColors.ink,
+    double larguraDaBorda = 2,
+    BoraAccent? acento,
+    double deslocamentoDaSombra = BoraShadows.distanciaCta,
+  }) {
+    return BoxDecoration(
+      color: fundo,
+      border: Border.all(color: corDaBorda, width: larguraDaBorda),
+      borderRadius: BoraBorders.raio,
+      boxShadow: acento == null
+          ? null
+          : [BoraShadows.hard(acento.cor, deslocamentoDaSombra)],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final acento = this.acento;
     final padding = this.padding;
     return DecoratedBox(
-      decoration: BoxDecoration(
-        color: fundo,
-        border: Border.all(color: corDaBorda, width: larguraDaBorda),
-        borderRadius: BoraBorders.raio,
-        boxShadow: acento == null
-            ? null
-            : [BoraShadows.hard(acento.cor, deslocamentoDaSombra)],
+      decoration: decoracaoDe(
+        fundo: fundo,
+        corDaBorda: corDaBorda,
+        larguraDaBorda: larguraDaBorda,
+        acento: acento,
+        deslocamentoDaSombra: deslocamentoDaSombra,
       ),
       child: padding == null ? child : Padding(padding: padding, child: child),
     );

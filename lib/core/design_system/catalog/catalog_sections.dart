@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../components/bora_press_sink.dart';
 import '../components/bora_surface.dart';
 import '../tokens/bora_accent.dart';
 import '../tokens/bora_borders.dart';
@@ -31,6 +32,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'SUPERFÍCIE',
     referencia: '§3 · §4 · superfície comum',
     builder: _construirSuperficie,
+  ),
+  (
+    titulo: 'AFUNDAMENTO DO CTA',
+    referencia: '§4 · hover/press',
+    builder: _construirAfundamento,
   ),
 ];
 
@@ -176,6 +182,26 @@ Widget _construirSuperficie(BuildContext context) {
         deslocamentoDaSombra: 5,
         padding: BoraSpacing.chip,
         child: Text('5px NO PURPLE', style: BoraTextStyles.microTag),
+      ),
+    ],
+  );
+}
+
+Widget _construirAfundamento(BuildContext context) {
+  return Wrap(
+    spacing: 24,
+    runSpacing: 24,
+    children: [
+      BoraPressSink(
+        acento: BoraAccent.primary,
+        onPressed: () {},
+        padding: BoraSpacing.botao,
+        child: Text('TOQUE PARA AFUNDAR', style: BoraTextStyles.botao),
+      ),
+      BoraPressSink(
+        acento: BoraAccent.primary,
+        padding: BoraSpacing.botao,
+        child: Text('DESABILITADO', style: BoraTextStyles.botao),
       ),
     ],
   );

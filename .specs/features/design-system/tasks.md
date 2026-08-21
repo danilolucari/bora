@@ -462,14 +462,14 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] No `pointer down` o widget desloca `Offset(2, 2)` **e** a sombra passa de `Offset(4, 4)` para `Offset(2, 2)`, em `BoraMotion.estado` (150ms) com `BoraMotion.curva`
-- [ ] No `pointer up` e no `pointer cancel` volta a `Offset.zero` e `Offset(4, 4)`
-- [ ] Com mouse, `onEnter` afunda igual e `onExit` volta (§4: "Hover/press de CTA (**obrigatório**)")
-- [ ] `onPressed == null` ⇒ `Opacity(0.7)` (A-07) e **não** afunda em press nem em hover
-- [ ] O teste usa `tester.startGesture` e lê a translação do `Transform`/`Matrix4` e o `offset` do `BoxShadow` da árvore — nos dois estados, ida e volta
-- [ ] Seção registrada no catálogo e export no barrel
-- [ ] Gate: `flutter test` passa (fim da Phase 3 é T13; este gate é quick)
-- [ ] Novos testes: ≥5
+- [x] No `pointer down` o widget desloca `Offset(2, 2)` **e** a sombra passa de `Offset(4, 4)` para `Offset(2, 2)`, em `BoraMotion.estado` (150ms) com `BoraMotion.curva`
+- [x] No `pointer up` e no `pointer cancel` volta a `Offset.zero` e `Offset(4, 4)`
+- [x] Com mouse, `onEnter` afunda igual e `onExit` volta (§4: "Hover/press de CTA (**obrigatório**)")
+- [x] `onPressed == null` ⇒ `Opacity(0.7)` (A-07) e **não** afunda em press nem em hover
+- [x] O teste usa `tester.startGesture` e lê a translação do `Transform`/`Matrix4` e o `offset` do `BoxShadow` da árvore — nos dois estados, ida e volta
+- [x] Seção registrada no catálogo e export no barrel
+- [x] Gate: `flutter test` passa (fim da Phase 3 é T13; este gate é quick)
+- [x] Novos testes: ≥5
 
 **Tests**: widget
 **Gate**: quick
