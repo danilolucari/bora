@@ -655,15 +655,15 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `LinhaDeAcerto` imutável com `de`, `para`, `valor`, `paga` (default `false`) e `copyWith` — **sem** campo de meio de pagamento (RN-19 é de `custos`); o doc comment registra a omissão
-- [ ] `List<LinhaDeAcerto> calcularRacha(List<SaldoDePessoa> saldos)` — **nome exigido pelo `CLAUDE.md`**
-- [ ] Credores (`saldo > tolerância`) e devedores (`saldo < −tolerância`) percorridos **na ordem de entrada**, nunca ordenados por valor; `parcela = min(dívida restante, crédito restante)`; avança o credor quando o crédito zera na tolerância
-- [ ] Proibição explícita de ordenar registrada no doc comment (risco R-2: ordenar por valor decrescente daria `BIA→RAFA 95 · LÉO→RAFA 10 · LÉO→ANA 25` no Teste B, contra a spec)
-- [ ] Nenhuma linha com valor `<= 0,01` é emitida
-- [ ] **Teste A** afirmado literalmente em `casos_literais_do_arquivo_03_test.dart`: VOCÊ 200, ANA 120, LÉO 0, BIA 0 → total 320, cota 80 → **LÉO→VOCÊ 80 · BIA→VOCÊ 40 · BIA→ANA 40**, nesta ordem
-- [ ] **Teste B** afirmado literalmente no mesmo arquivo: Rafa 200, Ana 120, Léo 60, Bia 0 → total 380, cota 95 → **LÉO→RAFA 35 · BIA→RAFA 70 · BIA→ANA 25**, nesta ordem
-- [ ] Gate: `flutter analyze && flutter test` passa
-- [ ] Novos testes: ≥10 (Teste A linha a linha e na ordem · Teste B linha a linha e na ordem · soma paga = soma recebida nos dois · lista vazia → vazio · só credores → vazio · só devedores → vazio · todos no zero → vazio · resíduo de 0,005 não gera linha · uma permutação da entrada produz a saída documentada para **aquela** ordem, provando que a ordem é preservada · nenhum valor de linha ≤ 0,01)
+- [x] `LinhaDeAcerto` imutável com `de`, `para`, `valor`, `paga` (default `false`) e `copyWith` — **sem** campo de meio de pagamento (RN-19 é de `custos`); o doc comment registra a omissão
+- [x] `List<LinhaDeAcerto> calcularRacha(List<SaldoDePessoa> saldos)` — **nome exigido pelo `CLAUDE.md`**
+- [x] Credores (`saldo > tolerância`) e devedores (`saldo < −tolerância`) percorridos **na ordem de entrada**, nunca ordenados por valor; `parcela = min(dívida restante, crédito restante)`; avança o credor quando o crédito zera na tolerância
+- [x] Proibição explícita de ordenar registrada no doc comment (risco R-2: ordenar por valor decrescente daria `BIA→RAFA 95 · LÉO→RAFA 10 · LÉO→ANA 25` no Teste B, contra a spec)
+- [x] Nenhuma linha com valor `<= 0,01` é emitida
+- [x] **Teste A** afirmado literalmente em `casos_literais_do_arquivo_03_test.dart`: VOCÊ 200, ANA 120, LÉO 0, BIA 0 → total 320, cota 80 → **LÉO→VOCÊ 80 · BIA→VOCÊ 40 · BIA→ANA 40**, nesta ordem
+- [x] **Teste B** afirmado literalmente no mesmo arquivo: Rafa 200, Ana 120, Léo 60, Bia 0 → total 380, cota 95 → **LÉO→RAFA 35 · BIA→RAFA 70 · BIA→ANA 25**, nesta ordem
+- [x] Gate: `flutter analyze && flutter test` passa
+- [x] Novos testes: ≥10 (Teste A linha a linha e na ordem · Teste B linha a linha e na ordem · soma paga = soma recebida nos dois · lista vazia → vazio · só credores → vazio · só devedores → vazio · todos no zero → vazio · resíduo de 0,005 não gera linha · uma permutação da entrada produz a saída documentada para **aquela** ordem, provando que a ordem é preservada · nenhum valor de linha ≤ 0,01)
 
 **Tests**: unit
 **Gate**: build
