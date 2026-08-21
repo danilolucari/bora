@@ -60,12 +60,12 @@
 
 ## Handoff
 
-> **Checkpoint de orquestração — 2026-08-21 09:15.** Duas specs em voo, em paralelo, cada uma
+> **Checkpoint de orquestração — 2026-08-21 (lotes finais).** Duas specs em voo, em paralelo, cada uma
 > na sua worktree. **Planejamento das duas concluído; Execute em curso.** Tudo abaixo está em
 > disco e em git — se a sessão morrer agora, perde-se no máximo a task corrente de cada lote.
 
 - **Features**: `design-system` (spec 01) e `calculo` (spec 02) — **em paralelo**, marco M1 do ROADMAP.
-- **Phase**: **Execute em curso.** `calculo` T1–T20 commitadas (fases 1–3 fechadas + T19/T20); `design-system` T1–T13 commitadas (fases 1–3 fechadas, 218 testes verdes).
+- **Phase**: **Execute, lote final nas duas specs.** `calculo` T1–T23 commitadas (379 testes verdes); `design-system` T1–T24 commitadas (318 testes verdes).
 
 | Worktree | Branch | Planejamento (commitado) | Tasks | Lotes |
 |---|---|---|---|---|
@@ -75,7 +75,7 @@
 Ambas partem de `c5be425`; baseline em cada uma: **92 testes verdes**, `flutter analyze` limpo, `pub get` feito.
 
 - **Completed**: Specify + Design + Tasks das duas specs; contratos de fronteira fixados (a UI não calcula nem formata — a fração do marcador de RN-11 e a formatação de RN-13 saem prontas de `core/calculo/`); os sete ADs propostos persistidos.
-- **In-progress**: `calculo` lote 4 retomado em T21 (o algoritmo de RN-16 e os Testes A e B; portão estava vermelho na retomada — `saldosDoTesteA_paraBalanco` indefinida); `design-system` lote 2 fechando com o commit da correção da corrida entre guardas.
+- **In-progress**: `calculo` lote 5 (T24–T28, fases 5–6 — tabela de RN-11, totais de RN-27, barrel público e fixture RN-30 tipada); `design-system` lote 5 (T25–T32, fases 6–7 — dinheiro, progresso, enquete, sheet, frame e completude do catálogo). **Ao fim de cada um, disparar o Verifier independente.**
 - **Next step**: receber o resumo de cada lote → checkpoint → despachar o lote seguinte (sequencial dentro da spec, paralelo entre specs) → ao fim de cada spec, **Verifier independente** → merge das duas branches em `main` → colar os ADs → rodar `lessons.py`.
 
 - **⚠️ ADs pendentes**: os sete textos estão em **`.specs/features/ads-pendentes.md`**, já com a **colisão de numeração resolvida** (os dois planners propuseram AD-008/009/010 para coisas diferentes; `calculo` ficou com 008–010 e `design-system` com 011–014). Colar na seção Decisions no merge e **apagar o arquivo**.
