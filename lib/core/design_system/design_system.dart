@@ -5,6 +5,8 @@
 library;
 
 export 'components/bora_press_sink.dart';
+export 'components/bora_primary_button.dart';
+export 'components/bora_secondary_button.dart';
 export 'components/bora_surface.dart';
 export 'components/bora_toast.dart';
 export 'components/bora_toast_texts.dart';

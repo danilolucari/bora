@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 import '../components/bora_press_sink.dart';
+import '../components/bora_primary_button.dart';
+import '../components/bora_secondary_button.dart';
 import '../components/bora_surface.dart';
 import '../components/bora_toast.dart';
 import '../components/bora_toast_texts.dart';
@@ -44,6 +46,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'TOAST',
     referencia: '§5 · Toast · RN-29',
     builder: _construirToast,
+  ),
+  (
+    titulo: 'BOTÕES',
+    referencia: '§5 · botão primário e secundário',
+    builder: _construirBotoes,
   ),
 ];
 
@@ -221,6 +228,28 @@ Widget _construirToast(BuildContext context) {
     children: [
       for (final texto in BoraToastTexts.todos)
         BoraToastContent(texto: texto),
+    ],
+  );
+}
+
+Widget _construirBotoes(BuildContext context) {
+  return Wrap(
+    spacing: 24,
+    runSpacing: 24,
+    children: [
+      BoraPrimaryButton(rotulo: 'bora marcar', onPressed: () {}),
+      BoraPrimaryButton(
+        rotulo: 'chamar a galera',
+        acento: BoraAccent.purple,
+        onPressed: () {},
+      ),
+      const BoraPrimaryButton(rotulo: 'sem ação'),
+      BoraSecondaryButton(rotulo: 'agora não', onPressed: () {}),
+      BoraSecondaryButton(
+        rotulo: 'no branco',
+        fundoBranco: true,
+        onPressed: () {},
+      ),
     ],
   );
 }

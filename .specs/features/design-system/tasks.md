@@ -521,15 +521,15 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Primário: fundo `ink`, texto `cream`, borda 2px `ink`, padding de §5, sombra `4px 4px 0` no acento do contexto; `larguraTotal: true` ocupa a largura do pai (o CTA do rodapé)
-- [ ] Secundário: fundo transparente ou branco, borda 2px `ink`, texto `ink`; no hover ganha fundo `paper` **ou** sombra dura — nunca radius
-- [ ] Os dois aplicam `toUpperCase()` no rótulo (DS-32): entra `bora`, sai `BORA`
-- [ ] Rótulo vazio renderiza sem exceção
-- [ ] `onPressed == null` ⇒ opacidade 0.7 e nenhum callback disparado ao tocar
-- [ ] Os testes afirmam cor de fundo, cor de texto, largura de borda, offset da sombra e o texto renderizado em CAIXA ALTA, lendo a árvore
-- [ ] Seções registradas no catálogo e exports no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥7
+- [x] Primário: fundo `ink`, texto `cream`, borda 2px `ink`, padding de §5, sombra `4px 4px 0` no acento do contexto; `larguraTotal: true` ocupa a largura do pai (o CTA do rodapé)
+- [x] Secundário: fundo transparente ou branco, borda 2px `ink`, texto `ink`; no hover ganha fundo `paper` **ou** sombra dura — nunca radius
+- [x] Os dois aplicam `toUpperCase()` no rótulo (DS-32): entra `bora`, sai `BORA`
+- [x] Rótulo vazio renderiza sem exceção
+- [x] `onPressed == null` ⇒ opacidade 0.7 e nenhum callback disparado ao tocar
+- [x] Os testes afirmam cor de fundo, cor de texto, largura de borda, offset da sombra e o texto renderizado em CAIXA ALTA, lendo a árvore
+- [x] Seções registradas no catálogo e exports no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥7
 
 **Tests**: widget
 **Gate**: quick
