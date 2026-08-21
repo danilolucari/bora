@@ -323,13 +323,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] A varredura percorre `lib/core/design_system/` e falha ao encontrar `BorderRadius.circular`, `BorderRadius.all`, `RoundedRectangleBorder`, `StadiumBorder` ou `CircleBorder`; `BorderRadius.zero` passa
-- [ ] A varredura falha ao encontrar `blurRadius:` com valor diferente de zero
-- [ ] A **allowlist é por caminho** e já contempla arquivos que ainda não existem, porque é ela que autoriza as exceções que as fases 5–7 vão criar: `bora_phone_frame.dart` (radius 38 + a única sombra suave), `bora_avatar.dart` e `bora_poll_option.dart` (`BoxShape.circle`). O doc comment do teste cita §3 ("Exceções: avatares e dots… e o frame do celular")
-- [ ] O teste afirma que **varreu ≥1 arquivo** — sem isso passaria vacuamente (risco R-4)
-- [ ] Verificado à mão nos dois sentidos: injetar `BorderRadius.circular(8)` num arquivo de token faz falhar nomeando o arquivo; remover faz passar. O mesmo com `blurRadius: 4`
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4
+- [x] A varredura percorre `lib/core/design_system/` e falha ao encontrar `BorderRadius.circular`, `BorderRadius.all`, `RoundedRectangleBorder`, `StadiumBorder` ou `CircleBorder`; `BorderRadius.zero` passa
+- [x] A varredura falha ao encontrar `blurRadius:` com valor diferente de zero
+- [x] A **allowlist é por caminho** e já contempla arquivos que ainda não existem, porque é ela que autoriza as exceções que as fases 5–7 vão criar: `bora_phone_frame.dart` (radius 38 + a única sombra suave), `bora_avatar.dart` e `bora_poll_option.dart` (`BoxShape.circle`). O doc comment do teste cita §3 ("Exceções: avatares e dots… e o frame do celular")
+- [x] O teste afirma que **varreu ≥1 arquivo** — sem isso passaria vacuamente (risco R-4)
+- [x] Verificado à mão nos dois sentidos: injetar `BorderRadius.circular(8)` num arquivo de token faz falhar nomeando o arquivo; remover faz passar. O mesmo com `blurRadius: 4`
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4
 
 **Tests**: unit
 **Gate**: quick
