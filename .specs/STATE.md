@@ -60,12 +60,12 @@
 
 ## Handoff
 
-> **Checkpoint de orquestração — 2026-08-21 04:10.** Duas specs em voo, em paralelo, cada uma
+> **Checkpoint de orquestração — 2026-08-21 04:40.** Duas specs em voo, em paralelo, cada uma
 > na sua worktree. **Planejamento das duas concluído; Execute em curso.** Tudo abaixo está em
 > disco e em git — se a sessão morrer agora, perde-se no máximo a task corrente de cada lote.
 
 - **Features**: `design-system` (spec 01) e `calculo` (spec 02) — **em paralelo**, marco M1 do ROADMAP.
-- **Phase**: **Execute em curso.** `calculo` T1–T10 commitadas (225 testes verdes); `design-system` T1–T5 commitadas (140 testes verdes).
+- **Phase**: **Execute em curso.** `calculo` T1–T13 commitadas (240 testes verdes, fases 1–2 fechadas); `design-system` T1–T6 commitadas (152 testes verdes, fase 1 fechada).
 
 | Worktree | Branch | Planejamento (commitado) | Tasks | Lotes |
 |---|---|---|---|---|
@@ -75,7 +75,7 @@
 Ambas partem de `c5be425`; baseline em cada uma: **92 testes verdes**, `flutter analyze` limpo, `pub get` feito.
 
 - **Completed**: Specify + Design + Tasks das duas specs; contratos de fronteira fixados (a UI não calcula nem formata — a fração do marcador de RN-11 e a formatação de RN-13 saem prontas de `core/calculo/`); os sete ADs propostos persistidos.
-- **In-progress**: `calculo` lote 2 retomado em T11 (fase 2 vai até T13); `design-system` lote 1 retomado em T6 (fecha a fase 1).
+- **In-progress**: `calculo` lote 3 (fase 3, T14–T18 — fecha os casos literais R$ 211 e R$ 271); `design-system` lote 2 (fases 2–3, T7–T13 — guardas, rota `/catalogo` e os mecanismos compartilhados).
 - **Next step**: receber o resumo de cada lote → checkpoint → despachar o lote seguinte (sequencial dentro da spec, paralelo entre specs) → ao fim de cada spec, **Verifier independente** → merge das duas branches em `main` → colar os ADs → rodar `lessons.py`.
 
 - **⚠️ ADs pendentes**: os sete textos estão em **`.specs/features/ads-pendentes.md`**, já com a **colisão de numeração resolvida** (os dois planners propuseram AD-008/009/010 para coisas diferentes; `calculo` ficou com 008–010 e `design-system` com 011–014). Colar na seção Decisions no merge e **apagar o arquivo**.
