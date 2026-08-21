@@ -788,11 +788,11 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `double subtotalDeItens(Iterable<ItemDeLista>)` e `double subtotalDoQueFalta(Iterable<ItemDeLista>)` (só `noCarrinho == false`, para o CTA "PEDIR O QUE FALTA 🛵")
-- [ ] `class TotalDoPedido { double subtotal, frete, total; }` e `TotalDoPedido totalDoPedido({required double subtotal, required double frete})`
-- [ ] O doc comment declara a fronteira: **ordem de corredores, parceiros, ETAs e valores de frete ficam em `lista`** — aqui só a soma, porque o `CLAUDE.md` proíbe aritmética em widget
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥5 (subtotal soma `valor` de todos · subtotal do que falta ignora os marcados · lista vazia → 0 · total = subtotal + frete · **frete 0 → total = subtotal** (Zé Delivery))
+- [x] `double subtotalDeItens(Iterable<ItemDeLista>)` e `double subtotalDoQueFalta(Iterable<ItemDeLista>)` (só `noCarrinho == false`, para o CTA "PEDIR O QUE FALTA 🛵")
+- [x] `class TotalDoPedido { double subtotal, frete, total; }` e `TotalDoPedido totalDoPedido({required double subtotal, required double frete})`
+- [x] O doc comment declara a fronteira: **ordem de corredores, parceiros, ETAs e valores de frete ficam em `lista`** — aqui só a soma, porque o `CLAUDE.md` proíbe aritmética em widget
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥5 (subtotal soma `valor` de todos · subtotal do que falta ignora os marcados · lista vazia → 0 · total = subtotal + frete · **frete 0 → total = subtotal** (Zé Delivery))
 
 **Tests**: unit
 **Gate**: build
