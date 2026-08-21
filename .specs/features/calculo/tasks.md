@@ -345,11 +345,11 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `double gramasDeCarne({required ContagemDePessoas contagem, required double fator})` → `(H×400 + M×300 + C×200) × f`
-- [ ] `double kgPorCarne({required double gramasTotais, required int carnesSelecionadas})` → `max(0,5; kgArredondadoEmDecimos(gramasTotais / carnes))`
-- [ ] `carnesSelecionadas == 0` devolve **0,0** sem dividir — nenhuma divisão por zero
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥8 (3H+3M+1C f=1 → **2300 g** · ÷2 carnes → **1,2 kg** · ÷1 carne → 2,3 kg · ÷3 carnes → 0,8 kg · f=0,5 → 1150 g · piso: 400 g ÷ 1 → **0,5 kg** · 0 carnes → 0,0 · a fronteira 1150 g → 1,2 kg reafirmada aqui, não só em T5)
+- [x] `double gramasDeCarne({required ContagemDePessoas contagem, required double fator})` → `(H×400 + M×300 + C×200) × f`
+- [x] `double kgPorCarne({required double gramasTotais, required int carnesSelecionadas})` → `max(0,5; kgArredondadoEmDecimos(gramasTotais / carnes))`
+- [x] `carnesSelecionadas == 0` devolve **0,0** sem dividir — nenhuma divisão por zero
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥8 (3H+3M+1C f=1 → **2300 g** · ÷2 carnes → **1,2 kg** · ÷1 carne → 2,3 kg · ÷3 carnes → 0,8 kg · f=0,5 → 1150 g · piso: 400 g ÷ 1 → **0,5 kg** · 0 carnes → 0,0 · a fronteira 1150 g → 1,2 kg reafirmada aqui, não só em T5)
 
 **Tests**: unit
 **Gate**: quick
