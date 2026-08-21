@@ -467,11 +467,11 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `List<ItemDeLista> essenciaisAutomaticos()` devolve **os quatro** com as quantidades default de RN-10 (1 saco de carvão · **3** sacos de gelo · 1 kg de sal · 1 kit), `essencial: true` e `fonteDaProporcao` preenchida (`kg de carne`, `volume de bebida gelada`, `kg de carne`, `nº de pessoas`)
-- [ ] As quantidades são **fixas nos defaults** — RN-10 dá o badge de proporcionalidade mas **nenhuma fórmula**, e inventar escala mudaria o R$ 271 (A-09, risco R-7). O doc comment declara isso
-- [ ] `double totalDosEssenciais(Iterable<ItemDeLista> essenciais)` soma **só** os de `entraNoTotal` verdadeiro
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6 (quatro itens, nesta ordem · valores 22 / **30** (3 × 10) / 8 / 15 · **total = 60,00** · Copos & pratos **está na lista** e **fora do total** · todos com `essencial: true` · cada `fonteDaProporcao` literal de RN-10)
+- [x] `List<ItemDeLista> essenciaisAutomaticos()` devolve **os quatro** com as quantidades default de RN-10 (1 saco de carvão · **3** sacos de gelo · 1 kg de sal · 1 kit), `essencial: true` e `fonteDaProporcao` preenchida (`kg de carne`, `volume de bebida gelada`, `kg de carne`, `nº de pessoas`)
+- [x] As quantidades são **fixas nos defaults** — RN-10 dá o badge de proporcionalidade mas **nenhuma fórmula**, e inventar escala mudaria o R$ 271 (A-09, risco R-7). O doc comment declara isso
+- [x] `double totalDosEssenciais(Iterable<ItemDeLista> essenciais)` soma **só** os de `entraNoTotal` verdadeiro
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6 (quatro itens, nesta ordem · valores 22 / **30** (3 × 10) / 8 / 15 · **total = 60,00** · Copos & pratos **está na lista** e **fora do total** · todos com `essencial: true` · cada `fonteDaProporcao` literal de RN-10)
 
 **Tests**: unit
 **Gate**: quick
