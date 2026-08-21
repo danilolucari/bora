@@ -378,13 +378,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Falha se qualquer arquivo sob `lib/core/design_system/` importar `core/calculo/` (relativo ou por `package:`), `package:firebase…`, `cloud_firestore` ou `package:flutter_bloc`, nomeando o arquivo infrator
-- [ ] O doc comment do teste explica a fronteira: RN-11 (posição do marcador) e RN-13 (formatação `R$`) são da spec 02; os componentes recebem `double` já calculado e `String` já formatada
-- [ ] O teste afirma que varreu ≥1 arquivo
-- [ ] Verificado à mão nos dois sentidos: acrescentar `import '../../calculo/calculo.dart';` num arquivo de token faz falhar; remover faz passar
-- [ ] `lib/core/calculo/` **não foi tocado** por esta task nem por nenhuma outra desta spec
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥3
+- [x] Falha se qualquer arquivo sob `lib/core/design_system/` importar `core/calculo/` (relativo ou por `package:`), `package:firebase…`, `cloud_firestore` ou `package:flutter_bloc`, nomeando o arquivo infrator
+- [x] O doc comment do teste explica a fronteira: RN-11 (posição do marcador) e RN-13 (formatação `R$`) são da spec 02; os componentes recebem `double` já calculado e `String` já formatada
+- [x] O teste afirma que varreu ≥1 arquivo
+- [x] Verificado à mão nos dois sentidos: acrescentar `import '../../calculo/calculo.dart';` num arquivo de token faz falhar; remover faz passar
+- [x] `lib/core/calculo/` **não foi tocado** por esta task nem por nenhuma outra desta spec
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥3
 
 **Tests**: unit
 **Gate**: quick
