@@ -735,13 +735,13 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `Corredor { acougue, hortifruti, padaria, bebidas, mercearia }` — **só o atributo**; a ordem de RN-27 é de `lista` (A-17), e o doc comment diz isso
-- [ ] `PrecoDeMercado` com `nome`, `emoji`, `corredor`, `rotuloDeQuantidade`, `media`, `minimo`, `maximo`, `fontes` e `chave` (**`ChaveItem?`**)
-- [ ] `chave` é anulável porque a 🌭 Linguiça toscana de RN-11 **não tem chip em T-03** nem preço-base na calculadora (A-03, risco R-6) — o doc comment proíbe inventar `ChaveItem.linguica`
-- [ ] `tabelaDePrecosDeMercado` com as **8 linhas literais** de RN-11 (Picanha 65/54/83/4 · Linguiça 23/18/29/3 · Legumes 28/22/35/2 · Pão de alho 24/20/30/3 · Cerveja 76/64/92/4 · Refrigerante 18/14/23/3 · Carvão 22/18/28/3 · Gelo 30/24/36/2)
-- [ ] O doc comment do arquivo declara A-03: esta tabela **nunca** alimenta a calculadora, e a calculadora nunca alimenta esta tabela
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥5 (8 linhas · cada linha campo a campo contra RN-11 · corredores corretos · Linguiça com `chave == null` · Picanha com `chave == ChaveItem.bovina` mas `media` 65 ≠ preço-base 45 da calculadora — a coexistência afirmada como comportamento)
+- [x] `Corredor { acougue, hortifruti, padaria, bebidas, mercearia }` — **só o atributo**; a ordem de RN-27 é de `lista` (A-17), e o doc comment diz isso
+- [x] `PrecoDeMercado` com `nome`, `emoji`, `corredor`, `rotuloDeQuantidade`, `media`, `minimo`, `maximo`, `fontes` e `chave` (**`ChaveItem?`**)
+- [x] `chave` é anulável porque a 🌭 Linguiça toscana de RN-11 **não tem chip em T-03** nem preço-base na calculadora (A-03, risco R-6) — o doc comment proíbe inventar `ChaveItem.linguica`
+- [x] `tabelaDePrecosDeMercado` com as **8 linhas literais** de RN-11 (Picanha 65/54/83/4 · Linguiça 23/18/29/3 · Legumes 28/22/35/2 · Pão de alho 24/20/30/3 · Cerveja 76/64/92/4 · Refrigerante 18/14/23/3 · Carvão 22/18/28/3 · Gelo 30/24/36/2)
+- [x] O doc comment do arquivo declara A-03: esta tabela **nunca** alimenta a calculadora, e a calculadora nunca alimenta esta tabela
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥5 (8 linhas · cada linha campo a campo contra RN-11 · corredores corretos · Linguiça com `chave == null` · Picanha com `chave == ChaveItem.bovina` mas `media` 65 ≠ preço-base 45 da calculadora — a coexistência afirmada como comportamento)
 
 **Tests**: unit
 **Gate**: quick
