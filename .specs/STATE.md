@@ -60,12 +60,12 @@
 
 ## Handoff
 
-> **Checkpoint de orquestração — 2026-08-21 04:40.** Duas specs em voo, em paralelo, cada uma
+> **Checkpoint de orquestração — 2026-08-21 09:15.** Duas specs em voo, em paralelo, cada uma
 > na sua worktree. **Planejamento das duas concluído; Execute em curso.** Tudo abaixo está em
 > disco e em git — se a sessão morrer agora, perde-se no máximo a task corrente de cada lote.
 
 - **Features**: `design-system` (spec 01) e `calculo` (spec 02) — **em paralelo**, marco M1 do ROADMAP.
-- **Phase**: **Execute em curso.** `calculo` T1–T13 commitadas (240 testes verdes, fases 1–2 fechadas); `design-system` T1–T6 commitadas (152 testes verdes, fase 1 fechada).
+- **Phase**: **Execute em curso.** `calculo` T1–T20 commitadas (fases 1–3 fechadas + T19/T20); `design-system` T1–T13 commitadas (fases 1–3 fechadas, 218 testes verdes).
 
 | Worktree | Branch | Planejamento (commitado) | Tasks | Lotes |
 |---|---|---|---|---|
@@ -75,7 +75,7 @@
 Ambas partem de `c5be425`; baseline em cada uma: **92 testes verdes**, `flutter analyze` limpo, `pub get` feito.
 
 - **Completed**: Specify + Design + Tasks das duas specs; contratos de fronteira fixados (a UI não calcula nem formata — a fração do marcador de RN-11 e a formatação de RN-13 saem prontas de `core/calculo/`); os sete ADs propostos persistidos.
-- **In-progress**: `calculo` lote 3 (fase 3, T14–T18 — fecha os casos literais R$ 211 e R$ 271); `design-system` lote 2 (fases 2–3, T7–T13 — guardas, rota `/catalogo` e os mecanismos compartilhados).
+- **In-progress**: `calculo` lote 4 retomado em T21 (o algoritmo de RN-16 e os Testes A e B; portão estava vermelho na retomada — `saldosDoTesteA_paraBalanco` indefinida); `design-system` lote 2 fechando com o commit da correção da corrida entre guardas.
 - **Next step**: receber o resumo de cada lote → checkpoint → despachar o lote seguinte (sequencial dentro da spec, paralelo entre specs) → ao fim de cada spec, **Verifier independente** → merge das duas branches em `main` → colar os ADs → rodar `lessons.py`.
 
 - **⚠️ ADs pendentes**: os sete textos estão em **`.specs/features/ads-pendentes.md`**, já com a **colisão de numeração resolvida** (os dois planners propuseram AD-008/009/010 para coisas diferentes; `calculo` ficou com 008–010 e `design-system` com 011–014). Colar na seção Decisions no merge e **apagar o arquivo**.
@@ -88,7 +88,18 @@ Ambas partem de `c5be425`; baseline em cada uma: **92 testes verdes**, `flutter 
   1. 2026-08-20 16:54 — derrubou os dois *planners* no meio do `design.md`. Reset 19:40; retomados ~21:51.
   2. 2026-08-21 ~00:00 — derrubou os dois *batch workers* no meio de uma task. Reset 02:40; retomados 04:05.
   Nas duas vezes a perda foi **zero**: o que estava commitado sobreviveu, e o trabalho meio-escrito estava íntegro em disco (portão verde nas duas árvores antes de retomar). A disciplina de commit atômico por task é o que fez isso funcionar.
-- **Proteção ativa**: autosave em background espelha trabalho não-commitado das três árvores para o scratchpad a cada 2 min. Protocolo de limite: checkpoint → dormir até o horário de reset informado no erro → retomar do último commit de cada branch.
+- **Proteção ativa**: autosave em background espelha trabalho não-commitado das três árvores para o scratchpad a cada 2 min.
+
+### Protocolo de limite de uso (decidido pelo usuário em 2026-08-21)
+
+Quando um agente morrer com `You've hit your session limit · resets HH:MM`:
+
+1. **Checkpoint** — atualizar esta seção e commitar.
+2. **Conferir o portão** em cada worktree (`flutter analyze && flutter test`) **antes** de retomar. O trabalho meio-escrito às vezes está íntegro (aconteceu 2×) e às vezes não compila (aconteceu 1×) — a diferença muda a instrução que o worker recebe na retomada.
+3. **Armar a espera automática**: `scratchpad/aguardar-reset.sh HH:MM` em background. O script dorme até **o horário de reset + 5 minutos** — a folga é deliberada, para não bater na virada e falhar de novo — e ao sair **re-invoca o orquestrador**, que então retoma sozinho.
+4. **Retomar por `SendMessage`**, nunca por agente novo: o transcript do worker preserva o contexto e custa muito menos que recomeçar frio. A mensagem deve dizer exatamente o que já está commitado, o que está solto na árvore, e se o portão está verde ou vermelho.
+
+Regra que faz tudo isso funcionar: **commit atômico ao fim de cada task, antes da próxima começar.** É o que limita a perda a uma task, sem depender de prever o limite.
 - **Uncommitted files**: nenhum em `main`.
 - **Branch**: `main` intocada em código desde `c5be425` (só docs de orquestração). O código novo vive nas duas `feature/*`, como o `CLAUDE.md` prescreve.
 
