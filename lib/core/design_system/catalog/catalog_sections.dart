@@ -7,6 +7,7 @@ import '../components/bora_segmented_control.dart';
 import '../components/bora_selection_chip.dart';
 import '../components/bora_stepper.dart';
 import '../components/bora_surface.dart';
+import '../components/bora_text_field.dart';
 import '../components/bora_toast.dart';
 import '../components/bora_toast_texts.dart';
 import '../tokens/bora_accent.dart';
@@ -69,6 +70,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'STEPPER',
     referencia: '§5 · stepper (− n +)',
     builder: _construirStepper,
+  ),
+  (
+    titulo: 'INPUTS',
+    referencia: '§5 · inputs',
+    builder: _construirInputs,
   ),
 ];
 
@@ -336,4 +342,51 @@ Widget _construirStepper(BuildContext context) {
       BoraStepper(valor: 0, onIncrementar: () {}),
     ],
   );
+}
+
+Widget _construirInputs(BuildContext context) {
+  return const Wrap(
+    spacing: 16,
+    runSpacing: 16,
+    children: [
+      // Os dois literais de §5, em minúsculas: o placeholder não é
+      // transformado (A-06).
+      _CampoDeCatalogo(placeholder: 'seu e-mail'),
+      _CampoDeCatalogo(placeholder: 'senha'),
+    ],
+  );
+}
+
+/// Um input do catálogo, dono do próprio controlador.
+///
+/// O controlador precisa de vida e de `dispose`, e a seção é uma função —
+/// por isso o campo vira widget.
+class _CampoDeCatalogo extends StatefulWidget {
+  const _CampoDeCatalogo({required this.placeholder});
+
+  final String placeholder;
+
+  @override
+  State<_CampoDeCatalogo> createState() => _CampoDeCatalogoState();
+}
+
+class _CampoDeCatalogoState extends State<_CampoDeCatalogo> {
+  final TextEditingController _controlador = TextEditingController();
+
+  @override
+  void dispose() {
+    _controlador.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 300,
+      child: BoraTextField(
+        controller: _controlador,
+        placeholder: widget.placeholder,
+      ),
+    );
+  }
 }

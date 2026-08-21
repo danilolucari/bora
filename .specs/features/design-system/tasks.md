@@ -634,13 +634,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Sem foco: fundo branco, borda 2px `ink`, radius zero, padding 15×16, texto 600/15
-- [ ] Com foco: a borda vira `primary`, mantendo largura 2px e radius zero
-- [ ] O placeholder **não** é transformado (A-06: minúscula em placeholder é exemplo de §5, não lei de §7 — `toLowerCase()` estragaria nome próprio); a seção do catálogo usa os literais "seu e-mail" e "senha"
-- [ ] O teste afirma a cor da borda antes e depois de `requestFocus`, lendo a árvore
-- [ ] Seção registrada no catálogo e export no barrel
-- [ ] Gate: `flutter analyze && flutter test` passa (fim da Phase 4)
-- [ ] Novos testes: ≥4
+- [x] Sem foco: fundo branco, borda 2px `ink`, radius zero, padding 15×16, texto 600/15
+- [x] Com foco: a borda vira `primary`, mantendo largura 2px e radius zero
+- [x] O placeholder **não** é transformado (A-06: minúscula em placeholder é exemplo de §5, não lei de §7 — `toLowerCase()` estragaria nome próprio); a seção do catálogo usa os literais "seu e-mail" e "senha"
+- [x] O teste afirma a cor da borda antes e depois de `requestFocus`, lendo a árvore
+- [x] Seção registrada no catálogo e export no barrel
+- [x] Gate: `flutter analyze && flutter test` passa (fim da Phase 4)
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: build

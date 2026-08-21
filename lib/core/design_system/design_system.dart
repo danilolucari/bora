@@ -11,6 +11,7 @@ export 'components/bora_segmented_control.dart';
 export 'components/bora_selection_chip.dart';
 export 'components/bora_stepper.dart';
 export 'components/bora_surface.dart';
+export 'components/bora_text_field.dart';
 export 'components/bora_toast.dart';
 export 'components/bora_toast_texts.dart';
 export 'tokens/bora_accent.dart';
