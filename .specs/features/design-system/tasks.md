@@ -296,13 +296,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] `BoraMotion` expõe `estado = 150ms`, `toastIn = 300ms`, `progresso = 300ms`, `toastVida = 2200ms`, `toastSubida = 14.0` e `curva = Curves.ease` (A-04: o default do CSS `transition` é `ease`)
-- [ ] `boraTheme()` deriva **todo** valor dos tokens: `scaffoldBackgroundColor`/`canvasColor` = `paper`, `fontFamily` = `Archivo`, `textTheme` mapeando `BoraTextStyles`, `colorScheme` a partir de `BoraColors`, `splashFactory: NoSplash.splashFactory` (§8 não tem ripple)
-- [ ] `bora_theme.dart` **não contém literal de cor nem de `fontFamily`** — os dois só existem em `bora_colors.dart` e `bora_text_styles.dart` (é o que as guardas de T7/T8 vão policiar)
-- [ ] `design_system.dart` exporta os tokens desta fase; cada task seguinte acrescenta a sua linha de export
-- [ ] O teste afirma cada duração contra §6; afirma que `boraTheme().scaffoldBackgroundColor == BoraColors.paper`, que a família do `textTheme` é `Archivo` e que o splash é `NoSplash`
-- [ ] Gate: `flutter analyze && flutter test` passa (fim da Phase 1)
-- [ ] Novos testes: ≥5
+- [x] `BoraMotion` expõe `estado = 150ms`, `toastIn = 300ms`, `progresso = 300ms`, `toastVida = 2200ms`, `toastSubida = 14.0` e `curva = Curves.ease` (A-04: o default do CSS `transition` é `ease`)
+- [x] `boraTheme()` deriva **todo** valor dos tokens: `scaffoldBackgroundColor`/`canvasColor` = `paper`, `fontFamily` = `Archivo`, `textTheme` mapeando `BoraTextStyles`, `colorScheme` a partir de `BoraColors`, `splashFactory: NoSplash.splashFactory` (§8 não tem ripple)
+- [x] `bora_theme.dart` **não contém literal de cor nem de `fontFamily`** — os dois só existem em `bora_colors.dart` e `bora_text_styles.dart` (é o que as guardas de T7/T8 vão policiar)
+- [x] `design_system.dart` exporta os tokens desta fase; cada task seguinte acrescenta a sua linha de export
+- [x] O teste afirma cada duração contra §6; afirma que `boraTheme().scaffoldBackgroundColor == BoraColors.paper`, que a família do `textTheme` é `Archivo` e que o splash é `NoSplash`
+- [x] Gate: `flutter analyze && flutter test` passa (fim da Phase 1)
+- [x] Novos testes: ≥5
 
 **Tests**: unit
 **Gate**: build
