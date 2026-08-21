@@ -684,11 +684,11 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `class SplitDeDespesa { Despesa despesa; double valorPorAdulto; int adultos; }`
-- [ ] `SplitDeDespesa splitIgualitario({required Despesa despesa, required int adultos})` — `valorPorAdulto = valor / adultos`, **0,0** quando `adultos == 0`
-- [ ] O split é sempre **por adulto** (RN-14/RN-17) — criança nunca entra; doc comment registra
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4 (R$ 80 entre 4 → R$ 20 · valor fracionário mantém a precisão exata (sem arredondar cedo) · `adultos == 0` → 0,0 · `adultos` preservado para a copy)
+- [x] `class SplitDeDespesa { Despesa despesa; double valorPorAdulto; int adultos; }`
+- [x] `SplitDeDespesa splitIgualitario({required Despesa despesa, required int adultos})` — `valorPorAdulto = valor / adultos`, **0,0** quando `adultos == 0`
+- [x] O split é sempre **por adulto** (RN-14/RN-17) — criança nunca entra; doc comment registra
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4 (R$ 80 entre 4 → R$ 20 · valor fracionário mantém a precisão exata (sem arredondar cedo) · `adultos == 0` → 0,0 · `adultos` preservado para a copy)
 
 **Tests**: unit
 **Gate**: quick
