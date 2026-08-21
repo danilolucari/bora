@@ -159,12 +159,12 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Os três arquivos foram copiados de `/tmp/claude-1000/-home-lucari-repo-bora/71175ab6-b93d-42f3-97d8-ca762642386b/scratchpad/fonts/` para `assets/fonts/`: `Archivo[wdth,wght].ttf` (658.596 bytes), `ArchivoBlack-Regular.ttf` (90.988 bytes) e `OFL.txt` — a OFL exige que a licença seja redistribuída **junto** com as fontes
-- [ ] `pubspec.yaml` declara, dentro do bloco `flutter:` já existente, `assets: - assets/fonts/` e duas famílias: `Archivo` → o `.ttf` variável e `Archivo Black` → o estático. **Sem descritor `weight:`** — cada família tem um arquivo só, e é o `FontWeight` que move o eixo `wght` (ver `design.md` §Pesquisa)
-- [ ] Nenhuma dependência foi adicionada, removida ou reordenada no `pubspec.yaml`; só as duas seções acima mudaram
-- [ ] O teste afirma: `rootBundle.load` dos dois `.ttf` devolve bytes (`lengthInBytes > 0`), `assets/fonts/OFL.txt` existe e carrega, e o `pubspec.yaml` declara exatamente as famílias `Archivo` e `Archivo Black`
-- [ ] Gate: `flutter analyze && flutter test` passa
-- [ ] Novos testes: ≥3 · contagem total ≥95
+- [x] Os três arquivos foram copiados de `/tmp/claude-1000/-home-lucari-repo-bora/71175ab6-b93d-42f3-97d8-ca762642386b/scratchpad/fonts/` para `assets/fonts/`: `Archivo[wdth,wght].ttf` (658.596 bytes), `ArchivoBlack-Regular.ttf` (90.988 bytes) e `OFL.txt` — a OFL exige que a licença seja redistribuída **junto** com as fontes
+- [x] `pubspec.yaml` declara, dentro do bloco `flutter:` já existente, `assets: - assets/fonts/` e duas famílias: `Archivo` → o `.ttf` variável e `Archivo Black` → o estático. **Sem descritor `weight:`** — cada família tem um arquivo só, e é o `FontWeight` que move o eixo `wght` (ver `design.md` §Pesquisa)
+- [x] Nenhuma dependência foi adicionada, removida ou reordenada no `pubspec.yaml`; só as duas seções acima mudaram
+- [x] O teste afirma: `rootBundle.load` dos dois `.ttf` devolve bytes (`lengthInBytes > 0`), `assets/fonts/OFL.txt` existe e carrega, e o `pubspec.yaml` declara exatamente as famílias `Archivo` e `Archivo Black`
+- [x] Gate: `flutter analyze && flutter test` passa
+- [x] Novos testes: ≥3 · contagem total ≥95
 
 **Tests**: unit
 **Gate**: build
