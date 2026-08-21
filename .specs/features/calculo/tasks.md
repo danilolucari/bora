@@ -492,14 +492,14 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `EfeitosDasPreferencias` com `veggies`, `semPorco`, `bebem`, `incluirKitVeggie`, `removerSuina`, `adultosQueBebem`
-- [ ] `efeitosDasPreferencias({required List<Pessoa> pessoas, required int adultos})`: `incluirKitVeggie = veggies >= 1`; `removerSuina = semPorco >= 1`; `adultosQueBebem = max(0, adultos − nomeadas com bebe == false)` (A-06)
-- [ ] **Os dois números que parecem um** estão separados e documentados: `bebem` (nomeadas com `bebe == true`, que alimenta o resumo de RN-21) ≠ `adultosQueBebem` (que dimensiona a cerveja)
-- [ ] `bebe == null` e `dieta == null` **não** contam como abstêmia nem como veggie (A-08)
-- [ ] Sem pessoas nomeadas, `adultosQueBebem == adultos` — RN-05 fica intacta
-- [ ] `String resumoDasPreferencias(EfeitosDasPreferencias)` produz a copy literal de RN-21 (`A lista já se ajusta às preferências: {n} veggie 🥗 · {n} sem porco 🚫 · {n} bebem 🍺`), **omitindo termos zerados**
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥9 (lista vazia → `adultosQueBebem == adultos` · 1 veggie → inclui kit · 1 sem porco → remove suína · 1 abstêmio entre 6 adultos → 5 · Duda (`bebe: null`) **não** reduz · `dieta: null` não conta veggie · abstêmios > adultos → 0, nunca negativo · resumo com os três termos · resumo omitindo os zerados)
+- [x] `EfeitosDasPreferencias` com `veggies`, `semPorco`, `bebem`, `incluirKitVeggie`, `removerSuina`, `adultosQueBebem`
+- [x] `efeitosDasPreferencias({required List<Pessoa> pessoas, required int adultos})`: `incluirKitVeggie = veggies >= 1`; `removerSuina = semPorco >= 1`; `adultosQueBebem = max(0, adultos − nomeadas com bebe == false)` (A-06)
+- [x] **Os dois números que parecem um** estão separados e documentados: `bebem` (nomeadas com `bebe == true`, que alimenta o resumo de RN-21) ≠ `adultosQueBebem` (que dimensiona a cerveja)
+- [x] `bebe == null` e `dieta == null` **não** contam como abstêmia nem como veggie (A-08)
+- [x] Sem pessoas nomeadas, `adultosQueBebem == adultos` — RN-05 fica intacta
+- [x] `String resumoDasPreferencias(EfeitosDasPreferencias)` produz a copy literal de RN-21 (`A lista já se ajusta às preferências: {n} veggie 🥗 · {n} sem porco 🚫 · {n} bebem 🍺`), **omitindo termos zerados**
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥9 (lista vazia → `adultosQueBebem == adultos` · 1 veggie → inclui kit · 1 sem porco → remove suína · 1 abstêmio entre 6 adultos → 5 · Duda (`bebe: null`) **não** reduz · `dieta: null` não conta veggie · abstêmios > adultos → 0, nunca negativo · resumo com os três termos · resumo omitindo os zerados)
 
 **Tests**: unit
 **Gate**: quick
