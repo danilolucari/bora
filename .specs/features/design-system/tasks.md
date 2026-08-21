@@ -577,15 +577,15 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Container com borda 2px `ink` sobre branco; botões dividindo a largura igualmente (`flex: 1`), separados por divisor de 2px `divider2`
-- [ ] **Exatamente um** ativo: fundo `ink` + texto `cream`; inativos transparentes com `text2`
-- [ ] Variante `sobreCardEscuro: true`: borda e divisores em `creamQuarter` (cream 25%) e o ativo muda **só o texto** para `cream`
-- [ ] Com `n` opções há `n - 1` divisores; com 1 opção há **zero** divisores (edge case da spec)
-- [ ] Tocar uma opção chama `onSelecionar` com o índice — o componente **não** guarda o índice ativo (é prop)
-- [ ] Os testes afirmam contagem de divisores, o par ativo/inativo nas duas variantes e o caso de 1 opção
-- [ ] Seção registrada no catálogo (as duas variantes) e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥5
+- [x] Container com borda 2px `ink` sobre branco; botões dividindo a largura igualmente (`flex: 1`), separados por divisor de 2px `divider2`
+- [x] **Exatamente um** ativo: fundo `ink` + texto `cream`; inativos transparentes com `text2`
+- [x] Variante `sobreCardEscuro: true`: borda e divisores em `creamQuarter` (cream 25%) e o ativo muda **só o texto** para `cream`
+- [x] Com `n` opções há `n - 1` divisores; com 1 opção há **zero** divisores (edge case da spec)
+- [x] Tocar uma opção chama `onSelecionar` com o índice — o componente **não** guarda o índice ativo (é prop)
+- [x] Os testes afirmam contagem de divisores, o par ativo/inativo nas duas variantes e o caso de 1 opção
+- [x] Seção registrada no catálogo (as duas variantes) e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥5
 
 **Tests**: widget
 **Gate**: quick

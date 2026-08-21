@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../components/bora_press_sink.dart';
 import '../components/bora_primary_button.dart';
 import '../components/bora_secondary_button.dart';
+import '../components/bora_segmented_control.dart';
 import '../components/bora_selection_chip.dart';
 import '../components/bora_surface.dart';
 import '../components/bora_toast.dart';
@@ -57,6 +58,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'CHIP DE SELEÇÃO',
     referencia: '§5 · chip de seleção · §6',
     builder: _construirChips,
+  ),
+  (
+    titulo: 'SEGMENTED CONTROL',
+    referencia: '§5 · segmented control',
+    builder: _construirSegmented,
   ),
 ];
 
@@ -279,6 +285,36 @@ Widget _construirChips(BuildContext context) {
           emoji: item.$2,
           selecionado: item.$3,
         ),
+    ],
+  );
+}
+
+Widget _construirSegmented(BuildContext context) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(
+        width: 300,
+        child: BoraSegmentedControl(
+          opcoes: const ['todos', 'quem paga', 'quem recebe'],
+          indiceAtivo: 0,
+          onSelecionar: (_) {},
+        ),
+      ),
+      const SizedBox(height: 16),
+      BoraSurface(
+        fundo: BoraColors.ink,
+        padding: BoraSpacing.chip,
+        child: SizedBox(
+          width: 300,
+          child: BoraSegmentedControl(
+            opcoes: const ['todos', 'quem paga', 'quem recebe'],
+            indiceAtivo: 1,
+            sobreCardEscuro: true,
+            onSelecionar: (_) {},
+          ),
+        ),
+      ),
     ],
   );
 }
