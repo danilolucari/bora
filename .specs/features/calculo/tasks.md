@@ -762,12 +762,12 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `double posicaoDoMarcador(PrecoDeMercado preco)` → `((media − minimo) / (maximo − minimo)).clamp(0.0, 1.0)`
-- [ ] `maximo == minimo` ⇒ **0.0**, sem divisão por zero (A-15)
-- [ ] O doc comment declara o **contrato de fronteira nº 1**: a spec 01 recebe um `double` pronto e **só pinta**; se o componente conhecer média/mín/máx para dividir, a fórmula vazou para a UI
-- [ ] `class TotalDeMercado { double media, minimo, maximo; }` e `TotalDeMercado totalDeMercado(Iterable<PrecoDeMercado>)`
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥7 (Picanha → 11/29 ≈ 0,379 · média = mín → 0.0 · média = máx → 1.0 · `maximo == minimo` → 0.0 · média fora da faixa → `clamp` em 0 ou 1 · total da tabela: média **286** · faixa **234–356**)
+- [x] `double posicaoDoMarcador(PrecoDeMercado preco)` → `((media − minimo) / (maximo − minimo)).clamp(0.0, 1.0)`
+- [x] `maximo == minimo` ⇒ **0.0**, sem divisão por zero (A-15)
+- [x] O doc comment declara o **contrato de fronteira nº 1**: a spec 01 recebe um `double` pronto e **só pinta**; se o componente conhecer média/mín/máx para dividir, a fórmula vazou para a UI
+- [x] `class TotalDeMercado { double media, minimo, maximo; }` e `TotalDeMercado totalDeMercado(Iterable<PrecoDeMercado>)`
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥7 (Picanha → 11/29 ≈ 0,379 · média = mín → 0.0 · média = máx → 1.0 · `maximo == minimo` → 0.0 · média fora da faixa → `clamp` em 0 ou 1 · total da tabela: média **286** · faixa **234–356**)
 
 **Tests**: unit
 **Gate**: quick
