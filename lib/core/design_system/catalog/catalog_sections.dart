@@ -6,6 +6,7 @@ import '../components/bora_expandable_row.dart';
 import '../components/bora_list_card.dart';
 import '../components/bora_press_sink.dart';
 import '../components/bora_primary_button.dart';
+import '../components/bora_rotated_tag.dart';
 import '../components/bora_secondary_button.dart';
 import '../components/bora_segmented_control.dart';
 import '../components/bora_selection_chip.dart';
@@ -105,6 +106,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'TRACEJADOS',
     referencia: '§3 · dica/nota e slot vazio',
     builder: _construirTracejados,
+  ),
+  (
+    titulo: 'TAGS ROTACIONADAS',
+    referencia: '§3 · tags rotacionadas',
+    builder: _construirTagsRotacionadas,
   ),
 ];
 
@@ -515,4 +521,60 @@ Widget _construirTracejados(BuildContext context) {
       ),
     ],
   );
+}
+
+Widget _construirTagsRotacionadas(BuildContext context) {
+  return const Wrap(
+    spacing: 32,
+    runSpacing: 32,
+    children: [
+      // As duas inclinações de §3, cada uma vazando o topo do seu card.
+      _CartaoComTag(texto: 'auto', acento: BoraAccent.yellow),
+      _CartaoComTag(
+        texto: 'sáb 20h',
+        aEsquerda: false,
+      ),
+    ],
+  );
+}
+
+/// Um card com a tag vazando o topo — o `Clip.none` é o que deixa o
+/// vazamento de §3 aparecer.
+class _CartaoComTag extends StatelessWidget {
+  const _CartaoComTag({
+    required this.texto,
+    this.acento = BoraAccent.primary,
+    this.aEsquerda = true,
+  });
+
+  final String texto;
+  final BoraAccent acento;
+  final bool aEsquerda;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 240,
+      height: 72,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          BoraSurface(
+            padding: BoraSpacing.linhaLista,
+            child: Text('churrasco do rafa', style: BoraTextStyles.linhaLista),
+          ),
+          Positioned(
+            left: aEsquerda ? 12 : null,
+            right: aEsquerda ? null : 12,
+            top: 0,
+            child: BoraRotatedTag(
+              texto: texto,
+              acento: acento,
+              aEsquerda: aEsquerda,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

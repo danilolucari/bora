@@ -800,14 +800,14 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Rotação de `-2°` (variante esquerda) e `+3°` (direita), convertidas para **radianos** (`-2 * pi / 180` e `3 * pi / 180`) — grau cru em `Transform.rotate` seria erro silencioso
-- [ ] Fundo `primary` ou `yellow` (pelo `BoraAccent`), borda 2px `ink`, radius zero
-- [ ] Posicionada vazando o topo do card em `-13px`
-- [ ] Texto em CAIXA ALTA no token `microTag`
-- [ ] O teste afirma o ângulo em radianos lendo o `Transform` da árvore e afirma o deslocamento de `-13`
-- [ ] Seção registrada no catálogo (as duas inclinações) e export no barrel
-- [ ] Gate: `flutter analyze && flutter test` passa (fim da Phase 5)
-- [ ] Novos testes: ≥4
+- [x] Rotação de `-2°` (variante esquerda) e `+3°` (direita), convertidas para **radianos** (`-2 * pi / 180` e `3 * pi / 180`) — grau cru em `Transform.rotate` seria erro silencioso
+- [x] Fundo `primary` ou `yellow` (pelo `BoraAccent`), borda 2px `ink`, radius zero
+- [x] Posicionada vazando o topo do card em `-13px`
+- [x] Texto em CAIXA ALTA no token `microTag`
+- [x] O teste afirma o ângulo em radianos lendo o `Transform` da árvore e afirma o deslocamento de `-13`
+- [x] Seção registrada no catálogo (as duas inclinações) e export no barrel
+- [x] Gate: `flutter analyze && flutter test` passa (fim da Phase 5)
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: build

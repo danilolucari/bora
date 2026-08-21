@@ -10,6 +10,7 @@ export 'components/bora_expandable_row.dart';
 export 'components/bora_list_card.dart';
 export 'components/bora_press_sink.dart';
 export 'components/bora_primary_button.dart';
+export 'components/bora_rotated_tag.dart';
 export 'components/bora_secondary_button.dart';
 export 'components/bora_segmented_control.dart';
 export 'components/bora_selection_chip.dart';
