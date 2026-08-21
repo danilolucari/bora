@@ -11,6 +11,7 @@ import 'quantidade_de_cerveja.dart';
 import 'quantidade_de_destilado.dart';
 import 'quantidades_de_bebida.dart';
 import 'quantidades_por_pessoa.dart';
+import 'totais.dart';
 
 /// As três carnes de RN-03 — as únicas que dividem as gramas entre si.
 const Set<ChaveItem> _carnes = {
@@ -38,6 +39,10 @@ class ResultadoDoCalculo {
     required this.essenciais,
     required this.contagem,
     required this.fator,
+    required this.totalDosItens,
+    required this.totalDosEssenciais,
+    required this.porCabeca,
+    required this.porAdulto,
   });
 
   final List<ItemDeLista> itens;
@@ -46,6 +51,26 @@ class ResultadoDoCalculo {
 
   /// O fator de RN-02 usado no cálculo.
   final double fator;
+
+  /// A soma exata dos itens escolhidos — o "SAI POR" da tela Montar.
+  ///
+  /// Estado padrão: 210,60, que RN-13 exibe como **R$ 211**.
+  final double totalDosItens;
+
+  /// A soma dos essenciais que entram no total (A-01/A-02): 60,00.
+  final double totalDosEssenciais;
+
+  /// A estimativa "≈ R$ X / cabeça" da tela Montar: total **sem** essenciais
+  /// dividido por **pessoas**, criança inclusive (210,60 ÷ 7 → ≈ R$ 30).
+  final double porCabeca;
+
+  /// O "por adulto" da tela Lista: total **com** essenciais dividido por
+  /// **adultos**, criança de fora (270,60 ÷ 6 → ≈ R$ 45) — RN-14.
+  final double porAdulto;
+
+  /// O total da festa com os essenciais que somam: 270,60 no estado padrão,
+  /// exibido como **R$ 271**.
+  double get totalComEssenciais => totalDosItens + totalDosEssenciais;
 
   /// A lista inteira, na ordem em que ela aparece: escolhidos e depois os
   /// essenciais de RN-10.
@@ -88,6 +113,10 @@ abstract final class CalculadoraDaFesta {
         essenciais: const [],
         contagem: contagem,
         fator: fator,
+        totalDosItens: 0,
+        totalDosEssenciais: 0,
+        porCabeca: 0,
+        porAdulto: 0,
       );
     }
 
@@ -124,11 +153,25 @@ abstract final class CalculadoraDaFesta {
       );
     }
 
+    final essenciais = essenciaisAutomaticos();
+    final somaDosItens = totalExato(itens);
+    final somaDosEssenciais = totalDosEssenciais(essenciais);
+
     return ResultadoDoCalculo(
       itens: itens,
-      essenciais: essenciaisAutomaticos(),
+      essenciais: essenciais,
       contagem: contagem,
       fator: fator,
+      totalDosItens: somaDosItens,
+      totalDosEssenciais: somaDosEssenciais,
+      porCabeca: estimativaPorCabeca(
+        totalDosItens: somaDosItens,
+        pessoas: contagem.pessoas,
+      ),
+      porAdulto: estimativaPorAdulto(
+        totalComEssenciais: somaDosItens + somaDosEssenciais,
+        adultos: contagem.adultos,
+      ),
     );
   }
 }

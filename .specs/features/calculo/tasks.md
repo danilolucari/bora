@@ -547,15 +547,15 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `ResultadoDoCalculo` passa a expor `totalDosItens`, `totalDosEssenciais`, `totalComEssenciais`, `porCabeca`, `porAdulto`
-- [ ] `porCabeca = totalDosItens ÷ pessoas` e `porAdulto = totalComEssenciais ÷ adultos` (A-04) — a assimetria é deliberada e está no doc comment: são duas telas diferentes
-- [ ] Total é `round` da **soma exata**, nunca soma de valores já arredondados (política de precisão, risco R-3) — e há teste que **separa as duas contas** com o Frango de R$ 21,60
-- [ ] `pessoas == 0` ou `adultos == 0` ⇒ estimativa `0.0`, nunca `NaN` nem `Infinity`
-- [ ] **`casos_literais_do_arquivo_03_test.dart` criado**, com o estado padrão (3H+3M+1C, 4h, bovina + frango + pão de alho + refrigerante + água + cerveja + cachaça, **sem pessoas nomeadas**) afirmando item a item: Bovina 1,2 kg `R$ 54` · Frango 1,2 kg `R$ 22` · Pão 4 un `R$ 24` · Refri 2 gf `R$ 18` · Água 2 gf `R$ 6` · Cerveja 18 latas `R$ 72` · Cachaça 1 gf `R$ 15`
-- [ ] O mesmo arquivo afirma **`R$ 211` e `≈ R$ 30` por cabeça**, e **`R$ 271` e `≈ R$ 45` por adulto** — os **dois** números de cada par, porque foi a consistência entre eles que decidiu a leitura (a) de RN-10
-- [ ] As asserções de dinheiro exibido comparam **string formatada**; as de valor exato usam `closeTo(v, 0.001)`
-- [ ] Gate: `flutter analyze && flutter test` passa
-- [ ] Novos testes: ≥12 (7 asserções de item · total 211 · por cabeça 30 · total com essenciais 271 · por adulto 45 · soma exata ≠ soma de arredondados · 0 pessoas → tudo 0 · 0 adultos → `porAdulto` 0)
+- [x] `ResultadoDoCalculo` passa a expor `totalDosItens`, `totalDosEssenciais`, `totalComEssenciais`, `porCabeca`, `porAdulto`
+- [x] `porCabeca = totalDosItens ÷ pessoas` e `porAdulto = totalComEssenciais ÷ adultos` (A-04) — a assimetria é deliberada e está no doc comment: são duas telas diferentes
+- [x] Total é `round` da **soma exata**, nunca soma de valores já arredondados (política de precisão, risco R-3) — e há teste que **separa as duas contas** com o Frango de R$ 21,60
+- [x] `pessoas == 0` ou `adultos == 0` ⇒ estimativa `0.0`, nunca `NaN` nem `Infinity`
+- [x] **`casos_literais_do_arquivo_03_test.dart` criado**, com o estado padrão (3H+3M+1C, 4h, bovina + frango + pão de alho + refrigerante + água + cerveja + cachaça, **sem pessoas nomeadas**) afirmando item a item: Bovina 1,2 kg `R$ 54` · Frango 1,2 kg `R$ 22` · Pão 4 un `R$ 24` · Refri 2 gf `R$ 18` · Água 2 gf `R$ 6` · Cerveja 18 latas `R$ 72` · Cachaça 1 gf `R$ 15`
+- [x] O mesmo arquivo afirma **`R$ 211` e `≈ R$ 30` por cabeça**, e **`R$ 271` e `≈ R$ 45` por adulto** — os **dois** números de cada par, porque foi a consistência entre eles que decidiu a leitura (a) de RN-10
+- [x] As asserções de dinheiro exibido comparam **string formatada**; as de valor exato usam `closeTo(v, 0.001)`
+- [x] Gate: `flutter analyze && flutter test` passa
+- [x] Novos testes: ≥12 (7 asserções de item · total 211 · por cabeça 30 · total com essenciais 271 · por adulto 45 · soma exata ≠ soma de arredondados · 0 pessoas → tudo 0 · 0 adultos → `porAdulto` 0)
 
 **Tests**: unit
 **Gate**: build
