@@ -60,12 +60,12 @@
 
 ## Handoff
 
-> **Checkpoint de orquestração — 2026-08-20 22:10.** Duas specs em voo, em paralelo, cada uma
+> **Checkpoint de orquestração — 2026-08-21 04:10.** Duas specs em voo, em paralelo, cada uma
 > na sua worktree. **Planejamento das duas concluído; Execute em curso.** Tudo abaixo está em
 > disco e em git — se a sessão morrer agora, perde-se no máximo a task corrente de cada lote.
 
 - **Features**: `design-system` (spec 01) e `calculo` (spec 02) — **em paralelo**, marco M1 do ROADMAP.
-- **Phase**: **Execute**, lote 1 de cada spec despachado.
+- **Phase**: **Execute em curso.** `calculo` T1–T10 commitadas (225 testes verdes); `design-system` T1–T5 commitadas (140 testes verdes).
 
 | Worktree | Branch | Planejamento (commitado) | Tasks | Lotes |
 |---|---|---|---|---|
@@ -75,7 +75,7 @@
 Ambas partem de `c5be425`; baseline em cada uma: **92 testes verdes**, `flutter analyze` limpo, `pub get` feito.
 
 - **Completed**: Specify + Design + Tasks das duas specs; contratos de fronteira fixados (a UI não calcula nem formata — a fração do marcador de RN-11 e a formatação de RN-13 saem prontas de `core/calculo/`); os sete ADs propostos persistidos.
-- **In-progress**: lote 1 de cada spec (fase 1, T1–T6 nas duas).
+- **In-progress**: `calculo` lote 2 retomado em T11 (fase 2 vai até T13); `design-system` lote 1 retomado em T6 (fecha a fase 1).
 - **Next step**: receber o resumo de cada lote → checkpoint → despachar o lote seguinte (sequencial dentro da spec, paralelo entre specs) → ao fim de cada spec, **Verifier independente** → merge das duas branches em `main` → colar os ADs → rodar `lessons.py`.
 
 - **⚠️ ADs pendentes**: os sete textos estão em **`.specs/features/ads-pendentes.md`**, já com a **colisão de numeração resolvida** (os dois planners propuseram AD-008/009/010 para coisas diferentes; `calculo` ficou com 008–010 e `design-system` com 011–014). Colar na seção Decisions no merge e **apagar o arquivo**.
@@ -84,7 +84,10 @@ Ambas partem de `c5be425`; baseline em cada uma: **92 testes verdes**, `flutter 
 
 - **Pergunta aberta ao usuário** (não bloqueia; cai na fase 4 de `calculo`, task T23): premissa A-16 de `calculo` — progresso de quitação **sem nenhuma linha** devolve `1.0` (barra cheia). O planner declarou e testou, mas sinalizou que um cliente poderia querer `0.0` (barra vazia) quando ainda não há despesa.
 
-- **Blockers**: nenhum ativo. **Evento de limite de uso da conta em 2026-08-20 16:54** derrubou os dois planners; o reset das 19:40 passou e ambos foram retomados às ~21:51 sem perda.
+- **Blockers**: nenhum ativo. **Dois eventos de limite de uso da conta até agora**, ambos superados sem perda de trabalho:
+  1. 2026-08-20 16:54 — derrubou os dois *planners* no meio do `design.md`. Reset 19:40; retomados ~21:51.
+  2. 2026-08-21 ~00:00 — derrubou os dois *batch workers* no meio de uma task. Reset 02:40; retomados 04:05.
+  Nas duas vezes a perda foi **zero**: o que estava commitado sobreviveu, e o trabalho meio-escrito estava íntegro em disco (portão verde nas duas árvores antes de retomar). A disciplina de commit atômico por task é o que fez isso funcionar.
 - **Proteção ativa**: autosave em background espelha trabalho não-commitado das três árvores para o scratchpad a cada 2 min. Protocolo de limite: checkpoint → dormir até o horário de reset informado no erro → retomar do último commit de cada branch.
 - **Uncommitted files**: nenhum em `main`.
 - **Branch**: `main` intocada em código desde `c5be425` (só docs de orquestração). O código novo vive nas duas `feature/*`, como o `CLAUDE.md` prescreve.
