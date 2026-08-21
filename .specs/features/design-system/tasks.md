@@ -185,13 +185,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Os 17 tokens de §1 existem com o ARGB da tabela do `design.md`; `paper` e `cream` existem os **dois**, com o mesmo valor e papéis diferentes (é o que a spec-fonte diz)
-- [ ] `divider` = `Color(0x18141414)` e `divider2` = `Color(0x22141414)` — o `#14141418` de §1 é RGBA, o alfa é o **último** par no CSS e o **primeiro** byte no Dart
-- [ ] As cinco derivadas de A-15 existem como token nomeado, cada uma com o trecho de origem no doc comment: `sheetScrim` `0x73140A32` (§5, `rgba(20,10,50,.45)` — **não** é `ink`), `pollFill` `0x2E25D366`, `creamQuarter` `0x40F4EFE3`, `frameBorder` `0x40000000`, `frameShadow` `0x59140A32`
-- [ ] `avatarPairs` traz os cinco pares fixos de §1 (Rafa, Ana, Léo, Bia, Duda) e `avatarPairFor(String nome)` devolve o par da tabela; nome fora da tabela devolve um dos **mesmos cinco** pares por checksum determinístico (A-05)
-- [ ] O teste afirma **cada** token contra o hex literal do arquivo 02, e afirma que `avatarPairFor` é determinístico (mesmo nome ⇒ mesmo par, duas chamadas) e nunca devolve cor fora dos cinco pares
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6
+- [x] Os 17 tokens de §1 existem com o ARGB da tabela do `design.md`; `paper` e `cream` existem os **dois**, com o mesmo valor e papéis diferentes (é o que a spec-fonte diz)
+- [x] `divider` = `Color(0x18141414)` e `divider2` = `Color(0x22141414)` — o `#14141418` de §1 é RGBA, o alfa é o **último** par no CSS e o **primeiro** byte no Dart
+- [x] As cinco derivadas de A-15 existem como token nomeado, cada uma com o trecho de origem no doc comment: `sheetScrim` `0x73140A32` (§5, `rgba(20,10,50,.45)` — **não** é `ink`), `pollFill` `0x2E25D366`, `creamQuarter` `0x40F4EFE3`, `frameBorder` `0x40000000`, `frameShadow` `0x59140A32`
+- [x] `avatarPairs` traz os cinco pares fixos de §1 (Rafa, Ana, Léo, Bia, Duda) e `avatarPairFor(String nome)` devolve o par da tabela; nome fora da tabela devolve um dos **mesmos cinco** pares por checksum determinístico (A-05)
+- [x] O teste afirma **cada** token contra o hex literal do arquivo 02, e afirma que `avatarPairFor` é determinístico (mesmo nome ⇒ mesmo par, duas chamadas) e nunca devolve cor fora dos cinco pares
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6
 
 **Tests**: unit
 **Gate**: quick
