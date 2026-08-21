@@ -882,13 +882,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Trilho de 8px de altura, fundo `paper2`, borda 2px `ink`; marcador de 8×12 com fundo `primary` e borda 2px `ink`; extremos rotulados abaixo em 700/10 `text3`
-- [ ] A posição do marcador chega como `double fracao` **já calculada** — `(média−mín)/(máx−mín)` é RN-11 e pertence à spec `calculo` (DS-34). A assinatura **não** aceita `media`, `min` nem `max` numéricos; os rótulos dos extremos chegam como `String` já formatada
-- [ ] Fração `< 0` ⇒ 0; `> 1` ⇒ 1; `NaN` ou infinita ⇒ `0.0` — sem lançar (edge case da spec; `min == max` produziria NaN lá na origem)
-- [ ] O teste cobre `0.0`, `0.5`, `1.0`, `-0.3`, `1.7`, `double.nan` e `double.infinity`, afirmando a posição resultante do marcador
-- [ ] Seção registrada no catálogo (três frações) e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥5
+- [x] Trilho de 8px de altura, fundo `paper2`, borda 2px `ink`; marcador de 8×12 com fundo `primary` e borda 2px `ink`; extremos rotulados abaixo em 700/10 `text3`
+- [x] A posição do marcador chega como `double fracao` **já calculada** — `(média−mín)/(máx−mín)` é RN-11 e pertence à spec `calculo` (DS-34). A assinatura **não** aceita `media`, `min` nem `max` numéricos; os rótulos dos extremos chegam como `String` já formatada
+- [x] Fração `< 0` ⇒ 0; `> 1` ⇒ 1; `NaN` ou infinita ⇒ `0.0` — sem lançar (edge case da spec; `min == max` produziria NaN lá na origem)
+- [x] O teste cobre `0.0`, `0.5`, `1.0`, `-0.3`, `1.7`, `double.nan` e `double.infinity`, afirmando a posição resultante do marcador
+- [x] Seção registrada no catálogo (três frações) e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥5
 
 **Tests**: widget
 **Gate**: quick

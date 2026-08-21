@@ -7,6 +7,7 @@ import '../components/bora_footer_bar.dart';
 import '../components/bora_hero_card.dart';
 import '../components/bora_list_card.dart';
 import '../components/bora_press_sink.dart';
+import '../components/bora_price_range_bar.dart';
 import '../components/bora_primary_button.dart';
 import '../components/bora_rotated_tag.dart';
 import '../components/bora_secondary_button.dart';
@@ -123,6 +124,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'RODAPÉ FIXO',
     referencia: '§5 · rodapé fixo (CTA bar)',
     builder: _construirRodape,
+  ),
+  (
+    titulo: 'BARRA DE FAIXA DE PREÇO',
+    referencia: '§5 · barra de faixa de preço (mín/máx)',
+    builder: _construirFaixaDePreco,
   ),
 ];
 
@@ -618,5 +624,27 @@ Widget _construirRodape(BuildContext context) {
       sublinha: r'≈ R$ 30 por cabeça',
       cta: BoraPrimaryButton(rotulo: 'bora', onPressed: () {}),
     ),
+  );
+}
+
+/// As três frações do catálogo, para conferir o percurso do marcador de ponta
+/// a ponta. Elas chegam prontas: RN-11 é da spec `calculo` (DS-34).
+const List<double> _fracoes = <double>[0, 0.5, 1];
+
+Widget _construirFaixaDePreco(BuildContext context) {
+  return Wrap(
+    spacing: 24,
+    runSpacing: 16,
+    children: [
+      for (final fracao in _fracoes)
+        SizedBox(
+          width: _larguraDeLista,
+          child: BoraPriceRangeBar(
+            fracao: fracao,
+            rotuloMin: r'R$ 180',
+            rotuloMax: r'R$ 260',
+          ),
+        ),
+    ],
   );
 }

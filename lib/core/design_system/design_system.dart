@@ -11,6 +11,7 @@ export 'components/bora_footer_bar.dart';
 export 'components/bora_hero_card.dart';
 export 'components/bora_list_card.dart';
 export 'components/bora_press_sink.dart';
+export 'components/bora_price_range_bar.dart';
 export 'components/bora_primary_button.dart';
 export 'components/bora_rotated_tag.dart';
 export 'components/bora_secondary_button.dart';
