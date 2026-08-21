@@ -490,17 +490,17 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] O visual é um widget próprio (`BoraToastContent`, com `Key('bora-toast')`), separado do controlador de `Overlay` — assim o catálogo mostra o toast **estático** sem depender de botão, e o teste de aparência não precisa do overlay
-- [ ] `BoraToast.mostrar(context, texto:, acento:)` insere **uma** `OverlayEntry` centralizada em `bottom: 112`, fundo `ink`, texto `cream` 800/13 `ls .5`, sombra dura no acento, entrando com fade + subida de 14px em 300ms `ease`
-- [ ] Depois de `BoraMotion.toastVida` (2200ms) o toast some **sozinho**, sem interação
-- [ ] Um segundo `mostrar` com o primeiro visível **substitui**: a árvore tem exatamente **um** toast, com o texto do segundo, e o `Timer` do primeiro foi cancelado (senão ele derrubaria o novo antes da hora)
-- [ ] `mostrar` com `Overlay` ausente/desmontado retorna em silêncio, sem lançar (`Overlay.maybeOf` + checagem de `mounted` antes de `remove()` — risco R-8)
-- [ ] `BoraToastTexts` traz as **11** constantes de RN-29 **caractere por caractere, emoji incluído** ("LINK COPIADO 🔗", "ROLÊ SALVO ✊", "CONVITE COPIADO 📋", "LISTA NO GRUPO 📲", "ABRINDO O WHATSAPP… 📲", "SALVO NA AGENDA 📅", "LEMBRETE MANDADO NO GRUPO 📲", "COBRANÇA ENVIADA NO PIX 📲", "GRUPO CRIADO NO WHATSAPP ✅", "ENQUETE POSTADA NO GRUPO 📲", "CRIE O GRUPO PRIMEIRO ☝️") mais `todos` para o teste percorrer — repare no **reticências unicode** de "ABRINDO O WHATSAPP… 📲"
-- [ ] O teste de tempo afirma presente em 2199ms e ausente logo depois de 2200ms; o teste de substituição dispara dois seguidos; o teste de texto compara as 11 strings com os literais de RN-29
-- [ ] Nenhum `Timer` pendente ao fim de cada teste
-- [ ] Seção registrada no catálogo e export no barrel
-- [ ] Gate: `flutter analyze && flutter test` passa (fim da Phase 3)
-- [ ] Novos testes: ≥8
+- [x] O visual é um widget próprio (`BoraToastContent`, com `Key('bora-toast')`), separado do controlador de `Overlay` — assim o catálogo mostra o toast **estático** sem depender de botão, e o teste de aparência não precisa do overlay
+- [x] `BoraToast.mostrar(context, texto:, acento:)` insere **uma** `OverlayEntry` centralizada em `bottom: 112`, fundo `ink`, texto `cream` 800/13 `ls .5`, sombra dura no acento, entrando com fade + subida de 14px em 300ms `ease`
+- [x] Depois de `BoraMotion.toastVida` (2200ms) o toast some **sozinho**, sem interação
+- [x] Um segundo `mostrar` com o primeiro visível **substitui**: a árvore tem exatamente **um** toast, com o texto do segundo, e o `Timer` do primeiro foi cancelado (senão ele derrubaria o novo antes da hora)
+- [x] `mostrar` com `Overlay` ausente/desmontado retorna em silêncio, sem lançar (`Overlay.maybeOf` + checagem de `mounted` antes de `remove()` — risco R-8)
+- [x] `BoraToastTexts` traz as **11** constantes de RN-29 **caractere por caractere, emoji incluído** ("LINK COPIADO 🔗", "ROLÊ SALVO ✊", "CONVITE COPIADO 📋", "LISTA NO GRUPO 📲", "ABRINDO O WHATSAPP… 📲", "SALVO NA AGENDA 📅", "LEMBRETE MANDADO NO GRUPO 📲", "COBRANÇA ENVIADA NO PIX 📲", "GRUPO CRIADO NO WHATSAPP ✅", "ENQUETE POSTADA NO GRUPO 📲", "CRIE O GRUPO PRIMEIRO ☝️") mais `todos` para o teste percorrer — repare no **reticências unicode** de "ABRINDO O WHATSAPP… 📲"
+- [x] O teste de tempo afirma presente em 2199ms e ausente logo depois de 2200ms; o teste de substituição dispara dois seguidos; o teste de texto compara as 11 strings com os literais de RN-29
+- [x] Nenhum `Timer` pendente ao fim de cada teste
+- [x] Seção registrada no catálogo e export no barrel
+- [x] Gate: `flutter analyze && flutter test` passa (fim da Phase 3)
+- [x] Novos testes: ≥8
 
 **Tests**: widget
 **Gate**: build

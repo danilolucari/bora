@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 
 import '../components/bora_press_sink.dart';
 import '../components/bora_surface.dart';
+import '../components/bora_toast.dart';
+import '../components/bora_toast_texts.dart';
 import '../tokens/bora_accent.dart';
 import '../tokens/bora_borders.dart';
 import '../tokens/bora_colors.dart';
@@ -37,6 +39,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'AFUNDAMENTO DO CTA',
     referencia: '§4 · hover/press',
     builder: _construirAfundamento,
+  ),
+  (
+    titulo: 'TOAST',
+    referencia: '§5 · Toast · RN-29',
+    builder: _construirToast,
   ),
 ];
 
@@ -203,6 +210,17 @@ Widget _construirAfundamento(BuildContext context) {
         padding: BoraSpacing.botao,
         child: Text('DESABILITADO', style: BoraTextStyles.botao),
       ),
+    ],
+  );
+}
+
+Widget _construirToast(BuildContext context) {
+  return Wrap(
+    spacing: 16,
+    runSpacing: 16,
+    children: [
+      for (final texto in BoraToastTexts.todos)
+        BoraToastContent(texto: texto),
     ],
   );
 }
