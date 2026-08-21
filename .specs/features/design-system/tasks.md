@@ -855,13 +855,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Fundo `paper`, **`border-top` de 2px `ink`** — só o topo, não a borda inteira (erro fácil de cometer com `BoraSurface`)
-- [ ] Padding 14–16 / 24 / 30; bloco à esquerda com label 800/11 `ls 1` `text2` em CAIXA ALTA + valor Archivo Black + sublinha `primary` 700/12.5; CTA à direita como `Widget` recebido
-- [ ] O valor chega como `String` já formatada (DS-34)
-- [ ] O teste afirma que existe borda **apenas** no topo, com 2px `ink`, e afirma os três estilos de texto
-- [ ] Seção registrada no catálogo (com um `BoraPrimaryButton` de CTA) e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4
+- [x] Fundo `paper`, **`border-top` de 2px `ink`** — só o topo, não a borda inteira (erro fácil de cometer com `BoraSurface`)
+- [x] Padding 14–16 / 24 / 30; bloco à esquerda com label 800/11 `ls 1` `text2` em CAIXA ALTA + valor Archivo Black + sublinha `primary` 700/12.5; CTA à direita como `Widget` recebido
+- [x] O valor chega como `String` já formatada (DS-34)
+- [x] O teste afirma que existe borda **apenas** no topo, com 2px `ink`, e afirma os três estilos de texto
+- [x] Seção registrada no catálogo (com um `BoraPrimaryButton` de CTA) e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: quick

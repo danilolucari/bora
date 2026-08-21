@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../components/bora_avatar.dart';
 import '../components/bora_dashed_note.dart';
 import '../components/bora_expandable_row.dart';
+import '../components/bora_footer_bar.dart';
 import '../components/bora_hero_card.dart';
 import '../components/bora_list_card.dart';
 import '../components/bora_press_sink.dart';
@@ -117,6 +118,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'CARD-HERÓI ESCURO',
     referencia: '§5 · card-herói escuro (dinheiro)',
     builder: _construirCardHeroi,
+  ),
+  (
+    titulo: 'RODAPÉ FIXO',
+    referencia: '§5 · rodapé fixo (CTA bar)',
+    builder: _construirRodape,
   ),
 ];
 
@@ -437,6 +443,10 @@ class _CampoDeCatalogoState extends State<_CampoDeCatalogo> {
 /// o modo expandido dariam largura demais para uma lista de festa.
 const double _larguraDeLista = 320;
 
+/// A largura do frame do celular (`CLAUDE.md`: 390×820), para os componentes
+/// que na tela real atravessam a largura toda.
+const double _larguraDoCelular = 390;
+
 Widget _construirCardDeLista(BuildContext context) {
   return const SizedBox(
     width: _larguraDeLista,
@@ -594,6 +604,19 @@ Widget _construirCardHeroi(BuildContext context) {
       label: 'sai por',
       valorFormatado: r'R$ 211',
       sublinha: r'≈ R$ 30 por cabeça',
+    ),
+  );
+}
+
+Widget _construirRodape(BuildContext context) {
+  return SizedBox(
+    // A largura do frame do celular: o rodapé é fixo e atravessa a tela.
+    width: _larguraDoCelular,
+    child: BoraFooterBar(
+      label: 'sai por',
+      valorFormatado: r'R$ 211',
+      sublinha: r'≈ R$ 30 por cabeça',
+      cta: BoraPrimaryButton(rotulo: 'bora', onPressed: () {}),
     ),
   );
 }
