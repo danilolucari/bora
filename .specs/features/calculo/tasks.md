@@ -709,12 +709,12 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `class ProgressoDeQuitacao { int pagas, total; double valorPago, valorDevido; double get fracao; }`
-- [ ] `ProgressoDeQuitacao progressoDeQuitacao(Iterable<LinhaDeAcerto> linhas)` — `fracao = valorPago / valorDevido`
-- [ ] **Sem linhas ⇒ `fracao == 1.0`**, com `pagas == 0` e `total == 0` (A-16); o doc comment declara a escolha e diz que trocá-la é uma linha
-- [ ] A alternância pendente ⇄ paga é reversível (via `LinhaDeAcerto.copyWith`) e o progresso reflete
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥7 (nenhuma paga → 0.0 · todas pagas → 1.0 · metade do **valor** ≠ metade da **contagem** quando as linhas têm valores diferentes · `pagas`/`total` corretos · sem linhas → 1.0 com 0 de 0 · desmarcar volta o progresso · `valorDevido` soma todas, pagas e pendentes)
+- [x] `class ProgressoDeQuitacao { int pagas, total; double valorPago, valorDevido; double get fracao; }`
+- [x] `ProgressoDeQuitacao progressoDeQuitacao(Iterable<LinhaDeAcerto> linhas)` — `fracao = valorPago / valorDevido`
+- [x] **Sem linhas ⇒ `fracao == 1.0`**, com `pagas == 0` e `total == 0` (A-16); o doc comment declara a escolha e diz que trocá-la é uma linha
+- [x] A alternância pendente ⇄ paga é reversível (via `LinhaDeAcerto.copyWith`) e o progresso reflete
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥7 (nenhuma paga → 0.0 · todas pagas → 1.0 · metade do **valor** ≠ metade da **contagem** quando as linhas têm valores diferentes · `pagas`/`total` corretos · sem linhas → 1.0 com 0 de 0 · desmarcar volta o progresso · `valorDevido` soma todas, pagas e pendentes)
 
 **Tests**: unit
 **Gate**: build
