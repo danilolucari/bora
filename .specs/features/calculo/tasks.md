@@ -813,13 +813,13 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] O barrel exporta **todo** o público de `dominio/`, `regras/` e `formatacao/`
-- [ ] O doc comment é atualizado: a frase "as fórmulas nascem na spec 02 `calculo`; **nenhuma** mora aqui ainda" **sai**, e entra a descrição da superfície + a regra "nenhuma outra camada recalcula"
-- [ ] `test/core/calculo/calculo_test.dart` importa **só** `package:bora/core/calculo/calculo.dart` — nenhum arquivo interno — e reproduz o caso literal R$ 211 de ponta a ponta
-- [ ] O mesmo teste afirma **determinismo**: a mesma `ComposicaoDaFesta` calculada duas vezes produz resultados iguais (base de UC-04, "recalcula a cada toque")
-- [ ] `test/architecture/calculo_isolation_test.dart` continua verde — nenhum import de Flutter, `dart:ui`, Firebase ou `flutter_bloc` entrou na pasta
-- [ ] Gate: `flutter analyze && flutter test` passa
-- [ ] Novos testes: ≥3 (caso literal só pelo barrel · determinismo · `MoneyFormatter` e `posicaoDoMarcador` alcançáveis pelo barrel — os dois contratos de fronteira da spec 01)
+- [x] O barrel exporta **todo** o público de `dominio/`, `regras/` e `formatacao/`
+- [x] O doc comment é atualizado: a frase "as fórmulas nascem na spec 02 `calculo`; **nenhuma** mora aqui ainda" **sai**, e entra a descrição da superfície + a regra "nenhuma outra camada recalcula"
+- [x] `test/core/calculo/calculo_test.dart` importa **só** `package:bora/core/calculo/calculo.dart` — nenhum arquivo interno — e reproduz o caso literal R$ 211 de ponta a ponta
+- [x] O mesmo teste afirma **determinismo**: a mesma `ComposicaoDaFesta` calculada duas vezes produz resultados iguais (base de UC-04, "recalcula a cada toque")
+- [x] `test/architecture/calculo_isolation_test.dart` continua verde — nenhum import de Flutter, `dart:ui`, Firebase ou `flutter_bloc` entrou na pasta
+- [x] Gate: `flutter analyze && flutter test` passa
+- [x] Novos testes: ≥3 (caso literal só pelo barrel · determinismo · `MoneyFormatter` e `posicaoDoMarcador` alcançáveis pelo barrel — os dois contratos de fronteira da spec 01)
 
 **Tests**: unit
 **Gate**: build
