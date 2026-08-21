@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../components/bora_expandable_row.dart';
 import '../components/bora_list_card.dart';
 import '../components/bora_press_sink.dart';
 import '../components/bora_primary_button.dart';
@@ -81,6 +82,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'CARD DE LISTA',
     referencia: '§5 · card de lista',
     builder: _construirCardDeLista,
+  ),
+  (
+    titulo: 'LINHA EXPANSÍVEL',
+    referencia: '§5 · linha expansível (accordion)',
+    builder: _construirExpansiveis,
   ),
 ];
 
@@ -415,6 +421,26 @@ Widget _construirCardDeLista(BuildContext context) {
         ),
         BoraListRow(emoji: '🥖', titulo: 'pão de alho', valor: 'R\$ 18'),
       ],
+    ),
+  );
+}
+
+Widget _construirExpansiveis(BuildContext context) {
+  return SizedBox(
+    width: _larguraDeLista,
+    child: BoraSurface(
+      child: BoraExpandableGroup(
+        linhas: [
+          for (final item in _itens.take(3))
+            (
+              titulo: item.$1,
+              painel: Text(
+                'quem leva: a galera decide',
+                style: BoraTextStyles.sublinhaLista,
+              ),
+            ),
+        ],
+      ),
     ),
   );
 }

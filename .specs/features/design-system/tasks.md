@@ -688,13 +688,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Caret `▾` quando fechada e `▴` quando aberta — os glifos literais de §5, afirmados no teste
-- [ ] Painel aberto com fundo `paper` e `border-top` de 2px
-- [ ] O **grupo** guarda qual linha está aberta: abrir a segunda **fecha** a primeira; tocar a que já está aberta **fecha** e deixa o grupo sem nenhuma; o grupo começa com **nenhuma** aberta
-- [ ] O teste cobre os três casos acima afirmando presença/ausência do painel de cada linha
-- [ ] Seção registrada no catálogo (grupo de três linhas) e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥5
+- [x] Caret `▾` quando fechada e `▴` quando aberta — os glifos literais de §5, afirmados no teste
+- [x] Painel aberto com fundo `paper` e `border-top` de 2px
+- [x] O **grupo** guarda qual linha está aberta: abrir a segunda **fecha** a primeira; tocar a que já está aberta **fecha** e deixa o grupo sem nenhuma; o grupo começa com **nenhuma** aberta
+- [x] O teste cobre os três casos acima afirmando presença/ausência do painel de cada linha
+- [x] Seção registrada no catálogo (grupo de três linhas) e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥5
 
 **Tests**: widget
 **Gate**: quick
