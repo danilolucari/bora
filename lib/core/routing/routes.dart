@@ -40,6 +40,9 @@ abstract final class Routes {
   /// T-08 convidado — **fora de qualquer shell e sem autenticação**.
   static const String convidadoPattern = '/c/:$paramCodigo';
 
+  /// Catálogo do design system (DS-33) — rota interna, fora de qualquer shell.
+  static const String catalogo = '/catalogo';
+
   static String montar(String festaId) => '/roles/$festaId/montar';
 
   static String lista(String festaId) => '/roles/$festaId/lista';

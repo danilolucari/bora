@@ -405,16 +405,16 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] `Routes.catalogo = '/catalogo'` acrescentada **ao fim** da lista existente; nenhuma constante existente foi tocada ou reordenada
-- [ ] Uma `GoRoute` nova em `buildAppRouter`, irmã de `/entrar` e `/erro` — **fora de qualquer shell** (o catálogo não é tela de produto e o chrome do app ainda é placeholder da fundação)
-- [ ] `CatalogPage` envolve o conteúdo em `Theme(data: boraTheme(), …)` — o tema não é aplicado no `BoraApp`, que está fora da fronteira desta spec (A-16)
-- [ ] `catalog_sections.dart` expõe a lista de seções, cada uma com `titulo`, `referencia` (o trecho do arquivo 02, ex. `'§5 · Stepper'`) e `builder`; começa com a seção de tokens (cores, tipografia, sombras)
-- [ ] O layout usa `ResponsiveBuilder`/`LayoutMode` de **AD-007**; o breakpoint **não** é redeclarado nem reexportado
-- [ ] `app_router_catalogo_test.dart` abre `/catalogo` e **afirma o destino**: `find.byKey(Key('catalogo'))` presente, `AppShell.chromeKey` **ausente**, `RouteErrorPage.pageKey` ausente e `tester.takeException()` nulo — atende ao aviso da validação da fundação (nenhuma rota alcançável sem destino afirmado)
-- [ ] O teste da página afirma que ela renderiza em largura compacta (`< 900`) e expandida (`>= 900`) sem overflow
-- [ ] Os 92 testes de baseline continuam passando — nenhuma rota existente mudou
-- [ ] Gate: `flutter analyze && flutter test` passa (fim da Phase 2; a task mexe em `lib/core/routing/`)
-- [ ] Novos testes: ≥5
+- [x] `Routes.catalogo = '/catalogo'` acrescentada **ao fim** da lista existente; nenhuma constante existente foi tocada ou reordenada
+- [x] Uma `GoRoute` nova em `buildAppRouter`, irmã de `/entrar` e `/erro` — **fora de qualquer shell** (o catálogo não é tela de produto e o chrome do app ainda é placeholder da fundação)
+- [x] `CatalogPage` envolve o conteúdo em `Theme(data: boraTheme(), …)` — o tema não é aplicado no `BoraApp`, que está fora da fronteira desta spec (A-16)
+- [x] `catalog_sections.dart` expõe a lista de seções, cada uma com `titulo`, `referencia` (o trecho do arquivo 02, ex. `'§5 · Stepper'`) e `builder`; começa com a seção de tokens (cores, tipografia, sombras)
+- [x] O layout usa `ResponsiveBuilder`/`LayoutMode` de **AD-007**; o breakpoint **não** é redeclarado nem reexportado
+- [x] `app_router_catalogo_test.dart` abre `/catalogo` e **afirma o destino**: `find.byKey(Key('catalogo'))` presente, `AppShell.chromeKey` **ausente**, `RouteErrorPage.pageKey` ausente e `tester.takeException()` nulo — atende ao aviso da validação da fundação (nenhuma rota alcançável sem destino afirmado)
+- [x] O teste da página afirma que ela renderiza em largura compacta (`< 900`) e expandida (`>= 900`) sem overflow
+- [x] Os 92 testes de baseline continuam passando — nenhuma rota existente mudou
+- [x] Gate: `flutter analyze && flutter test` passa (fim da Phase 2; a task mexe em `lib/core/routing/`)
+- [x] Novos testes: ≥5
 
 **Tests**: widget
 **Gate**: build
