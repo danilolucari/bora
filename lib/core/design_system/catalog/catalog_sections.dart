@@ -9,6 +9,7 @@ import '../components/bora_list_card.dart';
 import '../components/bora_press_sink.dart';
 import '../components/bora_price_range_bar.dart';
 import '../components/bora_primary_button.dart';
+import '../components/bora_progress_bar.dart';
 import '../components/bora_rotated_tag.dart';
 import '../components/bora_secondary_button.dart';
 import '../components/bora_segmented_control.dart';
@@ -129,6 +130,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'BARRA DE FAIXA DE PREÇO',
     referencia: '§5 · barra de faixa de preço (mín/máx)',
     builder: _construirFaixaDePreco,
+  ),
+  (
+    titulo: 'BARRA DE PROGRESSO',
+    referencia: '§5 · barra de progresso (quitação) · §6',
+    builder: _construirProgresso,
   ),
 ];
 
@@ -646,5 +652,27 @@ Widget _construirFaixaDePreco(BuildContext context) {
           ),
         ),
     ],
+  );
+}
+
+Widget _construirProgresso(BuildContext context) {
+  return SizedBox(
+    width: _larguraDeLista,
+    // §5 descreve a barra sobre card escuro: no catálogo ela aparece onde
+    // vive, senão a borda `cream` sumiria no `paper`.
+    child: BoraSurface(
+      fundo: BoraColors.ink,
+      padding: BoraSpacing.chip,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final fracao in _fracoes)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: BoraProgressBar(fracao: fracao),
+            ),
+        ],
+      ),
+    ),
   );
 }

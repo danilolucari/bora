@@ -909,12 +909,12 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Altura 12px, borda 2px `cream` (a variante sobre card escuro), preenchimento `waGreen`, animação de largura em `BoraMotion.progresso` (300ms)
-- [ ] A fração chega já calculada (RN-18 é da spec `calculo`) e sofre o **mesmo clamp** de T27, incluindo não-finito
-- [ ] O teste afirma a largura do preenchimento em `0.0`, `0.5` e `1.0` e cobre os casos fora da faixa
-- [ ] Seção registrada no catálogo e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4
+- [x] Altura 12px, borda 2px `cream` (a variante sobre card escuro), preenchimento `waGreen`, animação de largura em `BoraMotion.progresso` (300ms)
+- [x] A fração chega já calculada (RN-18 é da spec `calculo`) e sofre o **mesmo clamp** de T27, incluindo não-finito
+- [x] O teste afirma a largura do preenchimento em `0.0`, `0.5` e `1.0` e cobre os casos fora da faixa
+- [x] Seção registrada no catálogo e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: quick
