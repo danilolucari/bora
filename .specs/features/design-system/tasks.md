@@ -268,14 +268,14 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] `BoraShadows.hard(Color, double)` devolve `BoxShadow` com `blurRadius: 0` e `spreadRadius: 0`, e existem as constantes nomeadas dos usos de §4 (CTA 4 · login/link/grupo 5 · card branco 6 e 8 · card-herói 6 · flyer 8 · bolha WA 4)
-- [ ] `BoraShadows.frame` é a **única** com blur: `offset (0,20)`, `blurRadius 50`, `spreadRadius -20`, cor `frameShadow` — e o doc comment diz por quê (é o palco, não a UI)
-- [ ] `BoraBorders` expõe `raio = BorderRadius.zero`, `solida(cor)` com `width: 2`, `padraoInk`, `frame` (1px `frameBorder`), os descritores de tracejado `dicaTracejada` (2px `ink`) e `slotTracejado` (2px `text3`) e `opacidadeDesabilitado = 0.7`
-- [ ] `BoraSpacing` traz os paddings literais de §5 (botão, chip, linha de lista, card-herói, rodapé, sheet, tag, toast, input)
-- [ ] `BoraAccent` é um enum fechado (`primary`, `purple`, `waGreen`, `green`, `yellow`, `ink`) com `Color get cor` e o significado fixo de cada um no doc comment (vermelho = dinheiro/CTA · roxo = galera/link · `#25D366` = WhatsApp · verde = pago/comprado · amarelo = destaque · `ink` = neutro)
-- [ ] Os testes afirmam: `blurRadius == 0` e `spreadRadius == 0` em toda sombra dura; o `offset` de cada uma contra a tabela de §4; `BoraBorders.raio == BorderRadius.zero`; larguras de borda 2.0 (e 1.0 só no frame); cada `BoraAccent.cor` apontando para o token certo
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥8
+- [x] `BoraShadows.hard(Color, double)` devolve `BoxShadow` com `blurRadius: 0` e `spreadRadius: 0`, e existem as constantes nomeadas dos usos de §4 (CTA 4 · login/link/grupo 5 · card branco 6 e 8 · card-herói 6 · flyer 8 · bolha WA 4)
+- [x] `BoraShadows.frame` é a **única** com blur: `offset (0,20)`, `blurRadius 50`, `spreadRadius -20`, cor `frameShadow` — e o doc comment diz por quê (é o palco, não a UI)
+- [x] `BoraBorders` expõe `raio = BorderRadius.zero`, `solida(cor)` com `width: 2`, `padraoInk`, `frame` (1px `frameBorder`), os descritores de tracejado `dicaTracejada` (2px `ink`) e `slotTracejado` (2px `text3`) e `opacidadeDesabilitado = 0.7`
+- [x] `BoraSpacing` traz os paddings literais de §5 (botão, chip, linha de lista, card-herói, rodapé, sheet, tag, toast, input)
+- [x] `BoraAccent` é um enum fechado (`primary`, `purple`, `waGreen`, `green`, `yellow`, `ink`) com `Color get cor` e o significado fixo de cada um no doc comment (vermelho = dinheiro/CTA · roxo = galera/link · `#25D366` = WhatsApp · verde = pago/comprado · amarelo = destaque · `ink` = neutro)
+- [x] Os testes afirmam: `blurRadius == 0` e `spreadRadius == 0` em toda sombra dura; o `offset` de cada uma contra a tabela de §4; `BoraBorders.raio == BorderRadius.zero`; larguras de borda 2.0 (e 1.0 só no frame); cada `BoraAccent.cor` apontando para o token certo
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥8
 
 **Tests**: unit
 **Gate**: quick
