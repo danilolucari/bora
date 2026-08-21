@@ -264,11 +264,11 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `abstract final class MoneyFormatter { static String reais(num valor); }` → `R$ ` + `valor.round()`, milhar agrupado com `.` (pt-BR), **sem centavos e sem separador decimal**
-- [ ] `String rotuloDeDuracao(int horas)` → `2 horas` · `4 horas` · `6 horas` · `Dia todo` para 10
-- [ ] O doc comment declara o contrato: **a UI nunca formata dinheiro por conta própria** — recebe string pronta ou chama esta função
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥11 (0→`R$ 0` · 30,14→`R$ 30` · 210,6→`R$ 211` · 270,6→`R$ 271` · 30,5→`R$ 31` (meio para cima) · 1234→`R$ 1.234` · 1000000→`R$ 1.000.000` · negativo → sinal antes do `R$` · nenhuma saída contém `,` · rótulos 2/4/6/10)
+- [x] `abstract final class MoneyFormatter { static String reais(num valor); }` → `R$ ` + `valor.round()`, milhar agrupado com `.` (pt-BR), **sem centavos e sem separador decimal**
+- [x] `String rotuloDeDuracao(int horas)` → `2 horas` · `4 horas` · `6 horas` · `Dia todo` para 10
+- [x] O doc comment declara o contrato: **a UI nunca formata dinheiro por conta própria** — recebe string pronta ou chama esta função
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥11 (0→`R$ 0` · 30,14→`R$ 30` · 210,6→`R$ 211` · 270,6→`R$ 271` · 30,5→`R$ 31` (meio para cima) · 1234→`R$ 1.234` · 1000000→`R$ 1.000.000` · negativo → sinal antes do `R$` · nenhuma saída contém `,` · rótulos 2/4/6/10)
 
 **Tests**: unit
 **Gate**: build
