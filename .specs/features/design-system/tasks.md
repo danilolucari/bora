@@ -828,13 +828,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Fundo `ink`, padding 20–22, sombra `6px 6px 0` `primary` (`blurRadius 0`)
-- [ ] Label `yellow` 800/12 `ls 1` em CAIXA ALTA; valor `cream` Archivo Black 40; sublinha `primary` 700/13
-- [ ] O valor chega como **`String` já formatada** — o componente não formata `R$`, não arredonda e não divide (DS-34; RN-13 é da spec `calculo`). A assinatura usa `valorFormatado`, não `num`
-- [ ] O teste afirma cor de fundo, offset e blur da sombra, e as três cores de texto; afirma que passar `'R$ 211'` renderiza `'R$ 211'` intacto
-- [ ] Seção registrada no catálogo e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4
+- [x] Fundo `ink`, padding 20–22, sombra `6px 6px 0` `primary` (`blurRadius 0`)
+- [x] Label `yellow` 800/12 `ls 1` em CAIXA ALTA; valor `cream` Archivo Black 40; sublinha `primary` 700/13
+- [x] O valor chega como **`String` já formatada** — o componente não formata `R$`, não arredonda e não divide (DS-34; RN-13 é da spec `calculo`). A assinatura usa `valorFormatado`, não `num`
+- [x] O teste afirma cor de fundo, offset e blur da sombra, e as três cores de texto; afirma que passar `'R$ 211'` renderiza `'R$ 211'` intacto
+- [x] Seção registrada no catálogo e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: quick

@@ -7,6 +7,7 @@ library;
 export 'components/bora_avatar.dart';
 export 'components/bora_dashed_note.dart';
 export 'components/bora_expandable_row.dart';
+export 'components/bora_hero_card.dart';
 export 'components/bora_list_card.dart';
 export 'components/bora_press_sink.dart';
 export 'components/bora_primary_button.dart';

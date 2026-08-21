@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../components/bora_avatar.dart';
 import '../components/bora_dashed_note.dart';
 import '../components/bora_expandable_row.dart';
+import '../components/bora_hero_card.dart';
 import '../components/bora_list_card.dart';
 import '../components/bora_press_sink.dart';
 import '../components/bora_primary_button.dart';
@@ -111,6 +112,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'TAGS ROTACIONADAS',
     referencia: '§3 · tags rotacionadas',
     builder: _construirTagsRotacionadas,
+  ),
+  (
+    titulo: 'CARD-HERÓI ESCURO',
+    referencia: '§5 · card-herói escuro (dinheiro)',
+    builder: _construirCardHeroi,
   ),
 ];
 
@@ -577,4 +583,17 @@ class _CartaoComTag extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _construirCardHeroi(BuildContext context) {
+  return const SizedBox(
+    width: _larguraDeLista,
+    child: BoraHeroCard(
+      // O estado padrão de RN-30: R\$ 211 no total, ≈R\$ 30 por cabeça. O
+      // valor chega pronto — o card não formata (DS-34).
+      label: 'sai por',
+      valorFormatado: r'R$ 211',
+      sublinha: r'≈ R$ 30 por cabeça',
+    ),
+  );
 }
