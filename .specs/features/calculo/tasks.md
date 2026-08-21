@@ -602,13 +602,13 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `Despesa` imutável com `quemPagou`, `descricao`, `valor`, `==`/`hashCode`
-- [ ] `Map<String, double> contribuicoesPorPessoa({required Iterable<String> participantes, Iterable<ItemDeLista> itens, Iterable<Despesa> despesas})` soma o `valor` dos itens cujo `quemLeva` é a pessoa **mais** o das despesas que ela adiantou
-- [ ] Participante sem nada continua no mapa, com **0,0** — nunca ausente, nunca `null`
-- [ ] A ordem do mapa é a ordem de `participantes` — é a ordem que RN-16 vai consumir (A-14)
-- [ ] `double totalDasContribuicoes(Map<String, double>)`
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥7 (só itens · só despesas · itens + despesas na mesma pessoa · participante sem nada → 0,0 · item sem `quemLeva` não entra em ninguém · nome fora de `participantes` é ignorado · ordem do mapa preservada)
+- [x] `Despesa` imutável com `quemPagou`, `descricao`, `valor`, `==`/`hashCode`
+- [x] `Map<String, double> contribuicoesPorPessoa({required Iterable<String> participantes, Iterable<ItemDeLista> itens, Iterable<Despesa> despesas})` soma o `valor` dos itens cujo `quemLeva` é a pessoa **mais** o das despesas que ela adiantou
+- [x] Participante sem nada continua no mapa, com **0,0** — nunca ausente, nunca `null`
+- [x] A ordem do mapa é a ordem de `participantes` — é a ordem que RN-16 vai consumir (A-14)
+- [x] `double totalDasContribuicoes(Map<String, double>)`
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥7 (só itens · só despesas · itens + despesas na mesma pessoa · participante sem nada → 0,0 · item sem `quemLeva` não entra em ninguém · nome fora de `participantes` é ignorado · ordem do mapa preservada)
 
 **Tests**: unit
 **Gate**: quick
