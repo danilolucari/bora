@@ -576,12 +576,12 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `ItemDeLista comPassoDeQuantidade(ItemDeLista item, int passos)` — soma `passos × passoDeQuantidade`, com piso de **um passo**
-- [ ] `ItemDeLista comPassoDePreco(ItemDeLista item, int passos)` — passo R$ 1, piso **R$ 1**
-- [ ] `ItemDeLista restaurado(ItemDeLista item)` zera os dois overrides e devolve **exatamente** o valor automático
-- [ ] `Map<ChaveItem, OverrideDeItem> semOverrides()` para o "RESTAURAR" global
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥9 (carne +1 passo → +0,5 kg · cerveja +1 passo → +2 latas · demais +1 · carne descendo trava em **0,5 kg** · cerveja trava em **2 latas** · demais travam em 1 · preço trava em **R$ 1** · `editado` vira verdadeiro e volta a falso no restaurar · restaurado devolve o valor automático original)
+- [x] `ItemDeLista comPassoDeQuantidade(ItemDeLista item, int passos)` — soma `passos × passoDeQuantidade`, com piso de **um passo**
+- [x] `ItemDeLista comPassoDePreco(ItemDeLista item, int passos)` — passo R$ 1, piso **R$ 1**
+- [x] `ItemDeLista restaurado(ItemDeLista item)` zera os dois overrides e devolve **exatamente** o valor automático
+- [x] `Map<ChaveItem, OverrideDeItem> semOverrides()` para o "RESTAURAR" global
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥9 (carne +1 passo → +0,5 kg · cerveja +1 passo → +2 latas · demais +1 · carne descendo trava em **0,5 kg** · cerveja trava em **2 latas** · demais travam em 1 · preço trava em **R$ 1** · `editado` vira verdadeiro e volta a falso no restaurar · restaurado devolve o valor automático original)
 
 **Tests**: unit
 **Gate**: build
