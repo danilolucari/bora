@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../components/bora_avatar.dart';
+import '../components/bora_dashed_note.dart';
 import '../components/bora_expandable_row.dart';
 import '../components/bora_list_card.dart';
 import '../components/bora_press_sink.dart';
@@ -99,6 +100,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'TAG DE STATUS',
     referencia: '§5 · tag de status (pill quadrada)',
     builder: _construirTagsDeStatus,
+  ),
+  (
+    titulo: 'TRACEJADOS',
+    referencia: '§3 · dica/nota e slot vazio',
+    builder: _construirTracejados,
   ),
 ];
 
@@ -480,6 +486,33 @@ Widget _construirTagsDeStatus(BuildContext context) {
     children: [
       // Os sete significados de §5, lado a lado.
       for (final status in BoraStatus.values) BoraStatusTag(status: status),
+    ],
+  );
+}
+
+/// As três dicas do catálogo, uma por emoji-âncora de §3.
+const List<(String, String)> _dicas = <(String, String)>[
+  ('💡', 'a cerveja some rápido: conte 3 latas por adulto'),
+  ('📊', 'a média sai de 4 rolês parecidos'),
+  ('✅', 'quem já pagou some da lista de cobrança'),
+];
+
+Widget _construirTracejados(BuildContext context) {
+  return Wrap(
+    spacing: 16,
+    runSpacing: 16,
+    children: [
+      for (final dica in _dicas)
+        SizedBox(
+          width: _larguraDeLista,
+          child: BoraDashedNote(emoji: dica.$1, texto: dica.$2),
+        ),
+      SizedBox(
+        width: _larguraDeLista,
+        child: BoraEmptySlot(
+          child: Text('ninguém trouxe ainda', style: BoraTextStyles.dica),
+        ),
+      ),
     ],
   );
 }

@@ -772,14 +772,14 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] O tracejado é um `CustomPainter` próprio (~30 linhas): o Flutter **não** tem `BorderStyle.dashed`, e a alternativa (pacote novo ou imagem) violaria AD-002 (risco R-10)
-- [ ] Dica/nota: borda 2px tracejada `ink`, fundo branco, texto 600/12 `text2`, sempre com emoji-âncora (💡 📊 ✅) à esquerda
-- [ ] Slot vazio/desabilitado: borda 2px tracejada `text3` e `opacity 0.7`
-- [ ] Radius zero nos dois — a guarda de T7 continua passando (nenhum dos dois entra na allowlist)
-- [ ] O teste afirma o painter, as cores e as larguras dos dois; afirma a presença do emoji na dica
-- [ ] Seções registradas no catálogo e exports no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4
+- [x] O tracejado é um `CustomPainter` próprio (~30 linhas): o Flutter **não** tem `BorderStyle.dashed`, e a alternativa (pacote novo ou imagem) violaria AD-002 (risco R-10)
+- [x] Dica/nota: borda 2px tracejada `ink`, fundo branco, texto 600/12 `text2`, sempre com emoji-âncora (💡 📊 ✅) à esquerda
+- [x] Slot vazio/desabilitado: borda 2px tracejada `text3` e `opacity 0.7`
+- [x] Radius zero nos dois — a guarda de T7 continua passando (nenhum dos dois entra na allowlist)
+- [x] O teste afirma o painter, as cores e as larguras dos dois; afirma a presença do emoji na dica
+- [x] Seções registradas no catálogo e exports no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: quick
