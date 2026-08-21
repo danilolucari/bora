@@ -520,13 +520,13 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `ComposicaoDaFesta` imutável com `contagem`, `duracaoHoras`, `pessoas`, `itensSelecionados` (`Set<ChaveItem>`), `overrides` (`Map<ChaveItem, OverrideDeItem>`)
-- [ ] `abstract final class CalculadoraDaFesta { static ResultadoDoCalculo calcular(ComposicaoDaFesta); }` com `ResultadoDoCalculo` expondo `itens`, `essenciais`, `contagem`, `fator`, `todosOsItens`, `temOverrides` (os totais entram em T17)
-- [ ] A ordem interna é a do design: **guarda `pessoas == 0` primeiro** → fator → preferências (remove suína, injeta kit veggie) → gramas divididas entre as carnes **restantes** → quantidades na `ordemCanonicaDaLista` → overrides → essenciais
-- [ ] Quantidade 0 ⇒ o item **não entra** na lista
-- [ ] `pessoas == 0` ⇒ lista vazia, **sem** aplicar nenhum piso `max(1, …)` (A-11 / UC-03 E1)
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥10 (estado padrão produz os 7 itens esperados · ordem canônica estável entre duas chamadas · veggie injeta o kit · sem porco remove a suína **e** redivide as gramas entre as restantes · sem porco na única carne selecionada ≡ nenhuma carne · cerveja usa `adultosQueBebem` · 0 pessoas → lista vazia · só crianças → sem cerveja e sem destilado, com refri e água · override de quantidade e de preço chegam ao item · nenhum item de quantidade 0 na lista)
+- [x] `ComposicaoDaFesta` imutável com `contagem`, `duracaoHoras`, `pessoas`, `itensSelecionados` (`Set<ChaveItem>`), `overrides` (`Map<ChaveItem, OverrideDeItem>`)
+- [x] `abstract final class CalculadoraDaFesta { static ResultadoDoCalculo calcular(ComposicaoDaFesta); }` com `ResultadoDoCalculo` expondo `itens`, `essenciais`, `contagem`, `fator`, `todosOsItens`, `temOverrides` (os totais entram em T17)
+- [x] A ordem interna é a do design: **guarda `pessoas == 0` primeiro** → fator → preferências (remove suína, injeta kit veggie) → gramas divididas entre as carnes **restantes** → quantidades na `ordemCanonicaDaLista` → overrides → essenciais
+- [x] Quantidade 0 ⇒ o item **não entra** na lista
+- [x] `pessoas == 0` ⇒ lista vazia, **sem** aplicar nenhum piso `max(1, …)` (A-11 / UC-03 E1)
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥10 (estado padrão produz os 7 itens esperados · ordem canônica estável entre duas chamadas · veggie injeta o kit · sem porco remove a suína **e** redivide as gramas entre as restantes · sem porco na única carne selecionada ≡ nenhuma carne · cerveja usa `adultosQueBebem` · 0 pessoas → lista vazia · só crianças → sem cerveja e sem destilado, com refri e água · override de quantidade e de preço chegam ao item · nenhum item de quantidade 0 na lista)
 
 **Tests**: unit
 **Gate**: quick
