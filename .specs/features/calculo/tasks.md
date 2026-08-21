@@ -289,16 +289,16 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `ChaveItem` com os 16 valores e a `chave` snake_case: `bovina`, `suina`, `frango`, `paoDeAlho` (`pao_de_alho`), `refrigerante`, `suco`, `agua`, `cerveja`, `vodka`, `cachaca`, `whisky`, `legumesParaGrelha`, `carvao`, `gelo`, `salGrosso`, `coposEPratos`; `static ChaveItem? porChave(String)`
-- [ ] As sete chaves de `itensPadraoRn30` (`bovina`, `frango`, `pao_de_alho`, `refrigerante`, `agua`, `cerveja`, `cachaca`) resolvem — teste explícito cruzando com a fixture bruta
-- [ ] `UnidadeDeItem { kg, unidade, garrafa, lata, litro, saco, kit }`
-- [ ] `DefinicaoDeItem` com `chave`, `nome`, `emoji`, `unidade`, `precoBase`, `passoDeQuantidade`, `essencial`, `fonteDaProporcao?`, `quantidadeDefault?`, `entraNoTotal`
-- [ ] `catalogoDeItens` cobre os **16** com os preços literais do arquivo 03: 45 · 28 · 18 · 6 · 9 · 8 · 3 · 4 · 40 · 15 · 90 · **28** (kit veggie, A-10 — o doc comment cita a lacuna: RN-03..RN-09 não dão preço e R$ 28 é o único número que a spec associa ao item, via RN-11) · 22 · 10 · 8 · 15
-- [ ] Passos de RN-12 no catálogo: carnes **0,5** · cerveja **2** · demais **1**
-- [ ] `entraNoTotal` é `false` **só** em `coposEPratos`; o doc comment do campo registra a decisão do usuário (leitura (a) de RN-10, 2026-08-20) e diz o efeito de virá-lo: R$ 286 e ≈R$ 48/adulto
-- [ ] `ordemCanonicaDaLista` fixa a ordem estável de saída
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥8 (16 chaves únicas · `porChave` ida e volta · chave desconhecida → `null` · as 7 chaves da fixture resolvem · preços literais item a item · passos 0,5/2/1 · só `coposEPratos` com `entraNoTotal: false` · `ordemCanonicaDaLista` cobre o catálogo sem repetir)
+- [x] `ChaveItem` com os 16 valores e a `chave` snake_case: `bovina`, `suina`, `frango`, `paoDeAlho` (`pao_de_alho`), `refrigerante`, `suco`, `agua`, `cerveja`, `vodka`, `cachaca`, `whisky`, `legumesParaGrelha`, `carvao`, `gelo`, `salGrosso`, `coposEPratos`; `static ChaveItem? porChave(String)`
+- [x] As sete chaves de `itensPadraoRn30` (`bovina`, `frango`, `pao_de_alho`, `refrigerante`, `agua`, `cerveja`, `cachaca`) resolvem — teste explícito cruzando com a fixture bruta
+- [x] `UnidadeDeItem { kg, unidade, garrafa, lata, litro, saco, kit }`
+- [x] `DefinicaoDeItem` com `chave`, `nome`, `emoji`, `unidade`, `precoBase`, `passoDeQuantidade`, `essencial`, `fonteDaProporcao?`, `quantidadeDefault?`, `entraNoTotal`
+- [x] `catalogoDeItens` cobre os **16** com os preços literais do arquivo 03: 45 · 28 · 18 · 6 · 9 · 8 · 3 · 4 · 40 · 15 · 90 · **28** (kit veggie, A-10 — o doc comment cita a lacuna: RN-03..RN-09 não dão preço e R$ 28 é o único número que a spec associa ao item, via RN-11) · 22 · 10 · 8 · 15
+- [x] Passos de RN-12 no catálogo: carnes **0,5** · cerveja **2** · demais **1**
+- [x] `entraNoTotal` é `false` **só** em `coposEPratos`; o doc comment do campo registra a decisão do usuário (leitura (a) de RN-10, 2026-08-20) e diz o efeito de virá-lo: R$ 286 e ≈R$ 48/adulto
+- [x] `ordemCanonicaDaLista` fixa a ordem estável de saída
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥8 (16 chaves únicas · `porChave` ida e volta · chave desconhecida → `null` · as 7 chaves da fixture resolvem · preços literais item a item · passos 0,5/2/1 · só `coposEPratos` com `entraNoTotal: false` · `ordemCanonicaDaLista` cobre o catálogo sem repetir)
 
 **Tests**: unit
 **Gate**: quick
