@@ -136,12 +136,12 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `Dieta { tudo, veggie, semPorco }`, `PapelNaFesta { anfitriao, coAnfitriao, convidado, soVe }`, `StatusDePresenca { confirmado, pendente, recusou }` e `StatusDaFesta { chegando, passada }` existem, cada valor com a `chave` string do arquivo 01 §6 (`tudo`/`veggie`/`semporco`, `host`/`cohost`/`guest`/`viewer`) e um `porChave` que devolve `null` para chave desconhecida
-- [ ] `Pessoa` é imutável, `const`, com `nome`, `papel`, `status`, `dieta` (`Dieta?`), `bebe` (`bool?`), `voce`, `copyWith` e `String get inicial` derivado do nome
-- [ ] `==`/`hashCode` escritos à mão — **`package:meta` não é importado** (A-19: é dependência transitiva e derruba `flutter analyze`)
-- [ ] `dieta`/`bebe` `null` significa **não declarado** e é distinto de `Dieta.tudo` / `false` (A-08)
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6 (igualdade de valor · imutabilidade via `copyWith` · `null` ≠ `false` · `null` ≠ `Dieta.tudo` · `inicial` · `porChave` de chave desconhecida)
+- [x] `Dieta { tudo, veggie, semPorco }`, `PapelNaFesta { anfitriao, coAnfitriao, convidado, soVe }`, `StatusDePresenca { confirmado, pendente, recusou }` e `StatusDaFesta { chegando, passada }` existem, cada valor com a `chave` string do arquivo 01 §6 (`tudo`/`veggie`/`semporco`, `host`/`cohost`/`guest`/`viewer`) e um `porChave` que devolve `null` para chave desconhecida
+- [x] `Pessoa` é imutável, `const`, com `nome`, `papel`, `status`, `dieta` (`Dieta?`), `bebe` (`bool?`), `voce`, `copyWith` e `String get inicial` derivado do nome
+- [x] `==`/`hashCode` escritos à mão — **`package:meta` não é importado** (A-19: é dependência transitiva e derruba `flutter analyze`)
+- [x] `dieta`/`bebe` `null` significa **não declarado** e é distinto de `Dieta.tudo` / `false` (A-08)
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6 (igualdade de valor · imutabilidade via `copyWith` · `null` ≠ `false` · `null` ≠ `Dieta.tudo` · `inicial` · `porChave` de chave desconhecida)
 
 **Tests**: unit
 **Gate**: quick
