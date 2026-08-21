@@ -350,14 +350,14 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Falha ao encontrar literal de cor (`Color(0x…`, `Colors.`) em qualquer arquivo de `lib/core/design_system/` que não seja `bora_colors.dart`; `Colors.transparent` é tolerado (ausência de cor, não cor) e a tolerância está documentada no teste
-- [ ] Falha ao encontrar literal de `fontFamily:` fora de `bora_text_styles.dart`
-- [ ] Falha ao encontrar, em **qualquer** arquivo sob `lib/`: `Gradient`, `InkWell`, `InkResponse`, `Curves.elastic`, `Curves.bounce` ou `FontVariation` — as proibições de §8 e §6, mais a decisão de DS-03 (o peso é `fontWeight`, e `FontVariation` mascararia erro de peso)
-- [ ] Cada regra falha com mensagem que **nomeia o arquivo e o padrão** encontrado
-- [ ] O teste afirma que varreu ≥1 arquivo em cada escopo
-- [ ] Verificado à mão nos dois sentidos com `Color(0xFF00FF00)` e com `fontFamily: 'Roboto'`
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥5
+- [x] Falha ao encontrar literal de cor (`Color(0x…`, `Colors.`) em qualquer arquivo de `lib/core/design_system/` que não seja `bora_colors.dart`; `Colors.transparent` é tolerado (ausência de cor, não cor) e a tolerância está documentada no teste
+- [x] Falha ao encontrar literal de `fontFamily:` fora de `bora_text_styles.dart`
+- [x] Falha ao encontrar, em **qualquer** arquivo sob `lib/`: `Gradient`, `InkWell`, `InkResponse`, `Curves.elastic`, `Curves.bounce` ou `FontVariation` — as proibições de §8 e §6, mais a decisão de DS-03 (o peso é `fontWeight`, e `FontVariation` mascararia erro de peso)
+- [x] Cada regra falha com mensagem que **nomeia o arquivo e o padrão** encontrado
+- [x] O teste afirma que varreu ≥1 arquivo em cada escopo
+- [x] Verificado à mão nos dois sentidos com `Color(0xFF00FF00)` e com `fontFamily: 'Roboto'`
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥5
 
 **Tests**: unit
 **Gate**: quick
