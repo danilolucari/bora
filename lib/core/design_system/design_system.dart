@@ -9,6 +9,7 @@ export 'components/bora_primary_button.dart';
 export 'components/bora_secondary_button.dart';
 export 'components/bora_segmented_control.dart';
 export 'components/bora_selection_chip.dart';
+export 'components/bora_stepper.dart';
 export 'components/bora_surface.dart';
 export 'components/bora_toast.dart';
 export 'components/bora_toast_texts.dart';

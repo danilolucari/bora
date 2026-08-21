@@ -5,6 +5,7 @@ import '../components/bora_primary_button.dart';
 import '../components/bora_secondary_button.dart';
 import '../components/bora_segmented_control.dart';
 import '../components/bora_selection_chip.dart';
+import '../components/bora_stepper.dart';
 import '../components/bora_surface.dart';
 import '../components/bora_toast.dart';
 import '../components/bora_toast_texts.dart';
@@ -63,6 +64,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'SEGMENTED CONTROL',
     referencia: '§5 · segmented control',
     builder: _construirSegmented,
+  ),
+  (
+    titulo: 'STEPPER',
+    referencia: '§5 · stepper (− n +)',
+    builder: _construirStepper,
   ),
 ];
 
@@ -315,6 +321,19 @@ Widget _construirSegmented(BuildContext context) {
           ),
         ),
       ),
+    ],
+  );
+}
+
+Widget _construirStepper(BuildContext context) {
+  return Wrap(
+    spacing: 32,
+    runSpacing: 16,
+    children: [
+      BoraStepper(valor: 3, onDecrementar: () {}, onIncrementar: () {}),
+      // No limite de baixo quem decide é a tela: o stepper só recebe o
+      // callback nulo e esmaece o "−".
+      BoraStepper(valor: 0, onIncrementar: () {}),
     ],
   );
 }

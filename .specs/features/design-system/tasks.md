@@ -606,14 +606,14 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Botões 34×34 visualmente: `−` branco com borda `ink`; `+` fundo `ink` com texto `cream` (hover `primary`). Valor central 800/17
-- [ ] O **alvo de toque** de cada botão mede ≥44px nos dois eixos, via padding — afirmado com `tester.getSize` sobre o detector de gesto, não sobre a caixa visual
-- [ ] `onIncrementar`/`onDecrementar` são `VoidCallback` **sem payload**: o componente não calcula `valor + 1` nem conhece mínimo, máximo ou passo (RN-12 é da spec `calculo`). O valor exibido é sempre a prop recebida
-- [ ] `onDecrementar == null` ⇒ o `−` aparece com opacidade 0.7 e não emite nada ao ser tocado
-- [ ] O teste afirma: tocar `+` chama `onIncrementar` exatamente uma vez e **o valor exibido não muda sozinho** (prova de que não há estado interno nem aritmética)
-- [ ] Seção registrada no catálogo e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥5
+- [x] Botões 34×34 visualmente: `−` branco com borda `ink`; `+` fundo `ink` com texto `cream` (hover `primary`). Valor central 800/17
+- [x] O **alvo de toque** de cada botão mede ≥44px nos dois eixos, via padding — afirmado com `tester.getSize` sobre o detector de gesto, não sobre a caixa visual
+- [x] `onIncrementar`/`onDecrementar` são `VoidCallback` **sem payload**: o componente não calcula `valor + 1` nem conhece mínimo, máximo ou passo (RN-12 é da spec `calculo`). O valor exibido é sempre a prop recebida
+- [x] `onDecrementar == null` ⇒ o `−` aparece com opacidade 0.7 e não emite nada ao ser tocado
+- [x] O teste afirma: tocar `+` chama `onIncrementar` exatamente uma vez e **o valor exibido não muda sozinho** (prova de que não há estado interno nem aritmética)
+- [x] Seção registrada no catálogo e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥5
 
 **Tests**: widget
 **Gate**: quick
