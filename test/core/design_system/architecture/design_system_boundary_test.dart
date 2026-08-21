@@ -51,9 +51,38 @@ List<File> arquivosDartEm(Directory diretorio) => diretorio
 /// Uma linha por violação, no formato `<caminho do arquivo>: <import>`.
 List<String> violacoesEm(Directory diretorio) => [
       for (final arquivo in arquivosDartEm(diretorio))
-        for (final alvo in importsProibidosEm(arquivo.readAsStringSync()))
+        for (final alvo in importsProibidosEm(_conteudoDe(arquivo) ?? ''))
           '${arquivo.path}: $alvo',
     ];
+
+/// O conteúdo de [arquivo], ou `null` se ele sumiu entre listar e ler.
+///
+/// Arquivo que deixa de existir no meio da varredura não faz parte do código:
+/// `calculo_isolation_test.dart` cria e apaga um infrator temporário sob
+/// `lib/` enquanto esta varredura roda, e ler o que já sumiu quebraria a
+/// suíte sem provar nada. Nenhuma outra falha de leitura é engolida.
+String? _conteudoDe(File arquivo) {
+  try {
+    return arquivo.readAsStringSync();
+  } on PathNotFoundException {
+    return null;
+  }
+}
+
+/// Um diretório **isolado** com um arquivo `.dart` infrator dentro.
+///
+/// A injeção não acontece dentro de `lib/`: os três guardas varrem os mesmos
+/// diretórios em paralelo, e um arquivo aparecendo e sumindo no meio da
+/// varredura do vizinho deixava a suíte instável. A regra exercitada é a
+/// mesma — muda só onde o arquivo mora.
+Directory _diretorioComInfrator(String nome, String conteudo) {
+  final diretorio = Directory.systemTemp.createTempSync('bora_guarda_');
+  addTearDown(() {
+    if (diretorio.existsSync()) diretorio.deleteSync(recursive: true);
+  });
+  File('${diretorio.path}/$nome').writeAsStringSync(conteudo);
+  return diretorio;
+}
 
 void main() {
   final designSystem = Directory(_diretorioDoDesignSystem);
@@ -80,20 +109,19 @@ void main() {
 
     test('import da camada de cálculo é acusado nomeando o arquivo, e removê-lo '
         'faz passar', () {
-      final infrator = File('$_diretorioDoDesignSystem/fronteira_de_teste.dart');
-      addTearDown(() {
-        if (infrator.existsSync()) infrator.deleteSync();
-      });
-      infrator.writeAsStringSync("import '../../calculo/calculo.dart';\n");
+      final diretorio = _diretorioComInfrator(
+        'fronteira_de_teste.dart',
+        "import '../../calculo/calculo.dart';\n",
+      );
 
-      final violacoes = violacoesEm(designSystem);
+      final violacoes = violacoesEm(diretorio);
       expect(violacoes, hasLength(1));
       expect(violacoes.single, contains('fronteira_de_teste.dart'));
       expect(violacoes.single, contains('calculo/calculo.dart'));
 
-      infrator.deleteSync();
+      arquivosDartEm(diretorio).single.deleteSync();
 
-      expect(violacoesEm(designSystem), isEmpty);
+      expect(violacoesEm(diretorio), isEmpty);
     });
 
     test('cada alvo da lista proibida é detectado, relativo ou por pacote', () {

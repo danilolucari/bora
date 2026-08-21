@@ -88,17 +88,39 @@ List<String> _varrer(
 ) =>
     [
       for (final arquivo in arquivosDartEm(diretorio))
-        ...regra(arquivo.path, arquivo.readAsStringSync()),
+        ...?switch (_conteudoDe(arquivo)) {
+          final String conteudo => regra(arquivo.path, conteudo),
+          null => null,
+        },
     ];
 
-/// Escreve [conteudo] num arquivo do design system e o apaga ao fim do teste.
-File _injetar(String nome, String conteudo) {
-  final infrator = File('$_diretorioDoDesignSystem/$nome');
+/// O conteúdo de [arquivo], ou `null` se ele sumiu entre listar e ler.
+///
+/// Arquivo que deixa de existir no meio da varredura não faz parte do código:
+/// `calculo_isolation_test.dart` cria e apaga um infrator temporário sob
+/// `lib/` enquanto esta varredura roda, e ler o que já sumiu quebraria a
+/// suíte sem provar nada. Nenhuma outra falha de leitura é engolida.
+String? _conteudoDe(File arquivo) {
+  try {
+    return arquivo.readAsStringSync();
+  } on PathNotFoundException {
+    return null;
+  }
+}
+
+/// Um diretório **isolado** com um arquivo `.dart` infrator dentro.
+///
+/// A injeção não acontece dentro de `lib/`: os três guardas varrem os mesmos
+/// diretórios em paralelo, e um arquivo aparecendo e sumindo no meio da
+/// varredura do vizinho deixava a suíte instável. A regra exercitada é a
+/// mesma — muda só onde o arquivo mora.
+Directory _diretorioComInfrator(String nome, String conteudo) {
+  final diretorio = Directory.systemTemp.createTempSync('bora_guarda_');
   addTearDown(() {
-    if (infrator.existsSync()) infrator.deleteSync();
+    if (diretorio.existsSync()) diretorio.deleteSync(recursive: true);
   });
-  infrator.writeAsStringSync(conteudo);
-  return infrator;
+  File('${diretorio.path}/$nome').writeAsStringSync(conteudo);
+  return diretorio;
 }
 
 void main() {
@@ -126,12 +148,12 @@ void main() {
 
     test('forma arredondada injetada faz a varredura falhar nomeando o arquivo',
         () {
-      _injetar(
+      final diretorio = _diretorioComInfrator(
         'guarda_de_forma_infrator_de_teste.dart',
         'const raio = BorderRadius.circular(8);\n',
       );
 
-      final violacoes = _varrer(designSystem, violacoesDeFormaEm);
+      final violacoes = _varrer(diretorio, violacoesDeFormaEm);
 
       expect(violacoes, hasLength(1));
       expect(
@@ -142,15 +164,15 @@ void main() {
     });
 
     test('removida a forma injetada, a varredura volta a passar', () {
-      final infrator = _injetar(
+      final diretorio = _diretorioComInfrator(
         'guarda_de_forma_removido_de_teste.dart',
         'const forma = RoundedRectangleBorder();\n',
       );
-      expect(_varrer(designSystem, violacoesDeFormaEm), hasLength(1));
+      expect(_varrer(diretorio, violacoesDeFormaEm), hasLength(1));
 
-      infrator.deleteSync();
+      arquivosDartEm(diretorio).single.deleteSync();
 
-      expect(_varrer(designSystem, violacoesDeFormaEm), isEmpty);
+      expect(_varrer(diretorio, violacoesDeFormaEm), isEmpty);
     });
 
     test('cada forma da lista proibida de §3 é detectada', () {
@@ -199,12 +221,12 @@ void main() {
 
     test('blur diferente de zero faz a varredura falhar nomeando o arquivo',
         () {
-      _injetar(
+      final diretorio = _diretorioComInfrator(
         'guarda_de_blur_infrator_de_teste.dart',
         'const sombra = BoxShadow(blurRadius: 4);\n',
       );
 
-      final violacoes = _varrer(designSystem, violacoesDeBlurEm);
+      final violacoes = _varrer(diretorio, violacoesDeBlurEm);
 
       expect(violacoes, hasLength(1));
       expect(
@@ -215,15 +237,15 @@ void main() {
     });
 
     test('removido o blur injetado, a varredura volta a passar', () {
-      final infrator = _injetar(
+      final diretorio = _diretorioComInfrator(
         'guarda_de_blur_removido_de_teste.dart',
         'const sombra = BoxShadow(blurRadius: 12);\n',
       );
-      expect(_varrer(designSystem, violacoesDeBlurEm), hasLength(1));
+      expect(_varrer(diretorio, violacoesDeBlurEm), hasLength(1));
 
-      infrator.deleteSync();
+      arquivosDartEm(diretorio).single.deleteSync();
 
-      expect(_varrer(designSystem, violacoesDeBlurEm), isEmpty);
+      expect(_varrer(diretorio, violacoesDeBlurEm), isEmpty);
     });
 
     test('blurRadius zero não é acusado, blur por expressão é', () {

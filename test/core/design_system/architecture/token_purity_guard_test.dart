@@ -84,17 +84,39 @@ List<String> _varrer(
 ) =>
     [
       for (final arquivo in arquivosDartEm(diretorio))
-        ...regra(arquivo.path, arquivo.readAsStringSync()),
+        ...?switch (_conteudoDe(arquivo)) {
+          final String conteudo => regra(arquivo.path, conteudo),
+          null => null,
+        },
     ];
 
-/// Escreve [conteudo] num arquivo do design system e o apaga ao fim do teste.
-File _injetar(String nome, String conteudo) {
-  final infrator = File('$_diretorioDoDesignSystem/$nome');
+/// O conteúdo de [arquivo], ou `null` se ele sumiu entre listar e ler.
+///
+/// Arquivo que deixa de existir no meio da varredura não faz parte do código:
+/// `calculo_isolation_test.dart` cria e apaga um infrator temporário sob
+/// `lib/` enquanto esta varredura roda, e ler o que já sumiu quebraria a
+/// suíte sem provar nada. Nenhuma outra falha de leitura é engolida.
+String? _conteudoDe(File arquivo) {
+  try {
+    return arquivo.readAsStringSync();
+  } on PathNotFoundException {
+    return null;
+  }
+}
+
+/// Um diretório **isolado** com um arquivo `.dart` infrator dentro.
+///
+/// A injeção não acontece dentro de `lib/`: os três guardas varrem os mesmos
+/// diretórios em paralelo, e um arquivo aparecendo e sumindo no meio da
+/// varredura do vizinho deixava a suíte instável. A regra exercitada é a
+/// mesma — muda só onde o arquivo mora.
+Directory _diretorioComInfrator(String nome, String conteudo) {
+  final diretorio = Directory.systemTemp.createTempSync('bora_guarda_');
   addTearDown(() {
-    if (infrator.existsSync()) infrator.deleteSync();
+    if (diretorio.existsSync()) diretorio.deleteSync(recursive: true);
   });
-  infrator.writeAsStringSync(conteudo);
-  return infrator;
+  File('${diretorio.path}/$nome').writeAsStringSync(conteudo);
+  return diretorio;
 }
 
 void main() {
@@ -113,19 +135,19 @@ void main() {
 
     test('literal de cor injetado é acusado nomeando o arquivo, e removê-lo '
         'faz passar', () {
-      final infrator = _injetar(
+      final diretorio = _diretorioComInfrator(
         'pureza_de_cor_infrator_de_teste.dart',
         'const verde = Color(0xFF00FF00);\n',
       );
 
-      final violacoes = _varrer(lib, violacoesDeCorEm);
+      final violacoes = _varrer(diretorio, violacoesDeCorEm);
       expect(violacoes, hasLength(1));
       expect(violacoes.single, contains('pureza_de_cor_infrator_de_teste.dart'));
       expect(violacoes.single, contains('Color(0x'));
 
-      infrator.deleteSync();
+      arquivosDartEm(diretorio).single.deleteSync();
 
-      expect(_varrer(lib, violacoesDeCorEm), isEmpty);
+      expect(_varrer(diretorio, violacoesDeCorEm), isEmpty);
     });
 
     test('o atalho do Material é acusado, BoraColors não, e transparent passa',
@@ -165,12 +187,12 @@ void main() {
 
     test('fontFamily literal injetado é acusado nomeando o arquivo, e removê-lo '
         'faz passar', () {
-      final infrator = _injetar(
+      final diretorio = _diretorioComInfrator(
         'pureza_de_fonte_infrator_de_teste.dart',
         "const estilo = TextStyle(fontFamily: 'Roboto');\n",
       );
 
-      final violacoes = _varrer(lib, violacoesDeFonteEm);
+      final violacoes = _varrer(diretorio, violacoesDeFonteEm);
       expect(violacoes, hasLength(1));
       expect(
         violacoes.single,
@@ -178,9 +200,9 @@ void main() {
       );
       expect(violacoes.single, contains('fontFamily:'));
 
-      infrator.deleteSync();
+      arquivosDartEm(diretorio).single.deleteSync();
 
-      expect(_varrer(lib, violacoesDeFonteEm), isEmpty);
+      expect(_varrer(diretorio, violacoesDeFonteEm), isEmpty);
     });
 
     test('fontFamily lendo o token não é acusado', () {
