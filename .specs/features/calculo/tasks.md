@@ -394,10 +394,10 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `int garrafasDeRefrigerante({required int adultos, required int criancas, required double fator})` → `max(1, ceil((A×400 + C×500) × f / 2000))`
-- [ ] `int litrosDeSuco({required int adultos, required int criancas, required double fator})` → `max(1, ceil((A×250 + C×400) × f / 1000))`
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥8 (refri: 6A+1C f=1 → **2 gf** (2900/2000 = 1,45) · 0A+0C → 1 (piso) · só crianças conta 500 ml cada · f=2,5 escala · suco: 6A+1C f=1 → 2 L (1900/1000) · piso · só adultos · fronteira exata 2000 ml → 1 gf)
+- [x] `int garrafasDeRefrigerante({required int adultos, required int criancas, required double fator})` → `max(1, ceil((A×400 + C×500) × f / 2000))`
+- [x] `int litrosDeSuco({required int adultos, required int criancas, required double fator})` → `max(1, ceil((A×250 + C×400) × f / 1000))`
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥8 (refri: 6A+1C f=1 → **2 gf** (2900/2000 = 1,45) · 0A+0C → 1 (piso) · só crianças conta 500 ml cada · f=2,5 escala · suco: 6A+1C f=1 → 2 L (1900/1000) · piso · só adultos · fronteira exata 2000 ml → 1 gf)
 
 **Tests**: unit
 **Gate**: quick
