@@ -60,18 +60,44 @@
 
 ## Handoff
 
-- **Feature**: `fundacao` (`.specs/features/fundacao/`) — **CONCLUÍDA** ✅
-- **Phase / Task**: **Execute concluído** — T1–T18 implementadas e commitadas (3 lotes de sub-agentes), mais 2 tasks de correção vindas do Verifier. Validação independente **PASS** na iteração 2.
-- **Completed**: ROADMAP.md, STATE.md (AD-001..AD-007), fundacao/{context,spec,design,tasks,validation}.md, e o código: `pubspec.yaml`, árvore Clean Architecture (`lib/core/` + 8 features), `core/observability/`, `core/responsive/`, `core/firebase/`, `core/routing/` (rotas públicas + shell + abas), `core/di/`, `bootstrap/`, `main.dart`, fixture RN-30 e README de setup.
-- **In-progress** (file:line): none
-- **Next step**: **spec 01 `design-system`** (tokens e componentes do arquivo 02) ou **spec 02 `calculo`** (RN-xx em Dart puro) — as duas destravam todas as telas. Ver `.specs/ROADMAP.md`, marco M1.
-- **Blockers**: nenhum. **Checklist manual do README executada em 2026-08-20** (Android físico moto g15 / API 35 + Chrome 151 + Emulator Suite), com os resultados abaixo.
-- **Verificações manuais — resultado**:
-  - ✅ **FUND-01** — `flutter run` instalou e abriu no Android físico (`Installing build/app/outputs/flutter-apk/app-debug.apk`, `Flutter run key commands`, MainActivity renderizando 1080x2400) e `flutter build web` saiu com exit 0. Mesmo `lib/main.dart` nas duas plataformas.
-  - ✅ **R-1 RESOLVIDO — o risco caiu a favor do AD-004.** O SDK **nativo** aceitou as opções sintéticas de `demo-bora`: log do device traz `I/FirebaseApp: Device unlocked: initializing all Firebase APIs for app [DEFAULT]`, sem nenhum `invalid GOOGLE_APP_ID` nem `FirebaseException`. No web, zero erro de console. **O emulator-first não precisa de fallback**; `--dart-define` com projeto real segue desnecessário.
-  - ✅ **FUND-10** — em Chrome real, via servidor com fallback SPA: título exatamente `bora — a conta do rolê`; URLs **sem `#`** (`/roles`, `/c/rafa18`, `/rota-que-nao-existe`); `/rota-que-nao-existe` renderiza "PÁGINA NÃO ENCONTRADA — Esse endereço não leva a nenhuma tela do bora." com a URL tentada, **nunca tela branca**; `/c/rafa18` mostra "CONVIDADO · rafa18" e a URL **permanece** em `/c/rafa18`, provando que não há redirect para login. Bônus: `/roles/rafa18` redireciona para `/roles/rafa18/lista` — a rota do mutante corrigido em 73234e8, confirmada em navegador.
-  - ⚠️ **FUND-17 — metade verificada, metade ainda não observável.** O que importa está provado: com emuladores **no ar** e com eles **derrubados**, o app abre e navega igual — degradação, não crash. Mas o "erro de conexão aparece no log pelo handler global" **não se manifesta**: `useAuthEmulator`/`useFirestoreEmulator` só configuram host, não conectam de imediato, e como **toda tela desta spec é placeholder**, nada lê ou escreve no Firestore. Não é defeito — o critério só fica observável quando a primeira feature tocar dados de verdade (spec 05 em diante). Reverificar lá.
-  - ⬜ **FUND-20 AC2** — seguir o README do zero num clone limpo: não executado (exigiria clonar em outra máquina/pasta e refazer o setup).
-- **Decisão pendente do usuário**: **FUND-17 AC4** diz que o erro do Firebase é registrado "pelo handler global", mas a implementação o registra pelo `try/catch` do `AppBootstrap`, no mesmo `AppLogger` (mecanismo prescrito por T14). O resultado observável do AC está afirmado em teste. O Verifier apontou que a leitura literal do AC colide consigo mesma — uma exceção que chegasse ao handler global abortaria o boot, violando o "app abre mesmo assim" do próprio AC. Alinhar o texto do AC é decisão do usuário; o código não foi tocado.
-- **Uncommitted files**: none
-- **Branch**: main (os 23 commits da fundação foram para `main`, seguindo o histórico já existente; o `CLAUDE.md` prescreve `feature/nome` — divergência declarada, não corrigida por conta própria)
+> **Checkpoint de orquestração — 2026-08-20 21:55.** Duas specs em voo, em paralelo,
+> cada uma na sua worktree. Este bloco é o ponto de retomada: tudo abaixo está em disco
+> e em git. Se a sessão morrer agora, nada se perde além do que estiver a meio de uma task.
+
+- **Features**: `design-system` (spec 01) e `calculo` (spec 02) — **em paralelo**, marco M1 do ROADMAP.
+- **Phase / Task**: **Tasks** — `spec.md` e `design.md` das duas concluídos e commitados; `tasks.md` em escrita pelos planners.
+- **Worktrees e branches** (ambas partem de `c5be425`, baseline 92 testes verdes e `analyze` limpo, `pub get` já rodado):
+
+  | Worktree | Branch | Commits de planejamento |
+  |---|---|---|
+  | `/home/lucari/repo/bora-ds` | `feature/design-system` | `204bfcf` spec (DS-01..DS-35) · `893ab67` design |
+  | `/home/lucari/repo/bora-calculo` | `feature/calculo` | `1fe3cc3` spec (CALC-01..CALC-27) · `899a547` design |
+
+- **Completed**: decomposição do trabalho em dois workflows isolados; contratos de fronteira fixados (a UI não calcula nem formata — a fração do marcador de RN-11 e a formatação de RN-13 saem de `core/calculo/` prontas); `spec.md` + `design.md` das duas features.
+- **In-progress**: `.specs/features/design-system/tasks.md` e `.specs/features/calculo/tasks.md`.
+- **Next step**: empacotar as fases em lotes de ~7 tasks → despachar batch workers (sequencial dentro de cada spec, paralelo entre specs) → **Verifier independente por spec** → merge das duas branches em `main` → escrever os ADs e rodar `lessons.py`.
+
+- **Decisões do usuário em 2026-08-20** (já incorporadas às specs, ainda não viradas AD):
+  1. Fontes **bundladas** em `assets/fonts/` (Archivo variável + Archivo Black + OFL), não o pacote `google_fonts`.
+  2. Catálogo de componentes como **rota interna `/catalogo`**, sem dependência nova.
+  3. **RN-10 — leitura (a)**: R$ 271 manda e o parêntese "(22+30+8+15)" do arquivo 03 está errado. Entram no total Carvão 22 + Gelo 30 + Sal 8 = 60; Copos & pratos (R$ 15) aparece na lista e fica **fora** do total. Decidido pela consistência entre dois números independentes (211+60 = 271 e 270,6/6 = 45,1 → ≈R$ 45).
+
+- **Correção técnica registrada** (a premissa de partida do orquestrador estava errada): Archivo é distribuída só como fonte variável, mas **desde o Flutter 3.41 o `FontWeight` ajusta o eixo `wght` sozinho** e a doc oficial recomenda evitar `FontVariation`. SDK deste repo é 3.47.0. Medição empírica confirma (`w800` e `FontVariation('wght',800)` dão largura idêntica). `FontVariation` fica **proibida** no código de produto, policiada por DS-09.
+
+- **ADs propostos, aguardando merge para eu escrever**: `calculo` propõe AD-008 (entidades compartilhadas em `core/calculo/dominio/`), AD-009 (precisão: aritmética em `double`, arredondamento só na formatação) e AD-010 (leitura (a) de RN-10 com `entraNoTotal` declarado); `design-system` propõe quatro (exposição do token, mecanismo de peso da fonte, hand-off de `boraTheme()` para a spec 03, catálogo como rota interna).
+
+- **Blockers**: nenhum ativo. **Evento de limite de uso da conta em 2026-08-20 16:54** derrubou os dois planners no meio da escrita do `design.md`; o reset das 19:40 já passou e ambos foram retomados com sucesso às ~21:51, sem perda — os arquivos estavam em disco e foram commitados.
+- **Uncommitted files**: nenhum em `main`. Nas worktrees, apenas o `tasks.md` em escrita.
+- **Branch**: `main` intocada desde `c5be425`. O trabalho novo vive nas duas `feature/*`, como o `CLAUDE.md` prescreve — corrige a divergência que a fundação tinha registrado aqui.
+
+### Como retomar do zero
+
+```bash
+git worktree list                                   # as duas worktrees devem aparecer
+cd /home/lucari/repo/bora-calculo && git log --oneline main..HEAD
+cd /home/lucari/repo/bora-ds     && git log --oneline main..HEAD
+# em cada worktree, o portão:  flutter analyze && flutter test
+# o plano de cada spec:        .specs/features/<nome>/tasks.md  (marca o que já fechou)
+```
+
+Cada task fecha em commit atômico, então o último commit de cada branch é o ponto exato de retomada. Ao final das duas: `git merge feature/calculo` e `git merge feature/design-system` em `main`, escrever os ADs acima na seção Decisions e rodar `.claude/skills/tlc-spec-driven/scripts/lessons.py`.
