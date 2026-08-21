@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../components/bora_press_sink.dart';
 import '../components/bora_primary_button.dart';
 import '../components/bora_secondary_button.dart';
+import '../components/bora_selection_chip.dart';
 import '../components/bora_surface.dart';
 import '../components/bora_toast.dart';
 import '../components/bora_toast_texts.dart';
@@ -52,6 +53,19 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     referencia: '§5 · botão primário e secundário',
     builder: _construirBotoes,
   ),
+  (
+    titulo: 'CHIP DE SELEÇÃO',
+    referencia: '§5 · chip de seleção · §6',
+    builder: _construirChips,
+  ),
+];
+
+/// Itens de festa nos dois estados de §5 — rótulo, emoji e se está marcado.
+const List<(String, String, bool)> _itens = <(String, String, bool)>[
+  ('carne bovina', '🥩', true),
+  ('frango', '🍗', true),
+  ('pão de alho', '🥖', false),
+  ('cerveja', '🍺', false),
 ];
 
 /// As cores de §1, na ordem em que a tabela as declara.
@@ -250,6 +264,21 @@ Widget _construirBotoes(BuildContext context) {
         fundoBranco: true,
         onPressed: () {},
       ),
+    ],
+  );
+}
+
+Widget _construirChips(BuildContext context) {
+  return Wrap(
+    spacing: 12,
+    runSpacing: 12,
+    children: [
+      for (final item in _itens)
+        BoraSelectionChip(
+          rotulo: item.$1,
+          emoji: item.$2,
+          selecionado: item.$3,
+        ),
     ],
   );
 }

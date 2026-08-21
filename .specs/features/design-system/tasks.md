@@ -550,13 +550,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Não selecionado: fundo branco, texto `ink`. Selecionado: fundo `ink`, texto `cream`
-- [ ] Padding 10×14, texto 800/13 em CAIXA ALTA, emoji **à esquerda** do rótulo
-- [ ] A troca de estado usa `BoraMotion.estado` (150ms) — o `.15s` de §6
-- [ ] O teste afirma os dois estados lendo cor de fundo e cor do texto da árvore, afirma a ordem emoji→rótulo e afirma o rótulo em CAIXA ALTA
-- [ ] Seção registrada no catálogo (os dois estados lado a lado) e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4
+- [x] Não selecionado: fundo branco, texto `ink`. Selecionado: fundo `ink`, texto `cream`
+- [x] Padding 10×14, texto 800/13 em CAIXA ALTA, emoji **à esquerda** do rótulo
+- [x] A troca de estado usa `BoraMotion.estado` (150ms) — o `.15s` de §6
+- [x] O teste afirma os dois estados lendo cor de fundo e cor do texto da árvore, afirma a ordem emoji→rótulo e afirma o rótulo em CAIXA ALTA
+- [x] Seção registrada no catálogo (os dois estados lado a lado) e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: quick
