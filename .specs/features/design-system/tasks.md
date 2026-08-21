@@ -241,13 +241,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] `font_loading.dart` expõe um helper que carrega as duas famílias com `FontLoader` a partir do `rootBundle` — **local**, sem `flutter_test_config.dart` global (risco R-1: `flutter test` não carrega fonte do `pubspec`, e um config global mudaria o comportamento de toda a suíte, inclusive dos 92 testes de baseline)
-- [ ] O teste mede a largura da mesma string com `TextPainter` e afirma: largura(`FontWeight.w400`) **≠** largura(`FontWeight.w800`) — o eixo responde
-- [ ] O teste afirma: largura(`FontWeight.w800`) **==** largura(`FontVariation('wght', 800)`) — os dois caminhos são o mesmo mecanismo neste SDK. É este teste que avisa se o SDK do projeto um dia recuar para <3.41
-- [ ] O teste afirma que a família `Archivo Black` produz largura diferente de `Archivo` w400 — prova que a segunda família carregou de fato, e não caiu em fallback
-- [ ] As asserções usam pares de peso com diferença de largura **folgada** (w400 × w800 × w900), nunca vizinhos como w400 × w600, cuja diferença é de fração de pixel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥3
+- [x] `font_loading.dart` expõe um helper que carrega as duas famílias com `FontLoader` a partir do `rootBundle` — **local**, sem `flutter_test_config.dart` global (risco R-1: `flutter test` não carrega fonte do `pubspec`, e um config global mudaria o comportamento de toda a suíte, inclusive dos 92 testes de baseline)
+- [x] O teste mede a largura da mesma string com `TextPainter` e afirma: largura(`FontWeight.w400`) **≠** largura(`FontWeight.w800`) — o eixo responde
+- [x] O teste afirma: largura(`FontWeight.w800`) **==** largura(`FontVariation('wght', 800)`) — os dois caminhos são o mesmo mecanismo neste SDK. É este teste que avisa se o SDK do projeto um dia recuar para <3.41
+- [x] O teste afirma que a família `Archivo Black` produz largura diferente de `Archivo` w400 — prova que a segunda família carregou de fato, e não caiu em fallback
+- [x] As asserções usam pares de peso com diferença de largura **folgada** (w400 × w800 × w900), nunca vizinhos como w400 × w600, cuja diferença é de fração de pixel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥3
 
 **Tests**: unit
 **Gate**: quick
