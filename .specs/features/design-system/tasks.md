@@ -745,13 +745,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] `enum BoraStatus { recebe, paga, noZero, anfitriao, coAnfitriao, convidado, soVe }`, cada um com o par fundo/texto de §5: RECEBE = `ink` · PAGA = `primary` · NO ZERO = branco · ANFITRIÃO = `yellow` · CO-ANFITRIÃO = `purple` com texto branco · CONVIDADO = branco · SÓ VÊ = `waBubble` com texto `text2`
-- [ ] Borda 2px `ink`, padding 4–6×7–9, texto 800/9–10.5 com `letterSpacing .5` — o token `microTag`, cujo tamanho já respeita o piso de 9px (A-02)
-- [ ] O rótulo sai em CAIXA ALTA
-- [ ] O teste percorre os **sete** valores do enum e afirma o par de cores de cada um — um teste que falha se alguém acrescentar um status sem cor
-- [ ] Seção registrada no catálogo (os sete lado a lado) e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4
+- [x] `enum BoraStatus { recebe, paga, noZero, anfitriao, coAnfitriao, convidado, soVe }`, cada um com o par fundo/texto de §5: RECEBE = `ink` · PAGA = `primary` · NO ZERO = branco · ANFITRIÃO = `yellow` · CO-ANFITRIÃO = `purple` com texto branco · CONVIDADO = branco · SÓ VÊ = `waBubble` com texto `text2`
+- [x] Borda 2px `ink`, padding 4–6×7–9, texto 800/9–10.5 com `letterSpacing .5` — o token `microTag`, cujo tamanho já respeita o piso de 9px (A-02)
+- [x] O rótulo sai em CAIXA ALTA
+- [x] O teste percorre os **sete** valores do enum e afirma o par de cores de cada um — um teste que falha se alguém acrescentar um status sem cor
+- [x] Seção registrada no catálogo (os sete lado a lado) e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: quick

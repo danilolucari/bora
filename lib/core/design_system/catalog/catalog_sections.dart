@@ -8,6 +8,7 @@ import '../components/bora_primary_button.dart';
 import '../components/bora_secondary_button.dart';
 import '../components/bora_segmented_control.dart';
 import '../components/bora_selection_chip.dart';
+import '../components/bora_status_tag.dart';
 import '../components/bora_stepper.dart';
 import '../components/bora_surface.dart';
 import '../components/bora_text_field.dart';
@@ -93,6 +94,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'AVATARES',
     referencia: '§1 · §5 · avatares empilhados',
     builder: _construirAvatares,
+  ),
+  (
+    titulo: 'TAG DE STATUS',
+    referencia: '§5 · tag de status (pill quadrada)',
+    builder: _construirTagsDeStatus,
   ),
 ];
 
@@ -463,6 +469,17 @@ Widget _construirAvatares(BuildContext context) {
       for (final pessoa in _pessoas) BoraAvatar(nome: pessoa),
       const BoraStackedAvatars(nomes: ['Rafa', 'Ana', 'Léo'], extras: 3),
       const BoraStackedAvatars(nomes: ['Bia', 'Duda']),
+    ],
+  );
+}
+
+Widget _construirTagsDeStatus(BuildContext context) {
+  return Wrap(
+    spacing: 12,
+    runSpacing: 12,
+    children: [
+      // Os sete significados de §5, lado a lado.
+      for (final status in BoraStatus.values) BoraStatusTag(status: status),
     ],
   );
 }

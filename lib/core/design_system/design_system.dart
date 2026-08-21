@@ -12,6 +12,7 @@ export 'components/bora_primary_button.dart';
 export 'components/bora_secondary_button.dart';
 export 'components/bora_segmented_control.dart';
 export 'components/bora_selection_chip.dart';
+export 'components/bora_status_tag.dart';
 export 'components/bora_stepper.dart';
 export 'components/bora_surface.dart';
 export 'components/bora_text_field.dart';
