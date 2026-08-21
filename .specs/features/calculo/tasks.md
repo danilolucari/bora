@@ -162,12 +162,12 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `Festa` imutável e `const` com `nome`, `data` (`String`), `hora` (`String`), `local`, `duracaoHoras` (`int`), `status` (`StatusDaFesta`, default `chegando`) e `copyWith`
-- [ ] `data` e `hora` são **rótulos literais** (`SÁB · 18 JUL`, `14H`), não `DateTime` — A-23: converter exigiria inventar ano e fuso
-- [ ] **Sem** `link` e **sem** `nivelDoLink` — são RN-22/RN-23, domínio de `galera` (A-21); o doc comment diz isso
-- [ ] `==`/`hashCode` à mão, sem `package:meta`
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥3 (igualdade · `copyWith` não muta a original · default de `status`)
+- [x] `Festa` imutável e `const` com `nome`, `data` (`String`), `hora` (`String`), `local`, `duracaoHoras` (`int`), `status` (`StatusDaFesta`, default `chegando`) e `copyWith`
+- [x] `data` e `hora` são **rótulos literais** (`SÁB · 18 JUL`, `14H`), não `DateTime` — A-23: converter exigiria inventar ano e fuso
+- [x] **Sem** `link` e **sem** `nivelDoLink` — são RN-22/RN-23, domínio de `galera` (A-21); o doc comment diz isso
+- [x] `==`/`hashCode` à mão, sem `package:meta`
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥3 (igualdade · `copyWith` não muta a original · default de `status`)
 
 **Tests**: unit
 **Gate**: quick
