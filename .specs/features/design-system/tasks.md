@@ -715,16 +715,16 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Avatar circular de 34–40px com borda 2px `ink` e a inicial em 800 — **exceção de forma autorizada por §3**, e o arquivo já está na allowlist de T7
-- [ ] A inicial é a **primeira letra** do nome, em CAIXA ALTA (A-13)
-- [ ] As cinco personas usam os pares fixos de §1; nome fora da tabela recebe um dos **mesmos cinco** pares, sempre o mesmo para o mesmo nome
-- [ ] Pilha com sobreposição negativa de `-8` a `-10px`; último slot `+N` branco com borda **tracejada**
-- [ ] `extras == 0` ⇒ o slot `+N` **não** é renderizado (edge case da spec)
-- [ ] O teste afirma: forma circular, cor de fundo e de texto de cada persona, determinismo do fallback (duas chamadas, mesma cor), sobreposição negativa e ausência do slot com `+0`
-- [ ] A guarda de T7 continua passando (o arquivo está na allowlist, e só ele)
-- [ ] Seção registrada no catálogo e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6
+- [x] Avatar circular de 34–40px com borda 2px `ink` e a inicial em 800 — **exceção de forma autorizada por §3**, e o arquivo já está na allowlist de T7
+- [x] A inicial é a **primeira letra** do nome, em CAIXA ALTA (A-13)
+- [x] As cinco personas usam os pares fixos de §1; nome fora da tabela recebe um dos **mesmos cinco** pares, sempre o mesmo para o mesmo nome
+- [x] Pilha com sobreposição negativa de `-8` a `-10px`; último slot `+N` branco com borda **tracejada**
+- [x] `extras == 0` ⇒ o slot `+N` **não** é renderizado (edge case da spec)
+- [x] O teste afirma: forma circular, cor de fundo e de texto de cada persona, determinismo do fallback (duas chamadas, mesma cor), sobreposição negativa e ausência do slot com `+0`
+- [x] A guarda de T7 continua passando (o arquivo está na allowlist, e só ele)
+- [x] Seção registrada no catálogo e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6
 
 **Tests**: widget
 **Gate**: quick

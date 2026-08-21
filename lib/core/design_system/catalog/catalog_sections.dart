@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../components/bora_avatar.dart';
 import '../components/bora_expandable_row.dart';
 import '../components/bora_list_card.dart';
 import '../components/bora_press_sink.dart';
@@ -87,6 +88,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'LINHA EXPANSÍVEL',
     referencia: '§5 · linha expansível (accordion)',
     builder: _construirExpansiveis,
+  ),
+  (
+    titulo: 'AVATARES',
+    referencia: '§1 · §5 · avatares empilhados',
+    builder: _construirAvatares,
   ),
 ];
 
@@ -442,5 +448,21 @@ Widget _construirExpansiveis(BuildContext context) {
         ],
       ),
     ),
+  );
+}
+
+/// As cinco personas de RN-30, na ordem em que §1 as declara, mais um nome de
+/// fora da tabela — o caso de A-05.
+const List<String> _pessoas = ['Rafa', 'Ana', 'Léo', 'Bia', 'Duda', 'Marina'];
+
+Widget _construirAvatares(BuildContext context) {
+  return Wrap(
+    spacing: 24,
+    runSpacing: 16,
+    children: [
+      for (final pessoa in _pessoas) BoraAvatar(nome: pessoa),
+      const BoraStackedAvatars(nomes: ['Rafa', 'Ana', 'Léo'], extras: 3),
+      const BoraStackedAvatars(nomes: ['Bia', 'Duda']),
+    ],
   );
 }

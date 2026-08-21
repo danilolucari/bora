@@ -4,6 +4,7 @@
 /// e nenhum valor de cor, tipo, forma, sombra ou duração é digitado fora dele.
 library;
 
+export 'components/bora_avatar.dart';
 export 'components/bora_expandable_row.dart';
 export 'components/bora_list_card.dart';
 export 'components/bora_press_sink.dart';
