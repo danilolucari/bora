@@ -661,13 +661,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Fundo branco, borda 2px `ink`; cada linha com padding 12–13×14–16, emoji 19–20px à esquerda, título/sublinha à esquerda e valor 800/14 à direita
-- [ ] Entre linhas há divisor de **2px** na cor `divider`; com `n` linhas há `n - 1` divisores, e com 1 linha há **zero**
-- [ ] O valor da direita chega como `String` já formatada — o componente não formata `R$` (RN-13 é da spec `calculo`)
-- [ ] O teste afirma contagem de divisores, largura e cor do divisor, e a posição do emoji e do valor
-- [ ] Seção registrada no catálogo e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4
+- [x] Fundo branco, borda 2px `ink`; cada linha com padding 12–13×14–16, emoji 19–20px à esquerda, título/sublinha à esquerda e valor 800/14 à direita
+- [x] Entre linhas há divisor de **2px** na cor `divider`; com `n` linhas há `n - 1` divisores, e com 1 linha há **zero**
+- [x] O valor da direita chega como `String` já formatada — o componente não formata `R$` (RN-13 é da spec `calculo`)
+- [x] O teste afirma contagem de divisores, largura e cor do divisor, e a posição do emoji e do valor
+- [x] Seção registrada no catálogo e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: quick

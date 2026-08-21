@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../components/bora_list_card.dart';
 import '../components/bora_press_sink.dart';
 import '../components/bora_primary_button.dart';
 import '../components/bora_secondary_button.dart';
@@ -75,6 +76,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'INPUTS',
     referencia: '§5 · inputs',
     builder: _construirInputs,
+  ),
+  (
+    titulo: 'CARD DE LISTA',
+    referencia: '§5 · card de lista',
+    builder: _construirCardDeLista,
   ),
 ];
 
@@ -389,4 +395,26 @@ class _CampoDeCatalogoState extends State<_CampoDeCatalogo> {
       ),
     );
   }
+}
+
+/// A largura em que os componentes de linha aparecem no catálogo: o `Wrap` e
+/// o modo expandido dariam largura demais para uma lista de festa.
+const double _larguraDeLista = 320;
+
+Widget _construirCardDeLista(BuildContext context) {
+  return const SizedBox(
+    width: _larguraDeLista,
+    child: BoraListCard(
+      linhas: [
+        BoraListRow(emoji: '🥩', titulo: 'carne bovina', valor: 'R\$ 96'),
+        BoraListRow(
+          emoji: '🍺',
+          titulo: 'cerveja',
+          sublinha: '12 latas',
+          valor: 'R\$ 60',
+        ),
+        BoraListRow(emoji: '🥖', titulo: 'pão de alho', valor: 'R\$ 18'),
+      ],
+    ),
+  );
 }
