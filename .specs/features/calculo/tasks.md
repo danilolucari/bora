@@ -629,12 +629,12 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `double cotaPorAdulto({required double total, required int adultos})`; `adultos == 0` ⇒ **0,0**, nunca `NaN`/`Infinity`
-- [ ] O doc comment cita RN-14 e a copy "entre 4 adultos, criança de fora" — **criança nunca entra no racha**
-- [ ] `SituacaoDeSaldo { recebe, paga, noZero }` e `SaldoDePessoa` com `pessoa`, `contribuicao`, `cota`, `saldo` e `situacao` (usando `ehZeroNaTolerancia`)
-- [ ] `List<SaldoDePessoa> calcularSaldos({required Map<String, double> contribuicoes, required double total, required int adultos})` — `saldo = contribuição − cota`, **preservando a ordem de entrada**
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥8 (320 / 4 → **80** · 380 / 4 → **95** · `adultos == 0` → 0 · total 0 → 0 · saldos do Teste A: +120 / +40 / −80 / −80 · saldos do Teste B: +105 / +25 / −35 / −95 · situação recebe/paga/no zero · saldo de 0,005 conta como **no zero** pela tolerância)
+- [x] `double cotaPorAdulto({required double total, required int adultos})`; `adultos == 0` ⇒ **0,0**, nunca `NaN`/`Infinity`
+- [x] O doc comment cita RN-14 e a copy "entre 4 adultos, criança de fora" — **criança nunca entra no racha**
+- [x] `SituacaoDeSaldo { recebe, paga, noZero }` e `SaldoDePessoa` com `pessoa`, `contribuicao`, `cota`, `saldo` e `situacao` (usando `ehZeroNaTolerancia`)
+- [x] `List<SaldoDePessoa> calcularSaldos({required Map<String, double> contribuicoes, required double total, required int adultos})` — `saldo = contribuição − cota`, **preservando a ordem de entrada**
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥8 (320 / 4 → **80** · 380 / 4 → **95** · `adultos == 0` → 0 · total 0 → 0 · saldos do Teste A: +120 / +40 / −80 / −80 · saldos do Teste B: +105 / +25 / −35 / −95 · situação recebe/paga/no zero · saldo de 0,005 conta como **no zero** pela tolerância)
 
 **Tests**: unit
 **Gate**: quick
