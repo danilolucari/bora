@@ -840,14 +840,14 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `festaRn30Tipada` (`Festa`), `pessoasRn30Tipadas` (`List<Pessoa>`) e `itensPadraoRn30Tipados` (`List<ChaveItem>`) são **derivados** dos mapas brutos — nenhum literal duplicado, nenhuma segunda fonte da verdade
-- [ ] `test/fixtures/rn30_estado_inicial.dart` e `test/fixtures/rn30_estado_inicial_test.dart` **não são modificados** — nem uma linha, nem uma asserção
-- [ ] `dieta` e `bebe` da Duda chegam como **`null`** no tipo (A-08); o teste novo afirma isso explicitamente
-- [ ] A suíte antiga da fixture continua passando: a ausência de `dieta`/`bebe` na Duda e a de "todo valor bruto é primitivo" seguem valendo **palavra por palavra** (risco R-9)
-- [ ] Chave desconhecida em `ChaveItem.porChave` faria o teste **falhar** em vez de inventar item
-- [ ] Gate: `flutter analyze && flutter test` passa
-- [ ] Novos testes: ≥7 (festa campo a campo contra RN-30 · 5 pessoas na ordem · papéis mapeados · dietas mapeadas · **Duda com `dieta == null` e `bebe == null`** · 7 itens resolvidos para `ChaveItem` · Rafa é o `voce`)
-- [ ] **Verificação final da spec**: a contagem total de testes é a de 92 + a soma dos acréscimos de T1–T28; nenhuma queda
+- [x] `festaRn30Tipada` (`Festa`), `pessoasRn30Tipadas` (`List<Pessoa>`) e `itensPadraoRn30Tipados` (`List<ChaveItem>`) são **derivados** dos mapas brutos — nenhum literal duplicado, nenhuma segunda fonte da verdade
+- [x] `test/fixtures/rn30_estado_inicial.dart` e `test/fixtures/rn30_estado_inicial_test.dart` **não são modificados** — nem uma linha, nem uma asserção
+- [x] `dieta` e `bebe` da Duda chegam como **`null`** no tipo (A-08); o teste novo afirma isso explicitamente
+- [x] A suíte antiga da fixture continua passando: a ausência de `dieta`/`bebe` na Duda e a de "todo valor bruto é primitivo" seguem valendo **palavra por palavra** (risco R-9)
+- [x] Chave desconhecida em `ChaveItem.porChave` faria o teste **falhar** em vez de inventar item
+- [x] Gate: `flutter analyze && flutter test` passa
+- [x] Novos testes: ≥7 (festa campo a campo contra RN-30 · 5 pessoas na ordem · papéis mapeados · dietas mapeadas · **Duda com `dieta == null` e `bebe == null`** · 7 itens resolvidos para `ChaveItem` · Rafa é o `voce`)
+- [x] **Verificação final da spec**: a contagem total de testes é a de 92 + a soma dos acréscimos de T1–T28; nenhuma queda
 
 **Tests**: unit
 **Gate**: build
