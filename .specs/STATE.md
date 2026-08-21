@@ -60,35 +60,34 @@
 
 ## Handoff
 
-> **Checkpoint de orquestração — 2026-08-20 21:55.** Duas specs em voo, em paralelo,
-> cada uma na sua worktree. Este bloco é o ponto de retomada: tudo abaixo está em disco
-> e em git. Se a sessão morrer agora, nada se perde além do que estiver a meio de uma task.
+> **Checkpoint de orquestração — 2026-08-20 22:10.** Duas specs em voo, em paralelo, cada uma
+> na sua worktree. **Planejamento das duas concluído; Execute em curso.** Tudo abaixo está em
+> disco e em git — se a sessão morrer agora, perde-se no máximo a task corrente de cada lote.
 
 - **Features**: `design-system` (spec 01) e `calculo` (spec 02) — **em paralelo**, marco M1 do ROADMAP.
-- **Phase / Task**: **Tasks** — `spec.md` e `design.md` das duas concluídos e commitados; `tasks.md` em escrita pelos planners.
-- **Worktrees e branches** (ambas partem de `c5be425`, baseline 92 testes verdes e `analyze` limpo, `pub get` já rodado):
+- **Phase**: **Execute**, lote 1 de cada spec despachado.
 
-  | Worktree | Branch | Commits de planejamento |
-  |---|---|---|
-  | `/home/lucari/repo/bora-ds` | `feature/design-system` | `204bfcf` spec (DS-01..DS-35) · `893ab67` design |
-  | `/home/lucari/repo/bora-calculo` | `feature/calculo` | `1fe3cc3` spec (CALC-01..CALC-27) · `899a547` design |
+| Worktree | Branch | Planejamento (commitado) | Tasks | Lotes |
+|---|---|---|---|---|
+| `/home/lucari/repo/bora-calculo` | `feature/calculo` | `1fe3cc3` spec · `899a547` design · `8c9d404` tasks | **28** em 6 fases | 5 lotes: 6 / 7 / 5 / 5 / 5 |
+| `/home/lucari/repo/bora-ds` | `feature/design-system` | `204bfcf` spec · `893ab67` design · `9c69f5b` tasks | **32** em 7 fases | 5 lotes: 6 / 7 / 5 / 6 / 8 |
 
-- **Completed**: decomposição do trabalho em dois workflows isolados; contratos de fronteira fixados (a UI não calcula nem formata — a fração do marcador de RN-11 e a formatação de RN-13 saem de `core/calculo/` prontas); `spec.md` + `design.md` das duas features.
-- **In-progress**: `.specs/features/design-system/tasks.md` e `.specs/features/calculo/tasks.md`.
-- **Next step**: empacotar as fases em lotes de ~7 tasks → despachar batch workers (sequencial dentro de cada spec, paralelo entre specs) → **Verifier independente por spec** → merge das duas branches em `main` → escrever os ADs e rodar `lessons.py`.
+Ambas partem de `c5be425`; baseline em cada uma: **92 testes verdes**, `flutter analyze` limpo, `pub get` feito.
 
-- **Decisões do usuário em 2026-08-20** (já incorporadas às specs, ainda não viradas AD):
-  1. Fontes **bundladas** em `assets/fonts/` (Archivo variável + Archivo Black + OFL), não o pacote `google_fonts`.
-  2. Catálogo de componentes como **rota interna `/catalogo`**, sem dependência nova.
-  3. **RN-10 — leitura (a)**: R$ 271 manda e o parêntese "(22+30+8+15)" do arquivo 03 está errado. Entram no total Carvão 22 + Gelo 30 + Sal 8 = 60; Copos & pratos (R$ 15) aparece na lista e fica **fora** do total. Decidido pela consistência entre dois números independentes (211+60 = 271 e 270,6/6 = 45,1 → ≈R$ 45).
+- **Completed**: Specify + Design + Tasks das duas specs; contratos de fronteira fixados (a UI não calcula nem formata — a fração do marcador de RN-11 e a formatação de RN-13 saem prontas de `core/calculo/`); os sete ADs propostos persistidos.
+- **In-progress**: lote 1 de cada spec (fase 1, T1–T6 nas duas).
+- **Next step**: receber o resumo de cada lote → checkpoint → despachar o lote seguinte (sequencial dentro da spec, paralelo entre specs) → ao fim de cada spec, **Verifier independente** → merge das duas branches em `main` → colar os ADs → rodar `lessons.py`.
 
-- **Correção técnica registrada** (a premissa de partida do orquestrador estava errada): Archivo é distribuída só como fonte variável, mas **desde o Flutter 3.41 o `FontWeight` ajusta o eixo `wght` sozinho** e a doc oficial recomenda evitar `FontVariation`. SDK deste repo é 3.47.0. Medição empírica confirma (`w800` e `FontVariation('wght',800)` dão largura idêntica). `FontVariation` fica **proibida** no código de produto, policiada por DS-09.
+- **⚠️ ADs pendentes**: os sete textos estão em **`.specs/features/ads-pendentes.md`**, já com a **colisão de numeração resolvida** (os dois planners propuseram AD-008/009/010 para coisas diferentes; `calculo` ficou com 008–010 e `design-system` com 011–014). Colar na seção Decisions no merge e **apagar o arquivo**.
 
-- **ADs propostos, aguardando merge para eu escrever**: `calculo` propõe AD-008 (entidades compartilhadas em `core/calculo/dominio/`), AD-009 (precisão: aritmética em `double`, arredondamento só na formatação) e AD-010 (leitura (a) de RN-10 com `entraNoTotal` declarado); `design-system` propõe quatro (exposição do token, mecanismo de peso da fonte, hand-off de `boraTheme()` para a spec 03, catálogo como rota interna).
+- **Decisões do usuário em 2026-08-20** (já incorporadas às specs): fontes **bundladas** em `assets/fonts/`, não `google_fonts` · catálogo como **rota interna `/catalogo`** · **RN-10 leitura (a)**: R$ 271 manda, entram Carvão 22 + Gelo 30 + Sal 8 = 60, Copos & pratos fica fora do total · execução **ponta a ponta** sem checkpoint de aprovação entre fases.
 
-- **Blockers**: nenhum ativo. **Evento de limite de uso da conta em 2026-08-20 16:54** derrubou os dois planners no meio da escrita do `design.md`; o reset das 19:40 já passou e ambos foram retomados com sucesso às ~21:51, sem perda — os arquivos estavam em disco e foram commitados.
-- **Uncommitted files**: nenhum em `main`. Nas worktrees, apenas o `tasks.md` em escrita.
-- **Branch**: `main` intocada desde `c5be425`. O trabalho novo vive nas duas `feature/*`, como o `CLAUDE.md` prescreve — corrige a divergência que a fundação tinha registrado aqui.
+- **Pergunta aberta ao usuário** (não bloqueia; cai na fase 4 de `calculo`, task T23): premissa A-16 de `calculo` — progresso de quitação **sem nenhuma linha** devolve `1.0` (barra cheia). O planner declarou e testou, mas sinalizou que um cliente poderia querer `0.0` (barra vazia) quando ainda não há despesa.
+
+- **Blockers**: nenhum ativo. **Evento de limite de uso da conta em 2026-08-20 16:54** derrubou os dois planners; o reset das 19:40 passou e ambos foram retomados às ~21:51 sem perda.
+- **Proteção ativa**: autosave em background espelha trabalho não-commitado das três árvores para o scratchpad a cada 2 min. Protocolo de limite: checkpoint → dormir até o horário de reset informado no erro → retomar do último commit de cada branch.
+- **Uncommitted files**: nenhum em `main`.
+- **Branch**: `main` intocada em código desde `c5be425` (só docs de orquestração). O código novo vive nas duas `feature/*`, como o `CLAUDE.md` prescreve.
 
 ### Como retomar do zero
 
@@ -97,7 +96,7 @@ git worktree list                                   # as duas worktrees devem ap
 cd /home/lucari/repo/bora-calculo && git log --oneline main..HEAD
 cd /home/lucari/repo/bora-ds     && git log --oneline main..HEAD
 # em cada worktree, o portão:  flutter analyze && flutter test
-# o plano de cada spec:        .specs/features/<nome>/tasks.md  (marca o que já fechou)
+# o plano de cada spec:        .specs/features/<nome>/tasks.md  (as caixas marcadas dizem onde parou)
 ```
 
-Cada task fecha em commit atômico, então o último commit de cada branch é o ponto exato de retomada. Ao final das duas: `git merge feature/calculo` e `git merge feature/design-system` em `main`, escrever os ADs acima na seção Decisions e rodar `.claude/skills/tlc-spec-driven/scripts/lessons.py`.
+Cada task fecha em commit atômico, então o último commit de cada branch é o ponto exato de retomada.
