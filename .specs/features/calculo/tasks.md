@@ -214,9 +214,9 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `double fatorDuracao(num horas)` → `math.max(0.5, horas / 4)` — **nome exigido pelo `CLAUDE.md`**, não renomear
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6 (2h→0.5 · 4h→1.0 · 6h→1.5 · 10h→2.5 · 1h→0.5 e 0h→0.5, as duas fronteiras do piso)
+- [x] `double fatorDuracao(num horas)` → `math.max(0.5, horas / 4)` — **nome exigido pelo `CLAUDE.md`**, não renomear
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6 (2h→0.5 · 4h→1.0 · 6h→1.5 · 10h→2.5 · 1h→0.5 e 0h→0.5, as duas fronteiras do piso)
 
 **Tests**: unit
 **Gate**: quick
