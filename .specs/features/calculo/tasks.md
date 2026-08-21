@@ -443,10 +443,10 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `int garrafasPorDestilado({required int adultos, required double fator, required int destiladosSelecionados})` → `ml = adultos × 120 × f / n`; `max(1, ceil(ml / 1000))`
-- [ ] `adultos == 0` **ou** `destiladosSelecionados == 0` devolve **0** (A-12) — e nenhuma divisão por zero
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6 (6 adultos f=1 n=1 → **720 ml → 1 gf** · n=2 → 360 ml → 1 gf cada · 10 adultos f=1 n=1 → 1200 ml → 2 gf · f=2,5 escala · 0 adultos → 0 · 0 selecionados → 0)
+- [x] `int garrafasPorDestilado({required int adultos, required double fator, required int destiladosSelecionados})` → `ml = adultos × 120 × f / n`; `max(1, ceil(ml / 1000))`
+- [x] `adultos == 0` **ou** `destiladosSelecionados == 0` devolve **0** (A-12) — e nenhuma divisão por zero
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6 (6 adultos f=1 n=1 → **720 ml → 1 gf** · n=2 → 360 ml → 1 gf cada · 10 adultos f=1 n=1 → 1200 ml → 2 gf · f=2,5 escala · 0 adultos → 0 · 0 selecionados → 0)
 
 **Tests**: unit
 **Gate**: build
