@@ -370,10 +370,10 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `int unidadesDePaoDeAlho({required int pessoas, required double fator})` → `max(1, ceil(pessoas × 0,5 × f))`
-- [ ] `int garrafasDeAgua({required int pessoas, required double fator})` → `max(1, ceil(pessoas × 400 × f / 1500))`
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥8 (pão: 7 pessoas f=1 → **4 un** · 1 pessoa → 1 (piso) · 2 pessoas f=0,5 → 1 · 8 pessoas → 4 (sem `ceil` supérfluo) · água: 7 pessoas f=1 → **2 gf** (2800/1500 = 1,867) · 3 pessoas → 1 · 1 pessoa → 1 (piso) · fronteira exata 1500 ml → 1 gf)
+- [x] `int unidadesDePaoDeAlho({required int pessoas, required double fator})` → `max(1, ceil(pessoas × 0,5 × f))`
+- [x] `int garrafasDeAgua({required int pessoas, required double fator})` → `max(1, ceil(pessoas × 400 × f / 1500))`
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥8 (pão: 7 pessoas f=1 → **4 un** · 1 pessoa → 1 (piso) · 2 pessoas f=0,5 → 1 · 8 pessoas → 4 (sem `ceil` supérfluo) · água: 7 pessoas f=1 → **2 gf** (2800/1500 = 1,867) · 3 pessoas → 1 · 1 pessoa → 1 (piso) · fronteira exata 1500 ml → 1 gf)
 
 **Tests**: unit
 **Gate**: quick
