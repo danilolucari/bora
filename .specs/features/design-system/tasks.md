@@ -212,15 +212,15 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Os 24 tokens da tabela existem com exatamente os valores declarados
-- [ ] `microTag` usa **9.0**, não 8.5: §8 e o `CLAUDE.md` proíbem texto de UI abaixo de 9px, e o piso vence a faixa de §2 (A-02) — o doc comment registra o conflito e a resolução
-- [ ] Todo token de `Archivo Black` usa `FontWeight.w400` (A-11); nenhum token tem `fontWeight` nulo
-- [ ] **Nenhum** `FontVariation` no arquivo: o peso é declarado por `fontWeight` e o Flutter 3.47 move o eixo `wght` (ver `design.md` §Pesquisa e risco R-3)
-- [ ] `static const List<TextStyle> todos` contém **todos** os estilos declarados — a lista é contrato: estilo fora dela escapa da verificação
-- [ ] O teste percorre `todos` e afirma, para cada um: família ∈ {`Archivo`, `Archivo Black`}, `fontSize >= 9.0`, `fontWeight != null`, e `fontSize`/`letterSpacing`/`height` dentro da faixa de §2 daquele papel — com `reason` nomeando o papel
-- [ ] O teste afirma que `todos.length` bate com o número de estilos públicos declarados (senão a lista apodrece silenciosamente)
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6
+- [x] Os 24 tokens da tabela existem com exatamente os valores declarados
+- [x] `microTag` usa **9.0**, não 8.5: §8 e o `CLAUDE.md` proíbem texto de UI abaixo de 9px, e o piso vence a faixa de §2 (A-02) — o doc comment registra o conflito e a resolução
+- [x] Todo token de `Archivo Black` usa `FontWeight.w400` (A-11); nenhum token tem `fontWeight` nulo
+- [x] **Nenhum** `FontVariation` no arquivo: o peso é declarado por `fontWeight` e o Flutter 3.47 move o eixo `wght` (ver `design.md` §Pesquisa e risco R-3)
+- [x] `static const List<TextStyle> todos` contém **todos** os estilos declarados — a lista é contrato: estilo fora dela escapa da verificação
+- [x] O teste percorre `todos` e afirma, para cada um: família ∈ {`Archivo`, `Archivo Black`}, `fontSize >= 9.0`, `fontWeight != null`, e `fontSize`/`letterSpacing`/`height` dentro da faixa de §2 daquele papel — com `reason` nomeando o papel
+- [x] O teste afirma que `todos.length` bate com o número de estilos públicos declarados (senão a lista apodrece silenciosamente)
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6
 
 **Tests**: unit
 **Gate**: quick
