@@ -319,12 +319,12 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `ItemDeLista` imutável com `chave`, `nome`, `emoji`, `unidade`, `quantidadeAutomatica`, `precoBase`, `quantidadeOverride?`, `precoOverride?`, `essencial`, `fonteDaProporcao?`, `quemLeva?`, `noCarrinho`
-- [ ] Derivados: `quantidade` (override ?? automática), `preco` (override ?? base), `valor = quantidade × preco`, `editado` (qualquer override presente)
-- [ ] `OverrideDeItem { double? quantidade; double? preco; }`
-- [ ] `copyWith` e `==`/`hashCode`; `quemLeva` é o **nome** da pessoa (A-24) e `noCarrinho` é estado de `lista`, guardado aqui só porque o arquivo 01 §6 o declara no item — o doc comment diz isso
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥7 (`valor` com e sem override de quantidade · com e sem override de preço · `editado` falso sem override · verdadeiro com cada um dos dois · igualdade · `copyWith` não muta)
+- [x] `ItemDeLista` imutável com `chave`, `nome`, `emoji`, `unidade`, `quantidadeAutomatica`, `precoBase`, `quantidadeOverride?`, `precoOverride?`, `essencial`, `fonteDaProporcao?`, `quemLeva?`, `noCarrinho`
+- [x] Derivados: `quantidade` (override ?? automática), `preco` (override ?? base), `valor = quantidade × preco`, `editado` (qualquer override presente)
+- [x] `OverrideDeItem { double? quantidade; double? preco; }`
+- [x] `copyWith` e `==`/`hashCode`; `quemLeva` é o **nome** da pessoa (A-24) e `noCarrinho` é estado de `lista`, guardado aqui só porque o arquivo 01 §6 o declara no item — o doc comment diz isso
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥7 (`valor` com e sem override de quantidade · com e sem override de preço · `editado` falso sem override · verdadeiro com cada um dos dois · igualdade · `copyWith` não muta)
 
 **Tests**: unit
 **Gate**: quick
