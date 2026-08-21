@@ -418,11 +418,11 @@ T1..T26 ──→ T27 ──→ T28
 - Skill: NONE
 
 **Done when**:
-- [ ] `int latasDeCerveja({required int adultosQueBebem, required double fator})` → `max(1, ceil(bebem × 1000 × f / 350))`
-- [ ] `adultosQueBebem == 0` devolve **0**, não 1 — A-12: o piso existe para não comprar "0,4 lata" quando **há** plateia, não para comprar cerveja para plateia nenhuma
-- [ ] O nome do parâmetro é `adultosQueBebem` desde já, e o doc comment aponta RN-21/A-06 como quem o preenche
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥6 (6 adultos f=1 → **18 latas** (17,14) · 1 adulto → 3 · f=0,5 com 6 → 9 · f=2,5 com 6 → 43 · 0 que bebem → **0** · fronteira exata 350 ml → 1)
+- [x] `int latasDeCerveja({required int adultosQueBebem, required double fator})` → `max(1, ceil(bebem × 1000 × f / 350))`
+- [x] `adultosQueBebem == 0` devolve **0**, não 1 — A-12: o piso existe para não comprar "0,4 lata" quando **há** plateia, não para comprar cerveja para plateia nenhuma
+- [x] O nome do parâmetro é `adultosQueBebem` desde já, e o doc comment aponta RN-21/A-06 como quem o preenche
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥6 (6 adultos f=1 → **18 latas** (17,14) · 1 adulto → 3 · f=0,5 com 6 → 9 · f=2,5 com 6 → 43 · 0 que bebem → **0** · fronteira exata 350 ml → 1)
 
 **Tests**: unit
 **Gate**: quick
