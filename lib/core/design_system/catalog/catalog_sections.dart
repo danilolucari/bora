@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import '../components/bora_surface.dart';
+import '../tokens/bora_accent.dart';
 import '../tokens/bora_borders.dart';
 import '../tokens/bora_colors.dart';
 import '../tokens/bora_shadows.dart';
@@ -24,6 +26,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'TOKENS',
     referencia: '§1 · §2 · §4',
     builder: _construirTokens,
+  ),
+  (
+    titulo: 'SUPERFÍCIE',
+    referencia: '§3 · §4 · superfície comum',
+    builder: _construirSuperficie,
   ),
 ];
 
@@ -148,4 +155,28 @@ class _AmostraDeSombra extends StatelessWidget {
       child: Text(nome, style: BoraTextStyles.microTag),
     );
   }
+}
+
+Widget _construirSuperficie(BuildContext context) {
+  return Wrap(
+    spacing: 24,
+    runSpacing: 24,
+    children: [
+      BoraSurface(
+        padding: BoraSpacing.chip,
+        child: Text('SEM SOMBRA', style: BoraTextStyles.microTag),
+      ),
+      BoraSurface(
+        acento: BoraAccent.primary,
+        padding: BoraSpacing.chip,
+        child: Text('4px NO PRIMARY', style: BoraTextStyles.microTag),
+      ),
+      BoraSurface(
+        acento: BoraAccent.purple,
+        deslocamentoDaSombra: 5,
+        padding: BoraSpacing.chip,
+        child: Text('5px NO PURPLE', style: BoraTextStyles.microTag),
+      ),
+    ],
+  );
 }

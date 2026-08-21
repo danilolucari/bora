@@ -435,13 +435,13 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] `BoraSurface` renderiza `BoxDecoration` com `borderRadius: BorderRadius.zero`, borda de 2px na cor pedida e, quando há acento, **exatamente uma** `BoxShadow` dura
-- [ ] `pump_component.dart` monta um componente isolado com `boraTheme()` — é o helper que as fases 4–7 reusam
-- [ ] O teste lê a `BoxDecoration` **da árvore renderizada** e afirma: `borderRadius == BorderRadius.zero`, `border.top.width == 2.0`, `border.top.color == BoraColors.ink`, `boxShadow.length == 1`, `boxShadow.single.blurRadius == 0`, `boxShadow.single.offset == Offset(4, 4)`
-- [ ] O teste afirma que sem acento **não há sombra alguma** (e não uma sombra transparente)
-- [ ] Seção registrada em `catalog_sections.dart` e export acrescentado ao barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4
+- [x] `BoraSurface` renderiza `BoxDecoration` com `borderRadius: BorderRadius.zero`, borda de 2px na cor pedida e, quando há acento, **exatamente uma** `BoxShadow` dura
+- [x] `pump_component.dart` monta um componente isolado com `boraTheme()` — é o helper que as fases 4–7 reusam
+- [x] O teste lê a `BoxDecoration` **da árvore renderizada** e afirma: `borderRadius == BorderRadius.zero`, `border.top.width == 2.0`, `border.top.color == BoraColors.ink`, `boxShadow.length == 1`, `boxShadow.single.blurRadius == 0`, `boxShadow.single.offset == Offset(4, 4)`
+- [x] O teste afirma que sem acento **não há sombra alguma** (e não uma sombra transparente)
+- [x] Seção registrada em `catalog_sections.dart` e export acrescentado ao barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: quick

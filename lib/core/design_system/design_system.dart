@@ -4,6 +4,7 @@
 /// e nenhum valor de cor, tipo, forma, sombra ou duração é digitado fora dele.
 library;
 
+export 'components/bora_surface.dart';
 export 'tokens/bora_accent.dart';
 export 'tokens/bora_borders.dart';
 export 'tokens/bora_colors.dart';
