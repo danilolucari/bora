@@ -5,6 +5,7 @@
 library;
 
 export 'components/bora_avatar.dart';
+export 'components/bora_bottom_sheet.dart';
 export 'components/bora_dashed_note.dart';
 export 'components/bora_expandable_row.dart';
 export 'components/bora_footer_bar.dart';

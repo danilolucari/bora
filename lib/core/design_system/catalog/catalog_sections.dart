@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import '../components/bora_avatar.dart';
+import '../components/bora_bottom_sheet.dart';
 import '../components/bora_dashed_note.dart';
 import '../components/bora_expandable_row.dart';
 import '../components/bora_footer_bar.dart';
@@ -141,6 +142,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'OPÇÃO DE ENQUETE',
     referencia: '§5 · opção de enquete (estilo WhatsApp)',
     builder: _construirEnquete,
+  ),
+  (
+    titulo: 'BOTTOM SHEET',
+    referencia: '§5 · bottom sheet',
+    builder: _construirSheet,
   ),
 ];
 
@@ -709,6 +715,39 @@ Widget _construirEnquete(BuildContext context) {
             ),
           ),
         ),
+    ],
+  );
+}
+
+Widget _construirSheet(BuildContext context) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      // O sheet de verdade, com scrim e tudo, abre daqui.
+      BoraPrimaryButton(
+        rotulo: 'abrir o sheet',
+        onPressed: () => BoraBottomSheet.mostrar<void>(
+          context,
+          titulo: 'quem leva o quê',
+          conteudo: (context) => Text(
+            'a lista abre aqui, ancorada embaixo',
+            style: BoraTextStyles.corpo,
+          ),
+        ),
+      ),
+      const SizedBox(height: 16),
+      // E o painel parado, para conferir a moldura sem precisar abri-lo.
+      SizedBox(
+        width: _larguraDoCelular,
+        child: BoraBottomSheet(
+          titulo: 'quem leva o quê',
+          conteudo: (context) => Text(
+            'a lista abre aqui, ancorada embaixo',
+            style: BoraTextStyles.corpo,
+          ),
+        ),
+      ),
     ],
   );
 }
