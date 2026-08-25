@@ -965,14 +965,14 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] Overlay com `BoraColors.sheetScrim` (`rgba(20,10,50,.45)`) — **não** é `ink` com opacidade; é um preto-arroxeado, e o doc comment registra isso
-- [ ] Painel ancorado embaixo, fundo `paper`, `border-top` de 2px `ink`, padding 22/24/30, radius **zero**
-- [ ] Título Archivo Black 22 em CAIXA ALTA + botão ✕ de 32×32 com borda 2px
-- [ ] Tocar o ✕ (ou o scrim) fecha o sheet
-- [ ] O teste afirma a cor do scrim, a borda só no topo, o tamanho do ✕ e o fechamento
-- [ ] Seção registrada no catálogo (com um botão que abre o sheet) e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥5
+- [x] Overlay com `BoraColors.sheetScrim` (`rgba(20,10,50,.45)`) — **não** é `ink` com opacidade; é um preto-arroxeado, e o doc comment registra isso
+- [x] Painel ancorado embaixo, fundo `paper`, `border-top` de 2px `ink`, padding 22/24/30, radius **zero**
+- [x] Título Archivo Black 22 em CAIXA ALTA + botão ✕ de 32×32 com borda 2px
+- [x] Tocar o ✕ (ou o scrim) fecha o sheet
+- [x] O teste afirma a cor do scrim, a borda só no topo, o tamanho do ✕ e o fechamento
+- [x] Seção registrada no catálogo (com um botão que abre o sheet) e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥5
 
 **Tests**: widget
 **Gate**: quick
@@ -993,14 +993,14 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] 390×820, `borderRadius` de **38**, borda de 1px `frameBorder` (`rgba(0,0,0,.25)`), `clipBehavior` que corta o conteúdo
-- [ ] Coluna flex: header fixo, conteúdo rolando no meio (`Expanded` + scroll), rodapé fixo
-- [ ] A sombra é `BoraShadows.frame` — a **única** do sistema com `blurRadius > 0`, e o doc comment diz por quê ("é o palco, não a UI", §4)
-- [ ] O teste afirma o tamanho 390×820, o radius 38, a largura de borda 1.0 e que a sombra tem `blurRadius > 0`; afirma que o conteúdo central rola e que header/rodapé não
-- [ ] O teste de T7 continua passando com este arquivo na allowlist — e falharia se qualquer **outro** arquivo tentasse a mesma coisa
-- [ ] Seção registrada no catálogo e export no barrel
-- [ ] Gate: `flutter test` passa
-- [ ] Novos testes: ≥4
+- [x] 390×820, `borderRadius` de **38**, borda de 1px `frameBorder` (`rgba(0,0,0,.25)`), `clipBehavior` que corta o conteúdo
+- [x] Coluna flex: header fixo, conteúdo rolando no meio (`Expanded` + scroll), rodapé fixo
+- [x] A sombra é `BoraShadows.frame` — a **única** do sistema com `blurRadius > 0`, e o doc comment diz por quê ("é o palco, não a UI", §4)
+- [x] O teste afirma o tamanho 390×820, o radius 38, a largura de borda 1.0 e que a sombra tem `blurRadius > 0`; afirma que o conteúdo central rola e que header/rodapé não
+- [x] O teste de T7 continua passando com este arquivo na allowlist — e falharia se qualquer **outro** arquivo tentasse a mesma coisa
+- [x] Seção registrada no catálogo e export no barrel
+- [x] Gate: `flutter test` passa
+- [x] Novos testes: ≥4
 
 **Tests**: widget
 **Gate**: quick
@@ -1021,14 +1021,14 @@ T10, T31 → T32
 - Skill: NONE
 
 **Done when**:
-- [ ] O catálogo renderiza **todas** as seções registradas, cada uma com o título e a referência ao trecho do arquivo 02 (`'§5 · Stepper'`), para que a conferência a olho seja seção-a-seção contra a spec-fonte
-- [ ] Layout compacto (`< 900`) rola numa coluna; expandido (`>= 900`) usa largura maior sem overflow — os dois pelo `LayoutMode` de **AD-007**, sem redeclarar o breakpoint
-- [ ] O teste de completude percorre uma lista canônica de tipos de componente e afirma `find.byType(...)` para **cada** um, falhando com o **nome** do que faltou — é isto que impede um componente de existir sem lugar de conferência
-- [ ] O mesmo teste afirma que o barrel `design_system.dart` exporta todo componente e todo token, falhando com o nome do que não estiver exportado
-- [ ] Os dois layouts são exercitados com `tester.view.physicalSize` nas duas larguras, afirmando ausência de overflow (`tester.takeException()` nulo)
-- [ ] Os 92 testes de baseline continuam passando; contagem final reportada
-- [ ] Gate: `flutter analyze && flutter test` passa (fim da Phase 7)
-- [ ] Novos testes: ≥4
+- [x] O catálogo renderiza **todas** as seções registradas, cada uma com o título e a referência ao trecho do arquivo 02 (`'§5 · Stepper'`), para que a conferência a olho seja seção-a-seção contra a spec-fonte
+- [x] Layout compacto (`< 900`) rola numa coluna; expandido (`>= 900`) usa largura maior sem overflow — os dois pelo `LayoutMode` de **AD-007**, sem redeclarar o breakpoint
+- [x] O teste de completude percorre uma lista canônica de tipos de componente e afirma `find.byType(...)` para **cada** um, falhando com o **nome** do que faltou — é isto que impede um componente de existir sem lugar de conferência
+- [x] O mesmo teste afirma que o barrel `design_system.dart` exporta todo componente e todo token, falhando com o nome do que não estiver exportado
+- [x] Os dois layouts são exercitados com `tester.view.physicalSize` nas duas larguras, afirmando ausência de overflow (`tester.takeException()` nulo)
+- [x] Os 92 testes de baseline continuam passando; contagem final reportada
+- [x] Gate: `flutter analyze && flutter test` passa (fim da Phase 7)
+- [x] Novos testes: ≥4
 - [ ] **M** — `flutter run` e `flutter run -d chrome`, abrir `/catalogo` e conferir cada seção contra `.specs/init-spec/02-design-system.md` — **pendente com o usuário**: não há device nem navegador neste ambiente (risco R-11). O executor **reporta como não verificado**, não assume que passou
 
 **Tests**: widget
