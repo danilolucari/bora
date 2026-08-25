@@ -78,6 +78,14 @@ List<File> arquivosDartEm(Directory diretorio) => diretorio
     .where((f) => f.path.endsWith('.dart'))
     .toList();
 
+/// [caminho] com o separador do sistema trocado por `/`.
+///
+/// `listSync` devolve `lib\core\design_system` no Windows, e as constantes de
+/// escopo deste arquivo são escritas com `/`. Sem normalizar, o teste
+/// anti-vácuo não acha nada dentro do design system e a guarda se declara
+/// vazia numa plataforma e cheia na outra.
+String caminhoNormalizado(String caminho) => caminho.replaceAll(r'\', '/');
+
 List<String> _varrer(
   Directory diretorio,
   List<String> Function(String caminho, String conteudo) regra,
@@ -254,7 +262,8 @@ void main() {
 
   group('DS-09 — as varreduras não rodam vazias', () {
     test('lib/ tem arquivo .dart dentro e fora do design system', () {
-      final caminhos = arquivosDartEm(lib).map((f) => f.path).toList();
+      final caminhos =
+          arquivosDartEm(lib).map((f) => caminhoNormalizado(f.path)).toList();
 
       expect(caminhos, isNotEmpty, reason: 'guarda sem alvo passa vacuamente');
       expect(
@@ -267,6 +276,25 @@ void main() {
         caminhos.where((c) => !c.startsWith(_diretorioDoDesignSystem)),
         isNotEmpty,
         reason: 'a varredura global de §8 alcança lib/ inteira, não só o '
+            'design system',
+      );
+    });
+
+    test('o escopo é reconhecido com separador do Windows e do POSIX', () {
+      expect(
+        caminhoNormalizado(r'lib\core\design_system\tokens\bora_colors.dart'),
+        startsWith(_diretorioDoDesignSystem),
+        reason: 'sem normalizar, o teste anti-vácuo acima passa no Linux e '
+            'falha no Windows sem que a guarda tenha mudado',
+      );
+      expect(
+        caminhoNormalizado('lib/core/design_system/tokens/bora_colors.dart'),
+        startsWith(_diretorioDoDesignSystem),
+      );
+      expect(
+        caminhoNormalizado(r'lib\features\montar\montar_page.dart'),
+        isNot(startsWith(_diretorioDoDesignSystem)),
+        reason: 'normalizar não pode passar a incluir o que está fora do '
             'design system',
       );
     });
