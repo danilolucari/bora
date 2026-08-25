@@ -7,6 +7,7 @@ import '../components/bora_expandable_row.dart';
 import '../components/bora_footer_bar.dart';
 import '../components/bora_hero_card.dart';
 import '../components/bora_list_card.dart';
+import '../components/bora_phone_frame.dart';
 import '../components/bora_poll_option.dart';
 import '../components/bora_press_sink.dart';
 import '../components/bora_price_range_bar.dart';
@@ -147,6 +148,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'BOTTOM SHEET',
     referencia: '§5 · bottom sheet',
     builder: _construirSheet,
+  ),
+  (
+    titulo: 'FRAME DO CELULAR',
+    referencia: '§5 · frame do celular · §4 (única sombra suave)',
+    builder: _construirFrameDoCelular,
   ),
 ];
 
@@ -749,5 +755,41 @@ Widget _construirSheet(BuildContext context) {
         ),
       ),
     ],
+  );
+}
+
+/// O gutter lateral da tela — o mesmo 24 de [BoraSpacing.rodape] e
+/// [BoraSpacing.sheet], que §5 usa como margem de tela.
+const EdgeInsets _gutterDaTela = EdgeInsets.symmetric(horizontal: 24);
+
+Widget _construirFrameDoCelular(BuildContext context) {
+  return BoraPhoneFrame(
+    header: Padding(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
+      child: Text('BORA.', style: BoraTextStyles.tituloTela),
+    ),
+    rodape: BoraFooterBar(
+      label: 'sai por',
+      valorFormatado: r'R$ 211',
+      sublinha: r'≈ R$ 30 por cabeça',
+      cta: BoraPrimaryButton(rotulo: 'bora', onPressed: () {}),
+    ),
+    conteudo: Padding(
+      padding: _gutterDaTela,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (final (rotulo, emoji, _) in _itens)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Text('$emoji  $rotulo', style: BoraTextStyles.corpo),
+            ),
+          // Alto o bastante para provar a olho que o meio rola sob o header e
+          // o rodapé parados.
+          const SizedBox(height: 600),
+          Text('fim do conteúdo', style: BoraTextStyles.corpo),
+        ],
+      ),
+    ),
   );
 }
