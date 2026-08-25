@@ -80,6 +80,18 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: P1-2 AC2 (lib/core/calculo/dominio)
 - last seen: 2026-08-25T17:19:11Z
 
+### L-012 — Premissa sobre o ambiente (nao ha device, nao ha navegador) tem de ser retestada a cada maquina: a de R-11 valia so na maquina antiga e foi herdada por tres documentos, dando um criterio como impossivel por duas sessoes ate alguem rodar flutter devices.
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `.specs` · harmful: 0
+- features: design-system
+- evidence: R-11 / DS-33 (.specs)
+- last seen: 2026-08-25T19:46:26Z
+
+### L-013 — No Git Bash do Windows, argumento que comeca com barra e convertido em caminho Windows: use MSYS_NO_PATHCONV=1 em adb, git show ref:path e flags como --route.
+- signal: `gate_fail` · recurrence: 1 feature(s) · scope: `windows` · harmful: 0
+- features: design-system
+- evidence: --route=C:\Program Files\Git\catalogo virou C;C:\Program Files\Git\Program Files\Git\catalogo (windows)
+- last seen: 2026-08-25T19:46:27Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

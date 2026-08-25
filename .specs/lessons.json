@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 12,
+  "next_id": 14,
   "lessons": [
     {
       "id": "L-001",
@@ -202,6 +202,42 @@
       ],
       "created": "2026-08-25T17:19:11Z",
       "last_seen": "2026-08-25T17:19:11Z"
+    },
+    {
+      "id": "L-012",
+      "key": "spec_precision_gap::premissa sobre o ambiente nao ha device nao ha navegador tem de ser retestada a cada maquina a de r 11 valia so na maquina antiga e foi herdada por tres documentos dando um criterio como impossivel por duas sessoes ate alguem rodar flutter devices",
+      "text": "Premissa sobre o ambiente (nao ha device, nao ha navegador) tem de ser retestada a cada maquina: a de R-11 valia so na maquina antiga e foi herdada por tres documentos, dando um criterio como impossivel por duas sessoes ate alguem rodar flutter devices.",
+      "signal": "spec_precision_gap",
+      "scope": ".specs",
+      "status": "candidate",
+      "features": [
+        "design-system"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "R-11 / DS-33 (.specs)"
+      ],
+      "created": "2026-08-25T19:46:26Z",
+      "last_seen": "2026-08-25T19:46:26Z"
+    },
+    {
+      "id": "L-013",
+      "key": "gate_fail::no git bash do windows argumento que comeca com barra e convertido em caminho windows use msys no pathconv 1 em adb git show ref path e flags como route",
+      "text": "No Git Bash do Windows, argumento que comeca com barra e convertido em caminho Windows: use MSYS_NO_PATHCONV=1 em adb, git show ref:path e flags como --route.",
+      "signal": "gate_fail",
+      "scope": "windows",
+      "status": "candidate",
+      "features": [
+        "design-system"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "--route=C:\\Program Files\\Git\\catalogo virou C;C:\\Program Files\\Git\\Program Files\\Git\\catalogo (windows)"
+      ],
+      "created": "2026-08-25T19:46:27Z",
+      "last_seen": "2026-08-25T19:46:27Z"
     }
   ]
 }

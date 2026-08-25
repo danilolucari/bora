@@ -234,21 +234,21 @@ Tudo o que a lista de pendências desta sessão pedia foi feito:
 
 ### O que fica em aberto — e não é código
 
-1. **DS-33, a conferência visual — metade feita.** O **web foi validado pelo usuário em
-   2026-08-25** (Chrome 151, via `flutter run -d web-server` em `/catalogo`); falta o **mobile**.
-   Golden images seguem fora de escopo por decisão, então **nenhum teste da suíte afirma
-   aparência** — a evidência deste critério é a conferência humana, e é por isso que ela não
-   podia ser dada por boa sem acontecer.
+1. ~~**DS-33, a conferência visual.**~~ ✅ **Fechada em 2026-08-25**, nas **duas** plataformas:
+   web (Chrome 151, via `-d web-server` em `/catalogo`) e mobile (emulador `Pixel_10`). Validada
+   pelo usuário. A evidência deste critério é a conferência humana — golden images ficaram fora
+   de escopo e nenhum teste da suíte afirma aparência; o protótipo original nem está no
+   repositório, então "parece o protótipo?" só podia ser respondido por quem o viu.
 
-   ⚠️ **Premissa corrigida:** este arquivo e o `spec.md` afirmavam "não há device nem navegador
-   neste ambiente (risco R-11)". Isso valia na máquina **Linux** original e foi herdado sem
-   reteste. **Nesta máquina há os dois**: emulador `Pixel_10` disponível e `android/` no repo.
-   A metade mobile é executável e continua cobrada.
+   ⚠️ **Premissa que estava errada, para não se repetir:** este arquivo e o `spec.md` afirmavam
+   "não há device nem navegador neste ambiente (risco R-11)". Isso valia na máquina **Linux**
+   original e foi herdado por três documentos sem ninguém retestar. **Nesta máquina havia os
+   dois.** O critério foi dado como impossível por duas sessões antes de alguém rodar
+   `flutter devices`.
 
    Nota de ambiente: `flutter run -d chrome` **falha** aqui — o Chrome sobe e aceita
    `--remote-debugging-port` (testado com os flags exatos), mas o handshake do debug service do
-   `flutter_tools` 3.47.1 não fecha com o Chrome 151. O contorno é `-d web-server`, que para
-   conferência visual é mais fiel: renderiza no navegador real do usuário.
+   `flutter_tools` 3.47.1 não fecha com o Chrome 151. Use `-d web-server`.
 2. **FUND-17 AC4**, herdado da fundação — a spec nomeia "handler global" mas a implementação
    registra pelo `try/catch` do boot. Diagnóstico em `.specs/features/fundacao/validation.md`.
    **Decisão do usuário.**

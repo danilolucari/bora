@@ -38,11 +38,12 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > R$ 271 / ≈R$ 45) e os Testes A e B de RN-16 estão na suíte como testes literais, e o catálogo
 > de componentes renderiza os tokens do arquivo 02 na rota interna `/catalogo`.
 >
-> **Uma ressalva, para não dar por feito o que não foi.** "Catálogo renderizando os tokens" está
-> provado por asserção sobre a árvore: cada token tem o valor literal da spec. Isso **não** prova
-> que o conjunto parece o protótipo — golden images ficaram fora de escopo por decisão, então
-> nenhum teste da suíte afirma aparência. A conferência visual de **DS-33 está metade feita**:
-> o **web foi validado pelo usuário em 2026-08-25**, o **mobile segue pendente**.
+> **Sem ressalva pendente.** O que os testes provam — cada token com o valor literal da spec —
+> está provado por asserção sobre a árvore. O que eles **não** provam é se o conjunto parece o
+> protótipo: golden images ficaram fora de escopo por decisão, e nenhum teste da suíte afirma
+> aparência. Essa metade foi fechada por **conferência humana**: o usuário validou o `/catalogo`
+> em **2026-08-25** nas duas plataformas — web (Chrome 151) e mobile (emulador `Pixel_10`).
+> **DS-33 verificada.**
 
 ---
 
