@@ -1,4 +1,12 @@
-/// Camada de cálculo do BORA — território das regras RN-01..RN-29.
+/// Camada de cálculo do BORA — território das regras **RN-01..RN-18, RN-20 e
+/// RN-21**.
+///
+/// O recorte é literal, não aproximado: `spec.md` §Rastreabilidade dá dono a
+/// dez RNs **fora** desta camada — RN-19 → `custos`; RN-22, RN-23 → `galera`;
+/// RN-24, RN-28 → `convidado`; RN-25, RN-26, RN-26b → `convite`; RN-27 →
+/// `lista`; RN-29 → `design-system`. Reivindicar "RN-01..RN-29" aqui seria a
+/// primeira linha que toda feature consumidora lê prometendo o que a camada
+/// não entrega, e quem viesse buscar RN-29 sairia implementando por conta.
 ///
 /// Dart puro por contrato: nenhum arquivo desta pasta pode importar
 /// `package:flutter/…`, `dart:ui`, `package:firebase…`, `cloud_firestore` ou

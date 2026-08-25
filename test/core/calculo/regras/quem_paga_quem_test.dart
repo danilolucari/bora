@@ -175,6 +175,21 @@ void main() {
       expect(linhas.single.valor, closeTo(80, 0.001));
     });
 
+    test('o credor de meio centavo na frente da fila não vira linha fantasma',
+        () {
+      // A tolerância na **entrada** é o que protege daqui: sem ela, ANA entra
+      // na fila de credores e, por ser a primeira, recebe uma linha de
+      // R$ 0,005 antes de RAFA. Classificar por `> 0` deixa os outros testes
+      // deste grupo verdes — eles exercitam o resíduo do lado devedor e o que
+      // sobra no fim, não um credor sub-centavo no início da ordem.
+      final linhas = calcularRacha(
+        _saldos(const {'ANA': 0.005, 'RAFA': 50, 'BIA': -50.005}),
+      );
+
+      expect(_rotas(linhas), ['BIA→RAFA']);
+      expect(linhas.single.valor, closeTo(50, 0.001));
+    });
+
     test('nenhuma linha emitida vale um centavo ou menos', () {
       final linhas = calcularRacha(
         _saldos(const {'VOCÊ': 80.005, 'ANA': 40, 'LÉO': -80, 'BIA': -40.005}),
