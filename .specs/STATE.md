@@ -88,7 +88,9 @@ chegou pelo remote (`3b4d040` o bottom sheet da T30, `62c5537` o `validation.md`
 | Spec | Tasks | Testes | Analyze | Estado |
 |---|---|---|---|---|
 | 02 `calculo` | **28 / 28** | **425** verdes | limpo | Implementação completa. Falta a validação independente. |
-| 01 `design-system` | **31 / 32** | **386** verdes | limpo | Falta só a **T32**. |
+| 01 `design-system` | **32 / 32** | **395** verdes | limpo | Implementação completa. Falta a validação independente. |
+
+**As duas specs estão implementadas.** O que resta antes do merge é validação, não código.
 
 ### O que esta sessão fez
 
@@ -103,6 +105,17 @@ chegou pelo remote (`3b4d040` o bottom sheet da T30, `62c5537` o `validation.md`
    1px, conteúdo cortado nos cantos; header e rodapé fixos com a área central rolando; sombra
    suave **fora** do recorte. Seção no catálogo e export no barrel. +7 testes (379 → 386). As
    duas allowlists da guarda já nomeavam `bora_phone_frame.dart` desde a fase 2 e seguem verdes.
+3. **`feat(design-system)` `4b21801` — T32, o catálogo fechado por completude.** O catálogo e
+   o responsivo já vinham da T10; o que faltava era a prova de que **todo** componente tem
+   lugar lá dentro. Duas listas de naturezas diferentes de propósito: a de tipos é escrita à
+   mão (uma lista derivada da árvore renderizada concordaria com qualquer catálogo, inclusive
+   um vazio), e a de arquivos é varrida do disco (componente novo entra sozinho na cobrança do
+   barrel). O barrel é cobrado nos dois sentidos. **Verificado por mutação**: removida a seção
+   do frame, o teste falha nomeando `BoraPhoneFrame (bora_phone_frame.dart)`; árvore
+   restaurada em seguida. +9 testes (386 → **395**).
+4. **`docs(design-system)` `18fd815`** — marca T30–T32 no plano. A conferência visual de DS-33
+   fica **desmarcada de propósito**: sem device nem navegador aqui, é reportada como **não
+   verificada**, não assumida como passada.
 
 ### O `validation.md` de `calculo` é um esqueleto vazio
 
@@ -112,13 +125,12 @@ uma validação.** O Verifier de `calculo` continua integralmente por fazer.
 
 ### O que falta, em ordem
 
-1. **`design-system` T32** — catálogo completo, responsivo e verificado por completude.
-   Baseline ao retomar: **386** testes. O registro de seções termina em `FRAME DO CELULAR`; a
-   lista canônica do teste de completude tem de falhar **nomeando** o componente ou export que
-   sumir.
-2. **Verifier de `calculo`** — ver "Contrato do Verifier".
-3. **Verifier de `design-system`** — mesmo rigor, depois da T32.
-4. **Corrigir gaps** dos Verifiers (loop fix→re-verify, máx. 3 iterações antes de escalar).
+1. **Verifier de `calculo`** — ver "Contrato do Verifier". Quem verificar não pode ter
+   implementado: nesta sessão ninguém tocou em `calculo`, então a independência está
+   satisfeita sem agente novo.
+2. **Verifier de `design-system`** — mesmo rigor. Aqui a independência **exige agente novo**:
+   o `fix` da guarda, a T31 e a T32 saíram desta sessão.
+3. **Corrigir gaps** dos Verifiers (loop fix→re-verify, máx. 3 iterações antes de escalar).
 5. **Merge** de `feature/calculo` e depois `feature/design-system` em `main`. Fronteiras de
    arquivo foram disjuntas — só `design-system` tocou `pubspec.yaml` e `lib/core/routing/`.
 6. **Escrever os 7 ADs** de `.specs/features/ads-pendentes.md` na seção Decisions,
@@ -128,17 +140,11 @@ uma validação.** O Verifier de `calculo` continua integralmente por fazer.
    `/` é verde só no POSIX*.
 8. **Atualizar o `ROADMAP.md`**: specs 01 e 02 concluídas, marco **M0** fechado.
 
-### Pendência de marcação
-
-As caixas "Done when" de **T30 e T31** ainda estão `- [ ]` no
-`.specs/features/design-system/tasks.md` — as duas tasks estão commitadas e verdes, mas o
-plano não foi marcado. Marcar junto com a T32, num commit `docs(design-system)`.
-
 ### Decisão pendente do usuário: push
 
-`feature/design-system` está **2 commits à frente** de `origin` (`179bab0`, `bcd156d`) e nada
-foi enviado — push não foi pedido nesta sessão. Se o trabalho for retomado em outra máquina, é
-preciso `git push origin feature/design-system` antes.
+`feature/design-system` está **4 commits à frente** de `origin` (`179bab0`, `bcd156d`,
+`4b21801`, `18fd815`) e nada foi enviado — push não foi pedido nesta sessão. Se o trabalho for
+retomado em outra máquina, é preciso `git push origin feature/design-system` antes.
 
 ### Contrato do Verifier (vale para as duas specs)
 
