@@ -28,6 +28,24 @@ M0 · FUNDAÇÃO            M1 · MONTA E VÊ O CUSTO      M2 · CHAMA A GALERA 
 
 Dentro de M0, `design-system` e `calculo` são independentes — podem andar em paralelo. `entrar` + `home` também dependem só de M0.
 
+> ## ✅ M0 fechado em 2026-08-25
+>
+> As três specs da fundação estão implementadas, validadas por Verifier independente e
+> **mergeadas em `main`**: `flutter analyze` limpo e **742 testes verdes** — 92 da `fundacao`,
+> 344 de `calculo`, 306 de `design-system`.
+>
+> O critério verificável de M0 bate: os casos literais do arquivo 03 (R$ 211 / ≈R$ 30 e
+> R$ 271 / ≈R$ 45) e os Testes A e B de RN-16 estão na suíte como testes literais, e o catálogo
+> de componentes renderiza os tokens do arquivo 02 na rota interna `/catalogo`.
+>
+> **Uma ressalva, para não dar por feito o que não foi.** "Catálogo renderizando os tokens" está
+> provado por asserção sobre a árvore: cada token tem o valor literal da spec. A conferência
+> **visual** — "parece o protótipo?", DS-33 — segue **não verificada**: não há device nem
+> navegador no ambiente de desenvolvimento, golden images ficaram fora de escopo por decisão, e
+> por isso **nenhum teste da suíte afirma aparência**. Roteiro pendente com o usuário:
+> `flutter run` e `flutter run -d chrome`, abrir `/catalogo`, conferir seção a seção contra
+> `.specs/init-spec/02-design-system.md`.
+
 ---
 
 ## 2. Tabela mestre das specs
@@ -68,10 +86,10 @@ Decisões do Discuss: SDK Flutter é pré-requisito externo (instalado à mão, 
 
 ⚠️ **Pré-condição bloqueante:** o SDK Flutter/Dart não está instalado na máquina (verificado em 2026-08-12). O Execute não começa antes de `flutter --version` responder.
 
-### 01 · `design-system` — Grande
+### 01 · `design-system` — Grande · **Concluída e mergeada** (T1–T32, 2026-08-25) → `.specs/features/design-system/`
 `core/design_system/`: todos os tokens do arquivo 02 (cores, tipografia Archivo/Archivo Black, formas radius-0, sombras duras) como tema Flutter, mais o catálogo de componentes: botões primário/secundário (com press que afunda), chip de seleção, segmented, stepper, card de lista, accordion (1 aberto por vez), avatares empilhados, tag de status, **toast (RN-29: 2200 ms, 1 por vez)**, rodapé CTA, card-herói escuro, bottom sheet, barra de faixa de preço, opção de enquete, barra de progresso, inputs, frame do celular. Critério: página-catálogo (widgetbook ou similar interno) onde cada componente é conferível contra o arquivo 02. Nenhuma RN de cálculo aqui.
 
-### 02 · `calculo` — Grande
+### 02 · `calculo` — Grande · **Concluída e mergeada** (T1–T28, 2026-08-25) → `.specs/features/calculo/`
 `core/calculo/`, **Dart puro, sem Flutter e sem Firebase**. Implementa RN-01..RN-21: contagem de pessoas, fator de duração, quantidades por item, essenciais automáticos, preço médio/faixa, overrides com passos e mínimos, formatação R$ (RN-13), cota justa, saldos, algoritmo quem-paga-quem (RN-16), split de despesa, quitação, "eu levo" como contribuição (RN-20), efeitos de preferências (RN-21: kit veggie, remove suína, cerveja por quem bebe). Os exemplos numéricos do arquivo 03 entram como **testes literais**. Define as entidades de domínio em PT-BR. É a spec mais crítica do produto: tudo que mexe com dinheiro consome esta camada e **nenhuma outra camada recalcula**.
 
 ### 03 · `entrar` — Médio, com Discuss

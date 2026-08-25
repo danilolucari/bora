@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 6,
+  "next_id": 12,
   "lessons": [
     {
       "id": "L-001",
@@ -94,6 +94,114 @@
       ],
       "created": "2026-08-20T14:20:20Z",
       "last_seen": "2026-08-20T14:20:20Z"
+    },
+    {
+      "id": "L-006",
+      "key": "gate_fail::guarda que compara path de filesystem contra constante escrita com barra normal e verde no posix e vermelha no windows normalize o separador antes de comparar",
+      "text": "Guarda que compara path de filesystem contra constante escrita com barra normal e verde no POSIX e vermelha no Windows: normalize o separador antes de comparar.",
+      "signal": "gate_fail",
+      "scope": "test/architecture",
+      "status": "candidate",
+      "features": [
+        "design-system"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "test/core/design_system/architecture/token_purity_guard_test.dart:261 (test/architecture)"
+      ],
+      "created": "2026-08-25T17:19:10Z",
+      "last_seen": "2026-08-25T17:19:10Z"
+    },
+    {
+      "id": "L-007",
+      "key": "surviving_mutant::allowlist de guarda deve liberar a forma exata nao o arquivo liberar o arquivo abre um buraco do tamanho do arquivo inteiro",
+      "text": "Allowlist de guarda deve liberar a forma exata, nao o arquivo: liberar o arquivo abre um buraco do tamanho do arquivo inteiro.",
+      "signal": "surviving_mutant",
+      "scope": "test/architecture",
+      "status": "candidate",
+      "features": [
+        "design-system"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "GAP-1 e GAP-2 do validation.md (test/architecture)"
+      ],
+      "created": "2026-08-25T17:19:10Z",
+      "last_seen": "2026-08-25T17:19:10Z"
+    },
+    {
+      "id": "L-008",
+      "key": "surviving_mutant::assercao contra literal concorda com o literal do componente para amarrar componente a token compare com o token",
+      "text": "Assercao contra literal concorda com o literal do componente: para amarrar componente a token, compare com o token.",
+      "signal": "surviving_mutant",
+      "scope": "test/components",
+      "status": "candidate",
+      "features": [
+        "design-system"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "GAP-3 do validation.md (test/components)"
+      ],
+      "created": "2026-08-25T17:19:11Z",
+      "last_seen": "2026-08-25T17:19:11Z"
+    },
+    {
+      "id": "L-009",
+      "key": "spec_precision_gap::justificativa de ad com exemplo numerico tem de ser rodada antes de virar registro a de ad 009 era falsa e passou por planner implementador e revisao",
+      "text": "Justificativa de AD com exemplo numerico tem de ser rodada antes de virar registro: a de AD-009 era falsa e passou por planner, implementador e revisao.",
+      "signal": "spec_precision_gap",
+      "scope": ".specs",
+      "status": "candidate",
+      "features": [
+        "calculo"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "AD-009 (.specs)"
+      ],
+      "created": "2026-08-25T17:19:11Z",
+      "last_seen": "2026-08-25T17:19:11Z"
+    },
+    {
+      "id": "L-010",
+      "key": "surviving_mutant::tolerancia usada como filtro de entrada precisa de teste com o caso na frente da fila no fim da fila os outros testes ja cobrem",
+      "text": "Tolerancia usada como filtro de entrada precisa de teste com o caso na frente da fila: no fim da fila os outros testes ja cobrem.",
+      "signal": "surviving_mutant",
+      "scope": "lib/core/calculo/regras",
+      "status": "candidate",
+      "features": [
+        "calculo"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "M12 do validation.md (lib/core/calculo/regras)"
+      ],
+      "created": "2026-08-25T17:19:11Z",
+      "last_seen": "2026-08-25T17:19:11Z"
+    },
+    {
+      "id": "L-011",
+      "key": "ac_gap::entidade de dominio com colecao precisa de igualdade profunda de list set e map em dart e identidade",
+      "text": "Entidade de dominio com colecao precisa de igualdade profunda: == de List, Set e Map em Dart e identidade.",
+      "signal": "ac_gap",
+      "scope": "lib/core/calculo/dominio",
+      "status": "candidate",
+      "features": [
+        "calculo"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "P1-2 AC2 (lib/core/calculo/dominio)"
+      ],
+      "created": "2026-08-25T17:19:11Z",
+      "last_seen": "2026-08-25T17:19:11Z"
     }
   ]
 }

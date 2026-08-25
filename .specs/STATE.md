@@ -217,29 +217,41 @@ uma validação.** O Verifier de `calculo` continua integralmente por fazer.
 
 ### O que falta, em ordem
 
-**Verificação e correção de gaps: concluídas.** O que resta:
+## 🎉 M0 FECHADO — não há trabalho pendente de código
 
-1. **Merge** de `feature/calculo` e depois `feature/design-system` em `main`. Fronteiras de
-   arquivo foram disjuntas — só `design-system` tocou `pubspec.yaml` e `lib/core/routing/`.
-   ⚠️ Uma exceção **nova** desta sessão: as duas branches passaram a tocar `.specs/STATE.md`?
-   **Não** — o `STATE.md` só é escrito em `main`. Mas ambas agora têm `validation.md` próprio,
-   em pastas diferentes, sem colisão. Após o merge, rodar a suíte inteira uma vez: as duas
-   somam **834** testes e nenhuma viu o código da outra.
-2. **Rodar** `.claude/skills/tlc-spec-driven/scripts/lessons.py` com as lições da rodada.
-   Candidatas, todas com evidência nesta sessão:
-   - *guarda que compara path de filesystem contra constante escrita com `/` é verde só no
-     POSIX*;
-   - *allowlist que libera **arquivo** quando a regra autoriza **forma** abre buraco do tamanho
-     do arquivo*;
-   - *teste que bate em literal concorda com o literal do componente: para amarrar componente a
-     token, a asserção tem de ser contra o token*;
-   - *justificativa de AD não verificada empiricamente vira folclore — a de AD-009 estava
-     errada e passou por planner, implementador e revisão*.
-3. **Atualizar o `ROADMAP.md`**: specs 01 e 02 concluídas, marco **M0** fechado.
+`main` está em **742 testes verdes** com `flutter analyze` limpo, e as duas branches foram
+mergeadas sem conflito (`--no-ff`, um merge commit cada). A aritmética fecha e é a prova de que
+o merge não perdeu nem duplicou nada: **92** da `fundacao` + **344** de `calculo` + **306** de
+`design-system` = **742**.
 
-**Feito nesta sessão:** os 7 ADs pendentes foram escritos na seção Decisions acima, já
-renumerados (`calculo` 008–010, `design-system` 011–014), e `.specs/features/ads-pendentes.md`
-foi apagado.
+Tudo o que a lista de pendências desta sessão pedia foi feito:
+
+- ✅ Verifiers independentes das duas specs, gaps corrigidos com mutação confirmando cada fix
+- ✅ 7 ADs pendentes escritos em Decisions e `ads-pendentes.md` apagado
+- ✅ Merge de `feature/calculo` e `feature/design-system` em `main`, com a suíte inteira verde
+- ✅ 6 lições registradas no `lessons.py` (L-006..L-011)
+- ✅ `ROADMAP.md` atualizado: specs 01 e 02 concluídas, **M0 fechado**
+
+### O que fica em aberto — e não é código
+
+1. **DS-33, a conferência visual.** Não verificada e não verificável aqui: sem device nem
+   navegador, com golden images fora de escopo por decisão, **nenhum teste da suíte afirma
+   aparência**. Roteiro: `flutter run` e `flutter run -d chrome`, abrir `/catalogo`, conferir
+   seção a seção contra `.specs/init-spec/02-design-system.md`.
+2. **FUND-17 AC4**, herdado da fundação — a spec nomeia "handler global" mas a implementação
+   registra pelo `try/catch` do boot. Diagnóstico em `.specs/features/fundacao/validation.md`.
+   **Decisão do usuário.**
+3. **Premissa A-16 de `calculo`** — `progressoDeQuitacao` sem nenhuma linha devolve `1.0`. A
+   spec `custos` pode trocar em uma linha.
+4. **`62c5537`** está fora da convenção de commit (assunto em inglês, `feat` para doc, sem
+   `RN-xx` no corpo). É histórico; reescrever custa mais do que vale.
+
+### Próximo marco: M1 — monta e vê o custo
+
+As specs de M1 são **03 `entrar`**, **04 `home`** e **05 `montar`**, nesta ordem de dependência.
+Duas coisas que M0 deliberadamente deixou para elas, registradas em **AD-013**: plugar
+`boraTheme()` no `BoraApp` (`lib/app.dart` ficou fora da spec 01) e revestir `PlaceholderPage`,
+`RouteErrorPage`, `AppShell` e `FestaTabsShell`. Até isso acontecer, o app roda sem tema.
 
 ### Decisão pendente do usuário: push
 

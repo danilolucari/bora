@@ -44,6 +44,42 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: validation.md SPEC_DEVIATION 2 — lib/core/routing/app_router.dart:17-26 (routing)
 - last seen: 2026-08-20T14:20:20Z
 
+### L-006 — Guarda que compara path de filesystem contra constante escrita com barra normal e verde no POSIX e vermelha no Windows: normalize o separador antes de comparar.
+- signal: `gate_fail` · recurrence: 1 feature(s) · scope: `test/architecture` · harmful: 0
+- features: design-system
+- evidence: test/core/design_system/architecture/token_purity_guard_test.dart:261 (test/architecture)
+- last seen: 2026-08-25T17:19:10Z
+
+### L-007 — Allowlist de guarda deve liberar a forma exata, nao o arquivo: liberar o arquivo abre um buraco do tamanho do arquivo inteiro.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `test/architecture` · harmful: 0
+- features: design-system
+- evidence: GAP-1 e GAP-2 do validation.md (test/architecture)
+- last seen: 2026-08-25T17:19:10Z
+
+### L-008 — Assercao contra literal concorda com o literal do componente: para amarrar componente a token, compare com o token.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `test/components` · harmful: 0
+- features: design-system
+- evidence: GAP-3 do validation.md (test/components)
+- last seen: 2026-08-25T17:19:11Z
+
+### L-009 — Justificativa de AD com exemplo numerico tem de ser rodada antes de virar registro: a de AD-009 era falsa e passou por planner, implementador e revisao.
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `.specs` · harmful: 0
+- features: calculo
+- evidence: AD-009 (.specs)
+- last seen: 2026-08-25T17:19:11Z
+
+### L-010 — Tolerancia usada como filtro de entrada precisa de teste com o caso na frente da fila: no fim da fila os outros testes ja cobrem.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `lib/core/calculo/regras` · harmful: 0
+- features: calculo
+- evidence: M12 do validation.md (lib/core/calculo/regras)
+- last seen: 2026-08-25T17:19:11Z
+
+### L-011 — Entidade de dominio com colecao precisa de igualdade profunda: == de List, Set e Map em Dart e identidade.
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `lib/core/calculo/dominio` · harmful: 0
+- features: calculo
+- evidence: P1-2 AC2 (lib/core/calculo/dominio)
+- last seen: 2026-08-25T17:19:11Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
