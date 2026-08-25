@@ -52,7 +52,16 @@ abstract final class BoraShadows {
   static final BoxShadow cardBrancoGrande = hard(BoraColors.ink, 8);
 
   /// §4, card-herói escuro: `6px 6px 0 #FF4D2E`.
-  static final BoxShadow cardHeroi = hard(BoraColors.primary, 6);
+  /// A distância do card-herói, separada do [cardHeroi] pronto.
+  ///
+  /// `BoraSurface` monta a sombra a partir do **acento e da distância**, não de
+  /// um `BoxShadow` pronto. Sem esta constante, o componente digitava o `6` por
+  /// conta e virava uma segunda fonte da verdade: mudar [cardHeroi] aqui não
+  /// mudava o que o card desenhava. Mesma razão de [distanciaCta].
+  static const double distanciaCardHeroi = 6;
+
+  static final BoxShadow cardHeroi =
+      hard(BoraColors.primary, distanciaCardHeroi);
 
   /// §4, flyer do convite: `8px 8px 0 #FF4D2E`.
   static final BoxShadow flyer = hard(BoraColors.primary, 8);

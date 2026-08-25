@@ -63,6 +63,22 @@ void main() {
       );
     });
 
+    testWidgets('a sombra desenhada é o token, não uma cópia dele',
+        (tester) async {
+      await _montar(tester);
+
+      // As três asserções acima batem em literais, e literal no teste concorda
+      // com literal no componente: as duas cópias do 6 podiam divergir do token
+      // sem nada ficar vermelho. Esta amarra o que o card desenha ao que
+      // `BoraShadows` declara.
+      expect(_cartao(tester).boxShadow!.single, BoraShadows.cardHeroi);
+      expect(
+        BoraHeroCard.deslocamentoDaSombra,
+        BoraShadows.distanciaCardHeroi,
+        reason: 'a distância do card é a do token, não um segundo 6',
+      );
+    });
+
     testWidgets('o padding é o 20px de §5', (tester) async {
       await _montar(tester);
 

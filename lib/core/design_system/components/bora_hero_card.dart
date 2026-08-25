@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../tokens/bora_accent.dart';
 import '../tokens/bora_colors.dart';
+import '../tokens/bora_shadows.dart';
 import '../tokens/bora_spacing.dart';
 import '../tokens/bora_text_styles.dart';
 import 'bora_surface.dart';
@@ -26,7 +27,11 @@ class BoraHeroCard extends StatelessWidget {
   });
 
   /// §4, card-herói escuro: `6px 6px 0 #FF4D2E`.
-  static const double deslocamentoDaSombra = 6;
+  ///
+  /// Lê o token em vez de repetir o `6`: `BoraShadows.cardHeroi` e o que este
+  /// card desenha têm de ser a mesma sombra, e com dois literais separados
+  /// mudar o token não mudava o card.
+  static const double deslocamentoDaSombra = BoraShadows.distanciaCardHeroi;
 
   /// O rótulo do topo. Sai em CAIXA ALTA (§7, DS-32) venha como vier.
   final String label;
