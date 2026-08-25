@@ -45,6 +45,20 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > em **2026-08-25** nas duas plataformas — web (Chrome 151) e mobile (emulador `Pixel_10`).
 > **DS-33 verificada.**
 
+> ## 🟡 M1 em Specify — 2026-08-25
+>
+> As specs **03 `entrar`**, **04 `home`** e **05 `montar`** estão **especificadas** (spec + context),
+> com o Discuss rodado e quatro decisões registradas: **AD-015** (auth), **AD-016** (dados do M1),
+> **AD-017** (guarda de sessão) e **AD-018** ("PROS FORTES" nas duas plataformas; "QUEM LEVA?" fora
+> do M1). **Nenhuma linha de código foi escrita** — o próximo passo das três é Design formal.
+>
+> `entrar` e `home` subiram de Médio para **Grande** (ver ✱✱): Design e Tasks deixam de ser inline.
+>
+> **A spec 06 `lista` também é do M1 e ainda não foi especificada.** Ela tem Discuss marcado
+> (zonas cinzentas G2 e G3) e fica para sessão própria — o critério de M1 no quadro abaixo
+> menciona UC-06 e UC-16, que são dela.
+
+
 ---
 
 ## 2. Tabela mestre das specs
@@ -56,9 +70,9 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 | 00 | `fundacao` | raiz do projeto | scaffold Flutter + Firebase (emulador) + rotas + DI/BlocObserver + lint + fixture RN-30 + README | **Grande** ✱ | ✅ feito | sim | sim | — |
 | 01 | `design-system` | `core/design_system/` | arquivo 02 inteiro: tokens, tipografia, formas, sombras, ~18 componentes, motion · RN-29 (componente toast) | Grande | — | sim | sim | 00 |
 | 02 | `calculo` | `core/calculo/` | RN-01..RN-21 (fórmulas, overrides, saldos, quem-paga-quem, efeitos de preferência) · RN-13 (formatação) · entidades de domínio compartilhadas | Grande | — | sim | sim | 00 |
-| 03 | `entrar` | `features/entrar/` | T-01, W-01 · UC-01 | Médio | **sim** | inline | inline | 00, 01 |
-| 04 | `home` | `features/home/` | T-02, W-02 · UC-02, UC-24 · RN-28 (consumo) | Médio | — | inline | inline | 00, 01, 03 |
-| 05 | `montar` | `features/montar/` | T-03, W-03 · UC-03, UC-04 · RN-01..10, RN-21 (consumo) | Grande | — | sim | sim | 01, 02, 04 |
+| 03 | `entrar` | `features/entrar/` | T-01, W-01 · UC-01 · **AD-013** (tema no `BoraApp`) | **Grande** ✱✱ | ✅ feito | sim | sim | 00, 01 |
+| 04 | `home` | `features/home/` | T-02, W-02 · UC-02, UC-24 · RN-28 (consumo) | **Grande** ✱✱ | ✅ feito | sim | sim | 00, 01, 03 |
+| 05 | `montar` | `features/montar/` | T-03, W-03 · UC-03, UC-04 · RN-01..10, RN-21 (consumo) | Grande | ✅ feito | sim | sim | 01, 02, 04 |
 | 06 | `lista` | `features/lista/` | T-04, W-03/W-04 · UC-05, UC-06, UC-14, UC-15, UC-16 · RN-10, RN-11, RN-12, RN-27 | Grande | **sim** | sim | sim | 01, 02, 05 |
 | 07 | `galera` | `features/galera/` | T-05, W-04 · UC-11, UC-12, UC-13 · RN-21, RN-22, RN-23 | Grande | — | sim | sim | 01, 02, 04 |
 | 08 | `convite` | `features/convite/` | T-06, T-07, W-04 · UC-07, UC-17, UC-18 · RN-25, RN-26, RN-26b | **Complexo** | **sim** | sim + pesquisa | sim | 06, 07 |
@@ -66,6 +80,9 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 | 10 | `custos` | `features/custos/` | T-09, W-04 · UC-19..UC-23 · RN-14..RN-19 (consumo), RN-20 | Grande | **sim** | sim | sim | 02, 09 |
 
 ✱ **Revisão pós-Specify (2026-08-12):** a spec 00 subiu de Médio para Grande. O Discuss ampliou o "pronto" da fundação para incluir navegação, DI + BlocObserver, README e espelho de testes (~10 tasks), e essas escolhas — pacote de rotas, container de DI, wiring do emulador — são herdadas por todas as dez specs seguintes. Escolha herdada por dez specs é decisão de arquitetura, então **Design deixou de ser pulado**. Ver `.specs/features/fundacao/spec.md` §Porte.
+
+✱✱ **Revisão pós-Specify (2026-08-25):** `entrar` e `home` subiram de **Médio para Grande**, pelo mesmo critério que subiu a `fundacao` — não por volume de tela, mas porque cada uma origina uma escolha que as specs seguintes herdam. Em `entrar`: a guarda de sessão da **AD-017**, que passa a governar a navegação de sete specs, e a porta `AuthRepository`. Em `home`: a porta `FestaRepository` e o formato do stream de RN-28 (**AD-016**), consumidos por seis specs e obrigados a sobreviver à troca da impl em memória por Firestore no M2. **Design e Tasks deixam de ser inline nas duas.** Corte estimado: ~11 tasks cada, ~12 em `montar` — **~34 no M1 sem a spec 06**, o que aciona a oferta de sub-agentes no Execute de cada spec.
+
 
 Notas de recorte:
 
@@ -91,14 +108,24 @@ Decisões do Discuss: SDK Flutter é pré-requisito externo (instalado à mão, 
 ### 02 · `calculo` — Grande · **Concluída e mergeada** (T1–T28, 2026-08-25) → `.specs/features/calculo/`
 `core/calculo/`, **Dart puro, sem Flutter e sem Firebase**. Implementa RN-01..RN-21: contagem de pessoas, fator de duração, quantidades por item, essenciais automáticos, preço médio/faixa, overrides com passos e mínimos, formatação R$ (RN-13), cota justa, saldos, algoritmo quem-paga-quem (RN-16), split de despesa, quitação, "eu levo" como contribuição (RN-20), efeitos de preferências (RN-21: kit veggie, remove suína, cerveja por quem bebe). Os exemplos numéricos do arquivo 03 entram como **testes literais**. Define as entidades de domínio em PT-BR. É a spec mais crítica do produto: tudo que mexe com dinheiro consome esta camada e **nenhuma outra camada recalcula**.
 
-### 03 · `entrar` — Médio, com Discuss
-T-01/W-01 + UC-01: login e-mail/senha e Google, pós-login sempre na Home. **Zona cinzenta bloqueante:** o CLAUDE.md decidiu "Auth Google + telefone", mas a spec (T-01, UC-01) mostra e-mail/senha + Google e não menciona telefone — conflito real a resolver no Discuss antes de implementar. Inclui "CRIAR CONTA".
+### 03 · `entrar` — Grande · **Specify + Discuss concluídos** (ENT-01..20, 2026-08-25) → `.specs/features/entrar/`
+T-01/W-01 + UC-01: login e-mail/senha e Google contra o emulador do Auth, pós-login sempre na Home, "CRIAR CONTA" como **modo alternado da mesma tela** (sem rota nova) e guarda de sessão no roteador. A **primeira task é plugar `boraTheme()` no `BoraApp`**, cumprindo a **AD-013** — antes disso o app roda sem tema. Herda também o revestimento do `RouteErrorPage`.
 
-### 04 · `home` — Médio
-T-02/W-02 + UC-02, UC-24: painel de rolês com card da festa ativa, contadores confirmados/pendentes **em tempo real** (lado consumidor de RN-28, via stream do Firestore), atalho amarelo do acerto, seção "COMEÇAR OUTRA" (NIVER não clicável) e arquivo de festas passadas.
+Decisões do Discuss: **AD-015** resolve a zona cinzenta **G1** — vale a spec (e-mail/senha + Google), telefone é **descartado** e o `CLAUDE.md` é corrigido · **AD-016** resolve **G8** — auth real no emulador, dado de festa em memória, Firestore no M2 · **AD-017** — redirect por sessão em `app_router.dart`, com `/c/:codigo`, `/erro` e `/catalogo` sempre livres.
 
-### 05 · `montar` — Grande
-T-03/W-03 + UC-03, UC-04: steppers de extras sem app, chips de itens (grelha/geladeira/fortes — fortes só no web mobile-first? conferir no Specify: o arquivo 04 põe "PROS FORTES" como web-only em T-03), segmented de duração, rodapé "SAI POR" recalculando **a cada toque** via `core/calculo`. No web, é a tela única com rail sticky (card-herói + lista viva + "QUEM LEVA?"). Aceite: exemplo literal do arquivo 03 (R$ 211 / ≈R$ 30). Atenção à evolução pendente registrada em W-03: o seletor "quem leva" deve ser popover/sheet com lista de confirmados, não o botão que cicla.
+Porte revisto para **Grande** (✱✱): a guarda de sessão e a porta `AuthRepository` são herdadas por sete specs. ~11 tasks. Design e Tasks formais.
+
+### 04 · `home` — Grande · **Specify concluído** (HOME-01..19, 2026-08-25) → `.specs/features/home/`
+T-02/W-02 + UC-02, UC-24: painel de rolês com card da festa ativa, contadores confirmados/pendentes **em tempo real** (lado consumidor de RN-28, via **`Stream`** — a impl do M1 é em memória por **AD-016**, e vira Firestore no M2 sem a tela saber), atalho amarelo do acerto, seção "COMEÇAR OUTRA" (NIVER não clicável) e arquivo de festas passadas. Herda da **AD-013** o revestimento do `AppShell` (o header de app de `06`) e do `PlaceholderPage`.
+
+Decisões do Specify: a fixture RN-30 ganha **duas festas concluídas** — uma delas a "Churras da laje · 14 pessoas · R$ 612" literal de UC-24 — porque sem elas "2 passadas", a seção ARQUIVO e o aceite de UC-24 ficam sem dado; e a Home ganha **estado vazio próprio**, que é o que vê todo usuário recém-cadastrado.
+
+Porte revisto para **Grande** (✱✱): a porta `FestaRepository` e o formato do stream são herdados por seis specs. ~11 tasks. Design e Tasks formais.
+
+### 05 · `montar` — Grande · **Specify concluído** (MONT-01..24, 2026-08-25) → `.specs/features/montar/`
+T-03/W-03 + UC-03, UC-04: steppers de extras sem app, chips de itens, segmented de duração e rodapé "SAI POR" recalculando **a cada toque** via `core/calculo`. No web, a tela única com rail sticky (card-herói + lista viva). Aceite: o exemplo literal do arquivo 03 (**R$ 211 / ≈R$ 30 por cabeça**) renderizado **na tela**, nas duas plataformas.
+
+Decisões do Specify (**AD-018**): **"PROS FORTES" passa a existir nas duas plataformas** — o arquivo 04 a marcava como web-only, mas sem o chip 🍹 CACHAÇA o total mobile fecha R$ 196 e o aceite de UC-03 fica impossível na própria tela que ele descreve · o seletor **"QUEM LEVA?" fica fora do M1**, junto com a dica 💡 que o instrui, entrando com `galera`/`lista` já no formato popover que W-03 pede · o rodapé mostra o total **sem** essenciais (R$ 211/≈R$ 30 por pessoa); o R$ 271/≈R$ 45 por adulto é da tela Lista, e os dois não se unificam · `/roles/novo` abre um **rascunho** com nome e data default editáveis no header, resolvendo a pré-condição de UC-03 que nenhuma tela da spec-fonte cobria.
 
 ### 06 · `lista` — Grande, com Discuss
 T-04 + UC-05, UC-06, UC-14, UC-15, UC-16: modos PLANEJAR (média real, faixa mín/máx, overrides com ponto vermelho e RESTAURAR) ⇄ COMPRAR (checklist por corredor, ordem fixa RN-27, contador do carrinho) + sheet de pedido por delivery e overlay "PEDIDO A CAMINHO!". Estado dos checks persiste ao alternar modos; overrides sobrevivem à navegação. **Zonas cinzentas:** origem dos dados de "média de N mercados perto de você" (RN-11 — a tabela da spec é fixture; o produto real precisa de fonte de preços + localização) e integração de delivery (RN-27 — iFood/Rappi/Zé não têm API pública de pedido; decidir o que é real vs. simulado).
@@ -123,14 +150,14 @@ Registradas aqui para nenhuma se perder; cada uma é resolvida no Discuss da spe
 
 | # | Zona cinzenta | Spec dona |
 |---|---|---|
-| G1 | Auth: e-mail/senha (spec 04/05) × "Google + telefone" (CLAUDE.md) | `entrar` |
+| ~~G1~~ | ✅ **Resolvida** (2026-08-25, **AD-015**): vale a spec — **e-mail/senha + Google**. Telefone/SMS é **descartado**, não adiado: T-01, W-01 e UC-01 não o mencionam e não há UI desenhada para ele. O `CLAUDE.md` foi corrigido. | `entrar` |
 | G2 | Fonte real dos preços médios "de N mercados perto de você" (RN-11) — dado vivo ou tabela curada? | `lista` |
 | G3 | Delivery iFood/Rappi/Zé (RN-27): integração real inexistente — simular, linkar ou cortar do MVP? | `lista` |
 | G4 | WhatsApp (RN-25/26): grupo e enquete não são criáveis por API pública — o que é real no produto? | `convite` |
 | G5 | Segurança do link público: expiração, revogação, mudança de nível pós-abertura, identidade do anônimo | `convidado` |
 | G6 | Origem das despesas (não há UC de criação) e mecânica real da cobrança Pix | `custos` |
 | ~~G7~~ | ✅ **Resolvida** (2026-08-12): RN-30 é **fixture de teste/demo** em Dart puro, não seed de onboarding — nenhum usuário novo ganha festa de exemplo. Nasce como dado bruto na `fundacao` e é tipada pela spec `calculo`. | `fundacao` |
-| G8 | *(nova, surgida no Specify da fundação)* Quando criar o projeto Firebase real na nuvem — a decisão emulator-first adiou `flutterfire configure`, Hosting e Functions para a primeira feature que precise publicar | `home` ou `convidado` |
+| ~~G8~~ | ✅ **Resolvida** (2026-08-25, **AD-016**): o projeto na nuvem continua adiado. No M1, **auth é real contra o emulador e dado de festa é em memória**, atrás de `FestaRepository` como porta abstrata semeada pela fixture RN-30. **Firestore, Hosting e Functions entram no M2**, com a spec `convidado` — que é quem produz o realtime de RN-28 e a rota pública. | `convidado` |
 
 ---
 

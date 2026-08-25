@@ -114,9 +114,112 @@
 - **Scope**: conferência visual do design system e toda rota nova do projeto (o teste que afirma o destino vira o padrão).
 - **Date**: 2026-08-20
 - **Status**: active
+
+### AD-015
+- **Decision**: A autenticação do BORA é **e-mail/senha + Google**. Login por **telefone/SMS sai do produto** — não é adiado, é descartado. O `CLAUDE.md`, que dizia "Auth (Google + telefone)", passa a ser corrigido em vez de obedecido. "CRIAR CONTA" é um **modo alternado da própria tela** `/entrar` (label "CRIAR CONTA", CTA "CRIAR CONTA →", rodapé "Já tem conta? ENTRAR"), sem rota nova.
+- **Reason**: T-01, W-01 e o aceite de UC-01 desenham exatamente e-mail/senha + Google, com os inputs "seu e-mail" e "senha" e o botão Google — e não mencionam telefone em lugar nenhum. Obedecer o `CLAUDE.md` exigiria redesenhar duas telas literais e quebrar o aceite de UC-01. A tela desenhada é a que existe. Rota `/criar-conta` foi rejeitada por acrescentar nó ao mapa canônico da AD-003 que nem `04` nem `06` desenham.
+- **Trade-off**: quem depende de telefone fica de fora do produto; reabrir exige desenho de tela novo. O modo alternado carrega estado a mais na mesma tela (dois conjuntos de copy, preservação do e-mail entre modos).
+- **Scope**: spec 03 `entrar`; e o `CLAUDE.md`, que é corrigido.
+- **Date**: 2026-08-25
+- **Status**: active
+
+### AD-016
+- **Decision**: No M1, **auth é real e dado de festa é em memória**. `FirebaseAuth` contra o emulador (mantendo a AD-004 emulator-first); `FestaRepository` nasce como **porta abstrata** na spec 04 `home`, com implementação em memória semeada pela fixture RN-30. **Firestore entra no M2**, junto com a spec 09 `convidado` — que é quem produz o realtime de RN-28. A Home consome um **`Stream`**, não um `Future`, desde já.
+- **Reason**: resolve a zona cinzenta **G8** do roadmap. No M1 não existe produtor de RN-28: fazer models, serialização, streams e o começo de security rules agora seria construir a camada de dados **antes** de RN-22 (papéis) existir, e sem nada para ela transportar. A porta abstrata torna a troca de impl barata, e o `Stream` é o contrato que sobrevive a ela — ler uma vez e desenhar faria o M2 reescrever a Home.
+- **Trade-off**: o M2 paga a implementação Firestore inteira de uma vez, e até lá nenhum dado sobrevive a reiniciar o app. Em compensação a suíte de widget do M1 roda **sem emulador ligado**. `flutterfire configure` e o projeto real na nuvem continuam adiados.
+- **Scope**: specs 03, 04 e 05 (M1); herdado por `lista`, `galera`, `convite`, `convidado` e `custos`.
+- **Date**: 2026-08-25
+- **Status**: active
+
+### AD-017
+- **Decision**: A navegação passa a ter **guarda de sessão** em `app_router.dart`, via `redirect` do `go_router` observando o estado de autenticação: sem sessão em `/roles/**` → `/entrar`; com sessão em `/entrar` → `/roles`; `/c/:codigo`, `/erro` e `/catalogo` passam **sempre**, com ou sem sessão. A sessão persiste entre aberturas do app.
+- **Reason**: o aceite de UC-01 — "pós-login sempre cai na Home" — é literalmente um redirect. E sem guarda, no web basta digitar `/roles` na barra de endereços para entrar sem sessão. As três rotas livres não são exceção arbitrária: `/c/:codigo` é o link do convidado **sem conta** (RN-24), e barrá-lo mataria o diferencial "responde sem baixar nada".
+- **Trade-off**: toda spec de tela seguinte herda a guarda e precisa considerá-la nos próprios testes de rota; e o `app_router.dart` ganha dependência do estado de auth, que antes não tinha.
+- **Scope**: `lib/core/routing/app_router.dart`; herdado pelas sete specs de tela seguintes.
+- **Date**: 2026-08-25
+- **Status**: active
+
+### AD-018
+- **Decision**: A seção **"PROS FORTES"** (🍸 VODKA · 🍹 CACHAÇA · 🥃 WHISKY) existe **nas duas plataformas**, contrariando o `04-telas-ux.md`, que a marca como web-only. E o seletor **"QUEM LEVA?"** do rail de W-03 fica **fora do M1** — junto com a dica tracejada 💡 que o instrui —, entrando com `galera`/`lista` já no formato popover/sheet que W-03 pede.
+- **Reason**: duas leituras do mesmo princípio, o de que o aceite tem de ser alcançável na tela que ele descreve. (a) O exemplo canônico de RN-30 e o aceite de UC-03 incluem cachaça: sem "PROS FORTES" no mobile o total fecharia **R$ 196**, não os **R$ 211** que UC-03 exige, e o aceite ficaria impossível na própria tela. (b) "QUEM LEVA?" depende da lista de confirmados, que só nasce na spec 07; e o próprio W-03 registra o botão que cicla como lacuna a substituir — construí-lo agora seria construir para jogar fora. Sem o botão, a dica 💡 seria instrução falsa.
+- **Trade-off**: o mobile ganha uma quarta seção de chips que o protótipo original não tinha, alongando a rolagem de T-03. E o rail do web nasce como leitura pura, sem interação — mais pobre que o protótipo até a spec 07.
+- **Scope**: spec 05 `montar`; a atribuição de itens é herdada por `galera` e `lista`.
+- **Date**: 2026-08-25
+- **Status**: active
+
 ## Handoff
 
-> **SESSÃO EM ANDAMENTO — retomada em 2026-08-25.**
+> **SNAPSHOT ATUAL — 2026-08-25, fim da sessão de Specify do M1.**
+> Tudo abaixo desta caixa, a partir de "Histórico — sessão do M0", é **histórico** do M0 já
+> fechado: continua no arquivo pelas lições de retomada e de cota, não como estado corrente.
+
+### Onde o trabalho está
+
+**M0 fechado e mergeado em `main`** (`d95b385`): `flutter analyze` limpo, **742 testes verdes**
+(92 `fundacao` + 344 `calculo` + 306 `design-system`), DS-33 conferida a olho nas duas
+plataformas. Árvore limpa.
+
+**M1 especificado nesta sessão** — três `spec.md` + três `context.md`, nenhum código escrito:
+
+| Spec | Arquivos | Requisitos | Porte | Próximo passo |
+|---|---|---|---|---|
+| 03 `entrar` | `.specs/features/entrar/{spec,context}.md` | ENT-01..20 | Médio → **Grande** | Design formal |
+| 04 `home` | `.specs/features/home/{spec,context}.md` | HOME-01..19 | Médio → **Grande** | Design formal |
+| 05 `montar` | `.specs/features/montar/{spec,context}.md` | MONT-01..24 | **Grande** (confirmado) | Design formal |
+
+**Nenhuma das três tem `design.md` nem `tasks.md`.** As três subiram para Grande, então Design
+e Tasks são formais nas três — nada de inline. Estimativa somada: **~34 tasks**, o que aciona a
+oferta de sub-agentes (batches de ~7) no Execute de cada uma.
+
+### O que foi decidido (e o que mudou por causa disso)
+
+Quatro ADs novas — **AD-015** (auth e-mail/senha + Google, telefone descartado), **AD-016**
+(auth real no emulador + dado de festa em memória no M1; Firestore no M2), **AD-017** (guarda de
+sessão no `app_router`), **AD-018** ("PROS FORTES" nas duas plataformas; "QUEM LEVA?" fora do M1).
+
+Duas zonas cinzentas do roadmap fecharam: **G1** (auth) por AD-015 e **G8** (Firebase na nuvem)
+por AD-016. Restam G2, G3 (spec `lista`), G4 (`convite`), G5 (`convidado`), G6 (`custos`).
+
+O `CLAUDE.md` foi corrigido em dois pontos que tinham virado mentira: a seção "Estado do
+repositório", que ainda dizia não haver código, e a linha de auth, que dizia "Google + telefone"
+e agora contradiz a AD-015.
+
+### A ordem que a spec 03 tem de respeitar
+
+A **primeira task** de `entrar` é plugar `boraTheme()` no `BoraApp` (ENT-01, cumprindo a
+AD-013). Antes disso o app roda sem tema e qualquer tela nasce contra o default do Material.
+
+A AD-013 devolveu quatro artefatos da fundação "para as specs 03/04" sem dividir; a divisão foi
+feita: `lib/app.dart` e `RouteErrorPage` → `entrar`; `AppShell` e `PlaceholderPage` → `home`;
+`FestaTabsShell` → `lista` (spec 06), a primeira feature que monta as abas.
+
+### Como retomar
+
+```bash
+export PATH="$PATH:/c/SDKs/flutter/bin"
+cd /c/repos/lucari/bora && flutter test        # 742, baseline a preservar
+# ler antes de projetar:
+#   .specs/features/entrar/spec.md      (começar por aqui — as outras duas dependem da sessão)
+#   .specs/features/entrar/context.md
+#   .specs/ROADMAP.md §2 e §3
+```
+
+Ordem obrigatória: `entrar` → `home` → `montar`. `home` depende da sessão de `entrar`; `montar`
+depende da navegação de `home` e do `FestaRepository` que ela cria.
+
+### O que ficou pendente de propósito
+
+- **Spec 06 `lista`** também é do M1 no roadmap e **não foi especificada** — o pedido desta
+  sessão cobriu 03, 04 e 05. Ela tem Discuss marcado (G2, G3) e fica para uma sessão própria.
+- A pergunta aberta de `calculo` sobre `progressoDeQuitacao` continua aberta e continua sem
+  bloquear (ver "Pergunta aberta" mais abaixo).
+
+---
+
+## Histórico — sessão do M0
+
+
+> **[histórico]** Bloco da sessão do M0, retomada em 2026-08-25.
 > Este bloco substitui o handoff de 2026-08-21, que estava **desatualizado**: as branches
 > avançaram depois dele. Tudo abaixo foi re-apurado do git e da suíte, não herdado.
 >

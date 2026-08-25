@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Estado do repositório
 
-**Não há código ainda.** O repositório contém apenas a especificação do produto em `.specs/init-spec/` e a skill `tlc-spec-driven` em `.claude/skills/`. Não existem `pubspec.yaml`, package manager, build, lint ou suíte de testes — não invente comandos para eles. Quando o código nascer, o alvo declarado é **um único codebase Flutter** servindo mobile (frame 390×820) e web (janela 1180×800), com o mesmo estado nas duas plataformas.
+**O marco M0 está fechado e mergeado em `main`** (2026-08-25): projeto Flutter multi-plataforma, `core/calculo/` (RN-01..RN-21 em Dart puro) e `core/design_system/` (tokens e ~18 componentes do arquivo 02). Baseline: `flutter analyze` limpo e **742 testes verdes**. Comandos reais: `flutter test`, `flutter analyze`, `flutter run`. Sem CI — não crie pipeline sem pedido.
+
+O alvo é **um único codebase Flutter** servindo mobile (frame 390×820) e web (janela 1180×800), com o mesmo estado nas duas plataformas.
+
+`.specs/` tem quatro camadas, e a ordem importa: `init-spec/` é a especificação do produto (fonte da verdade), `ROADMAP.md` decompõe ela em 11 specs de feature e 4 marcos, `STATE.md` guarda as decisões de arquitetura (**AD-001..AD-018**) e o handoff, e `features/<nome>/` tem o `spec.md`/`design.md`/`tasks.md`/`validation.md` de cada uma. **Leia o `STATE.md` antes de decidir qualquer coisa** — uma AD ativa vale mais que este arquivo.
 
 Idioma: toda a spec e a copy do produto são em português BR. Escreva documentação e commits em português.
 
@@ -54,7 +58,7 @@ O protótipo visual original (`Bora - Revisão e Novas Direções.dc.html`) é c
 
 Decididas antes de o código existir. Valem como default: se uma delas atrapalhar a implementação, levante a questão em vez de divergir em silêncio.
 
-**Stack:** Flutter (mobile + web, um codebase). Estado com **BLoC** — eventos e estados explícitos, nada de lógica de negócio dentro de widget. Backend **Firebase**: Auth (Google + telefone; o convidado do link continua **sem conta**, via auth anônima), Firestore (banco principal, realtime — a confirmação do convidado reflete na Home do anfitrião sem refresh), Hosting (deploy do Flutter Web, servindo também o link público `bora.app/c/xxx`) e Functions (lógica servidora: gerar link, notificar, integrações).
+**Stack:** Flutter (mobile + web, um codebase). Estado com **BLoC** — eventos e estados explícitos, nada de lógica de negócio dentro de widget. Backend **Firebase**: Auth (**e-mail/senha + Google** — telefone foi descartado pela **AD-015**, porque T-01/W-01/UC-01 desenham só esses dois; o convidado do link continua **sem conta**, via auth anônima), Firestore (banco principal, realtime — a confirmação do convidado reflete na Home do anfitrião sem refresh), Hosting (deploy do Flutter Web, servindo também o link público `bora.app/c/xxx`) e Functions (lógica servidora: gerar link, notificar, integrações).
 
 **Arquitetura:** Clean Architecture, feature-first, com as camadas dentro de cada feature.
 
