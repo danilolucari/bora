@@ -68,7 +68,8 @@
 
 ### AD-009
 - **Decision**: Política única de precisão: aritmética interna em `double` e em reais, sem arredondamento intermediário; dinheiro arredondado **uma única vez**, na formatação (RN-13); totais são `round` da soma exata, nunca soma de valores já arredondados; a quantidade de carne arredonda a 0,1 kg **em gramas** (`(gramas/100).round()/10`); a tolerância de 1 centavo de RN-16 vive só na aritmética. Tudo isolado em `lib/core/calculo/regras/precisao.dart`.
-- **Reason**: `(1.15*10).round()` devolve 11 em ponto flutuante binário — daria 1,1 kg e quebraria o R$ 211; e arredondar por item acumula erro em listas grandes, num caso que os testes literais não pegam.
+- **Reason**: arredondar por item acumula erro em listas grandes — um caso que os testes literais do arquivo 03 **não** pegam, porque o estado padrão tem poucos itens. Arredondar uma única vez, na formatação, é o que mantém o total igual ao `round` da soma exata.
+- **Correção de 2026-08-25**: a justificativa original desta decisão citava `(1.15*10).round() == 11` como armadilha de ponto flutuante. **É factualmente falsa.** Em Dart `1.15 * 10` dá exatamente `11.5` (`== 11.5` é `true`) e `.round()` devolve **12**. E uma varredura de 2.000.001 pontos (0–20 kg, passo de 0,01 g) não achou **nenhuma** divergência entre arredondar em gramas e arredondar em kg. Apurado pelo Verifier independente de `calculo` e reconfirmado empiricamente. A decisão continua válida pelo motivo acima; o arredondamento da carne em gramas é **defensivo**, não corretivo — e o teste que o cobre não pode prometer proteção contra um erro de float que não existe.
 - **Trade-off**: `int` em centavos seria exato, mas RN-03 e RN-09 produzem frações e a tolerância de RN-16 perderia sentido — revisitar se o produto passar a cobrar de verdade via Pix.
 - **Scope**: toda aritmética monetária e de quantidade do produto.
 - **Date**: 2026-08-20
