@@ -15,66 +15,81 @@ import 'package:flutter_test/flutter_test.dart';
 const String _diretorioDoDesignSystem = 'lib/core/design_system';
 
 /// As formas arredondadas proibidas por §3.
+///
+/// `BoxShape.circle` entra na lista para que o círculo também seja policiado:
+/// §3 autoriza círculo em avatares e dots, e sem ele na lista qualquer
+/// componente poderia virar círculo sem a guarda notar.
 const List<String> _formasProibidas = [
   'BorderRadius.circular',
   'BorderRadius.all',
   'RoundedRectangleBorder',
   'StadiumBorder',
   'CircleBorder',
+  'BoxShape.circle',
 ];
 
-/// As duas exceções de §3, por caminho.
+/// As exceções de §3, por arquivo **e por forma exata**.
 ///
-/// A lista cita arquivos que **ainda não existem**: a guarda nasce na fase 2 e
-/// os componentes que ela autoriza nascem nas fases 5–7. Remover um nome daqui
-/// quebra a task daquele componente três fases depois.
-const Set<String> _formaLiberada = {
-  'bora_phone_frame.dart', // §3: o frame do celular, 38px
-  'bora_avatar.dart', // §3: avatares e dots, círculo
-  'bora_poll_option.dart', // §3: o dot do rádio da enquete, círculo
+/// A allowlist não libera o arquivo: libera **a forma** que §3 autoriza naquele
+/// arquivo. A diferença não é acadêmica — liberando o arquivo,
+/// `BorderRadius.circular(8)`, que não é círculo nem 38, passava despercebido
+/// dentro do avatar, e a guarda dizia que §3 estava cumprida.
+///
+/// São as **duas** exceções que §3 declara — radius 38 e círculo —, espalhadas
+/// por três arquivos porque o círculo vale para avatar e para o dot da enquete.
+/// O que se conta são as formas, não as entradas do mapa.
+///
+/// A lista cita arquivos que **ainda não existem** quando a guarda nasce (fase
+/// 2) e que chegam nas fases 5–7. Remover um nome daqui quebra a task daquele
+/// componente três fases depois.
+const Map<String, Set<String>> _excecoesDeForma = {
+  // §3: o frame do celular, 38px — e **só** 38.
+  'bora_phone_frame.dart': {'BorderRadius.all(Radius.circular(38))'},
+  // §3: avatares e dots, círculo.
+  'bora_avatar.dart': {'BoxShape.circle'},
+  // §3: o dot do rádio da enquete, círculo.
+  'bora_poll_option.dart': {'BoxShape.circle'},
 };
 
-/// Onde o blur de §4 é permitido.
+/// [conteudo] sem as formas que §3 autoriza em [caminho].
 ///
-/// O frame é a única sombra suave do sistema, e o token dela mora no arquivo
-/// de sombras (`design.md` §Estrutura de diretórios). Que ela continue **a
-/// única** é o que `bora_shadows_test.dart` afirma, sombra por sombra.
-//
-// SPEC_DEVIATION: o `tasks.md` enumera a allowlist só com
-// `bora_phone_frame.dart`, `bora_avatar.dart` e `bora_poll_option.dart`.
-// Motivo: `BoraShadows.frame` (blur 50) é declarada em `bora_shadows.dart`, e
-// é ela "o arquivo do frame" a que o AC-3 do `spec.md` se refere para a regra
-// de blur. Sem esta entrada a guarda acusaria o próprio token de §4.
-const Set<String> _blurLiberado = {
-  'bora_phone_frame.dart',
-  'bora_shadows.dart',
-};
+/// Remover a forma exata **antes** de varrer é o que faz a allowlist ser sobre
+/// forma e não sobre arquivo: o que sobra é sempre violação, inclusive dentro
+/// do arquivo que tem exceção.
+String semAsExcecoesDeForma(String caminho, String conteudo) {
+  for (final excecao in _excecoesDeForma.entries) {
+    if (!caminho.endsWith(excecao.key)) continue;
+    for (final permitida in excecao.value) {
+      conteudo = conteudo.replaceAll(permitida, '');
+    }
+  }
+  return conteudo;
+}
 
 final RegExp _blur = RegExp(r'blurRadius:\s*([^,)\n]*)');
 final RegExp _zeroLiteral = RegExp(r'^0(?:\.0+)?\b');
 
-bool _liberado(String caminho, Set<String> allowlist) =>
-    allowlist.any(caminho.endsWith);
-
 /// As formas arredondadas de [conteudo], no formato `<arquivo>: <padrão>`.
 List<String> violacoesDeFormaEm(String caminho, String conteudo) {
-  if (_liberado(caminho, _formaLiberada)) return const [];
+  final restante = semAsExcecoesDeForma(caminho, conteudo);
   return [
     for (final padrao in _formasProibidas)
-      if (conteudo.contains(padrao)) '$caminho: $padrao',
+      if (restante.contains(padrao)) '$caminho: $padrao',
   ];
 }
 
-/// As sombras com blur de [conteudo]. Só o literal zero passa: `blurRadius`
-/// vindo de expressão não é auditável por varredura.
-List<String> violacoesDeBlurEm(String caminho, String conteudo) {
-  if (_liberado(caminho, _blurLiberado)) return const [];
-  return [
-    for (final achado in _blur.allMatches(conteudo))
-      if (!_zeroLiteral.hasMatch(achado.group(1)!.trim()))
-        '$caminho: blurRadius: ${achado.group(1)!.trim()}',
-  ];
-}
+/// As sombras com blur não-zero de [conteudo]. Só o literal zero passa:
+/// `blurRadius` vindo de expressão não é auditável por varredura.
+///
+/// **Sem allowlist de arquivo.** §4 diz que a do frame é a única sombra suave
+/// do sistema, e "única" é uma afirmação sobre a contagem, não sobre onde ela
+/// mora: liberando `bora_shadows.dart` inteiro, uma **segunda** sombra com blur
+/// entrava ali com a suíte verde. Quem afirma a unicidade é o teste que conta.
+List<String> blursNaoZeroEm(String caminho, String conteudo) => [
+      for (final achado in _blur.allMatches(conteudo))
+        if (!_zeroLiteral.hasMatch(achado.group(1)!.trim()))
+          '$caminho: blurRadius: ${achado.group(1)!.trim()}',
+    ];
 
 List<File> arquivosDartEm(Directory diretorio) => diretorio
     .listSync(recursive: true)
@@ -196,37 +211,105 @@ void main() {
       );
     });
 
-    test('a allowlist de §3 libera o avatar, o dot da enquete e o frame', () {
-      for (final excecao in _formaLiberada) {
+    test('a exceção de §3 libera a forma exata no arquivo dela', () {
+      expect(
+        violacoesDeFormaEm(
+          'lib/core/design_system/components/bora_phone_frame.dart',
+          'static const raio = BorderRadius.all(Radius.circular(38));',
+        ),
+        isEmpty,
+        reason: '§3: o frame do celular é exceção declarada, com 38px',
+      );
+      for (final circular in ['bora_avatar.dart', 'bora_poll_option.dart']) {
         expect(
           violacoesDeFormaEm(
-            'lib/core/design_system/components/$excecao',
-            'const forma = CircleBorder();',
+            'lib/core/design_system/components/$circular',
+            'decoration: BoxDecoration(shape: BoxShape.circle),',
           ),
           isEmpty,
-          reason: '$excecao é exceção declarada em §3',
+          reason: '§3: avatares e dots são círculo por exceção declarada',
         );
       }
     });
-  });
 
-  group('DS-07 — sombra com blur não entra na UI', () {
-    test('nenhum arquivo sob lib/core/design_system tem sombra com blur', () {
+    test('a exceção é da forma, não do arquivo: outra forma no mesmo arquivo '
+        'é acusada', () {
+      // O buraco que esta guarda tinha: liberando o arquivo inteiro,
+      // `BorderRadius.circular(8)` — que não é círculo nem 38 — passava dentro
+      // do avatar, e a guarda ainda dizia que §3 estava cumprida.
       expect(
-        _varrer(designSystem, violacoesDeBlurEm),
-        isEmpty,
-        reason: '§4: "sempre duras, sem blur" — a do frame é a única suave',
+        violacoesDeFormaEm(
+          'lib/core/design_system/components/bora_avatar.dart',
+          'shape: BoxShape.circle, borderRadius: BorderRadius.circular(8),',
+        ),
+        ['lib/core/design_system/components/bora_avatar.dart: '
+            'BorderRadius.circular'],
+        reason: '§3 autoriza o círculo do avatar, não um canto de 8px nele',
+      );
+      expect(
+        violacoesDeFormaEm(
+          'lib/core/design_system/components/bora_phone_frame.dart',
+          'static const raio = BorderRadius.all(Radius.circular(24));',
+        ),
+        ['lib/core/design_system/components/bora_phone_frame.dart: '
+            'BorderRadius.all'],
+        reason: '§3 dá 38 ao frame — 24 não é a exceção declarada',
       );
     });
 
-    test('blur diferente de zero faz a varredura falhar nomeando o arquivo',
-        () {
+    test('a forma liberada num arquivo não vale no arquivo do vizinho', () {
+      expect(
+        violacoesDeFormaEm(
+          'lib/core/design_system/components/bora_list_card.dart',
+          'decoration: BoxDecoration(shape: BoxShape.circle),',
+        ),
+        ['lib/core/design_system/components/bora_list_card.dart: '
+            'BoxShape.circle'],
+        reason: 'o círculo é exceção de avatar e dot, não do sistema inteiro',
+      );
+    });
+  });
+
+  group('DS-07 — a do frame é a única sombra suave do sistema', () {
+    test('há exatamente uma sombra com blur, e ela é a do frame', () {
+      final comBlur = _varrer(designSystem, blursNaoZeroEm);
+
+      expect(
+        comBlur,
+        hasLength(1),
+        reason: '§4: "a do frame é a única sombra suave permitida" — e '
+            '"única" é afirmação sobre a contagem, não sobre onde ela mora',
+      );
+      expect(comBlur.single, contains('bora_shadows.dart'));
+      expect(
+        comBlur.single,
+        contains('blurRadius: 50'),
+        reason: '§4, frame do celular: `0 20px 50px -20px rgba(20,10,50,.35)`',
+      );
+    });
+
+    test('uma segunda sombra suave é contada, mesmo no arquivo de sombras', () {
+      // O buraco que esta guarda tinha: `bora_shadows.dart` estava liberado
+      // inteiro, e uma segunda sombra com blur entrava ali com a suíte verde.
+      // Agora quem prova a unicidade é a contagem acima, e ela enxerga esta.
+      const arquivo = 'lib/core/design_system/tokens/bora_shadows.dart';
+
+      expect(
+        blursNaoZeroEm(arquivo, 'blurRadius: 50,\nblurRadius: 12,'),
+        [
+          '$arquivo: blurRadius: 50',
+          '$arquivo: blurRadius: 12',
+        ],
+      );
+    });
+
+    test('blur diferente de zero é acusado nomeando o arquivo', () {
       final diretorio = _diretorioComInfrator(
         'guarda_de_blur_infrator_de_teste.dart',
         'const sombra = BoxShadow(blurRadius: 4);\n',
       );
 
-      final violacoes = _varrer(diretorio, violacoesDeBlurEm);
+      final violacoes = _varrer(diretorio, blursNaoZeroEm);
 
       expect(violacoes, hasLength(1));
       expect(
@@ -241,37 +324,23 @@ void main() {
         'guarda_de_blur_removido_de_teste.dart',
         'const sombra = BoxShadow(blurRadius: 12);\n',
       );
-      expect(_varrer(diretorio, violacoesDeBlurEm), hasLength(1));
+      expect(_varrer(diretorio, blursNaoZeroEm), hasLength(1));
 
       arquivosDartEm(diretorio).single.deleteSync();
 
-      expect(_varrer(diretorio, violacoesDeBlurEm), isEmpty);
+      expect(_varrer(diretorio, blursNaoZeroEm), isEmpty);
     });
 
     test('blurRadius zero não é acusado, blur por expressão é', () {
       const arquivo = 'lib/core/design_system/components/qualquer.dart';
 
-      expect(violacoesDeBlurEm(arquivo, 'blurRadius: 0,'), isEmpty);
-      expect(violacoesDeBlurEm(arquivo, 'blurRadius: 0.0,'), isEmpty);
+      expect(blursNaoZeroEm(arquivo, 'blurRadius: 0,'), isEmpty);
+      expect(blursNaoZeroEm(arquivo, 'blurRadius: 0.0,'), isEmpty);
       expect(
-        violacoesDeBlurEm(arquivo, 'blurRadius: distancia,'),
+        blursNaoZeroEm(arquivo, 'blurRadius: distancia,'),
         ['$arquivo: blurRadius: distancia'],
         reason: 'blur vindo de expressão não é auditável por varredura',
       );
-    });
-
-    test('a allowlist de §4 libera o frame e o arquivo que declara a sombra',
-        () {
-      for (final excecao in _blurLiberado) {
-        expect(
-          violacoesDeBlurEm(
-            'lib/core/design_system/tokens/$excecao',
-            'blurRadius: 50,',
-          ),
-          isEmpty,
-          reason: '$excecao carrega a única sombra suave de §4',
-        );
-      }
     });
   });
 }
