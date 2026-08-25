@@ -8,6 +8,7 @@ import '../../features/galera/presentation/pages/galera_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/lista/presentation/pages/lista_page.dart';
 import '../../features/montar/presentation/pages/montar_page.dart';
+import '../design_system/catalog/catalog_page.dart';
 import 'app_shell.dart';
 import 'festa_tabs_shell.dart';
 import 'invite_code_format.dart';
@@ -123,6 +124,13 @@ GoRouter buildAppRouter({String initialLocation = Routes.roles}) {
             ],
           ),
         ],
+      ),
+      // Acrescentada ao fim: o catálogo do design system (DS-33) é irmão de
+      // `/entrar` e `/erro` — fica **fora de qualquer shell**, porque não é
+      // tela de produto e o chrome do app ainda é placeholder da fundação.
+      GoRoute(
+        path: Routes.catalogo,
+        builder: (context, state) => const CatalogPage(),
       ),
     ],
   );

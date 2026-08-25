@@ -67,6 +67,24 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  # As fontes do arquivo 02 viajam no repositório: sem CDN, sem rede, sem pacote
+  # novo (DS-02). `OFL.txt` fica ao lado dos `.ttf` porque a licença exige que
+  # seja redistribuída junto com a fonte.
+  assets:
+    - assets/fonts/
+
+  # Archivo é distribuída só como fonte variável (eixos `wght` 100-900 e `wdth`
+  # 62-125). Desde o Flutter 3.41 o `FontWeight` move o eixo `wght` sozinho, e a
+  # doc oficial recomenda evitar `FontVariation` — por isso nenhuma família tem
+  # descritor `weight:` (DS-03). Archivo Black é estática, família própria.
+  fonts:
+    - family: Archivo
+      fonts:
+        - asset: assets/fonts/Archivo[wdth,wght].ttf
+    - family: Archivo Black
+      fonts:
+        - asset: assets/fonts/ArchivoBlack-Regular.ttf
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
