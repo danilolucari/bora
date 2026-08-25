@@ -39,12 +39,10 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > de componentes renderiza os tokens do arquivo 02 na rota interna `/catalogo`.
 >
 > **Uma ressalva, para não dar por feito o que não foi.** "Catálogo renderizando os tokens" está
-> provado por asserção sobre a árvore: cada token tem o valor literal da spec. A conferência
-> **visual** — "parece o protótipo?", DS-33 — segue **não verificada**: não há device nem
-> navegador no ambiente de desenvolvimento, golden images ficaram fora de escopo por decisão, e
-> por isso **nenhum teste da suíte afirma aparência**. Roteiro pendente com o usuário:
-> `flutter run` e `flutter run -d chrome`, abrir `/catalogo`, conferir seção a seção contra
-> `.specs/init-spec/02-design-system.md`.
+> provado por asserção sobre a árvore: cada token tem o valor literal da spec. Isso **não** prova
+> que o conjunto parece o protótipo — golden images ficaram fora de escopo por decisão, então
+> nenhum teste da suíte afirma aparência. A conferência visual de **DS-33 está metade feita**:
+> o **web foi validado pelo usuário em 2026-08-25**, o **mobile segue pendente**.
 
 ---
 

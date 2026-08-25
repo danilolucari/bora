@@ -1029,7 +1029,10 @@ T10, T31 → T32
 - [x] Os 92 testes de baseline continuam passando; contagem final reportada
 - [x] Gate: `flutter analyze && flutter test` passa (fim da Phase 7)
 - [x] Novos testes: ≥4
-- [ ] **M** — `flutter run` e `flutter run -d chrome`, abrir `/catalogo` e conferir cada seção contra `.specs/init-spec/02-design-system.md` — **pendente com o usuário**: não há device nem navegador neste ambiente (risco R-11). O executor **reporta como não verificado**, não assume que passou
+- [~] **M** — `flutter run` e `flutter run -d chrome`, abrir `/catalogo` e conferir cada seção contra `.specs/init-spec/02-design-system.md`. **Metade feita:**
+  - [x] **Web** — conferido pelo usuário em **2026-08-25**, no Chrome 151, servido por `flutter run -d web-server --web-port=8080` em `http://localhost:8080/catalogo`. Veredito: **validado**. A evidência deste critério é a conferência humana — não há teste que a substitua.
+  - [ ] **Mobile** — pendente. `flutter run -d chrome` falha nesta máquina (incompatibilidade `flutter_tools` 3.47.1 ↔ Chrome 151: o Chrome sobe e aceita `--remote-debugging-port`, mas o handshake do debug service não fecha); daí o `-d web-server`, que para conferência visual é até mais fiel, por renderizar no navegador real do usuário.
+  - **Correção de premissa:** o `spec.md` registrava "não há device nem navegador neste ambiente (risco R-11)". Isso valia na máquina Linux original. **Nesta máquina há os dois** — emulador `Pixel_10` disponível e `android/` configurado no repo —, então a metade mobile é executável e continua sendo cobrada.
 
 **Tests**: widget
 **Gate**: build

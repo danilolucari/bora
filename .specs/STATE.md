@@ -234,10 +234,21 @@ Tudo o que a lista de pendências desta sessão pedia foi feito:
 
 ### O que fica em aberto — e não é código
 
-1. **DS-33, a conferência visual.** Não verificada e não verificável aqui: sem device nem
-   navegador, com golden images fora de escopo por decisão, **nenhum teste da suíte afirma
-   aparência**. Roteiro: `flutter run` e `flutter run -d chrome`, abrir `/catalogo`, conferir
-   seção a seção contra `.specs/init-spec/02-design-system.md`.
+1. **DS-33, a conferência visual — metade feita.** O **web foi validado pelo usuário em
+   2026-08-25** (Chrome 151, via `flutter run -d web-server` em `/catalogo`); falta o **mobile**.
+   Golden images seguem fora de escopo por decisão, então **nenhum teste da suíte afirma
+   aparência** — a evidência deste critério é a conferência humana, e é por isso que ela não
+   podia ser dada por boa sem acontecer.
+
+   ⚠️ **Premissa corrigida:** este arquivo e o `spec.md` afirmavam "não há device nem navegador
+   neste ambiente (risco R-11)". Isso valia na máquina **Linux** original e foi herdado sem
+   reteste. **Nesta máquina há os dois**: emulador `Pixel_10` disponível e `android/` no repo.
+   A metade mobile é executável e continua cobrada.
+
+   Nota de ambiente: `flutter run -d chrome` **falha** aqui — o Chrome sobe e aceita
+   `--remote-debugging-port` (testado com os flags exatos), mas o handshake do debug service do
+   `flutter_tools` 3.47.1 não fecha com o Chrome 151. O contorno é `-d web-server`, que para
+   conferência visual é mais fiel: renderiza no navegador real do usuário.
 2. **FUND-17 AC4**, herdado da fundação — a spec nomeia "handler global" mas a implementação
    registra pelo `try/catch` do boot. Diagnóstico em `.specs/features/fundacao/validation.md`.
    **Decisão do usuário.**
