@@ -143,10 +143,46 @@ chegou pelo remote (`3b4d040` o bottom sheet da T30, `62c5537` o `validation.md`
 
 | Spec | Tasks | Testes | Analyze | Estado |
 |---|---|---|---|---|
-| 02 `calculo` | **28 / 28** | **425** verdes | limpo | Implementação completa. Falta a validação independente. |
-| 01 `design-system` | **32 / 32** | **395** verdes | limpo | Implementação completa. Falta a validação independente. |
+| 02 `calculo` | **28 / 28** | **436** verdes | limpo | Implementada **e validada**. Gaps do Verifier corrigidos. |
+| 01 `design-system` | **32 / 32** | **398** verdes | limpo | Implementada **e validada**. Gaps do Verifier corrigidos. |
 
-**As duas specs estão implementadas.** O que resta antes do merge é validação, não código.
+**As duas specs estão prontas para o merge.** Não há código pendente.
+
+### Rodada de verificação independente (2026-08-25)
+
+Dois Verifiers novos, um por worktree, autor ≠ verificador em ambos. Os dois deram **PASS com
+ressalvas**, e nenhuma ressalva bloqueava o merge.
+
+| | `calculo` | `design-system` |
+|---|---|---|
+| Critérios sem evidência | **1 de 60** | **0 de 35** |
+| Mutações mortas | **15 de 17** | **21 de 23** |
+| Relatório | `.specs/features/calculo/validation.md` (`53a84f4`) | `.specs/features/design-system/validation.md` (`ccf6c03`) |
+
+**Todos os gaps acionáveis foram corrigidos**, cada um com mutação confirmando que o teste novo
+morde:
+
+- **`a5932d9`** (ds) — as duas mutações sobreviventes apontavam o mesmo defeito de desenho: as
+  allowlists liberavam **arquivo**, e §3 autoriza **forma**. Uma segunda sombra com blur entrava
+  em `bora_shadows.dart` com a suíte verde, e `BorderRadius.circular(8)` passava dentro do
+  avatar. Agora a unicidade da sombra é afirmada por **contagem**, e a exceção de forma remove o
+  literal exato antes de varrer — o que sobra é sempre violação.
+- **`0fc8dfb`** (ds) — `BoraHeroCard` copiava a distância da sombra em vez de ler o token; o
+  teste batia num literal, e literal no teste concorda com literal no componente.
+- **`40a3ab8`** (calculo) — `ComposicaoDaFesta` e `PrecoDeMercado` ganharam `==`/`hashCode`
+  (P1-2 AC2, o único critério sem evidência). A composição é a primeira entidade com coleção, e
+  `==` de `List`/`Set`/`Map` em Dart é identidade: comparadores profundos escritos à mão, porque
+  `package:collection` é dependência nova (A-19) e `flutter/foundation` está fora (CALC-27).
+- **`da61385`** (calculo) — o credor **sub-centavo na frente da fila** não tinha teste: trocar a
+  tolerância por `> 0` deixava a suíte inteira verde emitindo uma linha fantasma de R$ 0,005. E
+  o doc do barrel reivindicava RN-01..RN-29 quando dez delas têm dono fora da camada.
+
+**Achado que mais valeu a rodada:** o Verifier de `calculo` mostrou que a **justificativa** do
+AD-009 era factualmente falsa — corrigida em `b9e83d5`, ver o próprio AD. O AD tinha acabado de
+ser gravado no `STATE.md` e teria virado folclore permanente.
+
+**Único gap não corrigível:** o commit `62c5537` está fora da convenção (assunto em inglês,
+`feat` para doc, sem `RN-xx` no corpo) — é histórico, e reescrevê-lo custa mais do que vale.
 
 ### O que esta sessão fez
 
@@ -181,18 +217,25 @@ uma validação.** O Verifier de `calculo` continua integralmente por fazer.
 
 ### O que falta, em ordem
 
-1. **Verifiers das duas specs** — despachados em 2026-08-25 como **agentes novos**, um por
-   worktree, rodando em paralelo. Contrato abaixo. O do `design-system` recebeu instrução
-   extra: os commits `179bab0` (fix da guarda), `bcd156d` (T31) e `4b21801` (T32) saíram da
-   sessão principal, não dos batch workers, e por isso pedem escrutínio redobrado — inclusive
-   refazer por conta própria a mutação que a T32 alega ter feito.
-2. **Corrigir gaps** dos Verifiers (loop fix→re-verify, máx. 3 iterações antes de escalar).
-3. **Merge** de `feature/calculo` e depois `feature/design-system` em `main`. Fronteiras de
+**Verificação e correção de gaps: concluídas.** O que resta:
+
+1. **Merge** de `feature/calculo` e depois `feature/design-system` em `main`. Fronteiras de
    arquivo foram disjuntas — só `design-system` tocou `pubspec.yaml` e `lib/core/routing/`.
-4. **Rodar** `.claude/skills/tlc-spec-driven/scripts/lessons.py` com as lições dos Verifiers.
-   Candidata desta sessão: *guarda que compara path de filesystem contra constante escrita com
-   `/` é verde só no POSIX*.
-5. **Atualizar o `ROADMAP.md`**: specs 01 e 02 concluídas, marco **M0** fechado.
+   ⚠️ Uma exceção **nova** desta sessão: as duas branches passaram a tocar `.specs/STATE.md`?
+   **Não** — o `STATE.md` só é escrito em `main`. Mas ambas agora têm `validation.md` próprio,
+   em pastas diferentes, sem colisão. Após o merge, rodar a suíte inteira uma vez: as duas
+   somam **834** testes e nenhuma viu o código da outra.
+2. **Rodar** `.claude/skills/tlc-spec-driven/scripts/lessons.py` com as lições da rodada.
+   Candidatas, todas com evidência nesta sessão:
+   - *guarda que compara path de filesystem contra constante escrita com `/` é verde só no
+     POSIX*;
+   - *allowlist que libera **arquivo** quando a regra autoriza **forma** abre buraco do tamanho
+     do arquivo*;
+   - *teste que bate em literal concorda com o literal do componente: para amarrar componente a
+     token, a asserção tem de ser contra o token*;
+   - *justificativa de AD não verificada empiricamente vira folclore — a de AD-009 estava
+     errada e passou por planner, implementador e revisão*.
+3. **Atualizar o `ROADMAP.md`**: specs 01 e 02 concluídas, marco **M0** fechado.
 
 **Feito nesta sessão:** os 7 ADs pendentes foram escritos na seção Decisions acima, já
 renumerados (`calculo` 008–010, `design-system` 011–014), e `.specs/features/ads-pendentes.md`
@@ -287,9 +330,15 @@ não serve para esta medida** — use `cachedUsageUtilization`.
 
 ### Estado da cota
 
-Medido em 2026-08-25 11:10 BRT, pela fonte certa: **sessão em 18%**, **semana em 3%**.
-Reset da janela de 5h: **2026-08-25 13:50 BRT** (16:50 UTC); reset semanal: 30/08 06:00 BRT.
-Há folga larga — não há motivo para pausar.
+**Sessão pausada em 85%** (semana em 10%), pelo gatilho combinado com o usuário. Desta vez o
+alerta veio da fonte certa e é confiável — diferente do alarme falso das 09:05.
+
+- **Reset da janela de 5h: 2026-08-25 13:50 BRT** (16:49:59 UTC).
+- **Retomar às 13:55 BRT.**
+- Reset semanal: 30/08, 06:00 BRT.
+
+Nada ficou pela metade: o último commit (`0fc8dfb`) fechou com 398 testes verdes e árvore
+limpa nas três worktrees.
 
 ### Pergunta aberta, sem bloquear
 
