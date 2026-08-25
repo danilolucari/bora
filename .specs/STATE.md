@@ -60,9 +60,12 @@
 
 ## Handoff
 
-> **SESSÃO PAUSADA em 2026-08-25 09:05 BRT, ao chegar em 83% da cota — a um tique do limiar de 85%.**
+> **SESSÃO EM ANDAMENTO — retomada em 2026-08-25.**
 > Este bloco substitui o handoff de 2026-08-21, que estava **desatualizado**: as branches
 > avançaram depois dele. Tudo abaixo foi re-apurado do git e da suíte, não herdado.
+>
+> Houve uma pausa por volta das 09:05 BRT, registrada aqui numa versão anterior deste
+> arquivo, que foi **um alarme falso** — ver "Monitoria de cota" abaixo. O trabalho seguiu.
 
 ### Mudança de ambiente
 
@@ -188,22 +191,41 @@ fração pronta e não calcula), e as exceções de radius/blur.
 
 ### Monitoria de cota (montada em 2026-08-25, a pedido do usuário)
 
-- `scratchpad/monitor-cota.sh` roda a cada **5 min** e lê o bloco de 5h ativo via `ccusage`
-  (instalado local em `scratchpad/node_modules`, sem rede por tique).
-- Denominador: **maior bloco já observado** no histórico local (**3.631.348** tokens), que se
-  auto-corrige para cima. É aproximação empírica — o `ccusage` não enxerga o limite real da
-  conta.
-- Silenciosa por padrão; avisa ao cruzar **50/70/80%** e dispara `ALERTA-COTA-85` em 85%. Grita
-  também se o `ccusage` falhar 3× seguidas, para que silêncio não seja lido como "tudo bem".
+**A fonte certa é `~/.claude.json` → `cachedUsageUtilization`** — o mesmo dado que o `/usage`
+do Claude Code mostra. Campos que interessam:
+`utilization.five_hour.utilization` (% da sessão), `utilization.seven_day.utilization`
+(% da semana), `five_hour.resets_at` e `fetchedAtMs`. O próprio Claude Code reescreve esse
+cache enquanto a sessão está ativa.
+
+- `scratchpad/monitor-cota.sh` lê esse cache a cada **5 min**.
+- Silencioso por padrão; avisa ao cruzar **50/70/80%** e dispara `ALERTA-COTA-85` quando a
+  sessão **ou** a semana passam de 85%.
+- Dois guardas contra falso-verde: grita se não conseguir ler o cache 3× seguidas, e grita se
+  o `fetchedAtMs` ficar parado por mais de 30 min — número velho repetido para sempre parece
+  "tudo bem" e não é.
 - Log em `scratchpad/cota.log`, último status em `cota-status.json`.
 - **A monitoria é da sessão, não do repositório**: quem retomar precisa rearmá-la.
 
-### Estado da cota nesta pausa
+#### O alarme falso de 09:05 — não repetir
 
-- Pausado em **83%** (3.019.767 / 3.631.348), a ~67K tokens do limiar de 85% — o suficiente
-  para salvar o estado, não para abrir a T32.
-- **Reset do bloco: 2026-08-25 13:00 BRT** (16:00 UTC).
-- **Retomar às 13:05 BRT.**
+A primeira versão do monitor estimava a cota com **`ccusage`**, somando os tokens do bloco de
+5h e dividindo pelo **maior bloco já visto no histórico local**. As duas pontas estavam
+erradas:
+
+1. `ccusage` soma `cacheReadInputTokens`, que cresce a cada turno porque o contexto inteiro é
+   relido — o número infla rápido e não é o que a cota mede.
+2. O denominador "maior bloco já observado" **satura em 100% por construção** assim que o
+   bloco atual vira o maior. Foi o que aconteceu: o monitor gritou "100%" quando o `/usage`
+   real marcava **18%**.
+
+O trabalho chegou a ser pausado por causa disso. **`ccusage` não enxerga o limite da conta e
+não serve para esta medida** — use `cachedUsageUtilization`.
+
+### Estado da cota
+
+Medido em 2026-08-25 11:10 BRT, pela fonte certa: **sessão em 18%**, **semana em 3%**.
+Reset da janela de 5h: **2026-08-25 13:50 BRT** (16:50 UTC); reset semanal: 30/08 06:00 BRT.
+Há folga larga — não há motivo para pausar.
 
 ### Pergunta aberta, sem bloquear
 
@@ -224,7 +246,8 @@ cd /c/repos/lucari/bora-ds     && flutter test   # 386
 
 ### Histórico de interrupções — o que funcionou
 
-A cota estourou **quatro vezes** em 2026-08-20/21, e houve uma pausa planejada em 2026-08-25.
+A cota estourou **quatro vezes** em 2026-08-20/21. Em 2026-08-25 houve uma quinta pausa, mas
+por **alarme falso** do monitor — ver "Monitoria de cota".
 **Perda acumulada de trabalho: praticamente zero.** O que fez isso funcionar:
 
 1. **Commit atômico ao fim de cada task**, antes de a próxima começar — limita a perda a uma
