@@ -60,89 +60,179 @@
 
 ## Handoff
 
-> **SESSÃO PAUSADA em 2026-08-21 15:05, a pedido do usuário.** Todos os agentes foram parados.
-> Este bloco é auto-suficiente: quem retomar não precisa de nada além dele, do `tasks.md` de cada
-> spec e do git. **57 das 60 tasks estão commitadas e verificadas.**
+> **SESSÃO PAUSADA em 2026-08-25 09:05 BRT, ao chegar em 83% da cota — a um tique do limiar de 85%.**
+> Este bloco substitui o handoff de 2026-08-21, que estava **desatualizado**: as branches
+> avançaram depois dele. Tudo abaixo foi re-apurado do git e da suíte, não herdado.
 
-### Panorama
+### Mudança de ambiente
 
-| Spec | Tasks | Testes | Commits à frente de `main` | Estado |
-|---|---|---|---|---|
-| 02 `calculo` | **28 / 28** ✅ | **425** verdes | 31 | Implementação **completa**. Falta só a validação independente. |
-| 01 `design-system` | **29 / 32** | **378** verdes | 33 | Faltam T30, T31, T32. |
-
-`main` está em `9b270b4`, limpa, **sem nenhum código das duas specs** — só os documentos de orquestração.
-Baseline histórica do projeto: 92 testes (fundação). Hoje somam **803** nas duas branches.
-
-### Worktrees
+A sessão anterior rodava em **Linux** (`/home/lucari/repo/...`). Esta roda em **Windows**,
+`c:\repos\lucari\bora`, Flutter 3.47.1 / Dart 3.13.1 (SDK em `C:\SDKs\flutter`). As
+worktrees foram **recriadas a partir do `origin`**:
 
 | Caminho | Branch | Último commit |
 |---|---|---|
-| `/home/lucari/repo/bora` | `main` | `9b270b4` |
-| `/home/lucari/repo/bora-calculo` | `feature/calculo` | `2735a13` (T28) |
-| `/home/lucari/repo/bora-ds` | `feature/design-system` | `bd7953b` (T29) |
+| `C:/repos/lucari/bora` | `main` | `a659aec` |
+| `C:/repos/lucari/bora-calculo` | `feature/calculo` | `62c5537` |
+| `C:/repos/lucari/bora-ds` | `feature/design-system` | `bcd156d` |
 
-⚠️ **Não rode `git clean` em nenhuma delas.** Há dois arquivos não-commitados que são trabalho legítimo em curso:
-- `bora-calculo/.specs/features/calculo/validation.md` — 61 linhas, **esqueleto com as 9 seções já criadas** pelo Verifier (que escrevia incrementalmente por causa do risco de limite). O Verifier foi interrompido logo no começo da apuração; o conteúdo das seções está vazio.
-- `bora-ds/lib/core/design_system/components/bora_bottom_sheet.dart` — 136 linhas, **T30 em andamento**. O worker havia decidido: scrim usa o token `sheetScrim` (não `ink`) e o painel tem borda só no topo. Não há teste ainda.
+Os dois arquivos não-commitados que o handoff antigo mandava preservar **não existem aqui**
+— ficaram na outra máquina. Nada se perdeu: o trabalho deles já tinha sido commitado e
+chegou pelo remote (`3b4d040` o bottom sheet da T30, `62c5537` o `validation.md`).
+
+### Panorama re-apurado
+
+| Spec | Tasks | Testes | Analyze | Estado |
+|---|---|---|---|---|
+| 02 `calculo` | **28 / 28** | **425** verdes | limpo | Implementação completa. Falta a validação independente. |
+| 01 `design-system` | **31 / 32** | **386** verdes | limpo | Falta só a **T32**. |
+
+### O que esta sessão fez
+
+1. **`fix(design-system)` `179bab0`** — a suíte do DS chegou **vermelha** no Windows:
+   `token_purity_guard_test.dart` comparava o path devolvido por `listSync`
+   (`lib\core\design_system`) contra a constante escrita com `/`. O teste anti-vácuo — que
+   existe justamente para provar que a varredura não passa à toa — falhava, e a guarda se
+   declarava vazia numa plataforma e cheia na outra. Normalizado o separador, com sensor
+   cobrindo as duas formas de path. **Era bug de teste, não de produto**: as varreduras em si
+   usam `endsWith` de nome de arquivo e sempre funcionaram nos dois sistemas.
+2. **`feat(design-system)` `bcd156d` — T31, o frame do celular.** 390×820, radius 38, borda
+   1px, conteúdo cortado nos cantos; header e rodapé fixos com a área central rolando; sombra
+   suave **fora** do recorte. Seção no catálogo e export no barrel. +7 testes (379 → 386). As
+   duas allowlists da guarda já nomeavam `bora_phone_frame.dart` desde a fase 2 e seguem verdes.
+
+### O `validation.md` de `calculo` é um esqueleto vazio
+
+`62c5537` commitou `.specs/features/calculo/validation.md` com **todas as nove seções em
+`_(pendente)_`** — e com mensagem de commit em inglês, fora da convenção do projeto. **Não é
+uma validação.** O Verifier de `calculo` continua integralmente por fazer.
 
 ### O que falta, em ordem
 
-1. **`design-system` T30–T32** (retomar o lote 5): T30 bottom sheet (parcial em disco), T31 frame do celular (as duas exceções do sistema: radius 38 e a única sombra com blur), T32 completude do catálogo — o teste tem de **falhar se um componente sumir** das seções. Baseline ao retomar: **378** testes.
-2. **Verifier de `calculo`** — agente novo, autor ≠ verificador, evidence-or-zero, sensor P0 com **≥10 mutações**. Foi despachado e interrompido; o prompt completo está descrito no item "Contrato do Verifier" abaixo.
-3. **Verifier de `design-system`** — mesmo rigor, depois de T32.
-4. **Corrigir gaps** que os Verifiers apontarem (loop fix→re-verify, no máximo 3 iterações antes de escalar).
-5. **Merge** de `feature/calculo` e depois `feature/design-system` em `main`. Os dois workflows respeitaram fronteiras disjuntas de arquivo — só `design-system` tocou `pubspec.yaml` e `lib/core/routing/` — então não deve haver conflito de código.
-6. **Escrever os 7 ADs** de `.specs/features/ads-pendentes.md` na seção Decisions acima, **já renumerados** (`calculo` 008–010, `design-system` 011–014), e **apagar aquele arquivo**.
-7. **Rodar** `.claude/skills/tlc-spec-driven/scripts/lessons.py` com as lições que os Verifiers destilarem.
-8. **Atualizar o `ROADMAP.md`**: marcar as specs 01 e 02 como concluídas e registrar que o marco **M0 fechou**.
+1. **`design-system` T32** — catálogo completo, responsivo e verificado por completude.
+   Baseline ao retomar: **386** testes. O registro de seções termina em `FRAME DO CELULAR`; a
+   lista canônica do teste de completude tem de falhar **nomeando** o componente ou export que
+   sumir.
+2. **Verifier de `calculo`** — ver "Contrato do Verifier".
+3. **Verifier de `design-system`** — mesmo rigor, depois da T32.
+4. **Corrigir gaps** dos Verifiers (loop fix→re-verify, máx. 3 iterações antes de escalar).
+5. **Merge** de `feature/calculo` e depois `feature/design-system` em `main`. Fronteiras de
+   arquivo foram disjuntas — só `design-system` tocou `pubspec.yaml` e `lib/core/routing/`.
+6. **Escrever os 7 ADs** de `.specs/features/ads-pendentes.md` na seção Decisions,
+   renumerados (`calculo` 008–010, `design-system` 011–014), e **apagar** aquele arquivo.
+7. **Rodar** `.claude/skills/tlc-spec-driven/scripts/lessons.py` com as lições dos Verifiers.
+   Candidata desta sessão: *guarda que compara path de filesystem contra constante escrita com
+   `/` é verde só no POSIX*.
+8. **Atualizar o `ROADMAP.md`**: specs 01 e 02 concluídas, marco **M0** fechado.
+
+### Pendência de marcação
+
+As caixas "Done when" de **T30 e T31** ainda estão `- [ ]` no
+`.specs/features/design-system/tasks.md` — as duas tasks estão commitadas e verdes, mas o
+plano não foi marcado. Marcar junto com a T32, num commit `docs(design-system)`.
+
+### Decisão pendente do usuário: push
+
+`feature/design-system` está **2 commits à frente** de `origin` (`179bab0`, `bcd156d`) e nada
+foi enviado — push não foi pedido nesta sessão. Se o trabalho for retomado em outra máquina, é
+preciso `git push origin feature/design-system` antes.
 
 ### Contrato do Verifier (vale para as duas specs)
 
 Agente **novo**, que não implementou nada. Instruções essenciais:
-- **Não aceitar nenhuma alegação dos batch workers**, inclusive os "self-checks de discriminação" que eles relataram — self-check de autor não substitui o sensor.
-- Re-derivar a cobertura a partir do `spec.md` com **evidence-or-zero**: critério sem `file:line` + expressão da asserção conta como **não coberto**.
-- **Sensor P0**: ≥10 mutações comportamentais em estado descartável. Protocolo: árvore limpa antes de cada uma → editar → rodar → `git checkout -- <arquivo>` **imediato** → `git status` conferido entre todas e ao final. Nenhum commit de código, nenhuma mutação deixada para trás.
+- **Não aceitar nenhuma alegação dos batch workers**, inclusive os "self-checks de
+  discriminação" que eles relataram — self-check de autor não substitui o sensor.
+- Re-derivar a cobertura a partir do `spec.md` com **evidence-or-zero**: critério sem
+  `file:line` + expressão da asserção conta como **não coberto**.
+- **Sensor P0**: ≥10 mutações comportamentais em estado descartável. Protocolo: árvore limpa
+  antes de cada uma → editar → rodar → `git checkout -- <arquivo>` **imediato** → `git status`
+  conferido entre todas e ao final. Nenhum commit de código, nenhuma mutação deixada para trás.
 - **O Verifier não conserta.** Gap vira task ranqueada para outro agente.
-- Escrever `.specs/features/<spec>/validation.md` **incrementalmente em disco** (risco de limite) e commitá-lo.
+- Escrever `.specs/features/<spec>/validation.md` **incrementalmente em disco** (risco de
+  limite) e commitá-lo.
 - Espelhar o formato de `.specs/features/fundacao/validation.md`.
 
-**Pontos que o Verifier de `calculo` precisa atacar:** os quatro números canônicos (R$ 211 · ≈R$ 30/cabeça · R$ 271 · ≈R$ 45/adulto), os Testes A e B de RN-16 com **ordem** (e se a guarda anti-ordenação em `casos_literais_do_arquivo_03_test.dart` discrimina mesmo), a política de precisão de AD-009 (a armadilha `(1.15*10).round() == 11`), RN-14 (criança fora do racha; os dois divisores coexistindo), `entraNoTotal` como dado declarado, a cerveja por `adultos − abstêmios`, a pureza Dart puro, a fixture RN-30 e o barrel como porta única.
+**Pontos que o Verifier de `calculo` precisa atacar:** os quatro números canônicos
+(R$ 211 · ≈R$ 30/cabeça · R$ 271 · ≈R$ 45/adulto), os Testes A e B de RN-16 com **ordem** (e se
+a guarda anti-ordenação em `casos_literais_do_arquivo_03_test.dart` discrimina mesmo), a
+política de precisão de AD-009 (a armadilha `(1.15*10).round() == 11`), RN-14 (criança fora do
+racha; os dois divisores coexistindo), `entraNoTotal` como dado declarado, a cerveja por
+`adultos − abstêmios`, a pureza Dart puro, a fixture RN-30 e o barrel como porta única.
 
-**Pontos para o de `design-system`:** os valores literais de §1 e §4 afirmados um a um, o press-sink (translate 2,2 + sombra 4→2), o toast (1 por vez, 2200 ms, substitui sem empilhar), as três guardas de varredura (se ainda mordem), a fronteira com `calculo` (DS-27 recebe a fração pronta e não calcula), e as exceções de radius/blur.
+**Pontos para o de `design-system`:** os valores literais de §1 e §4 afirmados um a um, o
+press-sink (translate 2,2 + sombra 4→2), o toast (1 por vez, 2200 ms, substitui sem empilhar),
+as três guardas de varredura (se ainda mordem), a fronteira com `calculo` (DS-27 recebe a
+fração pronta e não calcula), e as exceções de radius/blur.
 
 ### Pendências manuais (M) — não automatizáveis neste ambiente
 
-- **DS-33** — a conferência visual "parece o protótipo?". Não há device nem navegador aqui. Roteiro: `flutter run` e `flutter run -d chrome`, abrir `/catalogo`, conferir cada seção contra `.specs/init-spec/02-design-system.md`. **Testes verdes provam que cada token tem o valor literal da spec; não provam que o conjunto parece certo.**
-- **FUND-17 AC4** (herdada da fundação) — a spec nomeia "handler global" mas a implementação registra pelo `try/catch` do boot. Diagnóstico completo em `.specs/features/fundacao/validation.md`. **Decisão do usuário, ainda pendente.**
+- **DS-33** — a conferência visual "parece o protótipo?". Roteiro: `flutter run` e
+  `flutter run -d chrome`, abrir `/catalogo`, conferir cada seção contra
+  `.specs/init-spec/02-design-system.md`. **Testes verdes provam que cada token tem o valor
+  literal da spec; não provam que o conjunto parece certo.**
+- **FUND-17 AC4** (herdada da fundação) — a spec nomeia "handler global" mas a implementação
+  registra pelo `try/catch` do boot. Diagnóstico em
+  `.specs/features/fundacao/validation.md`. **Decisão do usuário, ainda pendente.**
 
-### Decisões do usuário nesta sessão (2026-08-20 / 21)
+### Decisões do usuário (2026-08-20 / 21)
 
-1. Fontes **bundladas** em `assets/fonts/` (Archivo variável + Archivo Black + OFL), não o pacote `google_fonts`.
+1. Fontes **bundladas** em `assets/fonts/` (Archivo variável + Archivo Black + OFL), não o
+   pacote `google_fonts`.
 2. Catálogo de componentes como **rota interna `/catalogo`**, sem dependência nova.
-3. **RN-10 leitura (a)**: R$ 271 manda; entram Carvão 22 + Gelo 30 + Sal 8 = 60; Copos & pratos aparece na lista e fica **fora** do total. O parêntese "(22+30+8+15)" do arquivo 03 está errado.
+3. **RN-10 leitura (a)**: R$ 271 manda; entram Carvão 22 + Gelo 30 + Sal 8 = 60; Copos & pratos
+   aparece na lista e fica **fora** do total. O parêntese "(22+30+8+15)" do arquivo 03 está
+   errado.
 4. Execução **ponta a ponta**, sem checkpoint de aprovação entre fases.
-5. Ao bater no limite de cota, retomar **5 minutos depois** do horário de reset, automaticamente.
+5. Ao bater no limite de cota, retomar **5 minutos depois** do horário de reset,
+   automaticamente.
+
+### Monitoria de cota (montada em 2026-08-25, a pedido do usuário)
+
+- `scratchpad/monitor-cota.sh` roda a cada **5 min** e lê o bloco de 5h ativo via `ccusage`
+  (instalado local em `scratchpad/node_modules`, sem rede por tique).
+- Denominador: **maior bloco já observado** no histórico local (**3.631.348** tokens), que se
+  auto-corrige para cima. É aproximação empírica — o `ccusage` não enxerga o limite real da
+  conta.
+- Silenciosa por padrão; avisa ao cruzar **50/70/80%** e dispara `ALERTA-COTA-85` em 85%. Grita
+  também se o `ccusage` falhar 3× seguidas, para que silêncio não seja lido como "tudo bem".
+- Log em `scratchpad/cota.log`, último status em `cota-status.json`.
+- **A monitoria é da sessão, não do repositório**: quem retomar precisa rearmá-la.
+
+### Estado da cota nesta pausa
+
+- Pausado em **83%** (3.019.767 / 3.631.348), a ~67K tokens do limiar de 85% — o suficiente
+  para salvar o estado, não para abrir a T32.
+- **Reset do bloco: 2026-08-25 13:00 BRT** (16:00 UTC).
+- **Retomar às 13:05 BRT.**
 
 ### Pergunta aberta, sem bloquear
 
-Premissa **A-16** de `calculo`: `progressoDeQuitacao` **sem nenhuma linha** devolve `1.0` (barra cheia). Está implementado e testado assim, com doc comment registrando que `0.0` seria defensável. A spec `custos` pode trocar em uma linha.
-
-### Histórico de interrupções — o que funcionou
-
-A cota estourou **quatro vezes** (2026-08-20 16:54 · 2026-08-21 ~00:00 · ~09:00 · ~14:00). **Perda acumulada de trabalho: praticamente zero.** O que fez isso funcionar:
-
-1. **Commit atômico ao fim de cada task**, antes de a próxima começar — limita a perda a uma task, sem depender de prever o limite.
-2. **Conferir o portão antes de retomar.** O estado do trabalho meio-escrito varia: 3× estava íntegro e verde (o worker morreu entre passar no teste e commitar), 1× não compilava. A instrução de retomada muda conforme o caso.
-3. **Retomar por mensagem, nunca por agente novo** — o transcript preserva o contexto e custa muito menos que recomeçar frio.
-4. **Esperar reset + 5 min** (`scratchpad/aguardar-reset.sh HH:MM`), para não bater na virada.
+Premissa **A-16** de `calculo`: `progressoDeQuitacao` **sem nenhuma linha** devolve `1.0`
+(barra cheia). Está implementado e testado assim, com doc comment registrando que `0.0` seria
+defensável. A spec `custos` pode trocar em uma linha.
 
 ### Como retomar
 
 ```bash
+export PATH="$PATH:/c/SDKs/flutter/bin"
 git worktree list
-cd /home/lucari/repo/bora-calculo && git log --oneline main..HEAD && flutter analyze && flutter test   # 425
-cd /home/lucari/repo/bora-ds     && git log --oneline main..HEAD && flutter analyze && flutter test   # 378
-# o que já fechou está marcado em .specs/features/<spec>/tasks.md
+cd /c/repos/lucari/bora-calculo && flutter test   # 425
+cd /c/repos/lucari/bora-ds     && flutter test   # 386
+# o que já fechou está em .specs/features/<spec>/tasks.md
 # os 7 ADs esperando merge: .specs/features/ads-pendentes.md
 ```
+
+### Histórico de interrupções — o que funcionou
+
+A cota estourou **quatro vezes** em 2026-08-20/21, e houve uma pausa planejada em 2026-08-25.
+**Perda acumulada de trabalho: praticamente zero.** O que fez isso funcionar:
+
+1. **Commit atômico ao fim de cada task**, antes de a próxima começar — limita a perda a uma
+   task, sem depender de prever o limite.
+2. **Conferir o portão antes de retomar.** O estado do trabalho meio-escrito varia: 3× estava
+   íntegro e verde, 1× não compilava. E o handoff pode estar velho: desta vez as branches
+   tinham avançado além do que ele dizia.
+3. **Retomar por mensagem, nunca por agente novo** — o transcript preserva o contexto e custa
+   muito menos que recomeçar frio.
+4. **Não abrir task que não cabe no que resta de cota.** Melhor parar com o plano preciso do
+   que deixar meia task no disco.
