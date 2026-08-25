@@ -39,6 +39,7 @@ export 'dominio/corredor.dart';
 export 'dominio/despesa.dart';
 export 'dominio/dieta.dart';
 export 'dominio/festa.dart';
+export 'dominio/igualdade.dart';
 export 'dominio/item_de_lista.dart';
 export 'dominio/linha_de_acerto.dart';
 export 'dominio/papel_na_festa.dart';

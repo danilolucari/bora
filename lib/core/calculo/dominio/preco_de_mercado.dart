@@ -11,7 +11,10 @@ import 'corredor.dart';
 /// literais (A-03): a Picanha bovina vale R$ 45/kg lá e média R$ 65 aqui.
 ///
 /// Valor imutável e `const`, no mesmo formato de `DefinicaoDeItem`: linha de
-/// catálogo, lida por chave, nunca comparada por valor.
+/// catálogo, lida por chave. Ser lida por chave no uso de hoje **não** a
+/// dispensa de `==`: P1-2 AC2 vale para toda entidade de domínio, e uma
+/// entidade que só é igual a si mesma quebra silenciosamente quem comparar
+/// estados para evitar recálculo.
 class PrecoDeMercado {
   const PrecoDeMercado({
     required this.nome,
@@ -58,4 +61,32 @@ class PrecoDeMercado {
   /// O contrário também vale: RN-11 não cobre água, suco, sal, copos nem
   /// destilados. As duas tabelas não cobrem o mesmo conjunto (A-03).
   final ChaveItem? chave;
+
+  /// Valor, não identidade (CALC-05).
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PrecoDeMercado &&
+          nome == other.nome &&
+          emoji == other.emoji &&
+          corredor == other.corredor &&
+          rotuloDeQuantidade == other.rotuloDeQuantidade &&
+          media == other.media &&
+          minimo == other.minimo &&
+          maximo == other.maximo &&
+          fontes == other.fontes &&
+          chave == other.chave;
+
+  @override
+  int get hashCode => Object.hash(
+        nome,
+        emoji,
+        corredor,
+        rotuloDeQuantidade,
+        media,
+        minimo,
+        maximo,
+        fontes,
+        chave,
+      );
 }

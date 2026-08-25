@@ -1,5 +1,6 @@
 import 'chave_item.dart';
 import 'contagem_de_pessoas.dart';
+import 'igualdade.dart';
 import 'item_de_lista.dart';
 import 'pessoa.dart';
 
@@ -40,4 +41,32 @@ class ComposicaoDaFesta {
 
   /// Ajustes manuais por item (RN-12), quando existem.
   final Map<ChaveItem, OverrideDeItem> overrides;
+
+  /// Valor, não identidade (CALC-05) — e por valor **profundo**: como esta é a
+  /// entrada única de `CalculadoraDaFesta.calcular`, é comparando duas
+  /// composições que um consumidor decide se precisa recalcular. Com o `==` de
+  /// identidade das coleções, duas composições idênticas nunca seriam iguais e
+  /// esse consumidor recalcularia sempre.
+  ///
+  /// [pessoas] compara **na ordem**: a ordem de entrada é comportamento
+  /// observável no racha (A-14), então duas composições que só diferem na
+  /// ordem não são a mesma.
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ComposicaoDaFesta &&
+          contagem == other.contagem &&
+          duracaoHoras == other.duracaoHoras &&
+          listaIgual(pessoas, other.pessoas) &&
+          conjuntoIgual(itensSelecionados, other.itensSelecionados) &&
+          mapaIgual(overrides, other.overrides);
+
+  @override
+  int get hashCode => Object.hash(
+        contagem,
+        duracaoHoras,
+        Object.hashAll(pessoas),
+        Object.hashAllUnordered(itensSelecionados),
+        hashDeMapa(overrides),
+      );
 }
