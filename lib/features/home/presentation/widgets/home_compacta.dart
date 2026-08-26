@@ -60,6 +60,12 @@ class HomeCompacta extends StatelessWidget {
             style: BoraTextStyles.corpo,
           ),
           const SizedBox(height: 28),
+          if (estado.situacao == SituacaoDaHome.falhou) ...[
+            // HOME-16: falha é mensagem na tela, não tela em branco — e
+            // "COMEÇAR OUTRA" continua abaixo, acessível.
+            Text(HomeTextos.falha, style: BoraTextStyles.dica),
+            const SizedBox(height: 20),
+          ],
           for (final resumo in estado.chegando) ...[
             CardDaFesta(
               resumo: resumo,

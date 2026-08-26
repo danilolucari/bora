@@ -58,6 +58,12 @@ class HomeExpandida extends StatelessWidget {
               children: [
                 _LinhaDeTitulo(estado: estado),
                 const SizedBox(height: vaoDoGrid),
+                if (estado.situacao == SituacaoDaHome.falhou) ...[
+                  // HOME-16: a mesma mensagem de T-02, e a coluna da direita
+                  // com "COMEÇAR OUTRA" continua acessível.
+                  Text(HomeTextos.falha, style: BoraTextStyles.dica),
+                  const SizedBox(height: vaoDoGrid),
+                ],
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

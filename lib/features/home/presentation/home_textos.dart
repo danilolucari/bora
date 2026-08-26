@@ -7,6 +7,16 @@ abstract final class HomeTextos {
   /// T-02 e W-02: o título da tela.
   static const String titulo = 'SEUS ROLÊS';
 
+  /// A mensagem do estado `falhou` (HOME-16).
+  ///
+  /// SPEC_PRECISION_GAP: nenhuma tela de `04` ou `06` desenha a Home falhando,
+  /// e nenhuma spec dá esta copy. O `design.md` só diz "mensagem de falha, e
+  /// COMEÇAR OUTRA permanece acessível". A frase segue a voz do produto —
+  /// corpo em sentence case (§7) — e fica declarada aqui como premissa, não
+  /// como literal de spec.
+  static const String falha =
+      'não deu pra carregar seus rolês agora. tenta de novo daqui a pouco.';
+
   /// O subtítulo, **derivado** da contagem real (A-05).
   ///
   /// T-02 escreve "1 festa chegando · 2 passadas", que é o que sai da fixture
