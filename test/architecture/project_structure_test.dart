@@ -6,6 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 const List<String> _pastasDeCore = [
   'design_system',
   'calculo',
+  // AD-019: a sessão mora em core/, não dentro de features/entrar/ — o
+  // roteador a consome para a guarda de AD-017, e a spec 04 consome a
+  // entidade para o avatar do header.
+  'autenticacao',
   'di',
   'routing',
   'observability',
