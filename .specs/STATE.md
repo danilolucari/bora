@@ -183,125 +183,137 @@
 
 ## Handoff
 
-> **SNAPSHOT — 2026-08-26, fim de sessão pedido pelo usuário.**
-> Sessão encerrada com a árvore limpa e tudo empurrado. Nada ficou pela metade.
+> **SNAPSHOT — 2026-08-26.** Spec 04 `home` com Execute concluído e Verifier **PASS**.
 > O que está abaixo de "Histórico — sessão do M0" é história, não estado corrente.
 
 ### Onde parou
 
-**Spec 03 `entrar` — COMPLETA e validada.** Branch `feature/entrar`, **20 commits**,
-empurrada para `origin` (`HEAD == origin/feature/entrar`).
+**Spec 04 `home` — COMPLETA e validada.** Branch `feature/home`, nascida de
+`feature/entrar` (a spec 03 ainda não foi mergeada e a 04 depende da porta de sessão e da
+guarda dela). **28 commits.**
 
 | | |
 |---|---|
-| Testes | **947 verdes** (baseline do M0: 742 · +205) |
+| Testes | **1136 verdes** (baseline da spec 03: 947 · **+189**) |
 | `flutter analyze` | zero issues |
-| Verifier | **PASS** — 21/21 requisitos com evidência `file:line` |
-| Sensor | 24 mutações · **21 mortas** · 3 sobreviventes (1 declarada, 2 redundantes) |
-| Relatório | `.specs/features/entrar/validation.md` — histórico das 3 iterações preservado |
+| Verifier | **PASS** na 3ª iteração — **19/19** requisitos com evidência que discrimina |
+| Sensor | 3 rodadas · **37 mutações, 32 mortas**, 0 sobreviventes não explicados |
+| `code-review` | 2 rodadas · 27 achados · 17 defeitos reais fechados com regressão |
+| Relatório | `.specs/features/home/validation.md` — 752 linhas, as 3 iterações preservadas |
 
-**PR a abrir** (o `gh` CLI não está instalado nesta máquina; a URL de compare está pronta):
-`https://github.com/danilolucari/bora/compare/main...feature/entrar?expand=1`
+**16 tasks executadas**: as 13 planejadas mais **T3a** (`BoraAvatar` aceita par de cores),
+**T4a** (`MarcaBora` promovida a `BoraMarca` com `.header()`) e **T9a** (`ResumoDeFesta`
+ganha `id`). As três nasceram do mesmo padrão: a tela precisava de algo que o design system
+ou o domínio não tinham.
 
-### O fio solto da sessão anterior — fechado
+### A primeira coisa a fazer ao retomar
 
-**A AD-022 está gravada** (2026-08-26), aprovada pelo usuário com três apertos sobre a
-redação que o `design.md` propunha:
+**A conferência visual com a skill `run` não foi feita** — nem em T-02, nem em W-02. É a
+mesma pendência que a spec 03 deixou aberta para T-01/W-01, e agora são quatro telas
+esperando olho humano. A suíte prova valor de token; ela **não** prova que o conjunto
+parece o protótipo. Foi por conferência humana que DS-33 fechou no M0.
 
-1. **A divergência mora inteira no `pendentes`.** `confirmados` coincide com a contagem dos
-   nomeados em toda a spec-fonte (T-05, RN-25, T-07, T-08) e tem de continuar coincidindo —
-   a AD não autoriza um `confirmados` que discorde de T-05.
-2. **O aceite é a transição de RN-28** (`4/2 → 5/1`), não a string estática
-   "4 confirmados · 2 pendentes" — essa passa igual numa implementação derivada errada.
-3. **O custo tem dono.** Home e Galera podem divergir sem que nada impeça, e o "+N"
-   tracejado agrava (`excedenteDeAvatares` = `confirmados − visíveis`). No M1 não há
-   mitigação; a obrigação recai na spec 09 `convidado` — quem grava o RSVP atualiza o
-   contador **na mesma escrita**.
-
-O `design.md` de `home` foi atualizado para essa redação. Não há mais documento apontando
-para decisão inexistente.
+Há um obstáculo concreto: **em produção o repositório em memória nasce com semente vazia**
+(a fixture RN-30 é dado de teste, e `lib/` não a importa), então rodar o app abre a Home no
+estado vazio de HOME-15. Conferir T-02/W-02 povoadas exige semear temporariamente — sem
+commitar — ou decidir por um caminho de demo, que hoje não existe e não está em spec
+nenhuma.
 
 ### Estado do M1, spec a spec
 
 | Spec | Specify | Design | Tasks | Execute | Verifier |
 |---|---|---|---|---|---|
 | 03 `entrar` | ✅ | ✅ | ✅ 16 tasks | ✅ | ✅ **PASS** |
-| 04 `home` | ✅ | ✅ | ⬜ **próximo passo** | ⬜ | ⬜ |
-| 05 `montar` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 04 `home` | ✅ | ✅ | ✅ 16 tasks | ✅ | ✅ **PASS** |
+| 05 `montar` | ✅ | ⬜ **próximo passo** | ⬜ | ⬜ | ⬜ |
 | 06 `lista` | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-`home` tem `spec.md`, `context.md` e `design.md` prontos — **falta o `tasks.md`**. O design
-prevê ~11 tasks em 4 fases: contrato (`ResumoDeFesta`, porta, impl em memória, fixture
-estendida) → chrome (`AppShell`, `PlaceholderPage`) → bloc → telas.
+`montar` tem `spec.md` e `context.md` prontos — **falta o `design.md`**. `lista` nunca foi
+especificada e segue com as premissas G2/G3 registradas, por decisão do usuário.
 
-`lista` nunca foi especificada. O usuário decidiu (2026-08-26) que ela **segue com premissas
-registradas** em vez de esperar: G2 (fonte dos preços) e G3 (delivery) viram assumptions no
-`spec.md` para ele revisar no PR.
+### Dois PRs abertos para abrir
 
-### Combinados desta sessão que valem para as próximas
+Nenhum dos dois foi aberto: o `gh` CLI não está instalado nesta máquina.
 
-- **Um PR por spec/feature**, não por fase interna. Seriam 4 no M1.
-- **Sub-agentes**: execução das tasks é **inline**; o **Verifier é sub-agente** e foi
-  autorizado. Vale para as três specs restantes.
-- **Bloqueio de acesso**: tentar emular/simular local; se não der, **pular e anotar no
-  relatório final** — não travar.
-- **Cota**: `python .claude/scripts/cota.py` ao fim de cada task e em fronteira de fase.
-  Protocolo completo na skill `cota` e no `CLAUDE.md`.
+- `entrar`: `https://github.com/danilolucari/bora/compare/main...feature/entrar?expand=1`
+- `home`: `https://github.com/danilolucari/bora/compare/feature/entrar...feature/home?expand=1`
 
-### Pendências declaradas — vão para o relatório final do M1
+Os dois são **empilhados**. Mergeando `entrar` primeiro, `home` rebaseia em `main` e a pilha
+some.
 
-1. **Código de cancelamento do Google não verificado empiricamente.** Os quatro valores em
-   `codigosDeCancelamento` (`lib/core/autenticacao/dados/falha_de_codigo.dart`) vêm do SDK
-   JS/nativo e **não existem em nenhum pacote Dart instalado** — varredura em
-   `firebase_auth 6.5.7`, `firebase_auth_web 6.2.6` e
-   `firebase_auth_platform_interface 9.0.6` não achou nenhuma ocorrência. O teste cobre o
-   **mecanismo**, não a lista, e a mutação M4 sobrevive **por construção declarada**.
-   Agora dá para capturar de verdade: o `firebase` CLI foi instalado (15.28.1) e o project
-   id é `bora-87050`. Fazer com a skill `run`: emulador + Chrome, fechar o popup, anotar o
-   `code`.
-2. **Conferência visual de T-01 e W-01 com `run` não foi feita.** A suíte prova valor de
-   token; ela não prova que o conjunto parece o protótipo. Foi assim que DS-33 fechou no M0
-   — por conferência humana.
-3. **Lições não distiladas.** O Verifier apontou que `validate.md` §10 pede rodar
-   `scripts/lessons.py` quando há sinal, e há: 4 mutantes sobreviventes não declarados e 5
-   spec-precision gaps na iteração 1. Ele não rodou porque `.specs/lessons.json` está fora
-   da fronteira da spec 03 e ele é read-only. Candidatas que ele já formulou:
-   (a) delegar cobertura por comentário a um teste de outra task produz requisito órfão — a
-   asserção tem de existir no arquivo que a alega;
-   (b) asserção de "saiu da tela" não é asserção de destino;
-   (c) layout responsivo com widget próprio precisa de arquivo de teste próprio.
+### Pendências declaradas que o M1 carrega adiante
 
-### Padrão de erro meu que se repetiu — vale vigiar
+Numeradas como o Verifier as deixou no `validation.md`:
 
-**Varredura mirando texto em vez de import** aconteceu três vezes (T4, T5, T10): o doc
-comment cita o que o teste proíbe, e a varredura acusa o próprio comentário.
+1. **D-1 · avatares de 40px de W-02.** `BoraStackedAvatars` é fixo nos 34px de §5, e os
+   outros três degraus do web (sombra 8px, padding 28px, título 38px) já estão aplicados.
+   **Não é imprecisão de spec** — W-02 define os 40px com precisão. É requisito deferido de
+   HOME-05, e precisa de emenda de fronteira no design system.
+2. **D-2 · seis spec-precision gaps abertos** — ls do logo do header, "primário compacto",
+   botão voltar "quando aplicável", emoji do ARQUIVO, cor dos avatares da pilha, copy da
+   falha da Home. Todos legítimos: é a spec que não define, e cada um está declarado no
+   arquivo que o carrega.
+3. **D-3 · contrato de igualdade de `HomeState`** — `comConfirmacaoNova` não tem teste
+   direto; hoje é inseparável das listas pela lógica do bloc. É o maior risco da lista.
+4. **D-5 · o custo declarado da AD-022** — deriva entre o contador da Home e os nomeados da
+   Galera, com o "+N" junto. Dono: spec 09 `convidado`, que grava contador e RSVP na mesma
+   escrita.
+5. **D-6 · `rotaAtual()` usa estado global de módulo** em `app_de_teste.dart`, isolado por
+   `addTearDown`. Vira problema só com testes concorrentes no mesmo isolate.
+6. **D-7 · semente vazia em produção** (AD-016) — ver o obstáculo da conferência visual.
+7. Da spec 03, ainda aberta: **o código de cancelamento do Google nunca foi capturado
+   empiricamente**. O `firebase` CLI está instalado (15.28.1) e o project id é `bora-87050`.
 
-**Teste que afirma estado em vez de movimento** aconteceu duas vezes, e a segunda foi
-depois de o Verifier já ter apontado a primeira: a correção inicial de R-1 usava viewport de
-420px afirmando "o CTA está visível", e o CTA nascia em `bottom=423` — três pixels fora, a
-asserção quase passava sem rolagem. **Rodar a mutação é o que pegou.** Correção aceita sem
-mutação confirmando não é correção.
+### O padrão que o sensor achou três vezes — vale mirar primeiro na spec 05
+
+**Defesa escrita e documentada no código, nunca exercida por teste, porque a fixture já
+satisfazia a condição que ela protege.** Aconteceu com o teto da pilha de avatares (a
+fixture já cortava em 3), com o `SafeArea` (nenhum teste definia inset) e com a cópia
+defensiva de `emitir` (só a da semente tinha teste). Nas três rodadas foi o alvo mais
+produtivo do sensor.
+
+Um segundo padrão, das duas rodadas de `code-review`: **asserção que confere o objeto
+errado** — `Text.style` em vez dos spans, `getRect` do widget em vez do texto pintado,
+`findsOneWidget` sem `skipOffstage` numa tela empilhada. Todas passavam com o defeito
+presente.
+
+### Correção de registro
+
+O `tasks.md` de `home` afirmava que os sete achados do primeiro `code-review` foram fechados
+"cada um com teste de regressão que falha sem a correção". O Verifier conferiu e mostrou que
+**para os dois de `SafeArea`/inset isso era falso**. A frase foi corrigida no lugar onde
+estava, dizendo o que era falso e quando a rede passou a existir.
+
+### Combinados que seguem valendo
+
+- **Um PR por spec**, não por fase interna.
+- Execução das tasks **inline**; **Verifier como sub-agente**; `code-review` ao fim de cada
+  batch; skill `run` nas tasks de tela.
+- Bloqueio de acesso: tentar emular/simular local; se não der, **pular e anotar no relatório
+  final** — não travar.
+- Cota: `python .claude/scripts/cota.py` ao fim de cada task e em fronteira de fase.
+- **Confira o exit code do `flutter test` explicitamente.** `flutter test | tail` engole o
+  código de saída, e isso já produziu um commit com o gate vermelho nesta sessão.
+- **Arquivo markdown longo em português vai pela ferramenta Write, não por heredoc** — o
+  heredoc estoura em conteúdo com acento, crase e aspas. Custou duas falhas aqui e uma no
+  sub-agente.
 
 ### Como retomar
 
 ```bash
 export PATH="$PATH:/c/SDKs/flutter/bin"
 cd /c/repos/lucari/bora
-git checkout feature/entrar && flutter test    # 947, referência de sanidade
-python .claude/scripts/cota.py                 # antes de abrir trabalho longo
+git checkout feature/home && flutter test    # 1136, referência de sanidade
+python .claude/scripts/cota.py
 
 # ler, nesta ordem:
-#   .specs/features/home/design.md   (o próximo passo é o tasks.md dele)
-#   .specs/features/entrar/validation.md  (o que o Verifier cobra)
+#   .specs/features/home/validation.md   (o que o Verifier cobra e o que ficou pendente)
+#   .specs/features/montar/spec.md       (o próximo passo é o design.md dele)
 #   .specs/ROADMAP.md §2 e §3
 ```
 
-Ordem obrigatória do que resta: **`home` (Tasks → Execute → Verifier → PR)** →
-**`montar` (Design → Tasks → Execute → Verifier → PR)** →
-**`lista` (Specify com premissas → Design → Tasks → Execute → Verifier → PR)**.
-
-`montar` depende da navegação e do `FestaRepository` que `home` cria; `lista` depende de
-`montar`.
+Ordem obrigatória do que resta no M1: **`montar` (Design → Tasks → Execute → Verifier → PR)**
+→ **`lista` (Specify com premissas → Design → Tasks → Execute → Verifier → PR)**.
 
 ---
 ## Histórico — sessão do M0
