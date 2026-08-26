@@ -171,6 +171,34 @@ void main() {
       );
     });
 
+    testWidgets('"+ CONVIDAR" tem fundo opaco, senão a sombra vaza por cima',
+        (tester) async {
+      await _montar(tester, rn30NaHome);
+
+      final preenchimento = tester
+          .widget<BoraPressSink>(
+            find
+                .descendant(
+                  of: find.byType(BoraSecondaryButton),
+                  matching: find.byType(BoraPressSink),
+                )
+                .first,
+          )
+          .fundo;
+
+      expect(
+        preenchimento,
+        BoraColors.white,
+        reason: 'achado na conferência visual: §5 dá ao secundário "fundo '
+            'transparente **ou** branco", e com o transparente a sombra dura '
+            'de §4 aparece **através** do botão — ele virava um retângulo '
+            'preto com o rótulo ink invisível por cima. O teste antigo '
+            'afirmava que o texto existe na árvore, e ele existia: o que '
+            'faltava era contraste',
+      );
+      expect(preenchimento.a, 1.0, reason: 'opaco, não translúcido');
+    });
+
     testWidgets('os toques voltam por callback — o card não navega',
         (tester) async {
       var convidou = 0;

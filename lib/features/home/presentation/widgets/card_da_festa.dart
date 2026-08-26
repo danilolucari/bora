@@ -118,6 +118,14 @@ class CardDaFesta extends StatelessWidget {
                     child: BoraSecondaryButton(
                       rotulo: convidar,
                       onPressed: aoConvidar,
+                      // §5 dá ao secundário "fundo transparente **ou**
+                      // branco". Sobre card branco só o branco lê: com o
+                      // transparente, a sombra dura de §4 aparece **através**
+                      // do botão e ele vira um retângulo preto com o rótulo
+                      // ink invisível por cima. Achado na conferência visual —
+                      // a suíte afirmava que o texto existe na árvore, e ele
+                      // existe; o que faltava era contraste.
+                      fundoBranco: true,
                     ),
                   ),
                   const SizedBox(width: 10),
