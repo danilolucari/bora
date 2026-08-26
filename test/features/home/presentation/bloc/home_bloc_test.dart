@@ -11,6 +11,7 @@ import '../../../../support/recording_app_logger.dart';
 
 /// A festa de RN-30 com um confirmado a mais — o RSVP de RN-28.
 ResumoDeFesta get _rn30DepoisDoRsvp => ResumoDeFesta(
+      id: rn30NaHome.id,
       festa: rn30NaHome.festa,
       confirmados: rn30NaHome.confirmados + 1,
       pendentes: rn30NaHome.pendentes - 1,
@@ -19,7 +20,7 @@ ResumoDeFesta get _rn30DepoisDoRsvp => ResumoDeFesta(
 
 /// A mesma festa recriada do zero, com o nome repetido e ninguém confirmado.
 ResumoDeFesta get _festaNovaComONomeAntigo =>
-    ResumoDeFesta(festa: rn30NaHome.festa, iniciais: const []);
+    ResumoDeFesta(id: rn30NaHome.id, festa: rn30NaHome.festa, iniciais: const []);
 
 /// Um repositório que emite e falha sob comando (HOME-16).
 class _RepositorioQueFalha implements FestaRepository {
@@ -302,6 +303,32 @@ void main() {
         isFalse,
         reason: 'o conjunto só crescia: uma festa nova com nome repetido '
             'nascia com o atalho aceso e zero confirmados, contra P1-3 AC3',
+      );
+    });
+  });
+
+  group('HOME-09 — festas homônimas não se confundem', () {
+    test('a confirmação de uma não acende o atalho da outra', () async {
+      final homonima = ResumoDeFesta(
+        id: 'outra18',
+        festa: rn30NaHome.festa,
+        confirmados: 2,
+        pendentes: 1,
+        iniciais: const ['B'],
+      );
+      final repositorio = repositorioCom([rn30NaHome, homonima]);
+      final bloc = blocCom(repositorio);
+      await _assentar();
+
+      repositorio.emitir([_rn30DepoisDoRsvp, homonima]);
+      await _assentar();
+
+      expect(bloc.state.temConfirmacaoNova(_rn30DepoisDoRsvp), isTrue);
+      expect(
+        bloc.state.temConfirmacaoNova(homonima),
+        isFalse,
+        reason: 'o pareamento é por id: por nome, a segunda festa herdaria o '
+            'atalho da primeira sem ninguém ter confirmado nela',
       );
     });
   });

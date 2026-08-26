@@ -4,6 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// `const` no teste é a prova de que o construtor de [ResumoDeFesta] é `const`
 /// — o mesmo padrão de `test/core/calculo/dominio/festa_test.dart`.
+/// O id da festa — o `{festaId}` das rotas.
+const String _id = 'rafa18';
+
 const Festa _churrasDoRafa = Festa(
   nome: 'CHURRAS DO RAFA 🔥',
   data: 'SÁB · 18 JUL',
@@ -23,6 +26,7 @@ const Festa _churrasDaLaje = Festa(
 
 /// O estado de RN-30 como a Home o mostra: 4 confirmados e 2 pendentes.
 const ResumoDeFesta _rn30 = ResumoDeFesta(
+  id: _id,
   festa: _churrasDoRafa,
   confirmados: 4,
   pendentes: 2,
@@ -47,7 +51,7 @@ void main() {
     });
 
     test('sem números informados, tudo nasce zerado e vazio', () {
-      const semNumeros = ResumoDeFesta(festa: _churrasDoRafa);
+      const semNumeros = ResumoDeFesta(id: _id, festa: _churrasDoRafa);
 
       expect(semNumeros.confirmados, 0);
       expect(semNumeros.pendentes, 0);
@@ -55,9 +59,34 @@ void main() {
     });
   });
 
+  group('HOME-07 — o id é o {festaId} da rota', () {
+    test('o resumo carrega o id que a navegação precisa', () {
+      expect(_rn30.id, 'rafa18');
+    });
+
+    test('duas festas com o mesmo nome e ids diferentes são diferentes', () {
+      const homonima = ResumoDeFesta(
+        id: 'outra18',
+        festa: _churrasDoRafa,
+        confirmados: 4,
+        pendentes: 2,
+        iniciais: ['R', 'A', 'L'],
+      );
+
+      expect(
+        homonima,
+        isNot(_rn30),
+        reason: 'repetir o nome do churrasco é comum; por nome, as duas '
+            'colapsariam numa só e a confirmação de uma acenderia o atalho '
+            'da outra',
+      );
+    });
+  });
+
   group('HOME-14 — ehPassada separa o arquivo do que está chegando', () {
     test('festa concluída é passada', () {
       const passada = ResumoDeFesta(
+        id: _id,
         festa: _churrasDaLaje,
         pessoas: 14,
         total: 612,
@@ -80,6 +109,7 @@ void main() {
 
     test('com exatamente 3 confirmados e 3 visíveis, o excedente é 0', () {
       const tresConfirmados = ResumoDeFesta(
+        id: _id,
         festa: _churrasDoRafa,
         confirmados: 3,
       );
@@ -90,6 +120,7 @@ void main() {
     test('com menos confirmados do que slots, o excedente nunca é negativo',
         () {
       const doisConfirmados = ResumoDeFesta(
+        id: _id,
         festa: _churrasDoRafa,
         confirmados: 2,
       );
@@ -98,7 +129,7 @@ void main() {
     });
 
     test('sem confirmado nenhum, o excedente é 0', () {
-      const ninguem = ResumoDeFesta(festa: _churrasDoRafa);
+      const ninguem = ResumoDeFesta(id: _id, festa: _churrasDoRafa);
 
       expect(ninguem.excedenteDeAvatares(3), 0);
     });
@@ -107,6 +138,7 @@ void main() {
   group('HOME-19 — igualdade por valor, porque o Stream compara emissões', () {
     test('dois resumos com os mesmos campos são iguais', () {
       const outro = ResumoDeFesta(
+        id: _id,
         festa: _churrasDoRafa,
         confirmados: 4,
         pendentes: 2,
@@ -120,6 +152,7 @@ void main() {
     test('iniciais são comparadas por conteúdo, não por identidade de lista',
         () {
       final listaNova = ResumoDeFesta(
+        id: _id,
         festa: _churrasDoRafa,
         confirmados: 4,
         pendentes: 2,
@@ -137,6 +170,7 @@ void main() {
 
     test('mudar a ordem das iniciais torna os resumos diferentes', () {
       const outraOrdem = ResumoDeFesta(
+        id: _id,
         festa: _churrasDoRafa,
         confirmados: 4,
         pendentes: 2,
@@ -148,6 +182,7 @@ void main() {
 
     test('um confirmado a mais torna os resumos diferentes (RN-28)', () {
       const depoisDoRsvp = ResumoDeFesta(
+        id: _id,
         festa: _churrasDoRafa,
         confirmados: 5,
         pendentes: 1,
@@ -163,6 +198,7 @@ void main() {
 
     test('trocar a festa torna os resumos diferentes', () {
       const outraFesta = ResumoDeFesta(
+        id: _id,
         festa: _churrasDaLaje,
         confirmados: 4,
         pendentes: 2,

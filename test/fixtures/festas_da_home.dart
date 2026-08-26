@@ -30,6 +30,7 @@ import 'rn30_estado_inicial_tipado.dart';
 ///
 /// `nome`, `pessoas` e `total` são da spec. O resto é premissa A-04.
 const Map<String, Object?> churrasDaLajeUc24 = {
+  'id': 'laje21jun',
   'emoji': '🔥',
   'nome': 'Churras da laje',
   'pessoas': 14,
@@ -46,6 +47,7 @@ const Map<String, Object?> churrasDaLajeUc24 = {
 /// Existe porque T-02 diz "2 passadas": com uma só, o subtítulo derivado
 /// nunca produziria a string de T-02 e o ARQUIVO teria uma linha só.
 const Map<String, Object?> segundaFestaPassadaA04 = {
+  'id': 'fimdeano20dez',
   'emoji': '🔥',
   'nome': 'Churras de fim de ano',
   'pessoas': 9,
@@ -65,8 +67,13 @@ final List<String> iniciaisDosConfirmadosRn30 = [
     if (pessoa['status'] == 'confirmado') (pessoa['nome']! as String)[0],
 ].take(3).toList();
 
+/// O id da festa de RN-30 — o `rafa18` do link `bora.app/c/rafa18` (RN-24),
+/// que é o único identificador que a spec dá a esta festa.
+const String idDaFestaRn30 = 'rafa18';
+
 /// A festa de RN-30 como a Home a mostra: 4 confirmados · 2 pendentes.
 final ResumoDeFesta rn30NaHome = ResumoDeFesta(
+  id: idDaFestaRn30,
   festa: festaRn30Tipada,
   confirmados: festaRn30['confirmadosNaHome']! as int,
   pendentes: festaRn30['pendentesNaHome']! as int,
@@ -84,6 +91,7 @@ final List<ResumoDeFesta> festasPassadas = [
 final List<ResumoDeFesta> festasDaHome = [rn30NaHome, ...festasPassadas];
 
 ResumoDeFesta _passadaDe(Map<String, Object?> bruta) => ResumoDeFesta(
+      id: bruta['id']! as String,
       festa: Festa(
         nome: bruta['nome']! as String,
         data: bruta['data']! as String,

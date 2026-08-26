@@ -67,16 +67,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (state.situacao == SituacaoDaHome.carregando) return const {};
 
     final anteriores = {
-      for (final festa in state.chegando) festa.festa.nome: festa.confirmados,
+      for (final festa in state.chegando) festa.id: festa.confirmados,
     };
 
-    final nomesQueChegam = {for (final festa in chegando) festa.festa.nome};
+    final idsQueChegam = {for (final festa in chegando) festa.id};
 
     return {
       for (final festa in chegando)
-        if ((anteriores[festa.festa.nome] ?? festa.confirmados) <
-            festa.confirmados)
-          festa.festa.nome,
+        if ((anteriores[festa.id] ?? festa.confirmados) < festa.confirmados)
+          festa.id,
       // Uma festa que já tinha o atalho aceso continua com ele: o anfitrião
       // não perde o caminho do acerto porque chegou outra emissão qualquer.
       //
@@ -84,7 +83,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       // crescia, e uma festa nova com o nome de uma festa antiga já concluída
       // nasceria com o atalho aceso e zero confirmados — o contrário do que
       // P1-3 AC3 exige.
-      ...state.comConfirmacaoNova.where(nomesQueChegam.contains),
+      ...state.comConfirmacaoNova.where(idsQueChegam.contains),
     };
   }
 

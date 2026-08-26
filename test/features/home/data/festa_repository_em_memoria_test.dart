@@ -29,6 +29,8 @@ List<String> _importsDeTesteEm(String conteudoDart) => _diretivaDeImport
     .where((alvo) => _alvosProibidos.any(alvo.contains))
     .toList();
 
+const String _id = 'rafa18';
+
 const Festa _churrasDoRafa = Festa(
   nome: 'CHURRAS DO RAFA 🔥',
   data: 'SÁB · 18 JUL',
@@ -38,6 +40,7 @@ const Festa _churrasDoRafa = Festa(
 );
 
 const ResumoDeFesta _rn30 = ResumoDeFesta(
+  id: _id,
   festa: _churrasDoRafa,
   confirmados: 4,
   pendentes: 2,
@@ -47,6 +50,7 @@ const ResumoDeFesta _rn30 = ResumoDeFesta(
 /// A mesma festa depois do RSVP de RN-28: um confirmado a mais, um pendente
 /// a menos.
 const ResumoDeFesta _rn30DepoisDoRsvp = ResumoDeFesta(
+  id: _id,
   festa: _churrasDoRafa,
   confirmados: 5,
   pendentes: 1,

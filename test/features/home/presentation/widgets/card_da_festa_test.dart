@@ -52,6 +52,7 @@ ResumoDeFesta _com({
   String? nome,
 }) =>
     ResumoDeFesta(
+      id: rn30NaHome.id,
       festa: nome == null
           ? rn30NaHome.festa
           : rn30NaHome.festa.copyWith(nome: nome),

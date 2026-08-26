@@ -16,6 +16,7 @@ import '../../../core/calculo/calculo.dart';
 /// `flutter analyze`.
 class ResumoDeFesta {
   const ResumoDeFesta({
+    required this.id,
     required this.festa,
     this.confirmados = 0,
     this.pendentes = 0,
@@ -23,6 +24,19 @@ class ResumoDeFesta {
     this.pessoas,
     this.total,
   });
+
+  /// A identidade da festa — o `{festaId}` das rotas `/roles/:festaId/**`.
+  ///
+  /// SPEC_DEVIATION: o `design.md` não previu este campo. Ele é inevitável:
+  /// HOME-07 manda "MONTAR LISTA →" navegar para `/roles/{festaId}/montar`, e
+  /// `Festa` não tem id — a spec nunca definiu um, e a entidade mora em
+  /// `core/calculo/` (AD-008), fora da fronteira desta spec. Mora aqui porque
+  /// é a Home que precisa dele para navegar; no M2 ele é o id do documento do
+  /// Firestore.
+  ///
+  /// É também o que pareia emissões no `HomeBloc`: por nome, duas festas
+  /// homônimas do mesmo anfitrião colapsariam numa só.
+  final String id;
 
   final Festa festa;
 
@@ -64,6 +78,7 @@ class ResumoDeFesta {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ResumoDeFesta &&
+          other.id == id &&
           other.festa == festa &&
           other.confirmados == confirmados &&
           other.pendentes == pendentes &&
@@ -73,6 +88,7 @@ class ResumoDeFesta {
 
   @override
   int get hashCode => Object.hash(
+        id,
         festa,
         confirmados,
         pendentes,

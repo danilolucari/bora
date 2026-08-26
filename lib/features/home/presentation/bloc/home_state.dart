@@ -27,7 +27,7 @@ class HomeState {
   /// O ARQUIVO de UC-24.
   final List<ResumoDeFesta> passadas;
 
-  /// Os nomes das festas que ganharam confirmação desde a emissão anterior
+  /// Os **ids** das festas que ganharam confirmação desde a emissão anterior
   /// (**D-1**).
   ///
   /// Guardado aqui, e não em `ResumoDeFesta`, porque "nova" é propriedade de
@@ -35,9 +35,9 @@ class HomeState {
   /// no dado obrigaria a fonte — Firestore, no M2 — a saber o que o anfitrião
   /// já tinha visto: estado de UI vazando para o banco.
   ///
-  /// Identificado por nome porque `Festa` não tem id: a spec nunca definiu um
-  /// (A-21 deixou de fora só link e nível). Quando a spec 09 criar a
-  /// identidade da festa, é aqui que ela entra.
+  /// Identificado pelo `id` de `ResumoDeFesta`: por nome, duas festas
+  /// homônimas do mesmo anfitrião — repetir o nome do churrasco é comum —
+  /// colapsariam numa só, e a confirmação de uma acenderia o atalho da outra.
   final Set<String> comConfirmacaoNova;
 
   /// `true` quando [resumo] ganhou confirmação desde a emissão anterior —
@@ -46,7 +46,7 @@ class HomeState {
   /// A tela pergunta ao estado em vez de comparar nomes: a regra de
   /// pareamento é do bloc.
   bool temConfirmacaoNova(ResumoDeFesta resumo) =>
-      comConfirmacaoNova.contains(resumo.festa.nome);
+      comConfirmacaoNova.contains(resumo.id);
 
   HomeState copyWith({
     SituacaoDaHome? situacao,
