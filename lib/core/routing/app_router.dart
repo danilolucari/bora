@@ -59,7 +59,7 @@ GoRouter buildAppRouter({
     routes: [
       GoRoute(
         path: Routes.entrar,
-        builder: (context, state) => const EntrarPage(),
+        builder: (context, state) => EntrarPage(autenticacao: autenticacao),
       ),
       GoRoute(
         path: Routes.erro,

@@ -1,4 +1,5 @@
 import 'package:bora/core/routing/placeholder_page.dart';
+import 'package:bora/features/entrar/presentation/pages/entrar_page.dart';
 import 'package:bora/core/routing/route_error_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:flutter/material.dart';
@@ -12,10 +13,12 @@ Future<void> _abrir(WidgetTester tester, String location) =>
 
 void main() {
   group('FUND-07 — cada rota pública tem destino identificável', () {
-    testWidgets('/entrar renderiza o placeholder de entrar', (tester) async {
+    testWidgets('/entrar renderiza a tela de entrar', (tester) async {
       await _abrir(tester, Routes.entrar);
 
-      expect(find.byKey(PlaceholderPage.keyFor('entrar')), findsOneWidget);
+      // Deixou de ser placeholder na spec 03: a asserção passou a apontar o
+      // destino real, sem afrouxar — continua exigindo um destino nomeado.
+      expect(find.byKey(EntrarPage.pageKey), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
   });
@@ -32,7 +35,7 @@ void main() {
     testWidgets('/c/rafa18 não desvia para a tela de entrar', (tester) async {
       await _abrir(tester, Routes.convidado('rafa18'));
 
-      expect(find.byKey(PlaceholderPage.keyFor('entrar')), findsNothing);
+      expect(find.byKey(EntrarPage.pageKey), findsNothing);
       expect(find.byKey(RouteErrorPage.pageKey), findsNothing);
     });
   });

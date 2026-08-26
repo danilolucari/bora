@@ -2,6 +2,7 @@ import 'package:bora/app.dart';
 import 'package:bora/core/design_system/tokens/bora_colors.dart';
 import 'package:bora/core/design_system/tokens/bora_text_styles.dart';
 import 'package:bora/core/routing/placeholder_page.dart';
+import 'package:bora/features/entrar/presentation/pages/entrar_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,7 +34,7 @@ void main() {
       await abrirApp(tester, Routes.roles);
 
       expect(
-        find.byKey(PlaceholderPage.keyFor('entrar')),
+        find.byKey(EntrarPage.pageKey),
         findsOneWidget,
         reason: 'o par com/sem sessão é o que discrimina a guarda: um teste '
             'que só afirmasse a Home passaria com a guarda desligada',
@@ -52,7 +53,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(PlaceholderPage.keyFor('entrar')),
+        find.byKey(EntrarPage.pageKey),
         findsOneWidget,
         reason: 'o refreshListenable reavalia a guarda sem ninguém chamar '
             'context.go — é a AD-020 funcionando',
@@ -62,7 +63,7 @@ void main() {
     testWidgets('a sessão começando leva de /entrar para a Home (ENT-16)',
         (tester) async {
       final autenticacao = await abrirApp(tester, Routes.entrar);
-      expect(find.byKey(PlaceholderPage.keyFor('entrar')), findsOneWidget);
+      expect(find.byKey(EntrarPage.pageKey), findsOneWidget);
 
       autenticacao.mudarSessao(sessaoDeTeste);
       await tester.pumpAndSettle();
