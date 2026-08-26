@@ -16,5 +16,6 @@
 /// único lugar do projeto que o faz fora do bootstrap e do injector.
 library;
 
+export 'dominio/autenticacao_repository.dart';
 export 'dominio/falha_de_autenticacao.dart';
 export 'dominio/usuario_logado.dart';
