@@ -79,7 +79,11 @@ GoRouter buildAppRouter({
         ),
       ),
       ShellRoute(
-        builder: (context, state, child) => AppShell(child: child),
+        builder: (context, state, child) => AppShell(
+          usuario: autenticacao.sessaoAtual,
+          rotaAtual: state.uri.path,
+          child: child,
+        ),
         routes: [
           GoRoute(
             path: Routes.roles,

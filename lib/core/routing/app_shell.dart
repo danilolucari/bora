@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../autenticacao/dominio/usuario_logado.dart';
 import '../design_system/design_system.dart';
+import '../responsive/layout_mode.dart';
+import '../responsive/responsive_builder.dart';
+import 'routes.dart';
 
 /// Chrome do app logado — envolve tudo que vive sob `/roles`.
 ///
@@ -13,7 +17,12 @@ import '../design_system/design_system.dart';
 /// A barra é sticky por construção: ela vive **fora** do que rola, numa
 /// `Column` acima do conteúdo, então não há o que grudar.
 class AppShell extends StatelessWidget {
-  const AppShell({required this.child, this.usuario, super.key});
+  const AppShell({
+    required this.child,
+    this.usuario,
+    this.rotaAtual,
+    super.key,
+  });
 
   /// Chave do chrome. É por ela que o teste afirma o par discriminante de
   /// FUND-08: presente em `/roles`, ausente em `/c/:codigo`.
@@ -31,6 +40,9 @@ class AppShell extends StatelessWidget {
 
   /// `06` §Header de app: "avatar do usuário 36px".
   static const double tamanhoDoAvatar = 36;
+
+  /// `06` §Header de app: "na Home a ação é o botão + NOVO ROLÊ".
+  static const String rotuloDeNovoRole = '+ NOVO ROLÊ';
 
   /// `06` §Header de app: o avatar de conta é sempre `#FFD23F`, com a inicial
   /// em `ink` (A-08). Não é persona de festa, então não deriva do nome.
@@ -53,13 +65,20 @@ class AppShell extends StatelessWidget {
   /// inicial inventada.
   final UsuarioLogado? usuario;
 
+  /// A rota que está montada, para o header saber qual ação é a dele.
+  ///
+  /// Chega pelo roteador — que é quem sabe —, e não de `GoRouterState.of`, para
+  /// que o header continue montável num teste sem rota. Qual ação pertence a
+  /// qual rota é decisão do header, e mora num lugar só.
+  final String? rotaAtual;
+
   @override
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: chromeKey,
       child: Column(
         children: [
-          _HeaderDeApp(usuario: usuario),
+          _HeaderDeApp(usuario: usuario, rotaAtual: rotaAtual),
           Expanded(child: child),
         ],
       ),
@@ -68,12 +87,31 @@ class AppShell extends StatelessWidget {
 }
 
 class _HeaderDeApp extends StatelessWidget {
-  const _HeaderDeApp({required this.usuario});
+  const _HeaderDeApp({required this.usuario, required this.rotaAtual});
 
   final UsuarioLogado? usuario;
+  final String? rotaAtual;
+
+  /// A ação contextual desta rota, se houver.
+  ///
+  /// `06` dá a ação do header **só no web** e T-02 não desenha barra de app
+  /// nenhuma no mobile (A-07), então em compacto o header não tem ação — a
+  /// entrada para criar rolê ali é o card "🔥 CHURRASCO" da própria Home.
+  ///
+  /// SPEC_PRECISION_GAP: `06` desenha o botão como "primário compacto"
+  /// (padding 9x14, sombra 3px). O padding e a sombra de §4 são 15 e 4px, e o
+  /// `CLAUDE.md` manda a sombra vir do token — um 3px aqui seria sombra fora
+  /// do sistema. Fica o primário do design system; se o compacto for mesmo
+  /// necessário, é variante do componente, não decisão de um arquivo de rota.
+  bool _temAcao(LayoutMode modo) =>
+      modo == LayoutMode.expanded && rotaAtual == Routes.roles;
 
   @override
   Widget build(BuildContext context) {
+    return ResponsiveBuilder(builder: (context, modo) => _barra(context, modo));
+  }
+
+  Widget _barra(BuildContext context, LayoutMode modo) {
     // `Container`, e não `DecoratedBox`: ele soma a espessura da borda ao
     // padding, que é a semântica de `06` — lá o `border-bottom` fica **fora**
     // do padding. Com `DecoratedBox` a borda é pintada por dentro e come 2px
@@ -88,8 +126,21 @@ class _HeaderDeApp extends StatelessWidget {
       padding: AppShell.paddingDoHeader,
       child: Row(
         children: [
+          // Sem botão voltar na Home: ela é a raiz do app logado.
+          //
+          // SPEC_PRECISION_GAP: `06` põe o voltar "quando aplicável" e nenhuma
+          // tela do M1 define quando isso é. Enquanto nenhuma spec disser, o
+          // header não desenha voltar em rota alguma — inventar o critério
+          // aqui furaria o mapa de navegação de AD-003.
           const BoraMarca.header(),
           const Spacer(),
+          if (_temAcao(modo)) ...[
+            BoraPrimaryButton(
+              rotulo: AppShell.rotuloDeNovoRole,
+              onPressed: () => context.go(Routes.novoRole),
+            ),
+            const SizedBox(width: 16),
+          ],
           if (usuario != null)
             BoraAvatar(
               // A inicial vem de `UsuarioLogado.inicial`, que já resolve o
