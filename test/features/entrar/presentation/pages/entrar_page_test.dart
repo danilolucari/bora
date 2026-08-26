@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bora/core/autenticacao/autenticacao.dart';
 import 'package:bora/core/design_system/design_system.dart';
 import 'package:bora/features/entrar/presentation/pages/entrar_page.dart';
@@ -244,6 +246,153 @@ void main() {
         reason: 'par discriminante: uma mensagem sempre presente faria os '
             'testes de falha acima passarem à toa',
       );
+    });
+  });
+
+  group('ENT-07/ENT-10 — o CTA fica inerte enquanto envia', () {
+    Future<void> preencher(WidgetTester tester) async {
+      await tester.enterText(find.byType(TextField).first, 'rafa@bora.app');
+      await tester.enterText(find.byType(TextField).last, 'segredo');
+    }
+
+    testWidgets('duplo toque no CTA dispara UMA autenticação', (tester) async {
+      // O edge case literal da spec. Sem pendurar o envio, o primeiro toque
+      // termina no mesmo frame e o segundo encontra o botão já reabilitado —
+      // foi por isso que a versão anterior deste requisito ficou sem prova.
+      autenticacao.travaDeEnvio = Completer<void>();
+      await abrir(tester);
+      await preencher(tester);
+
+      await tester.tap(find.text('COMEÇAR →'));
+      await tester.pump();
+      await tester.tap(find.text('COMEÇAR →'), warnIfMissed: false);
+      await tester.pump();
+
+      expect(
+        autenticacao.chamadas,
+        hasLength(1),
+        reason: 'ENT-10: o segundo toque não pode virar um segundo login',
+      );
+
+      autenticacao.travaDeEnvio!.complete();
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('durante o envio o CTA fica desabilitado e esmaecido',
+        (tester) async {
+      autenticacao.travaDeEnvio = Completer<void>();
+      await abrir(tester);
+      await preencher(tester);
+
+      await tester.tap(find.text('COMEÇAR →'));
+      await tester.pump();
+
+      expect(
+        tester
+            .widget<BoraPrimaryButton>(find.byType(BoraPrimaryButton))
+            .onPressed,
+        isNull,
+        reason: 'ENT-07: não aceitar novo acionamento',
+      );
+      expect(
+        tester
+            .widgetList<Opacity>(
+              find.descendant(
+                of: find.byType(BoraPrimaryButton),
+                matching: find.byType(Opacity),
+              ),
+            )
+            .single
+            .opacity,
+        BoraBorders.opacidadeDesabilitado,
+        reason: 'SPEC-PRECISION GAP declarado: ENT-07 pede "exibir estado de '
+            'carregando", mas o arquivo 02 não tem spinner e §8 proíbe '
+            'inventar motion. O esmaecido do design system é a única '
+            'afirmação de estado disponível dentro do sistema — e é o que '
+            'está implementado. Registrado no validation.md.',
+      );
+
+      autenticacao.travaDeEnvio!.complete();
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('o botão do Google também fica inerte durante o envio',
+        (tester) async {
+      autenticacao.travaDeEnvio = Completer<void>();
+      await abrir(tester);
+
+      await tester.tap(find.text('CONTINUAR COM GOOGLE'));
+      await tester.pump();
+      await tester.tap(find.text('CONTINUAR COM GOOGLE'), warnIfMissed: false);
+      await tester.pump();
+
+      expect(autenticacao.chamadas, hasLength(1));
+
+      autenticacao.travaDeEnvio!.complete();
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('terminado o envio, o CTA volta a aceitar toque',
+        (tester) async {
+      await abrir(tester);
+      await preencher(tester);
+
+      await tester.tap(find.text('COMEÇAR →'));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester
+            .widget<BoraPrimaryButton>(find.byType(BoraPrimaryButton))
+            .onPressed,
+        isNotNull,
+        reason: 'par discriminante: um botão sempre inerte passaria nos '
+            'testes acima por acidente',
+      );
+    });
+  });
+
+  group('edge cases da spec', () {
+    testWidgets('cruzar 900px preserva o texto digitado e o modo',
+        (tester) async {
+      await abrir(tester);
+      await tester.enterText(find.byType(TextField).first, 'rafa@bora.app');
+      await tester.tap(find.text('CRIAR CONTA'));
+      await tester.pumpAndSettle();
+
+      tester.view.physicalSize = _expandido;
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.widget<TextField>(find.byType(TextField).first).controller?.text,
+        'rafa@bora.app',
+        reason: 'os controladores vivem acima do ResponsiveBuilder — trocar de '
+            'layout não pode recriar os campos',
+      );
+      expect(
+        find.text('CRIAR CONTA →'),
+        findsOneWidget,
+        reason: 'o modo também sobrevive: o bloc está acima do split',
+      );
+    });
+
+    testWidgets('o conteúdo rola, para o teclado não estourar o layout',
+        (tester) async {
+      await abrir(tester);
+
+      expect(find.byType(SingleChildScrollView), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('nenhum layout produz scroll horizontal (W-R4)',
+        (tester) async {
+      await abrir(tester, tamanho: _expandido);
+
+      final scroll = tester.widget<SingleChildScrollView>(
+        find.byType(SingleChildScrollView),
+      );
+
+      expect(scroll.scrollDirection, Axis.vertical);
+      expect(tester.takeException(), isNull);
     });
   });
 

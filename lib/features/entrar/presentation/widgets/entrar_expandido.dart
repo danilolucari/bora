@@ -36,6 +36,14 @@ class EntrarExpandido extends StatelessWidget {
   /// W-01: padding 30px dentro do card.
   static const EdgeInsets paddingDoCard = EdgeInsets.all(30);
 
+  /// Chave do card do formulário.
+  ///
+  /// Existe porque outros componentes da tela também usam `BoraSurface` — o
+  /// input, por exemplo —, e um finder por tipo pega o primeiro da árvore, que
+  /// não é este. Depender da ordem da árvore faria o teste afirmar o widget
+  /// errado em silêncio.
+  static const Key cardKey = Key('entrar-card');
+
   final EntrarState estado;
   final TextEditingController email;
   final TextEditingController senha;
@@ -79,6 +87,7 @@ class EntrarExpandido extends StatelessWidget {
               SizedBox(
                 width: larguraDoCard,
                 child: BoraSurface(
+                  key: cardKey,
                   acento: BoraAccent.ink,
                   deslocamentoDaSombra: sombraDoCard,
                   padding: paddingDoCard,

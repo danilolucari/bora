@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bora/core/autenticacao/autenticacao.dart';
@@ -61,8 +62,17 @@ void main() {
       );
       await assentar();
 
-      expect(autenticacao.chamadas, ['entrarComEmailESenha']);
-      expect(bloc.state.erroDeEmail, isNull);
+      expect(
+        autenticacao.registros.single.email,
+        'rafa@bora.app',
+        reason: 'regra payload/conjunção: afirmar que a chamada aconteceu não '
+            'prova o valor que ela levou — e o edge case é sobre o valor',
+      );
+      expect(
+        autenticacao.registros.single.senha,
+        'segredo',
+        reason: 'a senha NÃO é aparada: espaço pode ser parte dela',
+      );
     });
 
     test('Google chama entrarComGoogle', () async {
@@ -183,6 +193,34 @@ void main() {
       );
     });
 
+    test('com o envio pendurado, um segundo submit não chama de novo',
+        () async {
+      // A guarda interna do bloc (`if (state.enviando) return`) cobre o add
+      // programático concorrente. Sem pendurar o envio ela era inobservável —
+      // e o Verifier provou que apagá-la não quebrava nada.
+      autenticacao.travaDeEnvio = Completer<void>();
+      const evento = SubmetidoComCredenciais(
+        email: 'rafa@bora.app',
+        senha: 'segredo',
+      );
+
+      bloc.add(evento);
+      await assentar();
+      expect(bloc.state.enviando, isTrue);
+
+      bloc.add(evento);
+      await assentar();
+
+      expect(
+        autenticacao.chamadas,
+        hasLength(1),
+        reason: 'ENT-10: o segundo submit durante o envio é ignorado',
+      );
+
+      autenticacao.travaDeEnvio!.complete();
+      await assentar();
+    });
+
     test('depois que o envio termina, submeter de novo funciona', () async {
       const evento = SubmetidoComCredenciais(
         email: 'rafa@bora.app',
@@ -261,11 +299,20 @@ void main() {
   });
 
   group('ENT-13/ENT-20 — a alternância de modo', () {
-    test('alterna entrar para cadastro e de volta', () {
+    test('alterna entrar para cadastro', () async {
       expect(bloc.state.modo, ModoDeEntrada.entrar);
 
       bloc.add(const ModoAlternado());
-      expect(bloc.state.modo, ModoDeEntrada.entrar);
+      await assentar();
+
+      expect(
+        bloc.state.modo,
+        ModoDeEntrada.cadastro,
+        reason: 'a versão anterior deste teste afirmava `entrar` de forma '
+            'síncrona logo após o add — ou seja, verificava que o evento '
+            'AINDA NÃO tinha sido processado, com um nome que prometia o '
+            'contrário. Passaria com um handler vazio.',
+      );
     });
 
     test('alternar limpa a falha anterior', () async {

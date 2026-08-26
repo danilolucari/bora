@@ -1,4 +1,5 @@
 import 'package:bora/core/design_system/design_system.dart';
+import 'package:bora/core/routing/placeholder_page.dart';
 import 'package:bora/core/routing/route_error_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ void main() {
         (tester) async {
       await abrirApp(tester, '/rota-que-nao-existe');
 
-      final titulo = tester.widget<Text>(find.text(RouteErrorPage.titulo));
+      final titulo = tester.widget<Text>(find.text('PÁGINA NÃO ENCONTRADA'));
 
       expect(titulo.style?.fontFamily, BoraTextStyles.familiaDisplay);
       expect(titulo.style?.fontSize, BoraTextStyles.tituloTela.fontSize);
@@ -51,14 +52,20 @@ void main() {
       );
       expect(autenticacao.sessaoAtual, isNotNull);
 
-      await tester.tap(find.text(RouteErrorPage.voltar));
+      // Literal, e não `RouteErrorPage.voltar`: a regra do tasks.md diz que
+      // copy da spec se afirma contra o literal escrito no teste — comparar
+      // com a constante faria o teste concordar com qualquer copy.
+      await tester.tap(find.text('VOLTAR PRO INÍCIO'));
       await tester.pumpAndSettle();
 
+      // O DESTINO, não só "saiu daqui": trocar /roles por /catalogo sobrevivia
+      // à asserção anterior (gap nº 4 do Verifier).
       expect(
-        find.byKey(RouteErrorPage.pageKey),
-        findsNothing,
-        reason: 'saiu da tela de erro — o destino final é ${Routes.roles}',
+        find.byKey(PlaceholderPage.keyFor('home')),
+        findsOneWidget,
+        reason: 'ENT-19 AC2: o CTA leva à raiz do app logado, ${Routes.roles}',
       );
+      expect(find.byKey(RouteErrorPage.pageKey), findsNothing);
     });
   });
 

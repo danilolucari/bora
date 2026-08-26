@@ -29,10 +29,21 @@ class FakeAutenticacaoRepository implements AutenticacaoRepository {
   /// O usuário que a próxima autenticação bem-sucedida coloca na sessão.
   UsuarioLogado usuarioAoEntrar = usuarioPadrao;
 
-  /// Os métodos chamados, em ordem. Deixa o teste afirmar **quantas** vezes o
-  /// repositório foi acionado — é o que prova que a validação barrou antes
-  /// (ENT-08) e que o duplo toque não disparou dois logins (ENT-07).
-  final List<String> chamadas = [];
+  /// Cada chamada com os **argumentos** que ela recebeu.
+  ///
+  /// Guardar só o nome do método não bastava: a regra payload/conjunção diz
+  /// que afirmar "a chamada aconteceu" não prova o **valor** que ela levou —
+  /// e o edge case do `trim` é exatamente sobre o valor (o Verifier pegou
+  /// isso como gap nº 5).
+  final List<ChamadaDeAutenticacao> registros = [];
+
+  /// Os métodos chamados, em ordem.
+  List<String> get chamadas => [for (final r in registros) r.metodo];
+
+  /// Quando != `null`, a autenticação **fica pendurada** até o teste
+  /// completá-lo. É o que permite observar a tela no estado "enviando" —
+  /// sem isso o envio termina no mesmo frame e o estado intermediário some.
+  Completer<void>? travaDeEnvio;
 
   final _controlador = StreamController<UsuarioLogado?>.broadcast();
   UsuarioLogado? _sessao;
@@ -48,18 +59,18 @@ class FakeAutenticacaoRepository implements AutenticacaoRepository {
     required String email,
     required String senha,
   }) =>
-      _autenticar('entrarComEmailESenha');
+      _autenticar('entrarComEmailESenha', email: email, senha: senha);
 
   @override
   Future<void> entrarComGoogle() => _autenticar('entrarComGoogle');
 
   @override
   Future<void> criarConta({required String email, required String senha}) =>
-      _autenticar('criarConta');
+      _autenticar('criarConta', email: email, senha: senha);
 
   @override
   Future<void> sair() async {
-    chamadas.add('sair');
+    registros.add(const ChamadaDeAutenticacao('sair'));
     _emitir(null);
   }
 
@@ -72,8 +83,10 @@ class FakeAutenticacaoRepository implements AutenticacaoRepository {
   /// montada (ENT-18), que nenhum método do app provoca.
   void mudarSessao(UsuarioLogado? usuario) => _emitir(usuario);
 
-  Future<void> _autenticar(String metodo) async {
-    chamadas.add(metodo);
+  Future<void> _autenticar(String metodo, {String? email, String? senha}) async {
+    registros.add(ChamadaDeAutenticacao(metodo, email: email, senha: senha));
+
+    await travaDeEnvio?.future;
 
     final programada = falha;
     if (programada != null) throw programada;
@@ -88,4 +101,16 @@ class FakeAutenticacaoRepository implements AutenticacaoRepository {
     _sessao = usuario;
     _controlador.add(usuario);
   }
+}
+
+/// Uma chamada ao repositório, com os argumentos que ela levou.
+class ChamadaDeAutenticacao {
+  const ChamadaDeAutenticacao(this.metodo, {this.email, this.senha});
+
+  final String metodo;
+  final String? email;
+  final String? senha;
+
+  @override
+  String toString() => 'ChamadaDeAutenticacao($metodo, $email)';
 }
