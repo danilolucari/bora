@@ -188,9 +188,9 @@
 
 ### Onde parou
 
-**Spec 04 `home` — COMPLETA e validada.** Branch `feature/home`, nascida de
-`feature/entrar` (a spec 03 ainda não foi mergeada e a 04 depende da porta de sessão e da
-guarda dela). **30 commits.**
+**Spec 04 `home` — COMPLETA, validada e mergeada na `main`.** Branch `feature/home`, nascida
+de `feature/entrar` porque a 04 depende da porta de sessão e da guarda dela. **31
+commits.**
 
 | | |
 |---|---|
@@ -250,15 +250,17 @@ que §5 já oferece.
 `montar` tem `spec.md` e `context.md` prontos — **falta o `design.md`**. `lista` nunca foi
 especificada e segue com as premissas G2/G3 registradas, por decisão do usuário.
 
-### Dois PRs abertos para abrir
+### As duas specs estão mergeadas na `main`
 
-Nenhum dos dois foi aberto: o `gh` CLI não está instalado nesta máquina.
+Por decisão do usuário em 2026-08-26, as duas entraram por **merge local** em vez de PR — o
+`gh` CLI não está instalado nesta máquina. Na ordem da dependência, e com `--no-ff`, como os
+merges do M0:
 
-- `entrar`: `https://github.com/danilolucari/bora/compare/main...feature/entrar?expand=1`
-- `home`: `https://github.com/danilolucari/bora/compare/feature/entrar...feature/home?expand=1`
+- `582f63e merge(entrar): integra a tela de entrar na main` — 947 testes na `main`
+- `34eb1dc merge(home): integra o painel de rolês na main` — **1137 testes na `main`**
 
-Os dois são **empilhados**. Mergeando `entrar` primeiro, `home` rebaseia em `main` e a pilha
-some.
+As branches `feature/entrar` e `feature/home` continuam existindo e apontam para o que foi
+mergeado. **A `main` local está à frente de `origin/main` e não foi empurrada.**
 
 ### Pendências declaradas que o M1 carrega adiante
 
@@ -322,7 +324,7 @@ estava, dizendo o que era falso e quando a rede passou a existir.
 ```bash
 export PATH="$PATH:/c/SDKs/flutter/bin"
 cd /c/repos/lucari/bora
-git checkout feature/home && flutter test    # 1137, referência de sanidade
+git checkout main && flutter test            # 1137, referência de sanidade
 python .claude/scripts/cota.py
 
 # ler, nesta ordem:
