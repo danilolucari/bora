@@ -183,8 +183,12 @@ void main() {
       expect(
         tester.getBottomLeft(find.byKey(AppShell.headerKey)).dy,
         lessThanOrEqualTo(tester.getTopLeft(find.text('conteúdo da rota')).dy),
-        reason: 'a barra é sticky por viver fora do que rola: se estivesse '
-            'dentro do conteúdo, sairia da tela ao rolar',
+        reason: 'SPEC_PRECISION_GAP: "sticky" é afirmado por **proxy** — a '
+            'barra vive fora do que rola, numa Column acima do conteúdo, e é '
+            'isso que esta asserção prova. Nenhum teste rola a página: para '
+            'provar a fixação de verdade seria preciso um conteúdo mais alto '
+            'que a janela e um scroll, e a barra não é um `SliverAppBar` que '
+            'pudesse deixar de grudar — ou está fora do scroll, ou não está',
       );
     });
 

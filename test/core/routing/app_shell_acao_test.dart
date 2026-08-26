@@ -53,11 +53,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(PlaceholderPage.keyFor('montar')),
-        findsOneWidget,
-        reason: 'A-06: "+ NOVO ROLÊ" e o card CHURRASCO têm o mesmo destino — '
-            'o teste abre a rota e afirma o destino, não a chamada',
+        rotaAtual(),
+        Routes.novoRole,
+        reason: 'A-06: "+ NOVO ROLÊ" e o card CHURRASCO têm o mesmo destino. '
+            'A URL é o que discrimina — `/roles/novo` e '
+            '`/roles/:festaId/montar` renderizam a mesma MontarPage, então a '
+            'chave da tela deixaria passar o destino errado',
       );
+      expect(find.byKey(PlaceholderPage.keyFor('montar')), findsOneWidget);
     });
 
     testWidgets('em compacto não há ação nem barra (A-07)', (tester) async {

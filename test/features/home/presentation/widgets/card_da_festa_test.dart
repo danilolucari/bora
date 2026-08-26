@@ -108,7 +108,16 @@ void main() {
       final superficie = tester.widget<BoraSurface>(_superficieDoCard);
 
       expect(superficie.fundo, BoraColors.white);
-      expect(superficie.deslocamentoDaSombra, BoraShadows.distanciaCardHeroi);
+      expect(
+        superficie.deslocamentoDaSombra,
+        CardDaFesta.distanciaDaSombra,
+        reason: 'o token é o do **card branco** de §4, não o do card-herói '
+            'escuro: os dois valem 6 hoje e são linhas independentes',
+      );
+      expect(
+        CardDaFesta.distanciaDaSombra,
+        BoraShadows.cardBranco.offset.dx,
+      );
       expect(
         superficie.acento,
         BoraAccent.ink,

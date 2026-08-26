@@ -5,6 +5,8 @@ import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
 import 'package:bora/features/home/domain/resumo_de_festa.dart';
 import 'package:bora/features/home/presentation/pages/home_page.dart';
 import 'package:bora/features/home/presentation/widgets/arquivo_de_festas.dart';
+import 'package:bora/features/home/presentation/widgets/card_da_festa.dart';
+import 'package:bora/features/home/presentation/widgets/comecar_outra.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -114,6 +116,37 @@ void main() {
           matching: find.text(ArquivoDeFestas.emoji),
         ),
         findsNWidgets(festasPassadas.length),
+      );
+    });
+  });
+
+  group('HOME-05 AC3 — onde o ARQUIVO fica no grid de W-02', () {
+    testWidgets('na coluna direita, **abaixo** de "COMEÇAR OUTRA"',
+        (tester) async {
+      await _abrirHome(tester);
+
+      final comecar = tester.getRect(find.byType(ComecarOutra));
+      final arquivo = tester.getRect(find.byType(ArquivoDeFestas));
+
+      expect(
+        arquivo.top,
+        greaterThan(comecar.bottom),
+        reason: 'W-02: "seção COMEÇAR OUTRA … e seção ARQUIVO" nessa ordem — '
+            'sem esta asserção, trocar as duas de lugar passava despercebido',
+      );
+      expect(
+        arquivo.left,
+        closeTo(comecar.left, 1),
+        reason: 'as duas dividem a mesma coluna',
+      );
+    });
+
+    testWidgets('e à direita do card da festa', (tester) async {
+      await _abrirHome(tester);
+
+      expect(
+        tester.getRect(find.byType(ArquivoDeFestas)).left,
+        greaterThan(tester.getRect(find.byType(CardDaFesta)).right),
       );
     });
   });

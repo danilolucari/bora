@@ -130,26 +130,36 @@ void main() {
   });
 
   group('HOME-07, HOME-08, HOME-11, HOME-12 — para onde cada toque leva', () {
-    testWidgets('"MONTAR LISTA →" abre montar da festa', (tester) async {
+    testWidgets('"MONTAR LISTA →" abre montar **desta** festa', (tester) async {
       await _abrirHome(tester);
 
       await tester.tap(find.text(CardDaFesta.montarLista));
       await tester.pumpAndSettle();
 
+      expect(
+        rotaAtual(),
+        Routes.montar(rn30NaHome.id),
+        reason: 'a URL é o que discrimina: `/roles/novo` e '
+            '`/roles/:festaId/montar` renderizam a mesma MontarPage, então '
+            'afirmar a tela deixaria passar o destino errado — e é aqui que o '
+            '`id` de `ResumoDeFesta` prova que serve para alguma coisa',
+      );
       expect(find.byKey(PlaceholderPage.keyFor('montar')), findsOneWidget);
       expect(find.byKey(HomePage.pageKey), findsNothing);
     });
 
-    testWidgets('"+ CONVIDAR" abre a aba de whatsapp da festa', (tester) async {
+    testWidgets('"+ CONVIDAR" abre o whatsapp **desta** festa', (tester) async {
       await _abrirHome(tester);
 
       await tester.tap(find.text(CardDaFesta.convidar));
       await tester.pumpAndSettle();
 
+      expect(rotaAtual(), Routes.whatsapp(rn30NaHome.id));
       expect(find.byKey(PlaceholderPage.keyFor('convite')), findsOneWidget);
     });
 
-    testWidgets('o atalho do acerto abre os custos da festa', (tester) async {
+    testWidgets('o atalho do acerto abre os custos **desta** festa',
+        (tester) async {
       final repositorio = await _abrirHome(tester);
       repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await tester.pumpAndSettle();
@@ -157,16 +167,24 @@ void main() {
       await tester.tap(find.text(CardDaFesta.verOAcerto));
       await tester.pumpAndSettle();
 
+      expect(rotaAtual(), Routes.custos(rn30NaHome.id));
       expect(find.byKey(PlaceholderPage.keyFor('custos')), findsOneWidget);
     });
 
-    testWidgets('"🔥 CHURRASCO" abre /roles/novo', (tester) async {
+    testWidgets('"🔥 CHURRASCO" abre /roles/novo, e não a festa existente',
+        (tester) async {
       await _abrirHome(tester);
 
       await tester.tap(find.text(ComecarOutra.churrasco));
       await tester.pumpAndSettle();
 
-      expect(find.byKey(PlaceholderPage.keyFor('montar')), findsOneWidget);
+      expect(
+        rotaAtual(),
+        Routes.novoRole,
+        reason: 'o rascunho é de uma festa que ainda não existe — cair na '
+            'festa do card seria editar o rolê errado',
+      );
+      expect(rotaAtual(), isNot(contains(rn30NaHome.id)));
     });
 
     testWidgets('"🎈 NIVER · EM BREVE" não leva a lugar nenhum', (
@@ -178,11 +196,32 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(HomePage.pageKey),
-        findsOneWidget,
+        rotaAtual(),
+        Routes.roles,
         reason: 'aceite de UC-02: a rota corrente fica inalterada',
       );
-      expect(find.byKey(PlaceholderPage.keyFor('montar')), findsNothing);
+      expect(find.byKey(HomePage.pageKey), findsOneWidget);
+    });
+
+    testWidgets('cada card leva à sua própria festa', (tester) async {
+      final outra = ResumoDeFesta(
+        id: 'outra18',
+        festa: rn30NaHome.festa.copyWith(nome: 'CHURRAS DA BIA 🔥'),
+        confirmados: 2,
+        pendentes: 1,
+        iniciais: const ['B'],
+      );
+      await _abrirHome(tester, festas: [rn30NaHome, outra]);
+
+      await tester.tap(find.text(CardDaFesta.montarLista).last);
+      await tester.pumpAndSettle();
+
+      expect(
+        rotaAtual(),
+        Routes.montar(outra.id),
+        reason: 'um id fixo levaria sempre à primeira festa, e o teste de um '
+            'card só não notaria',
+      );
     });
   });
 
@@ -197,12 +236,14 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(PlaceholderPage.keyFor('montar')),
+        find.byKey(PlaceholderPage.keyFor('montar'), skipOffstage: false),
         findsOneWidget,
-        reason:
-            'com `push` no lugar de `go`, o segundo toque empilharia uma '
-            'segunda cópia da tela',
+        reason: '`skipOffstage: false` é o que discrimina: com `push`, a '
+            'segunda cópia empilhada fica **fora de tela** e o findsOneWidget '
+            'padrão não a enxergava — o teste descrevia um efeito que não '
+            'detectava',
       );
+      expect(rotaAtual(), Routes.montar(rn30NaHome.id));
       expect(tester.takeException(), isNull);
     });
   });

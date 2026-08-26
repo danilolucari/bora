@@ -1,12 +1,28 @@
 import 'package:bora/app.dart';
 import 'package:bora/core/autenticacao/autenticacao.dart';
 import 'package:bora/core/routing/app_router.dart';
+import 'package:go_router/go_router.dart';
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
 import 'package:bora/features/home/domain/festa_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fake_autenticacao_repository.dart';
 import 'recording_app_logger.dart';
+
+/// O roteador que a última chamada de [abrirApp] montou.
+///
+/// Guardado para que [rotaAtual] exista: sem ele, todo teste de navegação
+/// tinha de afirmar o **destino renderizado**, e duas rotas diferentes podem
+/// renderizar a mesma tela — `/roles/novo` e `/roles/:festaId/montar` montam
+/// os dois a `MontarPage`. Foi por isso que três mutantes de navegação
+/// sobreviveram ao Verifier.
+GoRouter? _ultimoRouter;
+
+/// A URL que está montada agora.
+///
+/// É o que afirma **para onde** um toque levou, e não só que a tela mudou.
+String rotaAtual() => _ultimoRouter!.routerDelegate.currentConfiguration.uri
+    .toString();
 
 /// Monta o app inteiro em [location], com a sessão que o teste pedir.
 ///
@@ -33,16 +49,16 @@ Future<FakeAutenticacaoRepository> abrirApp(
   final repositorio = festas ?? FestaRepositoryEmMemoria();
   addTearDown(repositorio.dispose);
 
-  await tester.pumpWidget(
-    BoraApp(
-      router: buildAppRouter(
-        autenticacao: autenticacao,
-        festas: repositorio,
-        logger: RecordingAppLogger(),
-        initialLocation: location,
-      ),
-    ),
+  final router = buildAppRouter(
+    autenticacao: autenticacao,
+    festas: repositorio,
+    logger: RecordingAppLogger(),
+    initialLocation: location,
   );
+  _ultimoRouter = router;
+  addTearDown(() => _ultimoRouter = null);
+
+  await tester.pumpWidget(BoraApp(router: router));
   await tester.pumpAndSettle();
 
   return autenticacao;
