@@ -186,6 +186,22 @@ void main() {
       );
     });
 
+    test('a lista emitida também não muda o repositório por fora', () async {
+      final repositorio = FestaRepositoryEmMemoria();
+      addTearDown(repositorio.dispose);
+
+      final emitida = [_rn30];
+      repositorio.emitir(emitida);
+      emitida.clear();
+
+      await expectLater(
+        repositorio.observarFestas(),
+        emits(const [_rn30]),
+        reason: 'a cópia vale nas duas pontas — semente e emissão —, e só a '
+            'da semente estava coberta',
+      );
+    });
+
     test('a implementação satisfaz a porta', () {
       final repositorio = FestaRepositoryEmMemoria();
       addTearDown(repositorio.dispose);

@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 14,
+  "next_id": 26,
   "lessons": [
     {
       "id": "L-001",
@@ -238,6 +238,222 @@
       ],
       "created": "2026-08-25T19:46:27Z",
       "last_seen": "2026-08-25T19:46:27Z"
+    },
+    {
+      "id": "L-014",
+      "key": "surviving_mutant::assert the resulting router location string for every navigation acceptance criterion not the destination widget key because distinct routes can render the same page widget",
+      "text": "Assert the resulting router location string for every navigation acceptance criterion, not the destination widget key, because distinct routes can render the same page widget",
+      "signal": "surviving_mutant",
+      "scope": "routes",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md M8/M9/M10 — home_page_test.dart:139,149,160,169; app_shell_acao_test.dart:56 (routes)"
+      ],
+      "created": "2026-08-26T15:32:21Z",
+      "last_seen": "2026-08-26T15:32:21Z"
+    },
+    {
+      "id": "L-015",
+      "key": "surviving_mutant::pass skipoffstage false when asserting that a navigation did not stack a second page because the default finder hides the covered route and the assertion cannot fail",
+      "text": "Pass skipOffstage false when asserting that a navigation did not stack a second page, because the default finder hides the covered route and the assertion cannot fail",
+      "signal": "surviving_mutant",
+      "scope": "widget-tests",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md M3 — home_page_test.dart:199 (widget-tests)"
+      ],
+      "created": "2026-08-26T15:32:31Z",
+      "last_seen": "2026-08-26T15:32:31Z"
+    },
+    {
+      "id": "L-016",
+      "key": "surviving_mutant::assert the vertical order of sections that share a layout column not only their horizontal side because a column order swap survives a side only assertion",
+      "text": "Assert the vertical order of sections that share a layout column, not only their horizontal side, because a column-order swap survives a side-only assertion",
+      "signal": "surviving_mutant",
+      "scope": "layout-tests",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md M15 — home_expandida_test.dart:107-120 (layout-tests)"
+      ],
+      "created": "2026-08-26T15:32:32Z",
+      "last_seen": "2026-08-26T15:32:32Z"
+    },
+    {
+      "id": "L-017",
+      "key": "ac_gap::give every element named in a layout acceptance criterion its own positional assertion because an element only asserted as present leaves its placement unverified",
+      "text": "Give every element named in a layout acceptance criterion its own positional assertion, because an element only asserted as present leaves its placement unverified",
+      "signal": "ac_gap",
+      "scope": "layout-tests",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md HOME-05 AC3 / HOME-12 AC4 — grep -rn ArquivoDeFestas test/ (layout-tests)"
+      ],
+      "created": "2026-08-26T15:32:32Z",
+      "last_seen": "2026-08-26T15:32:32Z"
+    },
+    {
+      "id": "L-018",
+      "key": "spec_deviation::when a field is added outside the design to satisfy a requirement add the test that proves the field reaches the behaviour the requirement names",
+      "text": "When a field is added outside the design to satisfy a requirement, add the test that proves the field reaches the behaviour the requirement names",
+      "signal": "spec_deviation",
+      "scope": "domain",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md — resumo_de_festa.dart:28-39 (ResumoDeFesta.id) (domain)"
+      ],
+      "created": "2026-08-26T15:32:40Z",
+      "last_seen": "2026-08-26T15:32:40Z"
+    },
+    {
+      "id": "L-019",
+      "key": "spec_precision_gap::flag as a spec precision gap any acceptance criterion whose word describes runtime behaviour the test only approximates by static geometry",
+      "text": "Flag as a spec-precision gap any acceptance criterion whose word describes runtime behaviour the test only approximates by static geometry",
+      "signal": "spec_precision_gap",
+      "scope": "chrome",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md P1-1 AC1 — app_shell_test.dart:184 (chrome)"
+      ],
+      "created": "2026-08-26T15:32:40Z",
+      "last_seen": "2026-08-26T15:32:40Z"
+    },
+    {
+      "id": "L-020",
+      "key": "surviving_mutant::exercise a capping or truncating expression with input above the cap because every fixture sized at or below the cap makes the expression a no op",
+      "text": "Exercise a capping or truncating expression with input above the cap, because every fixture sized at or below the cap makes the expression a no-op",
+      "signal": "surviving_mutant",
+      "scope": "widget-tests",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md iter2 N1 — card_da_festa.dart:108; nenhum teste de widget com >3 iniciais (widget-tests)"
+      ],
+      "created": "2026-08-26T20:02:02Z",
+      "last_seen": "2026-08-26T20:02:02Z"
+    },
+    {
+      "id": "L-021",
+      "key": "surviving_mutant::assert the style on the same node that carries the text because a widget level style assertion misses a colour applied on the span",
+      "text": "Assert the style on the same node that carries the text, because a widget level style assertion misses a colour applied on the span",
+      "signal": "surviving_mutant",
+      "scope": "widget-tests",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md iter2 N7 — card_da_festa_test.dart:136-139 (widget-tests)"
+      ],
+      "created": "2026-08-26T20:02:03Z",
+      "last_seen": "2026-08-26T20:02:03Z"
+    },
+    {
+      "id": "L-022",
+      "key": "surviving_mutant::set the mediaquery inset a test needs to observe because inset aware widgets are invisible in a default test surface with zero padding",
+      "text": "Set the MediaQuery inset a test needs to observe, because inset aware widgets are invisible in a default test surface with zero padding",
+      "signal": "surviving_mutant",
+      "scope": "widget-tests",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md iter2 N5 — app_shell.dart:84-85; grep MediaQuery em test/ vazio (widget-tests)"
+      ],
+      "created": "2026-08-26T20:02:03Z",
+      "last_seen": "2026-08-26T20:02:03Z"
+    },
+    {
+      "id": "L-023",
+      "key": "surviving_mutant::test the defensive copy on every entry point that stores caller data not only on the constructor",
+      "text": "Test the defensive copy on every entry point that stores caller data, not only on the constructor",
+      "signal": "surviving_mutant",
+      "scope": "repo-layer",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md iter2 N6 — festa_repository_em_memoria.dart:57; teste só cobre a semente (repo-layer)"
+      ],
+      "created": "2026-08-26T20:02:13Z",
+      "last_seen": "2026-08-26T20:02:13Z"
+    },
+    {
+      "id": "L-024",
+      "key": "ac_gap::prove a claimed regression test by removing the fix and watching it fail because a fix commit can ship with a test that never exercised the defect",
+      "text": "Prove a claimed regression test by removing the fix and watching it fail, because a fix commit can ship with a test that never exercised the defect",
+      "signal": "ac_gap",
+      "scope": "process",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md iter2 N5 — tasks.md declara regressão para bf55f82 e 4e4a069 (process)"
+      ],
+      "created": "2026-08-26T20:02:13Z",
+      "last_seen": "2026-08-26T20:02:13Z"
+    },
+    {
+      "id": "L-025",
+      "key": "spec_precision_gap::file a value the spec states precisely but the code does not implement as a deferred requirement never as a spec precision gap",
+      "text": "File a value the spec states precisely but the code does not implement as a deferred requirement, never as a spec precision gap",
+      "signal": "spec_precision_gap",
+      "scope": "process",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md iter2 SP-8 — card_da_festa.dart:51-55 (avatar 40px de W-02) (process)"
+      ],
+      "created": "2026-08-26T20:02:13Z",
+      "last_seen": "2026-08-26T20:02:13Z"
     }
   ]
 }

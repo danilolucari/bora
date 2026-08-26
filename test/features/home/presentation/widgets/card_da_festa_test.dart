@@ -137,14 +137,24 @@ void main() {
       final linha = tester.widget<Text>(
         find.text('4 confirmados · 2 pendentes'),
       );
-      final trechos = (linha.textSpan! as TextSpan).children!.cast<TextSpan>();
 
-      expect(trechos.last.text, '2 pendentes');
-      expect(trechos.last.style?.color, BoraColors.primary);
+      // A varredura percorre **todos** os spans, e não o `style:` do widget.
+      // A asserção antiga conferia o objeto errado: pintar de vermelho o span
+      // dos confirmados não mexe em `Text.style`, e a suíte inteira passava.
+      final vermelhos = <String>[];
+      linha.textSpan!.visitChildren((span) {
+        if (span is TextSpan && span.style?.color == BoraColors.primary) {
+          vermelhos.add(span.toPlainText());
+        }
+        return true;
+      });
+
       expect(
-        linha.style?.color ?? BoraColors.ink,
-        isNot(BoraColors.primary),
-        reason: 'T-02 pinta de vermelho só o número que cobra ação',
+        vermelhos,
+        ['2 pendentes'],
+        reason: 'T-02 pinta de vermelho só o número que cobra ação — e A-09 '
+            'dá à tela um orçamento de dois acentos, que um vermelho a mais '
+            'estoura',
       );
     });
 
@@ -214,6 +224,26 @@ void main() {
       await _montar(tester, _com(confirmados: 6));
 
       expect(find.text('+3'), findsOneWidget);
+    });
+
+    testWidgets('com mais iniciais do que slots, a pilha para em 3',
+        (tester) async {
+      await _montar(
+        tester,
+        _com(confirmados: 6, iniciais: const ['R', 'A', 'L', 'B', 'D']),
+      );
+
+      expect(
+        find.byType(BoraAvatar),
+        findsNWidgets(CardDaFesta.avataresVisiveis),
+        reason: 'sem o teto, a pilha desenhava as cinco iniciais **e** somava '
+            'o "+3" — oito círculos para seis confirmados. Nenhum teste de '
+            'widget alimentava o card com mais de três iniciais, porque a '
+            'fixture já corta em três',
+      );
+      expect(find.text('+3'), findsOneWidget);
+      expect(find.text('B'), findsNothing);
+      expect(find.text('D'), findsNothing);
     });
   });
 

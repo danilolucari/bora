@@ -10,7 +10,7 @@ Implemente estas tasks com a skill `tlc-spec-driven`: **ative-a pelo nome e siga
 
 **Spec**: `.specs/features/home/spec.md`
 **Design**: `.specs/features/home/design.md` (**Aprovado** — AD-022 gravada em 2026-08-26)
-**Status**: **Em execução** — batch 1 concluído (T1–T7 + T3a e T4a), `code-review` rodado e os achados fechados. **1041 testes verdes**, `flutter analyze` limpo.
+**Status**: **Execute concluído** — 16 tasks (13 planejadas + T3a, T4a, T9a), dois `code-review` e duas iterações de Verifier. **1136 testes verdes**, `flutter analyze` limpo.
 **Ferramentas** (confirmadas em 2026-08-26): skill `run` nas tasks de tela (**T10** mobile, **T11** web) para conferência visual; skill `code-review` ao fim de cada batch (após T7 e após T13). Execução das tasks **inline**; **Verifier como sub-agente**, já autorizado no handoff.
 **Baseline**: `flutter test` = **947 passando** · `flutter analyze` = zero issues (`feature/home`, medido em 2026-08-26)
 **Branch**: `feature/home`, nascida de `feature/entrar` — a spec 03 ainda não foi mergeada e `home` depende da porta de sessão e da guarda dela
@@ -124,8 +124,7 @@ design system não tinha — o mesmo motivo que fez a spec 03 acrescentar o
 ## Rodada de `code-review` do batch 1
 
 14 achados, quatro deles verificados com probe em árvore pelo revisor. Sete
-eram defeito real e foram fechados em `bf55f82` e `e2ab3e3`, cada um com teste
-de regressão que falha sem a correção:
+eram defeito real e foram fechados em `bf55f82` e `e2ab3e3`:
 
 | Achado | Fechado em |
 |---|---|
@@ -136,6 +135,25 @@ de regressão que falha sem a correção:
 | Falha do stream zerava o estado e apagava o atalho do acerto para sempre | `e2ab3e3` |
 | `HomeState` sem igualdade por valor: `emit` nunca descartava emissão repetida | `e2ab3e3` |
 | `comConfirmacaoNova` só crescia: festa nova com nome repetido nascia com o atalho aceso | `e2ab3e3` |
+
+> **Correção de uma afirmação minha.** A frase original desta seção dizia que os
+> sete achados foram fechados "cada um com teste de regressão que falha sem a
+> correção". O Verifier conferiu e mostrou que, **para os dois de `SafeArea`/
+> inset, isso era falso**: removendo o `SafeArea` a suíte inteira continuava
+> verde, porque `setSurfaceSize` reporta inset zero e nenhum teste montava um
+> `MediaQuery` com notch. A rede só passou a existir na iteração 2 do Verifier
+> (`app_shell_test.dart`, grupo "o inset do topo é consumido uma vez só").
+> Correção feita porque a afirmação era verificável e estava errada — não
+> porque o achado voltou.
+
+**Requisito deferido, não imprecisão de spec.** W-02 pede "avatares 40px
+empilhados" e define os 40px com precisão — não é caso de spec omissa. É um
+**degrau de HOME-05 por entregar**, e está anotado como DEFERIDO em
+`card_da_festa.dart`: subi-lo exige acrescentar um parâmetro de tamanho a
+`BoraStackedAvatars`, que é extensão do design system e pede emenda de
+fronteira própria. Arquivá-lo entre os spec-precision gaps esconderia trabalho
+pendente atrás de "a spec não define", e por isso ele entra no relatório final
+como pendência declarada.
 
 Não acatados, com razão registrada: a generalização de `_temAcao` por rota
 (uma ação existe hoje — generalizar antes da segunda é inventar contrato); o

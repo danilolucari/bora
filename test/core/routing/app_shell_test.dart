@@ -27,6 +27,10 @@ const UsuarioLogado _semNome = UsuarioLogado(
 
 /// Um pouco acima e um pouco abaixo da fronteira de AD-007.
 const Size _janelaExpandida = Size(1180, 800);
+
+/// Um inset de topo qualquer — o que um aparelho com notch reporta e o que
+/// `setSurfaceSize` deixa em zero.
+const double _alturaDaStatusBar = 44;
 const Size _janelaCompacta = Size(390, 820);
 
 /// Monta o shell **como a produção monta**: direto sob o `MaterialApp`, sem
@@ -132,6 +136,72 @@ void main() {
             'amarelo no app real',
       );
       expect(find.byType(Material), findsWidgets);
+    });
+  });
+
+  group('o inset do topo é consumido uma vez só', () {
+    /// Monta o shell sob um `MediaQuery` com inset de topo, que é o que
+    /// `setSurfaceSize` **não** simula — por isso nenhum teste via o defeito.
+    Future<void> montarComNotch(
+      WidgetTester tester, {
+      Size janela = _janelaExpandida,
+    }) async {
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.binding.setSurfaceSize(janela);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: boraTheme(),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              padding: const EdgeInsets.only(top: _alturaDaStatusBar),
+            ),
+            child: child!,
+          ),
+          home: const AppShell(
+            usuario: _rafa,
+            child: Scaffold(body: Text('conteúdo da rota')),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('a barra desce a status bar em vez de ficar embaixo dela',
+        (tester) async {
+      await montarComNotch(tester);
+
+      expect(
+        tester.getRect(find.byKey(AppShell.headerKey)).top,
+        _alturaDaStatusBar,
+        reason: 'sem SafeArea a barra era desenhada em y=0, atrás do notch',
+      );
+    });
+
+    testWidgets('e a rota não recebe o inset de novo, abaixo da barra',
+        (tester) async {
+      await montarComNotch(tester);
+
+      expect(
+        tester.getRect(find.text('conteúdo da rota')).top,
+        tester.getRect(find.byKey(AppShell.headerKey)).bottom,
+        reason: '`SafeArea` remove o inset do MediaQuery só para o **próprio** '
+            'filho: dentro do header, o irmão continuava vendo o inset inteiro '
+            'e a página o aplicava de novo, abrindo uma faixa em branco da '
+            'altura da status bar logo abaixo da barra',
+      );
+    });
+
+    testWidgets('em compacto, sem barra, a rota ainda desce a status bar',
+        (tester) async {
+      await montarComNotch(tester, janela: _janelaCompacta);
+
+      expect(find.byKey(AppShell.headerKey), findsNothing);
+      expect(
+        tester.getRect(find.text('conteúdo da rota')).top,
+        _alturaDaStatusBar,
+        reason: 'no mobile não há barra, e é o shell que continua consumindo '
+            'o topo — senão T-02 nasceria atrás do notch',
+      );
     });
   });
 
