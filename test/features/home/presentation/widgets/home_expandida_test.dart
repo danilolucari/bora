@@ -17,7 +17,7 @@ import '../../../../support/app_de_teste.dart';
 const Size _janelaExpandida = Size(1180, 800);
 const Size _janelaCompacta = Size(390, 820);
 
-ResumoDeFesta get _rn30DepoisDoRsvp => ResumoDeFesta(
+ResumoDeFesta get rn30DepoisDoRsvp => ResumoDeFesta(
       id: rn30NaHome.id,
       festa: rn30NaHome.festa,
       confirmados: rn30NaHome.confirmados + 1,
@@ -176,7 +176,7 @@ void main() {
       expect(find.text('4 confirmados · 2 pendentes'), findsOneWidget);
       expect(find.text(CardDaFesta.verOAcerto), findsNothing);
 
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await tester.pumpAndSettle();
 
       expect(find.text('5 confirmados · 1 pendente'), findsOneWidget);
@@ -188,7 +188,7 @@ void main() {
     testWidgets('o layout troca e a confirmação já recebida continua lá',
         (tester) async {
       final repositorio = await _abrirHome(tester, janela: _janelaCompacta);
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await tester.pumpAndSettle();
       expect(find.byType(HomeCompacta), findsOneWidget);
       expect(find.text(CardDaFesta.verOAcerto), findsOneWidget);

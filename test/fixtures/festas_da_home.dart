@@ -78,6 +78,20 @@ final ResumoDeFesta rn30NaHome = ResumoDeFesta(
   iniciais: iniciaisDosConfirmadosRn30,
 );
 
+/// A festa de RN-30 **depois do RSVP** de RN-28: um confirmado a mais, um
+/// pendente a menos.
+///
+/// Mora aqui, e não em cada teste, porque três arquivos a construíam igual —
+/// e quando a derivação mudasse, os três teriam de mudar em sincronia ou
+/// discordariam sobre o que "depois do RSVP" significa.
+final ResumoDeFesta rn30DepoisDoRsvp = ResumoDeFesta(
+  id: rn30NaHome.id,
+  festa: rn30NaHome.festa,
+  confirmados: rn30NaHome.confirmados + 1,
+  pendentes: rn30NaHome.pendentes - 1,
+  iniciais: rn30NaHome.iniciais,
+);
+
 /// As duas festas concluídas do ARQUIVO (UC-24), na ordem de exibição.
 final List<ResumoDeFesta> festasPassadas = [
   _passadaDe(churrasDaLajeUc24),

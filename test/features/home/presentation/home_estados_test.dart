@@ -1,10 +1,8 @@
-import 'dart:async';
 
 import 'package:bora/core/routing/placeholder_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
 import 'package:bora/features/home/domain/festa_repository.dart';
-import 'package:bora/features/home/domain/resumo_de_festa.dart';
 import 'package:bora/features/home/presentation/home_textos.dart';
 import 'package:bora/features/home/presentation/pages/home_page.dart';
 import 'package:bora/features/home/presentation/widgets/arquivo_de_festas.dart';
@@ -16,6 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../core/design_system/support/font_loading.dart';
 import '../../../fixtures/festas_da_home.dart';
 import '../../../support/app_de_teste.dart';
+import '../../../support/festa_repository_que_falha.dart';
 
 const Size _janelaExpandida = Size(1180, 800);
 const Size _janelaCompacta = Size(390, 820);
@@ -25,21 +24,6 @@ const List<(String, Size)> _viewports = [
   ('mobile', _janelaCompacta),
   ('web', _janelaExpandida),
 ];
-
-/// Um repositório que emite e falha sob comando (HOME-16).
-class _RepositorioQueFalha implements FestaRepository {
-  final _controlador = StreamController<List<ResumoDeFesta>>.broadcast();
-
-  @override
-  Stream<List<ResumoDeFesta>> observarFestas() => _controlador.stream;
-
-  void emitir(List<ResumoDeFesta> festas) => _controlador.add(festas);
-
-  void falhar(Object erro) => _controlador.addError(erro, StackTrace.current);
-
-  @override
-  Future<void> dispose() => _controlador.close();
-}
 
 Future<void> _abrir(
   WidgetTester tester,
@@ -148,7 +132,7 @@ void main() {
     for (final (nome, janela) in _viewports) {
       testWidgets('no $nome, a mensagem aparece e o caminho adiante fica',
           (tester) async {
-        final repositorio = _RepositorioQueFalha();
+        final repositorio = FestaRepositoryQueFalha();
         addTearDown(repositorio.dispose);
         await _abrir(tester, repositorio, janela: janela);
 
@@ -175,7 +159,7 @@ void main() {
 
     testWidgets('a Home não diz "nenhuma festa" enquanto falha em carregar',
         (tester) async {
-      final repositorio = _RepositorioQueFalha();
+      final repositorio = FestaRepositoryQueFalha();
       addTearDown(repositorio.dispose);
       await _abrir(tester, repositorio, janela: _janelaCompacta);
 
@@ -193,7 +177,7 @@ void main() {
 
     testWidgets('e também não diz enquanto ainda está carregando',
         (tester) async {
-      final repositorio = _RepositorioQueFalha();
+      final repositorio = FestaRepositoryQueFalha();
       addTearDown(repositorio.dispose);
       await _abrir(tester, repositorio, janela: _janelaCompacta);
 
@@ -216,7 +200,7 @@ void main() {
 
     testWidgets('a falha não apaga da tela o que já tinha chegado',
         (tester) async {
-      final repositorio = _RepositorioQueFalha();
+      final repositorio = FestaRepositoryQueFalha();
       addTearDown(repositorio.dispose);
       await _abrir(tester, repositorio, janela: _janelaCompacta);
 

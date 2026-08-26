@@ -76,18 +76,26 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: chromeKey,
-      child: ResponsiveBuilder(
-        builder: (context, modo) => Column(
-          children: [
-            // A barra é **do web**. P1-1 AC1 a escopa em "viewport expandida",
-            // `06` é a spec web e T-02 não desenha barra de app nenhuma no
-            // mobile (A-07). Sem esta guarda, `/roles/novo` em 390px mostraria
-            // esta barra empilhada com o header próprio de T-03 — duas barras
-            // na mesma tela, e o mesmo em T-04..T-09 quando chegarem.
-            if (modo == LayoutMode.expanded)
-              _HeaderDeApp(usuario: usuario, rotaAtual: rotaAtual),
-            Expanded(child: child),
-          ],
+      // `SafeArea` aqui, e **não** dentro do header: ela remove o inset do
+      // `MediaQuery` dos descendentes, então consumi-lo uma vez cobre a barra
+      // e a rota. Dentro do header, o irmão `Expanded` continuava vendo o
+      // inset inteiro e a página o aplicava de novo — uma faixa em branco do
+      // tamanho da status bar logo abaixo da barra.
+      child: SafeArea(
+        bottom: false,
+        child: ResponsiveBuilder(
+          builder: (context, modo) => Column(
+            children: [
+              // A barra é **do web**. P1-1 AC1 a escopa em "viewport
+              // expandida", `06` é a spec web e T-02 não desenha barra de app
+              // nenhuma no mobile (A-07). Sem esta guarda, `/roles/novo` em
+              // 390px mostraria esta barra empilhada com o header próprio de
+              // T-03 — duas barras na mesma tela, e o mesmo em T-04..T-09.
+              if (modo == LayoutMode.expanded)
+                _HeaderDeApp(usuario: usuario, rotaAtual: rotaAtual),
+              Expanded(child: child),
+            ],
+          ),
         ),
       ),
     );
@@ -111,17 +119,16 @@ class _HeaderDeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // `Material` **acima** da barra, e `SafeArea` em volta dela.
+    // `Material` **acima** da barra.
     //
-    // Sem o `Material`, todo `Text` daqui herda o `_errorTextStyle` que o
-    // `MaterialApp` instala acima do `Navigator` — sublinhado duplo amarelo —,
-    // porque a barra vive fora do `Scaffold` da rota. O teste não via isso:
-    // ele montava o shell dentro de um `Scaffold`, coisa que a produção não
-    // faz.
-    return Material(
-      color: BoraColors.paper,
-      child: SafeArea(bottom: false, child: _barra(context)),
-    );
+    // Sem ele, todo `Text` daqui herda o `_errorTextStyle` que o `MaterialApp`
+    // instala acima do `Navigator` — sublinhado duplo amarelo —, porque a
+    // barra vive fora do `Scaffold` da rota. O teste não via isso: ele montava
+    // o shell dentro de um `Scaffold`, coisa que a produção não faz.
+    //
+    // Quem consome o inset do topo é o `AppShell`, uma vez só, para a barra e
+    // a rota.
+    return Material(color: BoraColors.paper, child: _barra(context));
   }
 
   Widget _barra(BuildContext context) {

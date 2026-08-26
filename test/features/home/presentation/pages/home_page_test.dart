@@ -12,15 +12,6 @@ import '../../../../core/design_system/support/font_loading.dart';
 import '../../../../fixtures/festas_da_home.dart';
 import '../../../../support/app_de_teste.dart';
 
-/// A festa de RN-30 com um confirmado a mais — o RSVP de RN-28.
-ResumoDeFesta get _rn30DepoisDoRsvp => ResumoDeFesta(
-  id: rn30NaHome.id,
-  festa: rn30NaHome.festa,
-  confirmados: rn30NaHome.confirmados + 1,
-  pendentes: rn30NaHome.pendentes - 1,
-  iniciais: rn30NaHome.iniciais,
-);
-
 /// Abre o app na Home, semeado com a fixture, e devolve o repositório para
 /// que o teste possa empurrar a confirmação com a tela montada (A-02).
 Future<FestaRepositoryEmMemoria> _abrirHome(
@@ -114,7 +105,7 @@ void main() {
       expect(find.text('4 confirmados · 2 pendentes'), findsOneWidget);
       expect(find.text(CardDaFesta.verOAcerto), findsNothing);
 
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await tester.pumpAndSettle();
 
       expect(
@@ -131,7 +122,7 @@ void main() {
       final repositorio = await _abrirHome(tester);
       expect(find.text('+1'), findsOneWidget);
 
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await tester.pumpAndSettle();
 
       expect(find.text('+2'), findsOneWidget);
@@ -160,7 +151,7 @@ void main() {
 
     testWidgets('o atalho do acerto abre os custos da festa', (tester) async {
       final repositorio = await _abrirHome(tester);
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text(CardDaFesta.verOAcerto));

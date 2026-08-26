@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
 import 'package:bora/features/home/domain/festa_repository.dart';
 import 'package:bora/features/home/domain/resumo_de_festa.dart';
@@ -7,35 +5,12 @@ import 'package:bora/features/home/presentation/bloc/home_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../fixtures/festas_da_home.dart';
+import '../../../../support/festa_repository_que_falha.dart';
 import '../../../../support/recording_app_logger.dart';
-
-/// A festa de RN-30 com um confirmado a mais — o RSVP de RN-28.
-ResumoDeFesta get _rn30DepoisDoRsvp => ResumoDeFesta(
-      id: rn30NaHome.id,
-      festa: rn30NaHome.festa,
-      confirmados: rn30NaHome.confirmados + 1,
-      pendentes: rn30NaHome.pendentes - 1,
-      iniciais: rn30NaHome.iniciais,
-    );
 
 /// A mesma festa recriada do zero, com o nome repetido e ninguém confirmado.
 ResumoDeFesta get _festaNovaComONomeAntigo =>
     ResumoDeFesta(id: rn30NaHome.id, festa: rn30NaHome.festa, iniciais: const []);
-
-/// Um repositório que emite e falha sob comando (HOME-16).
-class _RepositorioQueFalha implements FestaRepository {
-  final _controlador = StreamController<List<ResumoDeFesta>>.broadcast();
-
-  @override
-  Stream<List<ResumoDeFesta>> observarFestas() => _controlador.stream;
-
-  void emitir(List<ResumoDeFesta> festas) => _controlador.add(festas);
-
-  void falhar(Object erro) => _controlador.addError(erro, StackTrace.current);
-
-  @override
-  Future<void> dispose() => _controlador.close();
-}
 
 /// Espera o bloc processar as emissões pendentes do stream.
 Future<void> _assentar() => Future<void>.delayed(Duration.zero);
@@ -124,7 +99,7 @@ void main() {
       expect(bloc.state.chegando.single.confirmados, 4);
       expect(bloc.state.chegando.single.pendentes, 2);
 
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await _assentar();
 
       expect(bloc.state.chegando.single.confirmados, 5);
@@ -149,10 +124,10 @@ void main() {
       final bloc = blocCom(repositorio);
       await _assentar();
 
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await _assentar();
 
-      expect(bloc.state.temConfirmacaoNova(_rn30DepoisDoRsvp), isTrue);
+      expect(bloc.state.temConfirmacaoNova(rn30DepoisDoRsvp), isTrue);
     });
 
     test('D-1: emissão que não aumenta confirmados não acusa nada', () async {
@@ -176,13 +151,13 @@ void main() {
       final bloc = blocCom(repositorio);
       await _assentar();
 
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await _assentar();
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await _assentar();
 
       expect(
-        bloc.state.temConfirmacaoNova(_rn30DepoisDoRsvp),
+        bloc.state.temConfirmacaoNova(rn30DepoisDoRsvp),
         isTrue,
         reason: 'o anfitrião não perde o caminho do acerto porque chegou '
             'outra emissão qualquer',
@@ -192,7 +167,7 @@ void main() {
 
   group('HOME-16 — a falha vira estado e registro, não tela em branco', () {
     test('o stream falhando leva ao estado falhou', () async {
-      final repositorio = _RepositorioQueFalha();
+      final repositorio = FestaRepositoryQueFalha();
       addTearDown(repositorio.dispose);
       final bloc = blocCom(repositorio);
 
@@ -203,7 +178,7 @@ void main() {
     });
 
     test('e o erro vai para o AppLogger (AD-005)', () async {
-      final repositorio = _RepositorioQueFalha();
+      final repositorio = FestaRepositoryQueFalha();
       addTearDown(repositorio.dispose);
       blocCom(repositorio);
 
@@ -231,15 +206,15 @@ void main() {
 
   group('regressões que o code-review pegou', () {
     test('a falha não apaga o que já tinha chegado', () async {
-      final repositorio = _RepositorioQueFalha();
+      final repositorio = FestaRepositoryQueFalha();
       addTearDown(repositorio.dispose);
       final bloc = blocCom(repositorio);
 
       repositorio.emitir(festasDaHome);
       await _assentar();
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await _assentar();
-      expect(bloc.state.temConfirmacaoNova(_rn30DepoisDoRsvp), isTrue);
+      expect(bloc.state.temConfirmacaoNova(rn30DepoisDoRsvp), isTrue);
 
       repositorio.falhar(StateError('conexão caiu'));
       await _assentar();
@@ -252,7 +227,7 @@ void main() {
             'que já chegou continua válido',
       );
       expect(
-        bloc.state.temConfirmacaoNova(_rn30DepoisDoRsvp),
+        bloc.state.temConfirmacaoNova(rn30DepoisDoRsvp),
         isTrue,
         reason: 'zerando, o atalho do acerto de uma confirmação que já tinha '
             'chegado sumia para sempre: a emissão seguinte traz o mesmo '
@@ -287,9 +262,9 @@ void main() {
       final bloc = blocCom(repositorio);
       await _assentar();
 
-      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      repositorio.emitir([rn30DepoisDoRsvp, ...festasPassadas]);
       await _assentar();
-      expect(bloc.state.temConfirmacaoNova(_rn30DepoisDoRsvp), isTrue);
+      expect(bloc.state.temConfirmacaoNova(rn30DepoisDoRsvp), isTrue);
 
       // A festa acaba e some do que está chegando.
       repositorio.emitir(festasPassadas);
@@ -320,10 +295,10 @@ void main() {
       final bloc = blocCom(repositorio);
       await _assentar();
 
-      repositorio.emitir([_rn30DepoisDoRsvp, homonima]);
+      repositorio.emitir([rn30DepoisDoRsvp, homonima]);
       await _assentar();
 
-      expect(bloc.state.temConfirmacaoNova(_rn30DepoisDoRsvp), isTrue);
+      expect(bloc.state.temConfirmacaoNova(rn30DepoisDoRsvp), isTrue);
       expect(
         bloc.state.temConfirmacaoNova(homonima),
         isFalse,
@@ -340,7 +315,7 @@ void main() {
       await _assentar();
 
       await bloc.close();
-      repositorio.emitir([_rn30DepoisDoRsvp]);
+      repositorio.emitir([rn30DepoisDoRsvp]);
       await _assentar();
 
       expect(
