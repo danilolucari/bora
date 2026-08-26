@@ -1,9 +1,12 @@
 import 'package:bora/app.dart';
 import 'package:bora/core/autenticacao/autenticacao.dart';
 import 'package:bora/core/routing/app_router.dart';
+import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
+import 'package:bora/features/home/domain/festa_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fake_autenticacao_repository.dart';
+import 'recording_app_logger.dart';
 
 /// Monta o app inteiro em [location], com a sessão que o teste pedir.
 ///
@@ -18,14 +21,24 @@ Future<FakeAutenticacaoRepository> abrirApp(
   WidgetTester tester,
   String location, {
   UsuarioLogado? sessao,
+  FestaRepository? festas,
 }) async {
   final autenticacao = FakeAutenticacaoRepository(sessaoInicial: sessao);
   addTearDown(autenticacao.dispose);
+
+  // A porta de festas entrou pela mesma razão que a de sessão (E-3): o
+  // roteador a exige para montar a Home. O default é o repositório vazio, e
+  // não um nulo tolerado — a Home tem estado vazio próprio (HOME-15), então
+  // toda rota continua montável sem o teste dizer nada sobre festas.
+  final repositorio = festas ?? FestaRepositoryEmMemoria();
+  addTearDown(repositorio.dispose);
 
   await tester.pumpWidget(
     BoraApp(
       router: buildAppRouter(
         autenticacao: autenticacao,
+        festas: repositorio,
+        logger: RecordingAppLogger(),
         initialLocation: location,
       ),
     ),

@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/home/data/festa_repository_em_memoria.dart';
+import '../../features/home/domain/festa_repository.dart';
 import '../autenticacao/autenticacao.dart';
 import '../autenticacao/dados/firebase_autenticacao_repository.dart';
 import '../observability/app_logger.dart';
@@ -29,6 +31,7 @@ Future<void> configureDependencies({
   AppLogger? logger,
   GoRouter Function()? routerFactory,
   AutenticacaoRepository Function()? autenticacaoFactory,
+  FestaRepository Function()? festasFactory,
 }) async {
   if (_configured) return;
   _configured = true;
@@ -47,11 +50,23 @@ Future<void> configureDependencies({
     dispose: (repositorio) => repositorio.dispose(),
   );
 
+  // A semente de produção é **vazia**: a fixture de RN-30 é dado de teste
+  // (G7), e `lib/` não a importa. O app abre no estado vazio de HOME-15 até a
+  // spec 05 criar festa — que é a verdade do M1, não um buraco.
+  getIt.registerLazySingleton<FestaRepository>(
+    () => festasFactory != null ? festasFactory() : FestaRepositoryEmMemoria(),
+    dispose: (repositorio) => repositorio.dispose(),
+  );
+
   // Deixou de ser tear-off: o roteador agora exige a porta de sessão (AD-017),
   // e resolvê-la aqui dentro mantém a construção preguiçosa.
   getIt.registerLazySingleton<GoRouter>(
     routerFactory ??
-        () => buildAppRouter(autenticacao: getIt<AutenticacaoRepository>()),
+        () => buildAppRouter(
+              autenticacao: getIt<AutenticacaoRepository>(),
+              festas: getIt<FestaRepository>(),
+              logger: getIt<AppLogger>(),
+            ),
   );
 
   // Lazy de propósito: registrar não pode tocar no SDK. Com o Firebase caído,

@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
 
+import '../../features/home/domain/festa_repository.dart';
 import '../autenticacao/autenticacao.dart';
+import '../observability/app_logger.dart';
 
 import '../../features/convidado/presentation/pages/convidado_page.dart';
 import '../../features/convite/presentation/pages/convite_page.dart';
@@ -42,6 +44,8 @@ const String _festaPattern = '/roles/:${Routes.paramFestaId}';
 /// [guardaDeSessao], que é pura; aqui é só fiação.
 GoRouter buildAppRouter({
   required AutenticacaoRepository autenticacao,
+  required FestaRepository festas,
+  required AppLogger logger,
   String initialLocation = Routes.roles,
 }) {
   return GoRouter(
@@ -87,7 +91,8 @@ GoRouter buildAppRouter({
         routes: [
           GoRoute(
             path: Routes.roles,
-            builder: (context, state) => const HomePage(),
+            builder: (context, state) =>
+            HomePage(festas: festas, logger: logger),
           ),
           // Declarada antes de `/roles/:festaId` de propósito: `novo` é uma
           // palavra reservada da rota, não um id de festa.

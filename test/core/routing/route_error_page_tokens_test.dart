@@ -1,7 +1,7 @@
 import 'package:bora/core/design_system/design_system.dart';
-import 'package:bora/core/routing/placeholder_page.dart';
 import 'package:bora/core/routing/route_error_page.dart';
 import 'package:bora/core/routing/routes.dart';
+import 'package:bora/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -61,7 +61,7 @@ void main() {
       // O DESTINO, não só "saiu daqui": trocar /roles por /catalogo sobrevivia
       // à asserção anterior (gap nº 4 do Verifier).
       expect(
-        find.byKey(PlaceholderPage.keyFor('home')),
+        find.byKey(HomePage.pageKey),
         findsOneWidget,
         reason: 'ENT-19 AC2: o CTA leva à raiz do app logado, ${Routes.roles}',
       );
