@@ -70,7 +70,7 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 | 00 | `fundacao` | raiz do projeto | scaffold Flutter + Firebase (emulador) + rotas + DI/BlocObserver + lint + fixture RN-30 + README | **Grande** ✱ | ✅ feito | sim | sim | — |
 | 01 | `design-system` | `core/design_system/` | arquivo 02 inteiro: tokens, tipografia, formas, sombras, ~18 componentes, motion · RN-29 (componente toast) | Grande | — | sim | sim | 00 |
 | 02 | `calculo` | `core/calculo/` | RN-01..RN-21 (fórmulas, overrides, saldos, quem-paga-quem, efeitos de preferência) · RN-13 (formatação) · entidades de domínio compartilhadas | Grande | — | sim | sim | 00 |
-| 03 | `entrar` | `features/entrar/` | T-01, W-01 · UC-01 · **AD-013** (tema no `BoraApp`) | **Grande** ✱✱ | ✅ feito | sim | sim | 00, 01 |
+| 03 | `entrar` | `features/entrar/` | T-01, W-01 · UC-01 · **AD-013** (tema no `BoraApp`) | **Grande** ✱✱ | ✅ feito | ✅ feito | ✅ feito | 00, 01 |
 | 04 | `home` | `features/home/` | T-02, W-02 · UC-02, UC-24 · RN-28 (consumo) | **Grande** ✱✱ | ✅ feito | sim | sim | 00, 01, 03 |
 | 05 | `montar` | `features/montar/` | T-03, W-03 · UC-03, UC-04 · RN-01..10, RN-21 (consumo) | Grande | ✅ feito | sim | sim | 01, 02, 04 |
 | 06 | `lista` | `features/lista/` | T-04, W-03/W-04 · UC-05, UC-06, UC-14, UC-15, UC-16 · RN-10, RN-11, RN-12, RN-27 | Grande | **sim** | sim | sim | 01, 02, 05 |
@@ -81,7 +81,7 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 
 ✱ **Revisão pós-Specify (2026-08-12):** a spec 00 subiu de Médio para Grande. O Discuss ampliou o "pronto" da fundação para incluir navegação, DI + BlocObserver, README e espelho de testes (~10 tasks), e essas escolhas — pacote de rotas, container de DI, wiring do emulador — são herdadas por todas as dez specs seguintes. Escolha herdada por dez specs é decisão de arquitetura, então **Design deixou de ser pulado**. Ver `.specs/features/fundacao/spec.md` §Porte.
 
-✱✱ **Revisão pós-Specify (2026-08-25):** `entrar` e `home` subiram de **Médio para Grande**, pelo mesmo critério que subiu a `fundacao` — não por volume de tela, mas porque cada uma origina uma escolha que as specs seguintes herdam. Em `entrar`: a guarda de sessão da **AD-017**, que passa a governar a navegação de sete specs, e a porta `AuthRepository`. Em `home`: a porta `FestaRepository` e o formato do stream de RN-28 (**AD-016**), consumidos por seis specs e obrigados a sobreviver à troca da impl em memória por Firestore no M2. **Design e Tasks deixam de ser inline nas duas.** Corte estimado: ~11 tasks cada, ~12 em `montar` — **~34 no M1 sem a spec 06**, o que aciona a oferta de sub-agentes no Execute de cada spec.
+✱✱ **Revisão pós-Specify (2026-08-25):** `entrar` e `home` subiram de **Médio para Grande**, pelo mesmo critério que subiu a `fundacao` — não por volume de tela, mas porque cada uma origina uma escolha que as specs seguintes herdam. Em `entrar`: a guarda de sessão da **AD-017**, que passa a governar a navegação de sete specs, e a porta `AutenticacaoRepository`. Em `home`: a porta `FestaRepository` e o formato do stream de RN-28 (**AD-016**), consumidos por seis specs e obrigados a sobreviver à troca da impl em memória por Firestore no M2. **Design e Tasks deixam de ser inline nas duas.** Corte estimado: ~11 tasks cada, ~12 em `montar` — **~34 no M1 sem a spec 06**, o que aciona a oferta de sub-agentes no Execute de cada spec.
 
 
 Notas de recorte:
@@ -108,12 +108,14 @@ Decisões do Discuss: SDK Flutter é pré-requisito externo (instalado à mão, 
 ### 02 · `calculo` — Grande · **Concluída e mergeada** (T1–T28, 2026-08-25) → `.specs/features/calculo/`
 `core/calculo/`, **Dart puro, sem Flutter e sem Firebase**. Implementa RN-01..RN-21: contagem de pessoas, fator de duração, quantidades por item, essenciais automáticos, preço médio/faixa, overrides com passos e mínimos, formatação R$ (RN-13), cota justa, saldos, algoritmo quem-paga-quem (RN-16), split de despesa, quitação, "eu levo" como contribuição (RN-20), efeitos de preferências (RN-21: kit veggie, remove suína, cerveja por quem bebe). Os exemplos numéricos do arquivo 03 entram como **testes literais**. Define as entidades de domínio em PT-BR. É a spec mais crítica do produto: tudo que mexe com dinheiro consome esta camada e **nenhuma outra camada recalcula**.
 
-### 03 · `entrar` — Grande · **Specify + Discuss concluídos** (ENT-01..20, 2026-08-25) → `.specs/features/entrar/`
+### 03 · `entrar` — Grande · **Specify + Design + Tasks concluídos** (ENT-01..21 · 16 tasks, 2026-08-25) → `.specs/features/entrar/`
 T-01/W-01 + UC-01: login e-mail/senha e Google contra o emulador do Auth, pós-login sempre na Home, "CRIAR CONTA" como **modo alternado da mesma tela** (sem rota nova) e guarda de sessão no roteador. A **primeira task é plugar `boraTheme()` no `BoraApp`**, cumprindo a **AD-013** — antes disso o app roda sem tema. Herda também o revestimento do `RouteErrorPage`.
 
 Decisões do Discuss: **AD-015** resolve a zona cinzenta **G1** — vale a spec (e-mail/senha + Google), telefone é **descartado** e o `CLAUDE.md` é corrigido · **AD-016** resolve **G8** — auth real no emulador, dado de festa em memória, Firestore no M2 · **AD-017** — redirect por sessão em `app_router.dart`, com `/c/:codigo`, `/erro` e `/catalogo` sempre livres.
 
-Porte revisto para **Grande** (✱✱): a guarda de sessão e a porta `AuthRepository` são herdadas por sete specs. ~11 tasks. Design e Tasks formais.
+Porte revisto para **Grande** (✱✱): a guarda de sessão e a porta `AutenticacaoRepository` são herdadas por sete specs.
+
+Do Design saíram **AD-019** (a autenticação mora em `lib/core/autenticacao/`, não na feature — `core/routing` e a spec 04 a consomem) e **AD-020** (navegação pós-login é **consequência da guarda**, nunca `context.go` imperativo). O Design também corrigiu a spec: nenhum AC exigia que a senha fosse obscurecida — virou **ENT-21**. Corte final: **16 tasks em 5 fases**, dois batches (T1–T8 infraestrutura, T9–T16 tela). Pronto para Execute.
 
 ### 04 · `home` — Grande · **Specify concluído** (HOME-01..19, 2026-08-25) → `.specs/features/home/`
 T-02/W-02 + UC-02, UC-24: painel de rolês com card da festa ativa, contadores confirmados/pendentes **em tempo real** (lado consumidor de RN-28, via **`Stream`** — a impl do M1 é em memória por **AD-016**, e vira Firestore no M2 sem a tela saber), atalho amarelo do acerto, seção "COMEÇAR OUTRA" (NIVER não clicável) e arquivo de festas passadas. Herda da **AD-013** o revestimento do `AppShell` (o header de app de `06`) e do `PlaceholderPage`.

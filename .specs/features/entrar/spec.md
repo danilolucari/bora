@@ -1,8 +1,8 @@
 # Entrar — Specification
 
 **ID prefix:** `ENT` · **Porte:** **Grande** (revisto — ver §Porte)
-**Design:** `.specs/features/entrar/design.md` (a produzir)
-**Tasks:** `.specs/features/entrar/tasks.md` (a produzir)
+**Design:** `.specs/features/entrar/design.md` — **concluído** (2026-08-25)
+**Tasks:** `.specs/features/entrar/tasks.md` — **concluído** (2026-08-25) · 16 tasks, 5 fases
 **Context:** `.specs/features/entrar/context.md`
 **Spec-fonte:** T-01 (`04-telas-ux.md`) · W-01 + §Regras transversais web (`06-telas-web.md`) · UC-01 (`05-casos-de-uso.md`)
 **Roadmap:** `.specs/ROADMAP.md` — spec 03, marco M1
@@ -68,6 +68,15 @@ A AD-013 devolveu quatro artefatos da fundação "para as specs 03/04" sem divid
 | `lib/core/routing/route_error_page.dart` | `lib/core/routing/{app_shell,festa_tabs_shell,placeholder_page}.dart` |
 | `lib/core/di/injector.dart` — **só** registro dos próprios | `.specs/{STATE,ROADMAP,LESSONS}.md`, `.specs/lessons.json` |
 | `test/features/entrar/**`, `test/app_test.dart`, `test/core/routing/**` | qualquer teste existente — os **742** de baseline não podem ser enfraquecidos nem apagados |
+
+**Emendas autorizadas pelo Design** (`design.md` §Emendas de fronteira) — todas aditivas, nenhuma enfraquece teste existente:
+
+| # | Arquivo | Mudança |
+|---|---|---|
+| E-1 | `lib/core/autenticacao/**` + `test/core/autenticacao/**` | **Criar** — a porta de sessão é consumida por `core/routing` e pela spec 04, e não cabe em `features/entrar/` sem inverter camadas (AD-019) |
+| E-2 | `lib/core/design_system/components/bora_text_field.dart` | `obscureText` opcional, default `false` — **SPEC_DEVIATION** contra a spec 01, registrado |
+| E-3 | `test/architecture/project_structure_test.dart` | Acrescentar `autenticacao` a `_pastasDeCore` — **fortalece** a guarda |
+| E-4 | `test/app_test.dart` | Atualizar o destino esperado: sem sessão o app cai em `/entrar`, não em `/roles` |
 
 **Baseline a preservar:** `flutter test` = 742 passando · `flutter analyze` = zero issues (`main`, 2026-08-25).
 
@@ -139,8 +148,9 @@ A AD-013 devolveu quatro artefatos da fundação "para as specs 03/04" sem divid
 3. WHEN um input recebe foco THEN a borda SHALL passar para o vermelho do token de acento — o aceite literal de UC-01.
 4. WHEN o usuário informa credenciais válidas e aciona "COMEÇAR →" THEN o sistema SHALL autenticar e navegar para `/roles`.
 5. WHEN a autenticação está em curso THEN o CTA SHALL exibir estado de carregando e não aceitar novo acionamento.
+6. WHEN o campo "senha" renderiza THEN o texto digitado SHALL ser obscurecido — nunca legível na tela. *(Acrescentado no Design: o requisito existia de fato e não estava escrito. Congelar o comportamento em teste sem um AC que o defina é o erro registrado em L-002.)*
 
-**Independent Test**: com um duplo de `AuthRepository` que aceita um par conhecido, preencher os inputs, tocar "COMEÇAR →" e afirmar que a rota corrente virou `/roles`; afirmar cada literal de T-01 e W-01 nos dois viewports.
+**Independent Test**: com um duplo de `AutenticacaoRepository` que aceita um par conhecido, preencher os inputs, tocar "COMEÇAR →" e afirmar que a rota corrente virou `/roles`; afirmar cada literal de T-01 e W-01 nos dois viewports.
 
 ---
 
@@ -155,7 +165,7 @@ A AD-013 devolveu quatro artefatos da fundação "para as specs 03/04" sem divid
 2. WHEN o usuário aciona o botão Google e a autenticação conclui THEN o sistema SHALL navegar para `/roles` — o mesmo destino do e-mail/senha (UC-01: "pós-login sempre cai na Home").
 3. WHEN o usuário cancela o fluxo do Google THEN a tela SHALL voltar ao estado ocioso, sem erro e sem navegar.
 
-**Independent Test**: duplo de `AuthRepository` cujo `entrarComGoogle()` resolve — afirmar destino `/roles`; segundo duplo que devolve cancelamento — afirmar que a rota não mudou e nenhuma mensagem de erro apareceu. *(A verificação ponta-a-ponta contra o emulador é manual, no web — A-10.)*
+**Independent Test**: duplo de `AutenticacaoRepository` cujo `entrarComGoogle()` resolve — afirmar destino `/roles`; segundo duplo que devolve cancelamento — afirmar que a rota não mudou e nenhuma mensagem de erro apareceu. *(A verificação ponta-a-ponta contra o emulador é manual, no web — A-10.)*
 
 ---
 
@@ -189,7 +199,7 @@ A AD-013 devolveu quatro artefatos da fundação "para as specs 03/04" sem divid
 4. WHEN o repositório falha por rede ou Firebase indisponível THEN a tela SHALL exibir mensagem de falha, permanecer utilizável e **não** lançar exceção não tratada.
 5. WHEN qualquer falha de autenticação ocorre THEN SHALL ser registrada no `AppLogger` (AD-005) — nenhuma falha silenciosa.
 
-**Independent Test**: duplos de `AuthRepository` que lançam cada tipo de falha; afirmar mensagem exibida, CTA reabilitado, e-mail preservado e uma entrada no `RecordingAppLogger`.
+**Independent Test**: duplos de `AutenticacaoRepository` que lançam cada tipo de falha; afirmar mensagem exibida, CTA reabilitado, e-mail preservado e uma entrada no `RecordingAppLogger`.
 
 ---
 
@@ -260,8 +270,9 @@ A AD-013 devolveu quatro artefatos da fundação "para as specs 03/04" sem divid
 | ENT-18 | P1-4 AC5 | dimensão: concurrency | Design | Pending |
 | ENT-19 | P2-2 AC1,AC2,AC3 | AD-013 / FUND-09 | Design | Pending |
 | ENT-20 | P2-1 AC1,AC3,AC4 | UC-01 A1 / A-04 | Design | Pending |
+| ENT-21 | P1-2 AC6 | Design (S-1) — sem origem literal na spec-fonte | Design | Pending |
 
-**Cobertura:** 20 requisitos · 0 mapeados a tasks (Design pendente) · 0 órfãos.
+**Cobertura:** 21 requisitos · 0 mapeados a tasks (Tasks pendente) · 0 órfãos.
 
 ---
 
@@ -270,7 +281,7 @@ A AD-013 devolveu quatro artefatos da fundação "para as specs 03/04" sem divid
 O roadmap classificou `entrar` como **Médio** (Design inline, Tasks inline). O Discuss elevou para **Grande**, por duas razões, e não por volume de tela:
 
 1. **A guarda de sessão é herdada por sete specs.** O redirect da AD-017 vive em `app_router.dart` e passa a governar toda navegação de `home`, `montar`, `lista`, `galera`, `convite`, `convidado` e `custos`. Escolha herdada por sete specs é decisão de arquitetura — o mesmo argumento que subiu a `fundacao` de Médio para Grande.
-2. **A porta de autenticação é herdada igual.** `AuthRepository` e o formato da identidade logada são consumidos por toda tela que precise saber "quem sou eu" — e a AD-016 exige que a porta sobreviva à troca de impl no M2.
+2. **A porta de autenticação é herdada igual.** `AutenticacaoRepository` e o formato da identidade logada são consumidos por toda tela que precise saber "quem sou eu" — e a AD-016 exige que a porta sobreviva à troca de impl no M2.
 
 Somados ao plug do tema (ENT-01, que toca `lib/app.dart` — arquivo transversal), à tela nas duas plataformas e ao modo cadastro, o corte estimado é de **~11 tasks**, acima do limite de 8 do auto-sizing. **Design e Tasks passam a ser formais.**
 

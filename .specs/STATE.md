@@ -147,6 +147,32 @@
 - **Date**: 2026-08-25
 - **Status**: active
 
+
+### AD-019
+- **Decision**: A autenticação mora em **`lib/core/autenticacao/`**, não dentro de `features/entrar/`: a entidade `UsuarioLogado`, o enum `FalhaDeAutenticacao`, a porta `AutenticacaoRepository` (em `dominio/`) e o adaptador `FirebaseAutenticacaoRepository` (em `dados/`), atrás do barrel `autenticacao.dart` como **única porta de entrada** — a mesma forma da AD-008. Nenhuma feature cria a sua; `core/routing` e as features consomem a porta, **nunca** o SDK. `FirebaseAutenticacaoRepository` é o único arquivo do projeto que importa `firebase_auth` fora do bootstrap e do injector.
+- **Reason**: três consumidores fora de `entrar` obrigam a subida. (a) `core/routing/app_router.dart` precisa ler a sessão para a guarda da AD-017 — com a porta na feature, `core` importaria `features`, inversão de camada. (b) A spec 04 `home` precisa de `UsuarioLogado.inicial` para o avatar do header (HOME-01 AC2) — com a entidade em `entrar`, `home` importaria de `entrar`, acoplamento feature↔feature que é exatamente o que a organização feature-first evita. (c) A AD-008 já resolveu este caso uma vez para as entidades de cálculo; repetir a forma custa menos que inventar outra. Nome em PT-BR pela regra de idioma do `CLAUDE.md` — `core/calculo` é o precedente de pasta de core em português.
+- **Trade-off**: `lib/features/entrar/data/` fica vazio (a feature não tem fonte de dados própria) e `lib/core/` ganha mais uma pasta, ampliando a fronteira de arquivos que a `spec.md` de `entrar` havia fechado — registrado ali como emenda E-1. Em troca, nenhuma feature importa `firebase_auth` e a guarda de rota é testável com duplo, sem emulador.
+- **Scope**: `lib/core/autenticacao/`, `lib/core/routing/`, e toda feature que precise saber quem está logado.
+- **Date**: 2026-08-25
+- **Status**: active
+
+### AD-020
+- **Decision**: Navegação decorrente de autenticação é **consequência da guarda de rota, nunca imperativa**. Nenhuma feature chama `context.go`/`context.push` para efeito de login, cadastro ou logout: o repositório autentica, o `Stream` de sessão emite, o `refreshListenable` do `go_router` dispara e o `redirect` da AD-017 decide o destino. Vale como regra de revisão: um `context.go` para destino de sessão em código de feature é desvio, não estilo.
+- **Reason**: `entrar` tem **três** caminhos que terminam no mesmo lugar — e-mail/senha, Google e cadastro (ENT-06, ENT-14, ENT-20). Com navegação imperativa, o aceite de UC-01 "pós-login sempre cai na Home" vira a mesma linha repetida em três lugares, que podem divergir uma a uma sem que nenhum teste perceba. Como consequência da guarda, o aceite passa a ser propriedade da tabela de rotas: prova-se uma vez, e os três caminhos não têm como discordar. O mesmo mecanismo já é obrigatório para barrar `/roles` sem sessão, então não há mecanismo novo — há um mecanismo a menos.
+- **Trade-off**: o destino pós-login deixa de ser legível no ponto do clique — quem lê o bloc não vê para onde o usuário vai, e precisa conhecer a guarda. Mitigado por `guarda_de_sessao.dart` ser função pura em arquivo próprio, com a tabela de destinos num lugar só.
+- **Scope**: todas as features; o logout da spec que vier a tê-lo segue a mesma regra.
+- **Date**: 2026-08-25
+- **Status**: active
+
+
+### AD-021
+- **Decision**: O projeto adota **`mocktail`** em `dev_dependencies` como biblioteca única de duplos para **adaptadores sobre SDK externo** (Firebase Auth agora; Firestore no M2). Ela não substitui os duplos escritos à mão: portas de domínio continuam com fake próprio (`FakeAutenticacaoRepository`, `RecordingAppLogger`), porque esses têm comportamento que a suíte inteira depende de estar correto. `mocktail` entra só onde o colaborador é uma **classe concreta de terceiro** que não dá para instanciar nem estender de forma útil.
+- **Reason**: sem ela, testar `FirebaseAutenticacaoRepository` exigiria um gateway abstrato espelhando o SDK 1:1 mais um fake à mão — cerca de 60 linhas de infraestrutura por adaptador, repetidas em cada repositório Firestore do M2. `mocktail` é **livre de codegen** (ao contrário do `mockito`), então a AD-002 — que proíbe `build_runner` e geração de código, não pacotes — segue intacta. É `dev_dependencies`: **nada muda no bundle de produção**.
+- **Trade-off**: é a primeira dependência nova desde o M0, e o projeto vinha evitando pacote novo por princípio; além disso, mock de classe concreta de SDK é frágil a upgrade de major do `firebase_auth` — a quebra aparece como teste vermelho, não como bug em produção, que é o lado certo de falhar. A alternativa (gateway à mão) foi considerada e recusada pelo custo repetido no M2.
+- **Scope**: `test/` inteiro; todo adaptador sobre SDK externo, presente e futuro.
+- **Date**: 2026-08-25
+- **Status**: active
+
 ## Handoff
 
 > **SNAPSHOT ATUAL — 2026-08-25, fim da sessão de Specify do M1.**
@@ -163,19 +189,26 @@ plataformas. Árvore limpa.
 
 | Spec | Arquivos | Requisitos | Porte | Próximo passo |
 |---|---|---|---|---|
-| 03 `entrar` | `.specs/features/entrar/{spec,context}.md` | ENT-01..20 | Médio → **Grande** | Design formal |
+| 03 `entrar` | `.../entrar/{spec,context,design,tasks}.md` | ENT-01..**21** | Médio → **Grande** | **Execute** (16 tasks, 2 batches, aprovadas) |
 | 04 `home` | `.specs/features/home/{spec,context}.md` | HOME-01..19 | Médio → **Grande** | Design formal |
 | 05 `montar` | `.specs/features/montar/{spec,context}.md` | MONT-01..24 | **Grande** (confirmado) | Design formal |
 
-**Nenhuma das três tem `design.md` nem `tasks.md`.** As três subiram para Grande, então Design
-e Tasks são formais nas três — nada de inline. Estimativa somada: **~34 tasks**, o que aciona a
-oferta de sub-agentes (batches de ~7) no Execute de cada uma.
+**`entrar` está pronta para Execute**: Design e Tasks concluídos em 2026-08-25, com **16 tasks em
+5 fases** e empacotamento previsto de dois batches (T1–T8 infraestrutura, T9–T16 tela). `home` e
+`montar` ainda não têm `design.md` nem `tasks.md` — as duas subiram para Grande, então Design e
+Tasks são formais nelas também.
+
+O Design de `entrar` produziu **AD-019** e **AD-020**, corrigiu a spec em três pontos (S-1 criou
+**ENT-21**, o AC de senha obscurecida que faltava; S-2 renomeou `AuthRepository` para
+`AutenticacaoRepository`; S-3 registrou quatro emendas de fronteira) e verificou no fonte dos
+pacotes instalados que **`signInWithProvider` não existe no web** (`firebase_auth_web` 6.2.6 não o
+sobrescreve) e que o **emulador devolve `INVALID_LOGIN_CREDENTIALS`**, não `invalid-credential`.
 
 ### O que foi decidido (e o que mudou por causa disso)
 
-Quatro ADs novas — **AD-015** (auth e-mail/senha + Google, telefone descartado), **AD-016**
+Seis ADs novas — **AD-015** (auth e-mail/senha + Google, telefone descartado), **AD-016**
 (auth real no emulador + dado de festa em memória no M1; Firestore no M2), **AD-017** (guarda de
-sessão no `app_router`), **AD-018** ("PROS FORTES" nas duas plataformas; "QUEM LEVA?" fora do M1).
+sessão no `app_router`), **AD-018** ("PROS FORTES" nas duas plataformas; "QUEM LEVA?" fora do M1), **AD-019** (a autenticação mora em `lib/core/autenticacao/`) e **AD-020** (navegação pós-login é consequência da guarda, nunca imperativa). Nas Tasks entrou a **AD-021**: `mocktail` em `dev_dependencies` como duplo único de adaptador sobre SDK — primeira dependência nova desde o M0, livre de codegen, dev-only.
 
 Duas zonas cinzentas do roadmap fecharam: **G1** (auth) por AD-015 e **G8** (Firebase na nuvem)
 por AD-016. Restam G2, G3 (spec `lista`), G4 (`convite`), G5 (`convidado`), G6 (`custos`).
