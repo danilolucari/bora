@@ -64,6 +64,29 @@ void main() {
       );
     });
 
+    testWidgets('a marca fica à esquerda e o card à direita', (tester) async {
+      // R-2 do Verifier: tudo do card estava afirmado contra token, mas os
+      // LADOS não — inverter a ordem das colunas (M24) sobrevivia aos 945.
+      // W-01 é explícito: "coluna esquerda (marca)" e "coluna direita (form)".
+      await abrir(tester);
+
+      final marca = tester.getTopLeft(find.byType(MarcaBora)).dx;
+      final card = tester.getTopLeft(find.byKey(EntrarExpandido.cardKey)).dx;
+
+      expect(marca, lessThan(card));
+    });
+
+    testWidgets('o espaço entre as colunas é o gap de W-01', (tester) async {
+      await abrir(tester);
+
+      final fimDaMarca = tester.getRect(find.byType(MarcaBora)).right;
+      final inicioDoCard =
+          tester.getTopLeft(find.byKey(EntrarExpandido.cardKey)).dx;
+
+      expect(inicioDoCard, greaterThan(fimDaMarca));
+      expect(EntrarExpandido.espacoEntreColunas, 74);
+    });
+
     testWidgets('a marca usa o degrau de 92px do arquivo 06', (tester) async {
       await abrir(tester);
 

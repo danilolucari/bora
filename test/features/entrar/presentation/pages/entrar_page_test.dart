@@ -375,11 +375,37 @@ void main() {
       );
     });
 
-    testWidgets('o conteúdo rola, para o teclado não estourar o layout',
+    testWidgets('com o teclado aberto, o CTA continua alcançável rolando',
         (tester) async {
-      await abrir(tester);
+      // R-1 do Verifier: a versão anterior afirmava só que EXISTE um
+      // SingleChildScrollView. Trocar a física dele por
+      // NeverScrollableScrollPhysics sobrevivia (M22) — o teste provava a
+      // presença do widget, não que ele rola. Agora encolhe a viewport como o
+      // teclado faz e prova que dá para chegar no botão.
+      const altura = 300.0;
+      await abrir(tester, tamanho: const Size(390, altura));
 
-      expect(find.byType(SingleChildScrollView), findsOneWidget);
+      final antes = tester.getRect(find.text('COMEÇAR →')).top;
+      expect(
+        antes,
+        greaterThan(altura),
+        reason: 'pré-condição: nesta altura o CTA nasce fora da viewport, '
+            'senão o teste não exigiria rolagem nenhuma',
+      );
+
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
+      await tester.pumpAndSettle();
+
+      final depois = tester.getRect(find.text('COMEÇAR →')).top;
+
+      expect(
+        depois,
+        lessThan(antes),
+        reason: 'a prova é o MOVIMENTO: afirmar que existe um scroll view não '
+            'prova que ele rola — com NeverScrollableScrollPhysics a posição '
+            'não muda e este expect falha (M22)',
+      );
+      expect(depois, lessThan(altura), reason: 'e chegou a ficar visível');
       expect(tester.takeException(), isNull);
     });
 
