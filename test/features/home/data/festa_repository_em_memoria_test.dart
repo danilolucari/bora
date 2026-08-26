@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:bora/core/calculo/calculo.dart';
@@ -136,6 +137,48 @@ void main() {
           const [_rn30],
           emitsDone,
         ]),
+      );
+    });
+
+    test('emissão durante a entrega da semente não se perde', () async {
+      final repositorio = FestaRepositoryEmMemoria(inicial: const [_rn30]);
+      addTearDown(repositorio.dispose);
+
+      final recebidos = <List<ResumoDeFesta>>[];
+      late final StreamSubscription<List<ResumoDeFesta>> inscricao;
+      inscricao = repositorio.observarFestas().listen((festas) {
+        recebidos.add(festas);
+        // Emitir de dentro da entrega da semente é o instante exato da janela
+        // que o `async*` abria: a confirmação chegando enquanto a Home monta.
+        if (recebidos.length == 1) {
+          repositorio.emitir(const [_rn30DepoisDoRsvp]);
+        }
+      });
+      addTearDown(inscricao.cancel);
+      await Future<void>.delayed(Duration.zero);
+
+      expect(
+        recebidos,
+        [
+          const [_rn30],
+          const [_rn30DepoisDoRsvp],
+        ],
+        reason: 'a confirmação de RN-28 não pode sumir por chegar cedo demais',
+      );
+    });
+
+    test('a lista da semente não muda o repositório por fora', () async {
+      final semente = [_rn30];
+      final repositorio = FestaRepositoryEmMemoria(inicial: semente);
+      addTearDown(repositorio.dispose);
+
+      semente.clear();
+
+      await expectLater(
+        repositorio.observarFestas(),
+        emits(const [_rn30]),
+        reason: 'guardar a lista de quem chamou deixaria o estado mudar sem '
+            'emissão nenhuma, e a Home não teria como perceber',
       );
     });
 

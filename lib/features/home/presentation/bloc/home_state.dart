@@ -5,6 +5,12 @@ enum SituacaoDaHome { carregando, comFestas, vazia, falhou }
 
 /// O estado da Home: o que está chegando, o que já passou, e se chegou
 /// confirmação nova.
+///
+/// Igualdade por valor, escrita à mão como em `EntrarState` e em
+/// `ResumoDeFesta`: sem ela o `emit` do bloc não descarta emissão repetida, e
+/// **toda** emissão do repositório reconstruiria o card, a pilha de avatares e
+/// o ARQUIVO — inclusive as emissões idênticas que o Firestore vai produzir no
+/// M2 (AD-016).
 class HomeState {
   const HomeState({
     this.situacao = SituacaoDaHome.carregando,
@@ -41,4 +47,46 @@ class HomeState {
   /// pareamento é do bloc.
   bool temConfirmacaoNova(ResumoDeFesta resumo) =>
       comConfirmacaoNova.contains(resumo.festa.nome);
+
+  HomeState copyWith({
+    SituacaoDaHome? situacao,
+    List<ResumoDeFesta>? chegando,
+    List<ResumoDeFesta>? passadas,
+    Set<String>? comConfirmacaoNova,
+  }) =>
+      HomeState(
+        situacao: situacao ?? this.situacao,
+        chegando: chegando ?? this.chegando,
+        passadas: passadas ?? this.passadas,
+        comConfirmacaoNova: comConfirmacaoNova ?? this.comConfirmacaoNova,
+      );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HomeState &&
+          other.situacao == situacao &&
+          _mesmaLista(other.chegando, chegando) &&
+          _mesmaLista(other.passadas, passadas) &&
+          _mesmoConjunto(other.comConfirmacaoNova, comConfirmacaoNova);
+
+  @override
+  int get hashCode => Object.hash(
+        situacao,
+        Object.hashAll(chegando),
+        Object.hashAll(passadas),
+        Object.hashAllUnordered(comConfirmacaoNova),
+      );
+
+  static bool _mesmaLista(List<ResumoDeFesta> a, List<ResumoDeFesta> b) {
+    if (identical(a, b)) return true;
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  static bool _mesmoConjunto(Set<String> a, Set<String> b) =>
+      a.length == b.length && a.containsAll(b);
 }

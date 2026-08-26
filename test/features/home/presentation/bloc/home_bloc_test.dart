@@ -17,12 +17,18 @@ ResumoDeFesta get _rn30DepoisDoRsvp => ResumoDeFesta(
       iniciais: rn30NaHome.iniciais,
     );
 
-/// Um repositório cujo stream só sabe falhar (HOME-16).
+/// A mesma festa recriada do zero, com o nome repetido e ninguém confirmado.
+ResumoDeFesta get _festaNovaComONomeAntigo =>
+    ResumoDeFesta(festa: rn30NaHome.festa, iniciais: const []);
+
+/// Um repositório que emite e falha sob comando (HOME-16).
 class _RepositorioQueFalha implements FestaRepository {
-  final _controlador = StreamController<List<ResumoDeFesta>>();
+  final _controlador = StreamController<List<ResumoDeFesta>>.broadcast();
 
   @override
   Stream<List<ResumoDeFesta>> observarFestas() => _controlador.stream;
+
+  void emitir(List<ResumoDeFesta> festas) => _controlador.add(festas);
 
   void falhar(Object erro) => _controlador.addError(erro, StackTrace.current);
 
@@ -218,6 +224,84 @@ void main() {
         isEmpty,
         reason: 'é o par que discrimina: um logger chamado sempre passaria no '
             'teste de cima',
+      );
+    });
+  });
+
+  group('regressões que o code-review pegou', () {
+    test('a falha não apaga o que já tinha chegado', () async {
+      final repositorio = _RepositorioQueFalha();
+      addTearDown(repositorio.dispose);
+      final bloc = blocCom(repositorio);
+
+      repositorio.emitir(festasDaHome);
+      await _assentar();
+      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      await _assentar();
+      expect(bloc.state.temConfirmacaoNova(_rn30DepoisDoRsvp), isTrue);
+
+      repositorio.falhar(StateError('conexão caiu'));
+      await _assentar();
+
+      expect(bloc.state.situacao, SituacaoDaHome.falhou);
+      expect(
+        bloc.state.chegando,
+        isNotEmpty,
+        reason: 'o stream é broadcast e o erro não cancela a inscrição — o '
+            'que já chegou continua válido',
+      );
+      expect(
+        bloc.state.temConfirmacaoNova(_rn30DepoisDoRsvp),
+        isTrue,
+        reason: 'zerando, o atalho do acerto de uma confirmação que já tinha '
+            'chegado sumia para sempre: a emissão seguinte traz o mesmo '
+            'número e não tem como reacendê-lo',
+      );
+    });
+
+    test('emissão idêntica não produz estado novo', () async {
+      final repositorio = repositorioCom(festasDaHome);
+      final bloc = blocCom(repositorio);
+      await _assentar();
+
+      final estados = <HomeState>[];
+      final inscricao = bloc.stream.listen(estados.add);
+      addTearDown(inscricao.cancel);
+
+      repositorio.emitir(festasDaHome);
+      repositorio.emitir(festasDaHome);
+      await _assentar();
+
+      expect(
+        estados,
+        isEmpty,
+        reason: 'sem igualdade por valor, toda emissão do Firestore no M2 — '
+            'inclusive as idênticas — reconstruiria o card, a pilha de '
+            'avatares e o ARQUIVO',
+      );
+    });
+
+    test('festa que saiu de chegando perde o atalho do acerto', () async {
+      final repositorio = repositorioCom(festasDaHome);
+      final bloc = blocCom(repositorio);
+      await _assentar();
+
+      repositorio.emitir([_rn30DepoisDoRsvp, ...festasPassadas]);
+      await _assentar();
+      expect(bloc.state.temConfirmacaoNova(_rn30DepoisDoRsvp), isTrue);
+
+      // A festa acaba e some do que está chegando.
+      repositorio.emitir(festasPassadas);
+      await _assentar();
+      // O anfitrião cria outra com o mesmo nome, do zero.
+      repositorio.emitir([_festaNovaComONomeAntigo, ...festasPassadas]);
+      await _assentar();
+
+      expect(
+        bloc.state.temConfirmacaoNova(_festaNovaComONomeAntigo),
+        isFalse,
+        reason: 'o conjunto só crescia: uma festa nova com nome repetido '
+            'nascia com o atalho aceso e zero confirmados, contra P1-3 AC3',
       );
     });
   });

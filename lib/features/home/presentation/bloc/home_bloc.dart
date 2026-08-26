@@ -70,6 +70,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       for (final festa in state.chegando) festa.festa.nome: festa.confirmados,
     };
 
+    final nomesQueChegam = {for (final festa in chegando) festa.festa.nome};
+
     return {
       for (final festa in chegando)
         if ((anteriores[festa.festa.nome] ?? festa.confirmados) <
@@ -77,7 +79,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           festa.festa.nome,
       // Uma festa que já tinha o atalho aceso continua com ele: o anfitrião
       // não perde o caminho do acerto porque chegou outra emissão qualquer.
-      ...state.comConfirmacaoNova,
+      //
+      // **Podado pelo que está chegando agora**: sem isso o conjunto só
+      // crescia, e uma festa nova com o nome de uma festa antiga já concluída
+      // nasceria com o atalho aceso e zero confirmados — o contrário do que
+      // P1-3 AC3 exige.
+      ...state.comConfirmacaoNova.where(nomesQueChegam.contains),
     };
   }
 
@@ -85,7 +92,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     // AD-005: a falha vai para o logger e a tela mostra estado de erro. Tela
     // branca seria a única saída pior que as duas.
     _logger.logError(evento.erro, evento.stackTrace, name: 'home');
-    emit(const HomeState(situacao: SituacaoDaHome.falhou));
+
+    // `copyWith`, e não estado zerado: o stream é broadcast e o erro **não**
+    // cancela a inscrição, então o que já tinha chegado continua válido.
+    // Zerando, uma falha passageira apagava as festas e o atalho do acerto de
+    // uma confirmação que já tinha chegado — e a emissão seguinte, com o mesmo
+    // número, não teria como reacendê-lo.
+    emit(state.copyWith(situacao: SituacaoDaHome.falhou));
   }
 
   @override
