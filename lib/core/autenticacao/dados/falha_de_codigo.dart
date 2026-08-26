@@ -26,7 +26,28 @@ import '../dominio/falha_de_autenticacao.dart';
 /// degradação de AD-004: a tela abre, o CTA falha com mensagem, nada trava.
 /// É onde caem `invalid-email` (inalcançável — a validação de ENT-08 barra
 /// antes) e `too-many-requests`, que nenhuma tela da spec desenha.
+/// Os códigos que significam "o usuário desistiu", e não "deu erro".
+///
+/// ATENÇÃO — **não verificados empiricamente.** Vêm da lista pública de erros
+/// do Firebase Auth (SDK JS/nativo) e **não aparecem em nenhum pacote Dart
+/// instalado**: a varredura de `firebase_auth-6.5.7`, `firebase_auth_web-6.2.6`
+/// e `firebase_auth_platform_interface-9.0.6` não encontrou nenhuma
+/// ocorrência. O que está testado aqui é o **mecanismo** (código do conjunto
+/// vira `cancelada`), não a exatidão desta lista.
+///
+/// A captura do código real depende de fechar o popup do Google num navegador
+/// com o emulador ligado — e o botão que abre esse popup só nasce em T13/T14.
+/// Confirmar lá, com a skill `run`, e corrigir este conjunto.
+const Set<String> codigosDeCancelamento = {
+  'popup-closed-by-user',
+  'cancelled-popup-request',
+  'user-cancelled',
+  'web-context-canceled',
+};
+
 FalhaDeAutenticacao falhaDeCodigo(String codigo) => switch (codigo) {
+      _ when codigosDeCancelamento.contains(codigo) =>
+        FalhaDeAutenticacao.cancelada,
       'invalid-credential' ||
       'INVALID_LOGIN_CREDENTIALS' ||
       'wrong-password' ||

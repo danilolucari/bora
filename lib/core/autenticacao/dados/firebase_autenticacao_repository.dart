@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../../observability/app_logger.dart';
 import '../dominio/autenticacao_repository.dart';
 import '../dominio/falha_de_autenticacao.dart';
 import '../dominio/usuario_logado.dart';
 import 'falha_de_codigo.dart';
+import 'metodo_de_google.dart';
 
 /// A [AutenticacaoRepository] sobre o `firebase_auth` — **o único arquivo do
 /// projeto que importa o SDK** fora do bootstrap e do injector (AD-019).
@@ -20,7 +22,8 @@ class FirebaseAutenticacaoRepository implements AutenticacaoRepository {
   /// Posicional, e não nomeado, porque `prefer_initializing_formals` pede
   /// `this._campo` e Dart proíbe parâmetro nomeado começando com underscore.
   /// Dois argumentos de tipos distintos não ficam ambíguos.
-  FirebaseAutenticacaoRepository(this._auth, this._logger) {
+  FirebaseAutenticacaoRepository(this._auth, this._logger, {bool? isWeb})
+      : _isWeb = isWeb ?? kIsWeb {
     _sessao = _usuarioDe(_auth.currentUser);
     _inscricao = _auth.authStateChanges().listen((usuario) {
       _sessao = _usuarioDe(usuario);
@@ -33,6 +36,10 @@ class FirebaseAutenticacaoRepository implements AutenticacaoRepository {
 
   final FirebaseAuth _auth;
   final AppLogger _logger;
+
+  /// Injetável só para o teste alcançar os dois ramos de [metodoDeGooglePara];
+  /// em produção é sempre `kIsWeb`.
+  final bool _isWeb;
   final _controlador = StreamController<UsuarioLogado?>.broadcast();
 
   StreamSubscription<User?>? _inscricao;
@@ -63,9 +70,16 @@ class FirebaseAutenticacaoRepository implements AutenticacaoRepository {
       );
 
   @override
-  Future<void> entrarComGoogle() => _traduzindoFalha(
-        () => _auth.signInWithPopup(GoogleAuthProvider()),
-      );
+  Future<void> entrarComGoogle() => _traduzindoFalha(() async {
+        final provedor = GoogleAuthProvider();
+
+        switch (metodoDeGooglePara(isWeb: _isWeb)) {
+          case MetodoDeGoogle.popup:
+            await _auth.signInWithPopup(provedor);
+          case MetodoDeGoogle.provider:
+            await _auth.signInWithProvider(provedor);
+        }
+      });
 
   @override
   Future<void> sair() => _traduzindoFalha(_auth.signOut);

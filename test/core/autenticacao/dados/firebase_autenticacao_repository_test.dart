@@ -20,11 +20,11 @@ void main() {
   late StreamController<User?> mudancas;
 
   /// Constrói o repositório já com o stream do SDK sob controle do teste.
-  FirebaseAutenticacaoRepository criar({User? inicial}) {
+  FirebaseAutenticacaoRepository criar({User? inicial, bool isWeb = false}) {
     when(() => auth.currentUser).thenReturn(inicial);
     when(auth.authStateChanges).thenAnswer((_) => mudancas.stream);
 
-    return FirebaseAutenticacaoRepository(auth, logger);
+    return FirebaseAutenticacaoRepository(auth, logger, isWeb: isWeb);
   }
 
   _MockUser usuarioFirebase({
@@ -154,6 +154,47 @@ void main() {
           email: any(named: 'email'),
           password: any(named: 'password'),
         ),
+      );
+      repositorio.dispose();
+    });
+  });
+
+  group('ENT-14 — o Google usa a chamada certa em cada plataforma', () {
+    setUpAll(() => registerFallbackValue(GoogleAuthProvider()));
+
+    test('no web chama signInWithPopup, e nunca signInWithProvider', () async {
+      final repositorio = criar(isWeb: true);
+      when(() => auth.signInWithPopup(any()))
+          .thenAnswer((_) async => _MockUserCredential());
+
+      await repositorio.entrarComGoogle();
+
+      verify(() => auth.signInWithPopup(any())).called(1);
+      verifyNever(() => auth.signInWithProvider(any()));
+      repositorio.dispose();
+    });
+
+    test('fora do web chama signInWithProvider, e nunca signInWithPopup',
+        () async {
+      final repositorio = criar();
+      when(() => auth.signInWithProvider(any()))
+          .thenAnswer((_) async => _MockUserCredential());
+
+      await repositorio.entrarComGoogle();
+
+      verify(() => auth.signInWithProvider(any())).called(1);
+      verifyNever(() => auth.signInWithPopup(any()));
+      repositorio.dispose();
+    });
+
+    test('cancelar chega como cancelada, e não como erro genérico', () async {
+      final repositorio = criar(isWeb: true);
+      when(() => auth.signInWithPopup(any()))
+          .thenThrow(FirebaseAuthException(code: 'popup-closed-by-user'));
+
+      await expectLater(
+        repositorio.entrarComGoogle(),
+        throwsA(FalhaDeAutenticacao.cancelada),
       );
       repositorio.dispose();
     });

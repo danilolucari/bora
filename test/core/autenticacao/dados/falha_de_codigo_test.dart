@@ -55,6 +55,32 @@ void main() {
     }
   });
 
+  group('ENT-14 — cancelar não é erro', () {
+    for (final codigo in codigosDeCancelamento) {
+      test('$codigo vira cancelada, não credencialInvalida', () {
+        expect(falhaDeCodigo(codigo), FalhaDeAutenticacao.cancelada);
+      });
+    }
+
+    test('cancelada é distinta de toda outra falha', () {
+      expect(
+        falhaDeCodigo('invalid-credential'),
+        isNot(FalhaDeAutenticacao.cancelada),
+        reason: 'tratar quem fechou o popup como erro faria a tela acusar '
+            'algo que não aconteceu',
+      );
+    });
+
+    test('o conjunto de cancelamento não está vazio', () {
+      expect(
+        codigosDeCancelamento,
+        isNotEmpty,
+        reason: 'anti-vácuo: conjunto vazio faria os testes acima rodarem zero '
+            'vezes e o grupo passaria sem afirmar nada',
+      );
+    });
+  });
+
   test('o mapeamento é Dart puro — não importa o SDK', () {
     final fonte = File('lib/core/autenticacao/dados/falha_de_codigo.dart')
         .readAsLinesSync();
