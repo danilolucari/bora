@@ -175,80 +175,127 @@
 
 ## Handoff
 
-> **SNAPSHOT ATUAL — 2026-08-25, fim da sessão de Specify do M1.**
-> Tudo abaixo desta caixa, a partir de "Histórico — sessão do M0", é **histórico** do M0 já
-> fechado: continua no arquivo pelas lições de retomada e de cota, não como estado corrente.
+> **SNAPSHOT — 2026-08-26, fim de sessão pedido pelo usuário.**
+> Sessão encerrada com a árvore limpa e tudo empurrado. Nada ficou pela metade.
+> O que está abaixo de "Histórico — sessão do M0" é história, não estado corrente.
 
-### Onde o trabalho está
+### Onde parou
 
-**M0 fechado e mergeado em `main`** (`d95b385`): `flutter analyze` limpo, **742 testes verdes**
-(92 `fundacao` + 344 `calculo` + 306 `design-system`), DS-33 conferida a olho nas duas
-plataformas. Árvore limpa.
+**Spec 03 `entrar` — COMPLETA e validada.** Branch `feature/entrar`, **20 commits**,
+empurrada para `origin` (`HEAD == origin/feature/entrar`).
 
-**M1 especificado nesta sessão** — três `spec.md` + três `context.md`, nenhum código escrito:
+| | |
+|---|---|
+| Testes | **947 verdes** (baseline do M0: 742 · +205) |
+| `flutter analyze` | zero issues |
+| Verifier | **PASS** — 21/21 requisitos com evidência `file:line` |
+| Sensor | 24 mutações · **21 mortas** · 3 sobreviventes (1 declarada, 2 redundantes) |
+| Relatório | `.specs/features/entrar/validation.md` — histórico das 3 iterações preservado |
 
-| Spec | Arquivos | Requisitos | Porte | Próximo passo |
-|---|---|---|---|---|
-| 03 `entrar` | `.../entrar/{spec,context,design,tasks}.md` | ENT-01..**21** | Médio → **Grande** | **Execute** (16 tasks, 2 batches, aprovadas) |
-| 04 `home` | `.specs/features/home/{spec,context}.md` | HOME-01..19 | Médio → **Grande** | Design formal |
-| 05 `montar` | `.specs/features/montar/{spec,context}.md` | MONT-01..24 | **Grande** (confirmado) | Design formal |
+**PR a abrir** (o `gh` CLI não está instalado nesta máquina; a URL de compare está pronta):
+`https://github.com/danilolucari/bora/compare/main...feature/entrar?expand=1`
 
-**`entrar` está pronta para Execute**: Design e Tasks concluídos em 2026-08-25, com **16 tasks em
-5 fases** e empacotamento previsto de dois batches (T1–T8 infraestrutura, T9–T16 tela). `home` e
-`montar` ainda não têm `design.md` nem `tasks.md` — as duas subiram para Grande, então Design e
-Tasks são formais nelas também.
+### A primeira coisa a fazer ao retomar
 
-O Design de `entrar` produziu **AD-019** e **AD-020**, corrigiu a spec em três pontos (S-1 criou
-**ENT-21**, o AC de senha obscurecida que faltava; S-2 renomeou `AuthRepository` para
-`AutenticacaoRepository`; S-3 registrou quatro emendas de fronteira) e verificou no fonte dos
-pacotes instalados que **`signInWithProvider` não existe no web** (`firebase_auth_web` 6.2.6 não o
-sobrescreve) e que o **emulador devolve `INVALID_LOGIN_CREDENTIALS`**, não `invalid-credential`.
+**Decidir sobre a AD-022, que NÃO foi gravada.** O `design.md` de `home` a referencia como
+"a gravar", então há um documento apontando para uma decisão que não existe no log — é o
+único fio solto do repositório.
 
-### O que foi decidido (e o que mudou por causa disso)
+O conteúdo: os contadores "confirmados/pendentes" da Home são **dado da festa**, não
+derivação da lista de pessoas. RN-30 declara 5 pessoas nomeadas e "4 confirmados / 2
+pendentes" na mesma frase, e 4+2=6 não fecha. A divergência é real e intencional — a
+fundação a preservou e deixou um teste que a **afirma**
+(`test/fixtures/rn30_estado_inicial_test.dart:90-96`), justamente para ninguém "consertar"
+em silêncio. O raciocínio: pendente é quem recebeu o link (RN-24) e ainda não respondeu, e
+essa pessoa não é uma `Pessoa` nomeada. Derivar tornaria o produto incapaz de representar o
+próprio exemplo.
 
-Seis ADs novas — **AD-015** (auth e-mail/senha + Google, telefone descartado), **AD-016**
-(auth real no emulador + dado de festa em memória no M1; Firestore no M2), **AD-017** (guarda de
-sessão no `app_router`), **AD-018** ("PROS FORTES" nas duas plataformas; "QUEM LEVA?" fora do M1), **AD-019** (a autenticação mora em `lib/core/autenticacao/`) e **AD-020** (navegação pós-login é consequência da guarda, nunca imperativa). Nas Tasks entrou a **AD-021**: `mocktail` em `dev_dependencies` como duplo único de adaptador sobre SDK — primeira dependência nova desde o M0, livre de codegen, dev-only.
+O usuário viu o raciocínio e não objetou, **mas também não aprovou explicitamente**.
+Confirmar antes de gravar.
 
-Duas zonas cinzentas do roadmap fecharam: **G1** (auth) por AD-015 e **G8** (Firebase na nuvem)
-por AD-016. Restam G2, G3 (spec `lista`), G4 (`convite`), G5 (`convidado`), G6 (`custos`).
+### Estado do M1, spec a spec
 
-O `CLAUDE.md` foi corrigido em dois pontos que tinham virado mentira: a seção "Estado do
-repositório", que ainda dizia não haver código, e a linha de auth, que dizia "Google + telefone"
-e agora contradiz a AD-015.
+| Spec | Specify | Design | Tasks | Execute | Verifier |
+|---|---|---|---|---|---|
+| 03 `entrar` | ✅ | ✅ | ✅ 16 tasks | ✅ | ✅ **PASS** |
+| 04 `home` | ✅ | ✅ | ⬜ **próximo passo** | ⬜ | ⬜ |
+| 05 `montar` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 06 `lista` | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-### A ordem que a spec 03 tem de respeitar
+`home` tem `spec.md`, `context.md` e `design.md` prontos — **falta o `tasks.md`**. O design
+prevê ~11 tasks em 4 fases: contrato (`ResumoDeFesta`, porta, impl em memória, fixture
+estendida) → chrome (`AppShell`, `PlaceholderPage`) → bloc → telas.
 
-A **primeira task** de `entrar` é plugar `boraTheme()` no `BoraApp` (ENT-01, cumprindo a
-AD-013). Antes disso o app roda sem tema e qualquer tela nasce contra o default do Material.
+`lista` nunca foi especificada. O usuário decidiu (2026-08-26) que ela **segue com premissas
+registradas** em vez de esperar: G2 (fonte dos preços) e G3 (delivery) viram assumptions no
+`spec.md` para ele revisar no PR.
 
-A AD-013 devolveu quatro artefatos da fundação "para as specs 03/04" sem dividir; a divisão foi
-feita: `lib/app.dart` e `RouteErrorPage` → `entrar`; `AppShell` e `PlaceholderPage` → `home`;
-`FestaTabsShell` → `lista` (spec 06), a primeira feature que monta as abas.
+### Combinados desta sessão que valem para as próximas
+
+- **Um PR por spec/feature**, não por fase interna. Seriam 4 no M1.
+- **Sub-agentes**: execução das tasks é **inline**; o **Verifier é sub-agente** e foi
+  autorizado. Vale para as três specs restantes.
+- **Bloqueio de acesso**: tentar emular/simular local; se não der, **pular e anotar no
+  relatório final** — não travar.
+- **Cota**: `python .claude/scripts/cota.py` ao fim de cada task e em fronteira de fase.
+  Protocolo completo na skill `cota` e no `CLAUDE.md`.
+
+### Pendências declaradas — vão para o relatório final do M1
+
+1. **Código de cancelamento do Google não verificado empiricamente.** Os quatro valores em
+   `codigosDeCancelamento` (`lib/core/autenticacao/dados/falha_de_codigo.dart`) vêm do SDK
+   JS/nativo e **não existem em nenhum pacote Dart instalado** — varredura em
+   `firebase_auth 6.5.7`, `firebase_auth_web 6.2.6` e
+   `firebase_auth_platform_interface 9.0.6` não achou nenhuma ocorrência. O teste cobre o
+   **mecanismo**, não a lista, e a mutação M4 sobrevive **por construção declarada**.
+   Agora dá para capturar de verdade: o `firebase` CLI foi instalado (15.28.1) e o project
+   id é `bora-87050`. Fazer com a skill `run`: emulador + Chrome, fechar o popup, anotar o
+   `code`.
+2. **Conferência visual de T-01 e W-01 com `run` não foi feita.** A suíte prova valor de
+   token; ela não prova que o conjunto parece o protótipo. Foi assim que DS-33 fechou no M0
+   — por conferência humana.
+3. **Lições não distiladas.** O Verifier apontou que `validate.md` §10 pede rodar
+   `scripts/lessons.py` quando há sinal, e há: 4 mutantes sobreviventes não declarados e 5
+   spec-precision gaps na iteração 1. Ele não rodou porque `.specs/lessons.json` está fora
+   da fronteira da spec 03 e ele é read-only. Candidatas que ele já formulou:
+   (a) delegar cobertura por comentário a um teste de outra task produz requisito órfão — a
+   asserção tem de existir no arquivo que a alega;
+   (b) asserção de "saiu da tela" não é asserção de destino;
+   (c) layout responsivo com widget próprio precisa de arquivo de teste próprio.
+
+### Padrão de erro meu que se repetiu — vale vigiar
+
+**Varredura mirando texto em vez de import** aconteceu três vezes (T4, T5, T10): o doc
+comment cita o que o teste proíbe, e a varredura acusa o próprio comentário.
+
+**Teste que afirma estado em vez de movimento** aconteceu duas vezes, e a segunda foi
+depois de o Verifier já ter apontado a primeira: a correção inicial de R-1 usava viewport de
+420px afirmando "o CTA está visível", e o CTA nascia em `bottom=423` — três pixels fora, a
+asserção quase passava sem rolagem. **Rodar a mutação é o que pegou.** Correção aceita sem
+mutação confirmando não é correção.
 
 ### Como retomar
 
 ```bash
 export PATH="$PATH:/c/SDKs/flutter/bin"
-cd /c/repos/lucari/bora && flutter test        # 742, baseline a preservar
-# ler antes de projetar:
-#   .specs/features/entrar/spec.md      (começar por aqui — as outras duas dependem da sessão)
-#   .specs/features/entrar/context.md
+cd /c/repos/lucari/bora
+git checkout feature/entrar && flutter test    # 947, referência de sanidade
+python .claude/scripts/cota.py                 # antes de abrir trabalho longo
+
+# ler, nesta ordem:
+#   .specs/features/home/design.md   (o próximo passo é o tasks.md dele)
+#   .specs/features/entrar/validation.md  (o que o Verifier cobra)
 #   .specs/ROADMAP.md §2 e §3
 ```
 
-Ordem obrigatória: `entrar` → `home` → `montar`. `home` depende da sessão de `entrar`; `montar`
-depende da navegação de `home` e do `FestaRepository` que ela cria.
+Ordem obrigatória do que resta: **`home` (Tasks → Execute → Verifier → PR)** →
+**`montar` (Design → Tasks → Execute → Verifier → PR)** →
+**`lista` (Specify com premissas → Design → Tasks → Execute → Verifier → PR)**.
 
-### O que ficou pendente de propósito
-
-- **Spec 06 `lista`** também é do M1 no roadmap e **não foi especificada** — o pedido desta
-  sessão cobriu 03, 04 e 05. Ela tem Discuss marcado (G2, G3) e fica para uma sessão própria.
-- A pergunta aberta de `calculo` sobre `progressoDeQuitacao` continua aberta e continua sem
-  bloquear (ver "Pergunta aberta" mais abaixo).
+`montar` depende da navegação e do `FestaRepository` que `home` cria; `lista` depende de
+`montar`.
 
 ---
-
 ## Histórico — sessão do M0
 
 
