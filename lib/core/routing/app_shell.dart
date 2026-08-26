@@ -67,20 +67,28 @@ class AppShell extends StatelessWidget {
 
   /// A rota que está montada, para o header saber qual ação é a dele.
   ///
-  /// Chega pelo roteador — que é quem sabe —, e não de `GoRouterState.of`, para
-  /// que o header continue montável num teste sem rota. Qual ação pertence a
-  /// qual rota é decisão do header, e mora num lugar só.
+  /// Chega pelo roteador — que é quem sabe —, e não de `GoRouterState.of`,
+  /// para que o header continue montável num teste sem rota. Qual ação
+  /// pertence a qual rota é decisão do header, e mora num lugar só.
   final String? rotaAtual;
 
   @override
   Widget build(BuildContext context) {
     return KeyedSubtree(
       key: chromeKey,
-      child: Column(
-        children: [
-          _HeaderDeApp(usuario: usuario, rotaAtual: rotaAtual),
-          Expanded(child: child),
-        ],
+      child: ResponsiveBuilder(
+        builder: (context, modo) => Column(
+          children: [
+            // A barra é **do web**. P1-1 AC1 a escopa em "viewport expandida",
+            // `06` é a spec web e T-02 não desenha barra de app nenhuma no
+            // mobile (A-07). Sem esta guarda, `/roles/novo` em 390px mostraria
+            // esta barra empilhada com o header próprio de T-03 — duas barras
+            // na mesma tela, e o mesmo em T-04..T-09 quando chegarem.
+            if (modo == LayoutMode.expanded)
+              _HeaderDeApp(usuario: usuario, rotaAtual: rotaAtual),
+            Expanded(child: child),
+          ],
+        ),
       ),
     );
   }
@@ -92,26 +100,31 @@ class _HeaderDeApp extends StatelessWidget {
   final UsuarioLogado? usuario;
   final String? rotaAtual;
 
-  /// A ação contextual desta rota, se houver.
-  ///
-  /// `06` dá a ação do header **só no web** e T-02 não desenha barra de app
-  /// nenhuma no mobile (A-07), então em compacto o header não tem ação — a
-  /// entrada para criar rolê ali é o card "🔥 CHURRASCO" da própria Home.
+  /// A rota tem ação contextual no header?
   ///
   /// SPEC_PRECISION_GAP: `06` desenha o botão como "primário compacto"
   /// (padding 9x14, sombra 3px). O padding e a sombra de §4 são 15 e 4px, e o
   /// `CLAUDE.md` manda a sombra vir do token — um 3px aqui seria sombra fora
   /// do sistema. Fica o primário do design system; se o compacto for mesmo
   /// necessário, é variante do componente, não decisão de um arquivo de rota.
-  bool _temAcao(LayoutMode modo) =>
-      modo == LayoutMode.expanded && rotaAtual == Routes.roles;
+  bool get _temAcao => rotaAtual == Routes.roles;
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBuilder(builder: (context, modo) => _barra(context, modo));
+    // `Material` **acima** da barra, e `SafeArea` em volta dela.
+    //
+    // Sem o `Material`, todo `Text` daqui herda o `_errorTextStyle` que o
+    // `MaterialApp` instala acima do `Navigator` — sublinhado duplo amarelo —,
+    // porque a barra vive fora do `Scaffold` da rota. O teste não via isso:
+    // ele montava o shell dentro de um `Scaffold`, coisa que a produção não
+    // faz.
+    return Material(
+      color: BoraColors.paper,
+      child: SafeArea(bottom: false, child: _barra(context)),
+    );
   }
 
-  Widget _barra(BuildContext context, LayoutMode modo) {
+  Widget _barra(BuildContext context) {
     // `Container`, e não `DecoratedBox`: ele soma a espessura da borda ao
     // padding, que é a semântica de `06` — lá o `border-bottom` fica **fora**
     // do padding. Com `DecoratedBox` a borda é pintada por dentro e come 2px
@@ -134,7 +147,7 @@ class _HeaderDeApp extends StatelessWidget {
           // aqui furaria o mapa de navegação de AD-003.
           const BoraMarca.header(),
           const Spacer(),
-          if (_temAcao(modo)) ...[
+          if (_temAcao) ...[
             BoraPrimaryButton(
               rotulo: AppShell.rotuloDeNovoRole,
               onPressed: () => context.go(Routes.novoRole),

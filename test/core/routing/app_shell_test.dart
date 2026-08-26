@@ -25,20 +25,38 @@ const UsuarioLogado _semNome = UsuarioLogado(
   email: 'bia@bora.app',
 );
 
-Future<void> _montar(WidgetTester tester, {UsuarioLogado? usuario}) async {
+/// Um pouco acima e um pouco abaixo da fronteira de AD-007.
+const Size _janelaExpandida = Size(1180, 800);
+const Size _janelaCompacta = Size(390, 820);
+
+/// Monta o shell **como a produção monta**: direto sob o `MaterialApp`, sem
+/// `Scaffold` em volta.
+///
+/// O `Scaffold` que estava aqui escondia um defeito real: ele fornece o
+/// `Material` que a barra precisa, e a produção não fornece — o roteador
+/// entrega o `AppShell` ao `ShellRoute` cru.
+Future<void> _montar(
+  WidgetTester tester, {
+  UsuarioLogado? usuario,
+  Size janela = _janelaExpandida,
+}) async {
+  addTearDown(() => tester.binding.setSurfaceSize(null));
+  await tester.binding.setSurfaceSize(janela);
   await tester.pumpWidget(
     MaterialApp(
       theme: boraTheme(),
-      home: Scaffold(
-        body: AppShell(
-          usuario: usuario,
-          child: const Text('conteúdo da rota'),
-        ),
-      ),
+      home: AppShell(usuario: usuario, child: const Text('conteúdo da rota')),
     ),
   );
   await tester.pumpAndSettle();
 }
+
+/// O estilo **efetivo** de [texto] — o que o Flutter resolveu depois de fundir
+/// o estilo do widget com o `DefaultTextStyle` herdado.
+TextStyle _estiloEfetivo(WidgetTester tester, Finder texto) =>
+    tester.widget<RichText>(
+      find.descendant(of: texto, matching: find.byType(RichText)),
+    ).text.style!;
 
 BoxDecoration _decoracaoDoHeader(WidgetTester tester) =>
     tester.widget<Container>(find.byKey(AppShell.headerKey)).decoration!
@@ -73,6 +91,47 @@ void main() {
         reason: 'revestir o shell não pode tirar a rota de dentro dele — os '
             'testes de FUND-07/08 dependem disso',
       );
+    });
+  });
+
+  group('HOME-01 AC1 — a barra é do web', () {
+    testWidgets('em expandido a barra está lá', (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      expect(find.byKey(AppShell.headerKey), findsOneWidget);
+    });
+
+    testWidgets('em compacto o shell não desenha barra nenhuma',
+        (tester) async {
+      await _montar(tester, usuario: _rafa, janela: _janelaCompacta);
+
+      expect(
+        find.byKey(AppShell.headerKey),
+        findsNothing,
+        reason: 'T-02 não desenha barra de app, e `06` é a spec web: com a '
+            'barra no mobile, T-03 apareceria com dois headers empilhados',
+      );
+      expect(
+        find.text('conteúdo da rota'),
+        findsOneWidget,
+        reason: 'o que some é a barra, não a rota',
+      );
+    });
+
+    testWidgets('o texto da barra não cai no estilo de erro do Material',
+        (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      final estilo = _estiloEfetivo(tester, find.byType(BoraMarca));
+
+      expect(
+        estilo.decoration ?? TextDecoration.none,
+        TextDecoration.none,
+        reason: 'sem um Material acima da barra, todo Text herda o '
+            '_errorTextStyle do MaterialApp e sai com sublinhado duplo '
+            'amarelo no app real',
+      );
+      expect(find.byType(Material), findsWidgets);
     });
   });
 

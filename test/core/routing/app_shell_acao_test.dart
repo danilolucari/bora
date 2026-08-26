@@ -60,7 +60,7 @@ void main() {
       );
     });
 
-    testWidgets('em compacto a ação não existe (A-07)', (tester) async {
+    testWidgets('em compacto não há ação nem barra (A-07)', (tester) async {
       await _abrir(tester, Routes.roles, janela: _janelaCompacta);
 
       expect(
@@ -71,8 +71,8 @@ void main() {
       );
       expect(
         find.byKey(AppShell.headerKey),
-        findsOneWidget,
-        reason: 'o header continua lá — o que some é a ação',
+        findsNothing,
+        reason: 'P1-1 AC1 escopa a barra em viewport expandida',
       );
     });
 
@@ -91,27 +91,24 @@ void main() {
   });
 
   group('HOME-01 AC4 — a Home é a raiz: nenhum voltar no header', () {
-    for (final janela in [_janelaCompacta, _janelaExpandida]) {
-      testWidgets('sem botão voltar na Home em ${janela.width.toInt()}px',
-          (tester) async {
-        await _abrir(tester, Routes.roles, janela: janela);
+    testWidgets('sem botão voltar na barra da Home', (tester) async {
+      await _abrir(tester, Routes.roles, janela: _janelaExpandida);
 
-        expect(
-          find.descendant(
-            of: find.byKey(AppShell.headerKey),
-            matching: find.byType(BackButton),
-          ),
-          findsNothing,
-        );
-        expect(
-          find.descendant(
-            of: find.byKey(AppShell.headerKey),
-            matching: find.byIcon(Icons.arrow_back),
-          ),
-          findsNothing,
-        );
-      });
-    }
+      expect(
+        find.descendant(
+          of: find.byKey(AppShell.headerKey),
+          matching: find.byType(BackButton),
+        ),
+        findsNothing,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(AppShell.headerKey),
+          matching: find.byIcon(Icons.arrow_back),
+        ),
+        findsNothing,
+      );
+    });
   });
 
   group('HOME-01 — a sessão do roteador chega ao avatar', () {
