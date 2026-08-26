@@ -16,7 +16,12 @@ import '../tokens/bora_text_styles.dart';
 /// pares das cinco personas de §1 e devolve **um desses mesmos cinco** para
 /// qualquer outro nome, sempre o mesmo para o mesmo nome (A-05).
 class BoraAvatar extends StatelessWidget {
-  const BoraAvatar({required this.nome, this.tamanho = tamanhoPadrao, super.key});
+  const BoraAvatar({
+    required this.nome,
+    this.tamanho = tamanhoPadrao,
+    this.par,
+    super.key,
+  });
 
   /// §5: "34–40px" — o extremo inferior da faixa, pelo critério de A-01.
   static const double tamanhoPadrao = 34;
@@ -33,9 +38,17 @@ class BoraAvatar extends StatelessWidget {
   /// O diâmetro do círculo, dentro da faixa de §5.
   final double tamanho;
 
+  /// O par de cores do círculo. `null` ⇒ o par que §1 fixa para [nome].
+  ///
+  /// Existe para o **avatar de conta** do header de app (arquivo `06`), que é
+  /// sempre `#FFD23F` porque identifica quem está logado, não uma persona da
+  /// festa — e por isso não pode derivar do nome (HOME-01 AC2, A-08).
+  /// Nenhuma cor nova entra no sistema: quem passa o par passa um token.
+  final BoraAvatarPair? par;
+
   @override
   Widget build(BuildContext context) {
-    final par = BoraColors.avatarPairFor(nome);
+    final par = this.par ?? BoraColors.avatarPairFor(nome);
 
     return SizedBox(
       width: tamanho,
