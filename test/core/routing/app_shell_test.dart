@@ -1,0 +1,363 @@
+import 'package:bora/core/autenticacao/autenticacao.dart';
+import 'package:bora/core/design_system/design_system.dart';
+import 'package:bora/core/routing/app_shell.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../design_system/support/font_loading.dart';
+
+const UsuarioLogado _rafa = UsuarioLogado(
+  id: 'uid-rafa',
+  email: 'rafa@bora.app',
+  nome: 'Rafa',
+);
+
+const UsuarioLogado _ana = UsuarioLogado(
+  id: 'uid-ana',
+  email: 'ana@bora.app',
+  nome: 'Ana',
+);
+
+/// Conta de e-mail/senha: o Firebase não dá `displayName`, e a inicial cai no
+/// e-mail (AD-019).
+const UsuarioLogado _semNome = UsuarioLogado(
+  id: 'uid-bia',
+  email: 'bia@bora.app',
+);
+
+/// Um pouco acima e um pouco abaixo da fronteira de AD-007.
+const Size _janelaExpandida = Size(1180, 800);
+
+/// Um inset de topo qualquer — o que um aparelho com notch reporta e o que
+/// `setSurfaceSize` deixa em zero.
+const double _alturaDaStatusBar = 44;
+const Size _janelaCompacta = Size(390, 820);
+
+/// Monta o shell **como a produção monta**: direto sob o `MaterialApp`, sem
+/// `Scaffold` em volta.
+///
+/// O `Scaffold` que estava aqui escondia um defeito real: ele fornece o
+/// `Material` que a barra precisa, e a produção não fornece — o roteador
+/// entrega o `AppShell` ao `ShellRoute` cru.
+Future<void> _montar(
+  WidgetTester tester, {
+  UsuarioLogado? usuario,
+  Size janela = _janelaExpandida,
+}) async {
+  addTearDown(() => tester.binding.setSurfaceSize(null));
+  await tester.binding.setSurfaceSize(janela);
+  await tester.pumpWidget(
+    MaterialApp(
+      theme: boraTheme(),
+      home: AppShell(usuario: usuario, child: const Text('conteúdo da rota')),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+/// O estilo **efetivo** de [texto] — o que o Flutter resolveu depois de fundir
+/// o estilo do widget com o `DefaultTextStyle` herdado.
+TextStyle _estiloEfetivo(WidgetTester tester, Finder texto) =>
+    tester.widget<RichText>(
+      find.descendant(of: texto, matching: find.byType(RichText)),
+    ).text.style!;
+
+BoxDecoration _decoracaoDoHeader(WidgetTester tester) =>
+    tester.widget<Container>(find.byKey(AppShell.headerKey)).decoration!
+        as BoxDecoration;
+
+/// A decoração do círculo do avatar de conta.
+BoxDecoration _circuloDoAvatar(WidgetTester tester, String inicial) =>
+    tester.widget<DecoratedBox>(
+      find
+          .ancestor(
+            of: find.text(inicial),
+            matching: find.byType(DecoratedBox),
+          )
+          .first,
+    ).decoration as BoxDecoration;
+
+void main() {
+  setUpAll(carregarFontesArchivo);
+
+  group('FUND-08 — o envelope continua sendo o que marca a rota logada', () {
+    testWidgets('o chrome está presente e envolve o conteúdo da rota',
+        (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      expect(find.byKey(AppShell.chromeKey), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byKey(AppShell.chromeKey),
+          matching: find.text('conteúdo da rota'),
+        ),
+        findsOneWidget,
+        reason: 'revestir o shell não pode tirar a rota de dentro dele — os '
+            'testes de FUND-07/08 dependem disso',
+      );
+    });
+  });
+
+  group('HOME-01 AC1 — a barra é do web', () {
+    testWidgets('em expandido a barra está lá', (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      expect(find.byKey(AppShell.headerKey), findsOneWidget);
+    });
+
+    testWidgets('em compacto o shell não desenha barra nenhuma',
+        (tester) async {
+      await _montar(tester, usuario: _rafa, janela: _janelaCompacta);
+
+      expect(
+        find.byKey(AppShell.headerKey),
+        findsNothing,
+        reason: 'T-02 não desenha barra de app, e `06` é a spec web: com a '
+            'barra no mobile, T-03 apareceria com dois headers empilhados',
+      );
+      expect(
+        find.text('conteúdo da rota'),
+        findsOneWidget,
+        reason: 'o que some é a barra, não a rota',
+      );
+    });
+
+    testWidgets('o texto da barra não cai no estilo de erro do Material',
+        (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      final estilo = _estiloEfetivo(tester, find.byType(BoraMarca));
+
+      expect(
+        estilo.decoration ?? TextDecoration.none,
+        TextDecoration.none,
+        reason: 'sem um Material acima da barra, todo Text herda o '
+            '_errorTextStyle do MaterialApp e sai com sublinhado duplo '
+            'amarelo no app real',
+      );
+      expect(find.byType(Material), findsWidgets);
+    });
+  });
+
+  group('o inset do topo é consumido uma vez só', () {
+    /// Monta o shell sob um `MediaQuery` com inset de topo, que é o que
+    /// `setSurfaceSize` **não** simula — por isso nenhum teste via o defeito.
+    Future<void> montarComNotch(
+      WidgetTester tester, {
+      Size janela = _janelaExpandida,
+    }) async {
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.binding.setSurfaceSize(janela);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: boraTheme(),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              padding: const EdgeInsets.only(top: _alturaDaStatusBar),
+            ),
+            child: child!,
+          ),
+          // O filho imita a rota **real**: a `HomePage` embrulha o corpo num
+          // `SafeArea` próprio, e é ele que reaplicava o inset. Com um
+          // `Scaffold(body: Text(...))` cru a asserção do meio era vacuosa —
+          // `Scaffold` não aplica o padding do MediaQuery ao `body`, então ela
+          // passava com o defeito presente.
+          home: const AppShell(
+            usuario: _rafa,
+            child: Scaffold(
+              body: SafeArea(child: Text('conteúdo da rota')),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('a barra desce a status bar em vez de ficar embaixo dela',
+        (tester) async {
+      await montarComNotch(tester);
+
+      expect(
+        tester.getRect(find.byKey(AppShell.headerKey)).top,
+        _alturaDaStatusBar,
+        reason: 'sem SafeArea a barra era desenhada em y=0, atrás do notch',
+      );
+    });
+
+    testWidgets('e a rota não recebe o inset de novo, abaixo da barra',
+        (tester) async {
+      await montarComNotch(tester);
+
+      expect(
+        tester.getRect(find.text('conteúdo da rota')).top,
+        tester.getRect(find.byKey(AppShell.headerKey)).bottom,
+        reason: '`SafeArea` remove o inset do MediaQuery só para o **próprio** '
+            'filho: dentro do header, o irmão continuava vendo o inset inteiro '
+            'e a página o aplicava de novo, abrindo uma faixa em branco da '
+            'altura da status bar logo abaixo da barra',
+      );
+    });
+
+    testWidgets('em compacto, sem barra, a rota ainda desce a status bar',
+        (tester) async {
+      await montarComNotch(tester, janela: _janelaCompacta);
+
+      expect(find.byKey(AppShell.headerKey), findsNothing);
+      expect(
+        tester.getRect(find.text('conteúdo da rota')).top,
+        _alturaDaStatusBar,
+        reason: 'no mobile não há barra, e é o shell que continua consumindo '
+            'o topo — senão T-02 nasceria atrás do notch',
+      );
+    });
+  });
+
+  group('HOME-01 — a barra do header de `06`', () {
+    testWidgets('fundo paper e borda inferior de 2px ink', (tester) async {
+      await _montar(tester, usuario: _rafa);
+      final decoracao = _decoracaoDoHeader(tester);
+
+      expect(
+        decoracao.color,
+        BoraColors.paper,
+        reason: '`06`: "fundo paper" — afirmado pelo token, não pelo hex',
+      );
+
+      final borda = decoracao.border! as Border;
+      expect(borda.bottom.width, 2, reason: '`06`: "border-bottom 2px ink"');
+      expect(borda.bottom.color, BoraColors.ink);
+      expect(
+        borda.top,
+        BorderSide.none,
+        reason: '`06` põe borda só embaixo — uma borda em volta seria outra '
+            'coisa',
+      );
+    });
+
+    testWidgets('o padding de 13x36 chega à árvore, não só à constante',
+        (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      final barra = tester.getRect(find.byKey(AppShell.headerKey));
+      final logo = tester.getRect(find.byType(BoraMarca));
+      final avatar = tester.getRect(find.byType(BoraAvatar));
+
+      expect(logo.left - barra.left, 36, reason: '`06`: padding lateral 36px');
+      expect(barra.right - avatar.right, 36);
+      expect(
+        avatar.top - barra.top,
+        13,
+        reason: '`06`: padding vertical 13px — medido no avatar, que é o '
+            'elemento de altura fixa da barra',
+      );
+      expect(barra.bottom - avatar.bottom, 13 + 2, reason: 'mais a borda');
+    });
+
+    testWidgets('a barra fica no topo, acima do conteúdo da rota',
+        (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      expect(
+        tester.getBottomLeft(find.byKey(AppShell.headerKey)).dy,
+        lessThanOrEqualTo(tester.getTopLeft(find.text('conteúdo da rota')).dy),
+        reason: 'SPEC_PRECISION_GAP: "sticky" é afirmado por **proxy** — a '
+            'barra vive fora do que rola, numa Column acima do conteúdo, e é '
+            'isso que esta asserção prova. Nenhum teste rola a página: para '
+            'provar a fixação de verdade seria preciso um conteúdo mais alto '
+            'que a janela e um scroll, e a barra não é um `SliverAppBar` que '
+            'pudesse deixar de grudar — ou está fora do scroll, ou não está',
+      );
+    });
+
+    testWidgets('o logo BORA. de 20px abre a barra', (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      final logo = find.descendant(
+        of: find.byKey(AppShell.headerKey),
+        matching: find.byType(BoraMarca),
+      );
+
+      expect(logo, findsOneWidget);
+      expect(
+        tester.widget<Text>(
+          find.descendant(of: logo, matching: find.byType(Text)),
+        ).style!.fontSize,
+        BoraMarca.tamanhoHeader,
+      );
+    });
+
+    testWidgets('o logo vem antes do avatar, com o spacer entre os dois',
+        (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      expect(
+        tester.getTopRight(find.byType(BoraMarca)).dx,
+        lessThan(tester.getTopLeft(find.byType(BoraAvatar)).dx),
+        reason: '`06`: "logo BORA. · spacer · … · avatar do usuário"',
+      );
+    });
+  });
+
+  group('HOME-01 AC2 — o avatar é o do usuário logado', () {
+    testWidgets('36px, amarelo, borda 2px e a inicial em ink', (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      expect(find.text('R'), findsOneWidget);
+      expect(
+        tester.getSize(find.byType(BoraAvatar)),
+        const Size(AppShell.tamanhoDoAvatar, AppShell.tamanhoDoAvatar),
+        reason: '`06`: "avatar do usuário 36px"',
+      );
+
+      final circulo = _circuloDoAvatar(tester, 'R');
+      expect(
+        circulo.color,
+        BoraColors.yellow,
+        reason: 'A-08: o avatar de conta é sempre o amarelo do token',
+      );
+      expect(circulo.border!.top.width, 2, reason: '`06`: "borda 2px"');
+    });
+
+    testWidgets('a inicial vem do usuário, não de uma letra fixa',
+        (tester) async {
+      await _montar(tester, usuario: _ana);
+
+      expect(
+        find.text('A'),
+        findsOneWidget,
+        reason: 'é o par que discrimina: um avatar com a letra escrita à mão '
+            'passaria no teste do Rafa',
+      );
+      expect(find.text('R'), findsNothing);
+    });
+
+    testWidgets('sem nome, a inicial cai no e-mail (AD-019)', (tester) async {
+      await _montar(tester, usuario: _semNome);
+
+      expect(find.text('B'), findsOneWidget);
+    });
+
+    testWidgets('o avatar não fica amarelo por acaso do nome', (tester) async {
+      await _montar(tester, usuario: _rafa);
+
+      expect(
+        BoraColors.avatarPairFor('R').fundo,
+        isNot(BoraColors.yellow),
+        reason: 'se o par de §1 para esta inicial já fosse amarelo, o teste de '
+            'cima passaria com o override ignorado',
+      );
+    });
+
+    testWidgets('sem sessão, o avatar não é desenhado', (tester) async {
+      await _montar(tester);
+
+      expect(
+        find.byType(BoraAvatar),
+        findsNothing,
+        reason: 'inicial inventada é pior que avatar nenhum — e fora de '
+            '/roles a guarda de AD-017 não deixa chegar sem sessão',
+      );
+      expect(find.byType(BoraMarca), findsOneWidget);
+    });
+  });
+}

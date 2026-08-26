@@ -1,7 +1,7 @@
 import 'package:bora/core/autenticacao/autenticacao.dart';
-import 'package:bora/core/routing/placeholder_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:bora/features/entrar/presentation/pages/entrar_page.dart';
+import 'package:bora/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -41,7 +41,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(PlaceholderPage.keyFor('home')),
+        find.byKey(HomePage.pageKey),
         findsOneWidget,
         reason: 'UC-01: pós-login sempre cai na Home. E ninguém chamou '
             'context.go — a sessão mudou, o refreshListenable acordou e a '
@@ -84,7 +84,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(PlaceholderPage.keyFor('home')),
+        find.byKey(HomePage.pageKey),
         findsOneWidget,
         reason: 'ENT-14 AC2: o mesmo destino do e-mail/senha, porque é o mesmo '
             'mecanismo — não uma segunda linha de navegação',
@@ -107,7 +107,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(PlaceholderPage.keyFor('home')),
+        find.byKey(HomePage.pageKey),
         findsOneWidget,
         reason: 'os três caminhos terminam no mesmo lugar porque terminam no '
             'mesmo mecanismo',

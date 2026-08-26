@@ -4,7 +4,6 @@ import '../../../../core/design_system/design_system.dart';
 import '../bloc/entrar_bloc.dart';
 import '../entrar_textos.dart';
 import 'formulario_de_entrada.dart';
-import 'marca_bora.dart';
 
 /// W-01 — duas colunas centralizadas: marca à esquerda, card à direita.
 class EntrarExpandido extends StatelessWidget {
@@ -67,7 +66,7 @@ class EntrarExpandido extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const MarcaBora.expandida(),
+                    const BoraMarca.expandida(),
                     const SizedBox(height: 16),
                     const BoraRotatedTag(texto: EntrarTextos.tagline),
                     const SizedBox(height: 22),

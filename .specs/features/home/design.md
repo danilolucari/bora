@@ -2,8 +2,8 @@
 
 **Spec**: `.specs/features/home/spec.md`
 **Context**: `.specs/features/home/context.md`
-**Status**: Draft — aguardando aprovação para Tasks
-**Decisões ativas conferidas**: AD-001..AD-021 (`.specs/STATE.md`). Nenhuma é superada; **AD-016** (dado em memória), **AD-019** (`core/autenticacao/`) e **AD-020** (navegação por guarda) são consumidas como estão. Uma nasce deste design: **AD-022** (contadores da Home são dado da festa, não derivados).
+**Status**: **Aprovado** (2026-08-26) — a AD-022 que faltava está gravada no `STATE.md`; liberado para Tasks
+**Decisões ativas conferidas**: AD-001..AD-021 (`.specs/STATE.md`). Nenhuma é superada; **AD-016** (dado em memória), **AD-019** (`core/autenticacao/`) e **AD-020** (navegação por guarda) são consumidas como estão. Uma nasceu deste design e já está **gravada no `STATE.md`**: **AD-022** (contadores da Home são dado da festa, não derivados), aprovada em 2026-08-26 com três apertos sobre o texto original — ver §A questão que o design teve de resolver primeiro.
 **Lições confirmadas**: `lessons.py list --status confirmed` → vazio. As candidatas L-002 e L-008 informaram a §Estratégia de teste como raciocínio próprio.
 
 ---
@@ -18,7 +18,11 @@ Não é descuido de leitura minha — a fundação viu, preservou e **deixou reg
 
 E isso não é conveniência para bater o literal — é o modelo certo. "Pendente" é quem foi **convidado e ainda não respondeu**, e no produto real o convite sai por link (RN-24): quem recebeu o link e não abriu não é uma `Pessoa` nomeada ainda. Derivar o contador da lista de nomeados tornaria impossível representar exatamente o caso que o produto tem de representar — e o número da Home passaria a mentir assim que o primeiro link fosse enviado.
 
-Consequência direta: `HOME-06` continua exigindo a string literal `"4 confirmados · 2 pendentes"`, e ela sai do dado, não de uma contagem.
+**A divergência mora inteira no `pendentes`.** `confirmados` coincide com a contagem dos nomeados em toda a spec-fonte — T-05 "5 pessoas · **4 confirmadas**", RN-25 "apenas confirmados (**4**)", T-07 "**4 membros**", T-08 "**4 já confirmaram**" — e tem de continuar coincidindo. A AD-022 **não** autoriza um `confirmados` que discorde de T-05; ela cobre o `pendentes`, que é o único número que a lista de nomeados não produz.
+
+**A prova de que derivar quebra** está na própria transição: T-02 diz que, com uma confirmação nova (RN-28), a Home lê "**5 confirmados · 1 pendente**". Sob derivação, quando Duda confirmasse o pendente iria a **zero** — o literal da transição ficaria impossível de renderizar. Só fecha se houver um convidado sem nome no meio, que é exatamente o que o link produz.
+
+Consequência direta: `HOME-06` continua exigindo a string literal `"4 confirmados · 2 pendentes"`, e ela sai do dado, não de uma contagem — mas **a string estática não é o aceite**: ela passa igual numa implementação derivada errada. O aceite dos contadores é a **transição** `4/2 → 5/1` de HOME-09 (RN-28).
 
 ---
 
@@ -141,6 +145,11 @@ class ResumoDeFesta {
 
   /// AD-022: dado, não derivação. "Pendente" é quem recebeu o link e ainda
   /// não respondeu — e quem não respondeu não é uma `Pessoa` nomeada ainda.
+  ///
+  /// A divergência de RN-30 é só do [pendentes]: [confirmados] coincide com a
+  /// contagem dos nomeados em T-05/RN-25/T-07/T-08 e tem de continuar
+  /// coincidindo. Quem alimentar estes campos no M2 grava contador e RSVP na
+  /// mesma escrita (RN-28).
   final int confirmados;
   final int pendentes;
 
@@ -179,7 +188,7 @@ Herda a regra da spec 03 e acrescenta duas:
 
 1. **Copy da spec → literal no teste; token → o token.** Já valia; segue valendo.
 2. **Fontes reais obrigatórias.** A Home mede muito texto em card estreito. Sem `carregarFontesArchivo`, `flutter test` usa fonte de glifo fixo e o layout estoura por artefato — o que já aconteceu em `entrar` e custou uma rodada de diagnóstico.
-3. **Todo contador vem do dado, e o teste prova isso mudando o dado.** Afirmar só "4 confirmados · 2 pendentes" passaria com a string escrita à mão na tela. O par: mudar a fixture para outro número e ver a tela acompanhar.
+3. **Todo contador vem do dado, e o teste prova isso mudando o dado.** Afirmar só "4 confirmados · 2 pendentes" passaria com a string escrita à mão na tela — e passaria também com uma implementação que derivasse da lista de pessoas. O par que discrimina é a **transição de RN-28** (`4/2 → 5/1`, HOME-09): sob derivação ela dá `5/0` e o teste fica vermelho. Mudar a fixture para outro número e ver a tela acompanhar continua valendo como segunda rede.
 4. **RN-28 tem par discriminante obrigatório**: com confirmação nova, atalho presente; sem, ausente. Um teste que só afirme presença passa com o botão sempre visível.
 
 ---
@@ -198,6 +207,7 @@ Herda a regra da spec 03 e acrescenta duas:
 | Preocupação | Local | Impacto | Mitigação |
 |---|---|---|---|
 | Reconciliar 4+2 com 5 pessoas "consertando" o número | `rn30_estado_inicial.dart:13-15` | Apagaria um literal de RN-30 e quebraria o teste que afirma a divergência de propósito | AD-022: contador é dado. O teste existente fica **intocado** |
+| Contador de dado sair de sincronia com a lista de pessoas | `ResumoDeFesta` | Home e Galera exibiriam números diferentes, e o "+N" tracejado (`confirmados − visíveis`) mentiria junto | Custo declarado na AD-022. No M1 não há produtor de RSVP para mitigar; a obrigação é da spec 09 `convidado` — quem grava o RSVP atualiza o contador **na mesma escrita** (RN-28) |
 | `lib/` importar `test/fixtures/` para semear | `festa_repository_em_memoria.dart` | Código de produção dependendo de test | A semente entra por **injeção**: a impl recebe a lista, quem a monta com a fixture é o `main`/teste |
 | A segunda festa passada é invenção minha | fixture | Virar "literal de spec" por descuido (foi o L-002 da fundação) | Marcada como assumption no `spec.md` (A-04) e com doc no código dizendo que **só a "Churras da laje" é literal de UC-24** |
 | `AppShell` é usado por 7 rotas | `app_shell.dart` | Errar aqui custa retrabalho em todas | `chromeKey` preservada; os testes de FUND-08 continuam valendo como rede |
@@ -216,9 +226,10 @@ Herda a regra da spec 03 e acrescenta duas:
 | Semente da fixture | Por injeção | Impede `lib/` de importar `test/` |
 | Navegação por toque | `context.go` na página | AD-020 proíbe navegar por efeito de **sessão**; toque em botão é navegação comum |
 
-### Decisão que sobe para o `STATE.md`
+### Decisão que subiu para o `STATE.md` — **gravada em 2026-08-26**
 
 - **AD-022** — Os contadores "confirmados/pendentes" da Home são **dado da festa**, não derivação da lista de pessoas nomeadas. RN-30 declara 5 nomeados e 4+2 na Home, e a divergência é real e intencional: pendente é quem recebeu o link (RN-24) e ainda não respondeu, e essa pessoa não existe como `Pessoa`. A fixture já registrava a divergência e um teste a afirma; nenhum dos dois é alterado.
+- Aprovada com três apertos, que valem como leitura obrigatória da AD: **(1)** a divergência é só do `pendentes` — `confirmados` coincide com os nomeados em T-05/RN-25/T-07/T-08 e tem de continuar coincidindo; **(2)** o aceite é a **transição** de RN-28 (`4/2 → 5/1`), não a string estática; **(3)** o custo (deriva Home ⇄ Galera, e o "+N" junto) tem dono declarado na spec 09 `convidado`, que grava contador e RSVP na mesma escrita.
 
 ---
 

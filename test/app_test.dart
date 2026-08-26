@@ -1,7 +1,7 @@
 import 'package:bora/app.dart';
 import 'package:bora/core/design_system/tokens/bora_colors.dart';
 import 'package:bora/core/design_system/tokens/bora_text_styles.dart';
-import 'package:bora/core/routing/placeholder_page.dart';
+import 'package:bora/features/home/presentation/pages/home_page.dart';
 import 'package:bora/features/entrar/presentation/pages/entrar_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ import 'support/app_de_teste.dart';
 Future<ThemeData> _temaDaTelaMontada(WidgetTester tester) async {
   await abrirApp(tester, Routes.roles, sessao: sessaoDeTeste);
 
-  return Theme.of(tester.element(find.byKey(PlaceholderPage.keyFor('home'))));
+  return Theme.of(tester.element(find.byKey(HomePage.pageKey)));
 }
 
 void main() {
@@ -26,7 +26,7 @@ void main() {
       await abrirApp(tester, Routes.roles, sessao: sessaoDeTeste);
 
       expect(find.byType(BoraApp), findsOneWidget);
-      expect(find.byKey(PlaceholderPage.keyFor('home')), findsOneWidget);
+      expect(find.byKey(HomePage.pageKey), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
 
@@ -39,7 +39,7 @@ void main() {
         reason: 'o par com/sem sessão é o que discrimina a guarda: um teste '
             'que só afirmasse a Home passaria com a guarda desligada',
       );
-      expect(find.byKey(PlaceholderPage.keyFor('home')), findsNothing);
+      expect(find.byKey(HomePage.pageKey), findsNothing);
       expect(tester.takeException(), isNull);
     });
 
@@ -47,7 +47,7 @@ void main() {
         (tester) async {
       final autenticacao =
           await abrirApp(tester, Routes.roles, sessao: sessaoDeTeste);
-      expect(find.byKey(PlaceholderPage.keyFor('home')), findsOneWidget);
+      expect(find.byKey(HomePage.pageKey), findsOneWidget);
 
       autenticacao.mudarSessao(null);
       await tester.pumpAndSettle();
@@ -69,7 +69,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(PlaceholderPage.keyFor('home')),
+        find.byKey(HomePage.pageKey),
         findsOneWidget,
         reason: 'UC-01: pós-login sempre cai na Home — sem nenhuma feature '
             'navegar (AD-020)',

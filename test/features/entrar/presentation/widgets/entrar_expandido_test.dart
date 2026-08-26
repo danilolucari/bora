@@ -2,7 +2,6 @@ import 'package:bora/core/design_system/design_system.dart';
 import 'package:bora/features/entrar/presentation/pages/entrar_page.dart';
 import 'package:bora/features/entrar/presentation/widgets/entrar_compacto.dart';
 import 'package:bora/features/entrar/presentation/widgets/entrar_expandido.dart';
-import 'package:bora/features/entrar/presentation/widgets/marca_bora.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -70,7 +69,7 @@ void main() {
       // W-01 é explícito: "coluna esquerda (marca)" e "coluna direita (form)".
       await abrir(tester);
 
-      final marca = tester.getTopLeft(find.byType(MarcaBora)).dx;
+      final marca = tester.getTopLeft(find.byType(BoraMarca)).dx;
       final card = tester.getTopLeft(find.byKey(EntrarExpandido.cardKey)).dx;
 
       expect(marca, lessThan(card));
@@ -79,7 +78,7 @@ void main() {
     testWidgets('o espaço entre as colunas é o gap de W-01', (tester) async {
       await abrir(tester);
 
-      final fimDaMarca = tester.getRect(find.byType(MarcaBora)).right;
+      final fimDaMarca = tester.getRect(find.byType(BoraMarca)).right;
       final inicioDoCard =
           tester.getTopLeft(find.byKey(EntrarExpandido.cardKey)).dx;
 
@@ -92,12 +91,12 @@ void main() {
 
       final logo = tester.widget<Text>(
         find.descendant(
-          of: find.byType(MarcaBora),
+          of: find.byType(BoraMarca),
           matching: find.byType(Text),
         ),
       );
 
-      expect(logo.style?.fontSize, MarcaBora.tamanhoExpandido);
+      expect(logo.style?.fontSize, BoraMarca.tamanhoExpandido);
       expect(logo.style?.letterSpacing, -3);
     });
   });

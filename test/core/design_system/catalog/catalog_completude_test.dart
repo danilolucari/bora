@@ -56,6 +56,7 @@ const List<(Type, String)> _componentes = <(Type, String)>[
   (BoraProgressBar, 'bora_progress_bar.dart'),
   (BoraPollOption, 'bora_poll_option.dart'),
   (BoraBottomSheet, 'bora_bottom_sheet.dart'),
+  (BoraMarca, 'bora_marca.dart'),
   (BoraPhoneFrame, 'bora_phone_frame.dart'),
 ];
 

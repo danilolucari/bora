@@ -92,6 +92,84 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: --route=C:\Program Files\Git\catalogo virou C;C:\Program Files\Git\Program Files\Git\catalogo (windows)
 - last seen: 2026-08-25T19:46:27Z
 
+### L-014 — Assert the resulting router location string for every navigation acceptance criterion, not the destination widget key, because distinct routes can render the same page widget
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `routes` · harmful: 0
+- features: home
+- evidence: validation.md M8/M9/M10 — home_page_test.dart:139,149,160,169; app_shell_acao_test.dart:56 (routes)
+- last seen: 2026-08-26T15:32:21Z
+
+### L-015 — Pass skipOffstage false when asserting that a navigation did not stack a second page, because the default finder hides the covered route and the assertion cannot fail
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `widget-tests` · harmful: 0
+- features: home
+- evidence: validation.md M3 — home_page_test.dart:199 (widget-tests)
+- last seen: 2026-08-26T15:32:31Z
+
+### L-016 — Assert the vertical order of sections that share a layout column, not only their horizontal side, because a column-order swap survives a side-only assertion
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `layout-tests` · harmful: 0
+- features: home
+- evidence: validation.md M15 — home_expandida_test.dart:107-120 (layout-tests)
+- last seen: 2026-08-26T15:32:32Z
+
+### L-017 — Give every element named in a layout acceptance criterion its own positional assertion, because an element only asserted as present leaves its placement unverified
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `layout-tests` · harmful: 0
+- features: home
+- evidence: validation.md HOME-05 AC3 / HOME-12 AC4 — grep -rn ArquivoDeFestas test/ (layout-tests)
+- last seen: 2026-08-26T15:32:32Z
+
+### L-018 — When a field is added outside the design to satisfy a requirement, add the test that proves the field reaches the behaviour the requirement names
+- signal: `spec_deviation` · recurrence: 1 feature(s) · scope: `domain` · harmful: 0
+- features: home
+- evidence: validation.md — resumo_de_festa.dart:28-39 (ResumoDeFesta.id) (domain)
+- last seen: 2026-08-26T15:32:40Z
+
+### L-019 — Flag as a spec-precision gap any acceptance criterion whose word describes runtime behaviour the test only approximates by static geometry
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `chrome` · harmful: 0
+- features: home
+- evidence: validation.md P1-1 AC1 — app_shell_test.dart:184 (chrome)
+- last seen: 2026-08-26T15:32:40Z
+
+### L-020 — Exercise a capping or truncating expression with input above the cap, because every fixture sized at or below the cap makes the expression a no-op
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `widget-tests` · harmful: 0
+- features: home
+- evidence: validation.md iter2 N1 — card_da_festa.dart:108; nenhum teste de widget com >3 iniciais (widget-tests)
+- last seen: 2026-08-26T20:02:02Z
+
+### L-021 — Assert the style on the same node that carries the text, because a widget level style assertion misses a colour applied on the span
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `widget-tests` · harmful: 0
+- features: home
+- evidence: validation.md iter2 N7 — card_da_festa_test.dart:136-139 (widget-tests)
+- last seen: 2026-08-26T20:02:03Z
+
+### L-022 — Set the MediaQuery inset a test needs to observe, because inset aware widgets are invisible in a default test surface with zero padding
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `widget-tests` · harmful: 0
+- features: home
+- evidence: validation.md iter2 N5 — app_shell.dart:84-85; grep MediaQuery em test/ vazio (widget-tests)
+- last seen: 2026-08-26T20:02:03Z
+
+### L-023 — Test the defensive copy on every entry point that stores caller data, not only on the constructor
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `repo-layer` · harmful: 0
+- features: home
+- evidence: validation.md iter2 N6 — festa_repository_em_memoria.dart:57; teste só cobre a semente (repo-layer)
+- last seen: 2026-08-26T20:02:13Z
+
+### L-024 — Prove a claimed regression test by removing the fix and watching it fail, because a fix commit can ship with a test that never exercised the defect
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `process` · harmful: 0
+- features: home
+- evidence: validation.md iter2 N5 — tasks.md declara regressão para bf55f82 e 4e4a069 (process)
+- last seen: 2026-08-26T20:02:13Z
+
+### L-025 — File a value the spec states precisely but the code does not implement as a deferred requirement, never as a spec precision gap
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `process` · harmful: 0
+- features: home
+- evidence: validation.md iter2 SP-8 — card_da_festa.dart:51-55 (avatar 40px de W-02) (process)
+- last seen: 2026-08-26T20:02:13Z
+
+### L-026 — Give a test stub the same structure as the real child it stands for, because a simpler stub can make the assertion unable to exhibit the defect it names
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `widget-tests` · harmful: 0
+- features: home
+- evidence: validation.md iter3 P1 — app_shell_test.dart:180-193; probe mediu faixa de 44px com filho realista, asserção ficou verde sob P1 e sob N5 (widget-tests)
+- last seen: 2026-08-26T20:13:39Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

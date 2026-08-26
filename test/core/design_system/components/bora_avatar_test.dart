@@ -125,6 +125,55 @@ void main() {
     });
   });
 
+  group('HOME-01 — o par pode vir do contexto, para o avatar de conta', () {
+    testWidgets('com um par explícito, o círculo usa esse par', (tester) async {
+      await pumpComponent(
+        tester,
+        const BoraAvatar(
+          nome: 'Rafa',
+          par: (fundo: BoraColors.yellow, texto: BoraColors.ink),
+        ),
+      );
+
+      expect(
+        _circulo(tester, 'R').color,
+        BoraColors.yellow,
+        reason: 'o header de app de `06` fixa o avatar de conta em amarelo — '
+            'ele identifica quem está logado, não uma persona da festa',
+      );
+      expect(_estilo(tester, 'R').color, BoraColors.ink);
+    });
+
+    testWidgets('sem par, o mesmo nome continua caindo no par de §1',
+        (tester) async {
+      await pumpComponent(tester, const BoraAvatar(nome: 'Rafa'));
+
+      expect(
+        _circulo(tester, 'R').color,
+        BoraColors.primary,
+        reason: 'é o par que discrimina: sem ele, um avatar sempre amarelo '
+            'passaria no teste de cima',
+      );
+    });
+
+    testWidgets('o par do contexto não muda a forma nem a borda de §3',
+        (tester) async {
+      await pumpComponent(
+        tester,
+        const BoraAvatar(
+          nome: 'Rafa',
+          par: (fundo: BoraColors.yellow, texto: BoraColors.ink),
+        ),
+      );
+
+      final decoracao = _circulo(tester, 'R');
+
+      expect(decoracao.shape, BoxShape.circle);
+      expect(decoracao.border!.top.width, 2.0);
+      expect(decoracao.border!.top.color, BoraColors.ink);
+    });
+  });
+
   group('DS-21 — a pilha e o slot "+N"', () {
     testWidgets('os avatares se sobrepõem em -8px', (tester) async {
       await pumpComponent(

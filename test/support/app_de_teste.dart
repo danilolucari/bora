@@ -1,9 +1,28 @@
 import 'package:bora/app.dart';
 import 'package:bora/core/autenticacao/autenticacao.dart';
 import 'package:bora/core/routing/app_router.dart';
+import 'package:go_router/go_router.dart';
+import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
+import 'package:bora/features/home/domain/festa_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fake_autenticacao_repository.dart';
+import 'recording_app_logger.dart';
+
+/// O roteador que a última chamada de [abrirApp] montou.
+///
+/// Guardado para que [rotaAtual] exista: sem ele, todo teste de navegação
+/// tinha de afirmar o **destino renderizado**, e duas rotas diferentes podem
+/// renderizar a mesma tela — `/roles/novo` e `/roles/:festaId/montar` montam
+/// os dois a `MontarPage`. Foi por isso que três mutantes de navegação
+/// sobreviveram ao Verifier.
+GoRouter? _ultimoRouter;
+
+/// A URL que está montada agora.
+///
+/// É o que afirma **para onde** um toque levou, e não só que a tela mudou.
+String rotaAtual() => _ultimoRouter!.routerDelegate.currentConfiguration.uri
+    .toString();
 
 /// Monta o app inteiro em [location], com a sessão que o teste pedir.
 ///
@@ -18,18 +37,28 @@ Future<FakeAutenticacaoRepository> abrirApp(
   WidgetTester tester,
   String location, {
   UsuarioLogado? sessao,
+  FestaRepository? festas,
 }) async {
   final autenticacao = FakeAutenticacaoRepository(sessaoInicial: sessao);
   addTearDown(autenticacao.dispose);
 
-  await tester.pumpWidget(
-    BoraApp(
-      router: buildAppRouter(
-        autenticacao: autenticacao,
-        initialLocation: location,
-      ),
-    ),
+  // A porta de festas entrou pela mesma razão que a de sessão (E-3): o
+  // roteador a exige para montar a Home. O default é o repositório vazio, e
+  // não um nulo tolerado — a Home tem estado vazio próprio (HOME-15), então
+  // toda rota continua montável sem o teste dizer nada sobre festas.
+  final repositorio = festas ?? FestaRepositoryEmMemoria();
+  addTearDown(repositorio.dispose);
+
+  final router = buildAppRouter(
+    autenticacao: autenticacao,
+    festas: repositorio,
+    logger: RecordingAppLogger(),
+    initialLocation: location,
   );
+  _ultimoRouter = router;
+  addTearDown(() => _ultimoRouter = null);
+
+  await tester.pumpWidget(BoraApp(router: router));
   await tester.pumpAndSettle();
 
   return autenticacao;

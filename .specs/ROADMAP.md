@@ -45,7 +45,18 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > em **2026-08-25** nas duas plataformas — web (Chrome 151) e mobile (emulador `Pixel_10`).
 > **DS-33 verificada.**
 
-> ## 🟡 M1 em Specify — 2026-08-25
+> ## 🟢 M1 em Execute — 2026-08-26
+>
+> **Spec 03 `entrar` e spec 04 `home` estão completas e validadas**, cada uma com Verifier
+> independente em PASS: `entrar` com 947 testes, `home` com **1136** (+189). As duas vivem em
+> branches empilhadas — `feature/home` nasceu de `feature/entrar` — e **nenhum dos dois PRs
+> foi aberto**, porque o `gh` CLI não está instalado na máquina.
+>
+> Falta do M1: **`montar`** (tem spec e context; falta o design) e **`lista`** (nunca
+> especificada). A conferência visual com a skill `run` está pendente para as quatro telas
+> já construídas — T-01, W-01, T-02 e W-02.
+
+> ## 🟡 M1 em Specify — 2026-08-25 (histórico)
 >
 > As specs **03 `entrar`**, **04 `home`** e **05 `montar`** estão **especificadas** (spec + context),
 > com o Discuss rodado e quatro decisões registradas: **AD-015** (auth), **AD-016** (dados do M1),
@@ -71,7 +82,9 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 | 01 | `design-system` | `core/design_system/` | arquivo 02 inteiro: tokens, tipografia, formas, sombras, ~18 componentes, motion · RN-29 (componente toast) | Grande | — | sim | sim | 00 |
 | 02 | `calculo` | `core/calculo/` | RN-01..RN-21 (fórmulas, overrides, saldos, quem-paga-quem, efeitos de preferência) · RN-13 (formatação) · entidades de domínio compartilhadas | Grande | — | sim | sim | 00 |
 | 03 | `entrar` | `features/entrar/` | T-01, W-01 · UC-01 · **AD-013** (tema no `BoraApp`) | **Grande** ✱✱ | ✅ feito | ✅ feito | ✅ feito | 00, 01 |
-| 04 | `home` | `features/home/` | T-02, W-02 · UC-02, UC-24 · RN-28 (consumo) | **Grande** ✱✱ | ✅ feito | sim | sim | 00, 01, 03 |
+| — | **`entrar` concluída** | — | 16 tasks · Verifier PASS · 947 testes · PR por abrir | — | — | — | — | — |
+| 04 | `home` | `features/home/` | T-02, W-02 · UC-02, UC-24 · RN-28 (consumo) | **Grande** ✱✱ | ✅ feito | ✅ feito | ✅ feito | 00, 01, 03 |
+| — | **`home` concluída** | — | 16 tasks · Verifier PASS 19/19 · 1136 testes · PR por abrir | — | — | — | — | — |
 | 05 | `montar` | `features/montar/` | T-03, W-03 · UC-03, UC-04 · RN-01..10, RN-21 (consumo) | Grande | ✅ feito | sim | sim | 01, 02, 04 |
 | 06 | `lista` | `features/lista/` | T-04, W-03/W-04 · UC-05, UC-06, UC-14, UC-15, UC-16 · RN-10, RN-11, RN-12, RN-27 | Grande | **sim** | sim | sim | 01, 02, 05 |
 | 07 | `galera` | `features/galera/` | T-05, W-04 · UC-11, UC-12, UC-13 · RN-21, RN-22, RN-23 | Grande | — | sim | sim | 01, 02, 04 |
@@ -116,6 +129,17 @@ Decisões do Discuss: **AD-015** resolve a zona cinzenta **G1** — vale a spec 
 Porte revisto para **Grande** (✱✱): a guarda de sessão e a porta `AutenticacaoRepository` são herdadas por sete specs.
 
 Do Design saíram **AD-019** (a autenticação mora em `lib/core/autenticacao/`, não na feature — `core/routing` e a spec 04 a consomem) e **AD-020** (navegação pós-login é **consequência da guarda**, nunca `context.go` imperativo). O Design também corrigiu a spec: nenhum AC exigia que a senha fosse obscurecida — virou **ENT-21**. Corte final: **16 tasks em 5 fases**, dois batches (T1–T8 infraestrutura, T9–T16 tela). Pronto para Execute.
+
+### 04 · `home` — Grande · **Concluída e validada** (16 tasks, 2026-08-26) → `.specs/features/home/`
+
+Verifier independente em **PASS na 3ª iteração**: 19/19 requisitos com evidência que
+discrimina, 37 mutações com 32 mortas em três rodadas de sensor, e duas rodadas de
+`code-review` que fecharam 17 defeitos reais — entre eles um que teria posto **sublinhado
+duplo amarelo** em todo texto do header no app real. Três decisões nasceram no Execute:
+**AD-022** (contadores são dado, com a transição de RN-28 como aceite), **D-1** (o flag de
+confirmação nova mora no bloc) e o `id` de `ResumoDeFesta`, que a spec nunca definiu e a
+rota exige. Pendências declaradas no `validation.md`, com destaque para o avatar de 40px de
+W-02, que é **requisito deferido** e não imprecisão de spec.
 
 ### 04 · `home` — Grande · **Specify concluído** (HOME-01..19, 2026-08-25) → `.specs/features/home/`
 T-02/W-02 + UC-02, UC-24: painel de rolês com card da festa ativa, contadores confirmados/pendentes **em tempo real** (lado consumidor de RN-28, via **`Stream`** — a impl do M1 é em memória por **AD-016**, e vira Firestore no M2 sem a tela saber), atalho amarelo do acerto, seção "COMEÇAR OUTRA" (NIVER não clicável) e arquivo de festas passadas. Herda da **AD-013** o revestimento do `AppShell` (o header de app de `06`) e do `PlaceholderPage`.

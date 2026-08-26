@@ -1,7 +1,9 @@
 import 'package:bora/core/routing/app_shell.dart';
 import 'package:bora/core/routing/festa_tabs_shell.dart';
 import 'package:bora/core/routing/placeholder_page.dart';
+import 'package:bora/features/home/presentation/pages/home_page.dart';
 import 'package:bora/core/routing/routes.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../support/app_de_teste.dart';
@@ -13,16 +15,24 @@ const String _festaId = 'rafa18';
 Future<void> _abrir(WidgetTester tester, String location) =>
     abrirApp(tester, location, sessao: sessaoDeTeste);
 
+/// A chave que identifica a tela [id].
+///
+/// E-4: a Home deixou de ser placeholder na spec 04 e passou a ter chave
+/// própria, como `/entrar` já tinha desde a spec 03. A asserção continua sendo
+/// "a tela X está montada" — muda só por qual chave se pergunta.
+Key _chaveDe(String id) =>
+    id == HomePage.id ? HomePage.pageKey : PlaceholderPage.keyFor(id);
+
 /// Afirma que a tela [id] está montada e que nenhuma das [outras] está.
 void _apenas(String id, {required List<String> outras}) {
   expect(
-    find.byKey(PlaceholderPage.keyFor(id)),
+    find.byKey(_chaveDe(id)),
     findsOneWidget,
-    reason: 'a rota deveria renderizar o placeholder de $id',
+    reason: 'a rota deveria renderizar a tela de $id',
   );
   for (final outra in outras) {
     expect(
-      find.byKey(PlaceholderPage.keyFor(outra)),
+      find.byKey(_chaveDe(outra)),
       findsNothing,
       reason: '$outra não deveria estar na tela junto de $id',
     );
