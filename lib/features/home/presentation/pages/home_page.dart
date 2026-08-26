@@ -4,10 +4,14 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/observability/app_logger.dart';
+import '../../../../core/responsive/layout_mode.dart';
+import '../../../../core/responsive/responsive_builder.dart';
 import '../../../../core/routing/routes.dart';
 import '../../domain/festa_repository.dart';
+import '../../domain/resumo_de_festa.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/home_compacta.dart';
+import '../widgets/home_expandida.dart';
 
 /// T-02 e W-02 — o painel de rolês, e o destino de todo login.
 ///
@@ -40,20 +44,42 @@ class HomePage extends StatelessWidget {
         key: pageKey,
         backgroundColor: BoraColors.paper,
         body: SafeArea(
+          // O bloc vive **acima** do `ResponsiveBuilder`, como em `entrar`: se
+          // descesse para dentro de cada layout, cruzar 900px destruiria e
+          // recriaria o bloc, e a Home reassinaria o repositório do zero —
+          // perdendo o que já sabia sobre confirmação nova.
           child: BlocBuilder<HomeBloc, HomeState>(
-            builder: (context, estado) => HomeCompacta(
-              estado: estado,
-              aoConvidar: (resumo) => _ir(context, Routes.whatsapp(resumo.id)),
-              aoMontarLista: (resumo) =>
-                  _ir(context, Routes.montar(resumo.id)),
-              aoVerOAcerto: (resumo) => _ir(context, Routes.custos(resumo.id)),
-              aoComecarChurrasco: () => _ir(context, Routes.novoRole),
+            builder: (context, estado) => ResponsiveBuilder(
+              builder: (context, modo) => modo == LayoutMode.compact
+                  ? HomeCompacta(
+                      estado: estado,
+                      aoConvidar: (resumo) => _convidar(context, resumo),
+                      aoMontarLista: (resumo) => _montar(context, resumo),
+                      aoVerOAcerto: (resumo) => _acerto(context, resumo),
+                      aoComecarChurrasco: () => _ir(context, Routes.novoRole),
+                    )
+                  : HomeExpandida(
+                      estado: estado,
+                      aoConvidar: (resumo) => _convidar(context, resumo),
+                      aoMontarLista: (resumo) => _montar(context, resumo),
+                      aoVerOAcerto: (resumo) => _acerto(context, resumo),
+                      aoComecarChurrasco: () => _ir(context, Routes.novoRole),
+                    ),
             ),
           ),
         ),
       ),
     );
   }
+
+  void _convidar(BuildContext context, ResumoDeFesta resumo) =>
+      _ir(context, Routes.whatsapp(resumo.id));
+
+  void _montar(BuildContext context, ResumoDeFesta resumo) =>
+      _ir(context, Routes.montar(resumo.id));
+
+  void _acerto(BuildContext context, ResumoDeFesta resumo) =>
+      _ir(context, Routes.custos(resumo.id));
 
   /// `go`, e não `push`: dois toques no mesmo botão levam ao mesmo lugar uma
   /// vez só, em vez de empilhar duas cópias da tela (HOME-17).
