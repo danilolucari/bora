@@ -31,7 +31,6 @@ import 'rn30_estado_inicial_tipado.dart';
 /// `nome`, `pessoas` e `total` são da spec. O resto é premissa A-04.
 const Map<String, Object?> churrasDaLajeUc24 = {
   'id': 'laje21jun',
-  'emoji': '🔥',
   'nome': 'Churras da laje',
   'pessoas': 14,
   'total': 612.0,
@@ -48,7 +47,6 @@ const Map<String, Object?> churrasDaLajeUc24 = {
 /// nunca produziria a string de T-02 e o ARQUIVO teria uma linha só.
 const Map<String, Object?> segundaFestaPassadaA04 = {
   'id': 'fimdeano20dez',
-  'emoji': '🔥',
   'nome': 'Churras de fim de ano',
   'pessoas': 9,
   'total': 430.0,

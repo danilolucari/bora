@@ -4,6 +4,7 @@ import '../../../../core/design_system/design_system.dart';
 import '../../domain/resumo_de_festa.dart';
 import '../bloc/home_state.dart';
 import '../home_textos.dart';
+import 'arquivo_de_festas.dart';
 import 'card_da_festa.dart';
 import 'comecar_outra.dart';
 
@@ -82,8 +83,17 @@ class HomeExpandida extends StatelessWidget {
                     const SizedBox(width: vaoDoGrid),
                     Expanded(
                       flex: flexDaDireita,
-                      child: ComecarOutra(
-                        aoComecarChurrasco: aoComecarChurrasco,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ComecarOutra(
+                            aoComecarChurrasco: aoComecarChurrasco,
+                          ),
+                          const SizedBox(height: vaoDoGrid),
+                          // W-02 põe o ARQUIVO abaixo de "COMEÇAR OUTRA", na
+                          // mesma coluna.
+                          ArquivoDeFestas(passadas: estado.passadas),
+                        ],
                       ),
                     ),
                   ],
