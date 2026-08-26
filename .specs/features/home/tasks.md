@@ -10,7 +10,7 @@ Implemente estas tasks com a skill `tlc-spec-driven`: **ative-a pelo nome e siga
 
 **Spec**: `.specs/features/home/spec.md`
 **Design**: `.specs/features/home/design.md` (**Aprovado** — AD-022 gravada em 2026-08-26)
-**Status**: Draft — aguardando aprovação para Execute
+**Status**: **Em execução** — batch 1 concluído (T1–T7 + T3a e T4a), `code-review` rodado e os achados fechados. **1041 testes verdes**, `flutter analyze` limpo.
 **Ferramentas** (confirmadas em 2026-08-26): skill `run` nas tasks de tela (**T10** mobile, **T11** web) para conferência visual; skill `code-review` ao fim de cada batch (após T7 e após T13). Execução das tasks **inline**; **Verifier como sub-agente**, já autorizado no handoff.
 **Baseline**: `flutter test` = **947 passando** · `flutter analyze` = zero issues (`feature/home`, medido em 2026-08-26)
 **Branch**: `feature/home`, nascida de `feature/entrar` — a spec 03 ainda não foi mergeada e `home` depende da porta de sessão e da guarda dela
@@ -62,6 +62,8 @@ O `design.md` registrou E-1 (estender a fixture) e E-2 (revestir `AppShell`/`Pla
 | # | Arquivo | Mudança | Por que é inevitável |
 |---|---|---|---|
 | **E-3** | `lib/core/routing/app_router.dart`, `test/support/app_de_teste.dart` | `buildAppRouter` passa a receber a porta `FestaRepository` e repassá-la à `HomePage`, e a entregar `autenticacao.sessaoAtual` ao `AppShell`. `abrirApp` ganha o parâmetro opcional correspondente | A `spec.md` marca `app_router.dart` como intocável, mas o roteador monta `const HomePage()` e `AppShell(child: child)` **sem argumento nenhum** — não há por onde a porta nem o usuário chegarem. A alternativa (a página resolver `getIt` por dentro) é **recusada pelo precedente explícito da spec 03**, documentado em `entrar_page.dart`: a página não busca no container porque isso faria todo teste de rota configurar DI para montar uma tela. A spec 03 já alterou estes dois arquivos exatamente assim para a porta de sessão |
+| **E-5** | `lib/core/design_system/components/bora_avatar.dart` e seu teste | `BoraAvatar` ganha o par de cores opcional (**T3a**) | `06` fixa o avatar de conta em `#FFD23F`, mas o componente derivava a cor do nome. Usar o par do nome contraria `06` e A-08; desenhar o círculo à mão no shell quebra a guarda de forma de §3, que varre `lib/` inteira. Mesma forma do `obscureText` que a spec 03 acrescentou ao `BoraTextField` |
+| **E-6** | `lib/core/design_system/components/bora_marca.dart` (novo), o barrel, o catálogo, `lib/features/entrar/presentation/widgets/*` e os testes correspondentes | `MarcaBora` promovida a `BoraMarca` com o construtor `.header()` de 20px (**T4a**) | O doc do original marcava este momento: "quando a spec 04 precisar do logo 20px do header de app, aparece o segundo uso real e a promoção passa a valer a pena". Decisão do usuário em 2026-08-26; a alternativa era uma segunda marca no código, que divergiria da primeira |
 | **E-4** | `test/app_test.dart`, `test/core/routing/app_router_shell_test.dart` | Trocar `PlaceholderPage.keyFor('home')` por `HomePage.pageKey` nas asserções que identificam a Home | Cinco asserções em dois arquivos identificam a Home **pela chave do placeholder**. Quando a Home deixa de ser placeholder, elas param de encontrá-la. Não é enfraquecer: é a mesma migração que a spec 03 fez ao criar `EntrarPage.pageKey`. **A asserção continua sendo "a Home está montada"** — muda só por qual chave. Nenhum par discriminante é removido: o par com sessão × sem sessão de ENT-15/16 fica intacto |
 
 ## Decisão tomada no corte de tasks
@@ -76,7 +78,7 @@ O `design.md` registrou E-1 (estender a fixture) e E-2 (revestir `AppShell`/`Pla
 
 Fases ordenadas, executadas em sequência; tasks dentro de uma fase executam em ordem.
 
-### Fase 1 — Contrato e dado (3 tasks)
+### Fase 1 — Contrato e dado (3 tasks) — ✅ **CONCLUÍDA**
 
 O vocabulário da Home e a fonte que a alimenta. Nada aqui é Flutter de tela.
 
@@ -84,15 +86,15 @@ O vocabulário da Home e a fonte que a alimenta. Nada aqui é Flutter de tela.
 T1 → T2 → T3
 ```
 
-### Fase 2 — O chrome (3 tasks)
+### Fase 2 — O chrome (3 tasks + T3a e T4a) — ✅ **CONCLUÍDA**
 
 A metade da AD-013 que sobrou. Toca arquivos que sete rotas usam.
 
 ```
-T4 → T5 → T6
+T3a → T4a → T4 → T5 → T6
 ```
 
-### Fase 3 — O bloc (1 task)
+### Fase 3 — O bloc (1 task) — ✅ **CONCLUÍDA**
 
 Onde o stream vira estado — e onde D-1 mora.
 
@@ -107,6 +109,42 @@ T-02, W-02, o arquivo e o estado vazio.
 ```
 T8 → T9 → T10 → T11 → T12 → T13
 ```
+
+## Tasks acrescentadas durante o Execute
+
+Duas, ambas na Fase 2, ambas porque a tela precisava de uma capacidade que o
+design system não tinha — o mesmo motivo que fez a spec 03 acrescentar o
+`obscureText` no meio do Execute dela.
+
+| # | Task | Por quê | Commit |
+|---|---|---|---|
+| **T3a** | `BoraAvatar` aceita o par de cores do contexto | O avatar de conta de `06` é sempre amarelo; o componente derivava a cor do nome | `c578218` |
+| **T4a** | `MarcaBora` promovida a `BoraMarca` com `.header()` | Segundo uso real do logo; a promoção estava marcada no doc do original | `d9873c4` |
+
+## Rodada de `code-review` do batch 1
+
+14 achados, quatro deles verificados com probe em árvore pelo revisor. Sete
+eram defeito real e foram fechados em `bf55f82` e `e2ab3e3`, cada um com teste
+de regressão que falha sem a correção:
+
+| Achado | Fechado em |
+|---|---|
+| Header sem `Material` acima: todo texto herdava o `_errorTextStyle` do `MaterialApp` e sairia com sublinhado duplo amarelo no app real | `bf55f82` |
+| Barra renderizando em compacto, contra P1-1 AC1 e A-07 — T-03 apareceria com dois headers | `bf55f82` |
+| Barra sem `SafeArea`, desenhada atrás da status bar | `bf55f82` |
+| `async*` do repositório perdia emissão que chegasse durante a entrega da semente | `e2ab3e3` |
+| Falha do stream zerava o estado e apagava o atalho do acerto para sempre | `e2ab3e3` |
+| `HomeState` sem igualdade por valor: `emit` nunca descartava emissão repetida | `e2ab3e3` |
+| `comConfirmacaoNova` só crescia: festa nova com nome repetido nascia com o atalho aceso | `e2ab3e3` |
+
+Não acatados, com razão registrada: a generalização de `_temAcao` por rota
+(uma ação existe hoje — generalizar antes da segunda é inventar contrato); o
+`late final` da inscrição do bloc (defesa para cenário que nenhuma impl atual
+produz); a varredura de pureza local no `app_shell.dart` (as guardas globais de
+`token_purity_guard_test.dart` e `shape_and_shadow_guard_test.dart` já varrem
+`lib/` inteira — duplicar seria o que o Check C manda remover); e a
+identificação de festa por nome (limitação declarada no código, que se resolve
+quando a spec 09 criar a identidade da festa).
 
 ---
 
