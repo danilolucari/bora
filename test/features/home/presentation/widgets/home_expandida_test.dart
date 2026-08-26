@@ -2,6 +2,7 @@ import 'package:bora/core/responsive/layout_mode.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
 import 'package:bora/features/home/domain/resumo_de_festa.dart';
+import 'package:bora/core/design_system/design_system.dart';
 import 'package:bora/features/home/presentation/widgets/card_da_festa.dart';
 import 'package:bora/features/home/presentation/widgets/comecar_outra.dart';
 import 'package:bora/features/home/presentation/widgets/home_compacta.dart';
@@ -115,6 +116,54 @@ void main() {
         card.width,
         greaterThan(comecar.width),
         reason: 'W-02: grid 1.15fr / 0.85fr — a coluna do card é a maior',
+      );
+    });
+  });
+
+  group('HOME-05 — o card também sobe o degrau de W-02', () {
+    testWidgets('sombra de 8px, padding de 28px e título de 38px',
+        (tester) async {
+      await _abrirHome(tester);
+
+      final superficie = tester.widget<BoraSurface>(
+        find
+            .descendant(
+              of: find.byType(CardDaFesta),
+              matching: find.byType(BoraSurface),
+            )
+            .first,
+      );
+
+      expect(
+        superficie.deslocamentoDaSombra,
+        CardDaFesta.distanciaDaSombraNoWeb,
+        reason: 'W-02: "sombra 8px preta"',
+      );
+      expect(superficie.padding, CardDaFesta.paddingNoWeb);
+      expect(
+        tester.widget<Text>(find.text('CHURRAS DO RAFA 🔥')).style!.fontSize,
+        CardDaFesta.tamanhoDoTituloNoWeb,
+      );
+    });
+
+    testWidgets('e o mobile fica no degrau de T-02 — é o par que discrimina',
+        (tester) async {
+      await _abrirHome(tester, janela: _janelaCompacta);
+
+      final superficie = tester.widget<BoraSurface>(
+        find
+            .descendant(
+              of: find.byType(CardDaFesta),
+              matching: find.byType(BoraSurface),
+            )
+            .first,
+      );
+
+      expect(superficie.deslocamentoDaSombra, CardDaFesta.distanciaDaSombra);
+      expect(superficie.padding, CardDaFesta.padding);
+      expect(
+        CardDaFesta.distanciaDaSombraNoWeb,
+        greaterThan(CardDaFesta.distanciaDaSombra),
       );
     });
   });

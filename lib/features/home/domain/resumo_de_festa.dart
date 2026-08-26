@@ -69,10 +69,19 @@ class ResumoDeFesta {
 
   /// Quantos avatares não couberam — o "+N" tracejado de T-02.
   ///
-  /// Nunca negativo: com 3 ou menos confirmados e 3 slots visíveis o
-  /// excedente é 0, e a tela não renderiza o "+N".
+  /// Desconta os avatares **realmente desenhados**, e não [visiveis]: com
+  /// menos iniciais do que slots, subtrair os slots contaria gente que a pilha
+  /// não mostrou. Com 4 confirmados e 2 iniciais, a pilha desenha 2 e o
+  /// excedente é 2 — não 1.
+  ///
+  /// Nunca negativo: com 3 ou menos confirmados e 3 slots, o excedente é 0 e a
+  /// tela não renderiza o "+N".
   int excedenteDeAvatares(int visiveis) =>
-      (confirmados - visiveis).clamp(0, confirmados);
+      (confirmados - avataresMostrados(visiveis)).clamp(0, confirmados);
+
+  /// Quantos círculos a pilha desenha, dado o teto de [visiveis].
+  int avataresMostrados(int visiveis) =>
+      iniciais.length < visiveis ? iniciais.length : visiveis;
 
   @override
   bool operator ==(Object other) =>

@@ -112,6 +112,7 @@ void main() {
         id: _id,
         festa: _churrasDoRafa,
         confirmados: 3,
+        iniciais: ['R', 'A', 'L'],
       );
 
       expect(tresConfirmados.excedenteDeAvatares(3), 0);
@@ -123,6 +124,7 @@ void main() {
         id: _id,
         festa: _churrasDoRafa,
         confirmados: 2,
+        iniciais: ['R', 'A'],
       );
 
       expect(doisConfirmados.excedenteDeAvatares(3), 0);
@@ -132,6 +134,40 @@ void main() {
       const ninguem = ResumoDeFesta(id: _id, festa: _churrasDoRafa);
 
       expect(ninguem.excedenteDeAvatares(3), 0);
+    });
+
+    test('o excedente desconta os avatares desenhados, não os slots', () {
+      const poucasIniciais = ResumoDeFesta(
+        id: _id,
+        festa: _churrasDoRafa,
+        confirmados: 4,
+        iniciais: ['R', 'A'],
+      );
+
+      expect(
+        poucasIniciais.excedenteDeAvatares(3),
+        2,
+        reason: 'a pilha desenha 2 círculos, então 2 pessoas ficaram de fora — '
+            'descontar os 3 slots contaria gente que a tela não mostrou',
+      );
+      expect(poucasIniciais.avataresMostrados(3), 2);
+    });
+
+    test('com mais iniciais do que slots, a pilha para no teto', () {
+      const muitasIniciais = ResumoDeFesta(
+        id: _id,
+        festa: _churrasDoRafa,
+        confirmados: 6,
+        iniciais: ['R', 'A', 'L', 'B', 'D'],
+      );
+
+      expect(muitasIniciais.avataresMostrados(3), 3);
+      expect(
+        muitasIniciais.excedenteDeAvatares(3),
+        3,
+        reason: '3 desenhados + "+3" = os 6 confirmados; sem o teto a pilha '
+            'desenhava 5 círculos e ainda somava "+3"',
+      );
     });
   });
 

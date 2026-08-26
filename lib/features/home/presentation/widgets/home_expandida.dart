@@ -75,6 +75,9 @@ class HomeExpandida extends StatelessWidget {
                           for (final resumo in estado.chegando) ...[
                             CardDaFesta(
                               resumo: resumo,
+                              // W-02 sobe o degrau do card: sombra de 8px,
+                              // padding de 28px e título de 38px.
+                              expandido: true,
                               confirmacaoNova:
                                   estado.temConfirmacaoNova(resumo),
                               aoConvidar: () => aoConvidar(resumo),

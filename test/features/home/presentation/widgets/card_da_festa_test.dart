@@ -72,12 +72,23 @@ void main() {
       expect(find.text('CHURRAS DO RAFA 🔥'), findsOneWidget);
       expect(find.text('SÁB · 18 JUL'), findsOneWidget);
 
-      final tag = tester.getRect(find.byType(BoraRotatedTag));
+      // A caixa do `BoraRotatedTag` fica na altura do card; quem sobe é o
+      // conteúdo pintado. Por isso a medida é do **texto** da tag.
+      final tag = tester.getRect(find.text('SÁB · 18 JUL'));
       final card = tester.getRect(_superficieDoCard);
+      final vazamento = card.top - tag.top;
+
       expect(
-        tag.top,
-        lessThan(card.top),
+        vazamento,
+        greaterThan(0),
         reason: '§3: a tag é "posicionada vazando o card"',
+      );
+      expect(
+        vazamento,
+        lessThan(2 * -BoraRotatedTag.vazamentoDoTopo),
+        reason: 'o vazamento é do componente, que já sobe os 13px sozinho — '
+            'somar `top: -13` aqui subia 26 e a tag podia cortar no topo da '
+            'rolagem',
       );
     });
 
