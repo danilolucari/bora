@@ -164,6 +164,12 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: validation.md iter2 SP-8 — card_da_festa.dart:51-55 (avatar 40px de W-02) (process)
 - last seen: 2026-08-26T20:02:13Z
 
+### L-026 — Give a test stub the same structure as the real child it stands for, because a simpler stub can make the assertion unable to exhibit the defect it names
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `widget-tests` · harmful: 0
+- features: home
+- evidence: validation.md iter3 P1 — app_shell_test.dart:180-193; probe mediu faixa de 44px com filho realista, asserção ficou verde sob P1 e sob N5 (widget-tests)
+- last seen: 2026-08-26T20:13:39Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

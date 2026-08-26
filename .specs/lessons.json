@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 26,
+  "next_id": 27,
   "lessons": [
     {
       "id": "L-001",
@@ -454,6 +454,24 @@
       ],
       "created": "2026-08-26T20:02:13Z",
       "last_seen": "2026-08-26T20:02:13Z"
+    },
+    {
+      "id": "L-026",
+      "key": "surviving_mutant::give a test stub the same structure as the real child it stands for because a simpler stub can make the assertion unable to exhibit the defect it names",
+      "text": "Give a test stub the same structure as the real child it stands for, because a simpler stub can make the assertion unable to exhibit the defect it names",
+      "signal": "surviving_mutant",
+      "scope": "widget-tests",
+      "status": "candidate",
+      "features": [
+        "home"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md iter3 P1 — app_shell_test.dart:180-193; probe mediu faixa de 44px com filho realista, asserção ficou verde sob P1 e sob N5 (widget-tests)"
+      ],
+      "created": "2026-08-26T20:13:39Z",
+      "last_seen": "2026-08-26T20:13:39Z"
     }
   ]
 }

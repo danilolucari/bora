@@ -157,9 +157,16 @@ void main() {
             ),
             child: child!,
           ),
+          // O filho imita a rota **real**: a `HomePage` embrulha o corpo num
+          // `SafeArea` próprio, e é ele que reaplicava o inset. Com um
+          // `Scaffold(body: Text(...))` cru a asserção do meio era vacuosa —
+          // `Scaffold` não aplica o padding do MediaQuery ao `body`, então ela
+          // passava com o defeito presente.
           home: const AppShell(
             usuario: _rafa,
-            child: Scaffold(body: Text('conteúdo da rota')),
+            child: Scaffold(
+              body: SafeArea(child: Text('conteúdo da rota')),
+            ),
           ),
         ),
       );

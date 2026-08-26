@@ -6,13 +6,230 @@
 | Iteração | Data | Range | Testes | Veredito |
 |---|---|---|---|---|
 | 1 | 2026-08-26 | `feature/entrar..4e4a069` (25 commits) | 1128 | ❌ FAIL — 5 mutantes sobreviventes |
-| 2 | 2026-08-26 | `feature/entrar..1601979` (26 commits) | **1131** | ❌ **FAIL — 4 mutantes novos, nenhum Blocker** |
+| 2 | 2026-08-26 | `feature/entrar..1601979` (26 commits) | 1131 | ❌ FAIL — 4 mutantes novos, nenhum Blocker |
+| 3 | 2026-08-26 | `feature/entrar..ad28628` (27 commits) | **1136** | ✅ **PASS — com pendências declaradas** |
 
-O histórico da iteração 1 está preservado **na íntegra** ao fim deste arquivo: o registro do que estava errado é o que prova que o sensor discrimina.
+O histórico das iterações 1 e 2 está preservado **na íntegra** ao fim deste arquivo: o registro do que estava errado é o que prova que o sensor discrimina.
 
 ---
 
-# Iteração 2 — 2026-08-26
+# Iteração 3 — 2026-08-26
+
+**Diff range**: `feature/entrar..HEAD` · commit de correção **`ad28628`** (`test(home): fecha os quatro gaps da iteração 2 do Verifier`)
+**Escopo da correção**: **test-only** — `git show --stat ad28628` mostra 3 arquivos de `test/` e 4 de `.specs/`. **Zero linha de `lib/`**, como a iteração 2 previu.
+
+## Veredito: ✅ **PASS — com pendências declaradas**
+
+Os **quatro gaps da iteração 2 estão fechados e verificados por mim**, re-injetando cada mutação em estado descartável. Escolhi mais **seis alvos novos**, cinco deles em arquivos que nenhuma das três rodadas tinha tocado, justamente para não convergir num ponto cego comum: cinco morreram e **um sobreviveu, e eu o julgo equivalente** — não consigo fundamentá-lo como diferença de comportamento, e evidence-or-zero corta nos dois sentidos.
+
+**19/19 requisitos** têm agora asserção que **provadamente discrimina**. Não resta Blocker nem Major. O que fica são **pendências declaradas**, listadas ao fim — nenhuma delas é defeito: são trabalho que o M1 carrega adiante de propósito.
+
+---
+
+## Gate Check — iteração 3
+
+| Gate | Comando | Exit code | Resultado |
+|---|---|---|---|
+| Analyze | `flutter analyze` | **0** | `No issues found!` |
+| Full | `flutter test` | **0** | **1136 passaram**, 0 falharam, 0 skipped |
+
+- **Antes da feature**: 947 · **iter. 1**: 1128 · **iter. 2**: 1131 · **iter. 3**: **1136** · delta total **+189**
+- Contagem só cresceu nas três rodadas. As asserções trocadas em `ad28628` foram **substituídas por versões mais fortes**: a de N7 deixou de conferir `Text.style` e passou a varrer todos os spans exigindo que **exatamente um** seja vermelho **e** que seu texto seja `2 pendentes` — protege o literal e o orçamento de acentos de A-09 num golpe só.
+
+---
+
+## Os 4 gaps da iteração 2 — conferidos com mutação própria
+
+Re-injetei as quatro eu mesmo. Não reaproveitei o resultado declarado.
+
+| # | Mutação | Correção verificada no código | Prova empírica (minha) | Status |
+|---|---|---|---|---|
+| **N7** | `style: TextStyle(color: primary)` no span dos **confirmados** | `card_da_festa_test.dart:144-157` — `linha.textSpan!.visitChildren(...)` acumulando os spans vermelhos e `expect(vermelhos, ['2 pendentes'])` | ❌ → ✅ **Morto (1 falha)** | ✅ Fechado |
+| **N1** | remove `.take(avataresVisiveis)` da pilha | `card_da_festa_test.dart:229-246` — 5 iniciais / 6 confirmados: `expect(find.byType(BoraAvatar), findsNWidgets(CardDaFesta.avataresVisiveis))`, `expect(find.text('+3'), findsOneWidget)`, `expect(find.text('B'), findsNothing)` | ❌ → ✅ **Morto (1 falha)** | ✅ Fechado |
+| **N5** | remove o `SafeArea(bottom: false)` do shell | `app_shell_test.dart:142-207` — grupo "o inset do topo é consumido uma vez só", sob `MediaQuery(padding: EdgeInsets.only(top: 44))` | ❌ → ✅ **Morto (2 falhas)** | ✅ Fechado |
+| **N6** | `emitir` guarda a lista de quem chamou | `festa_repository_em_memoria_test.dart:189-204` — emite lista mutável, `emitida.clear()`, `expectLater(observarFestas(), emits(const [_rn30]))` | ❌ → ✅ **Morto (1 falha)** | ✅ Fechado |
+
+**A correção do `tasks.md`**: a frase que eu tinha derrubado na iteração 2 — "cada um com teste de regressão que falha sem a correção" — foi corrigida no lugar onde estava, dizendo o que era falso e quando a rede passou a existir. **Confirmo que a história não foi reescrita**: o registro do erro continua legível. Isso importa mais que a correção em si, porque é o que mantém o `tasks.md` utilizável como evidência.
+
+**A reclassificação do avatar de 40px**: saiu de "spec-precision gap" e virou **requisito deferido de HOME-05** no `tasks.md`. ✅ Aceito — era exatamente o argumento que eu tinha levantado.
+
+---
+
+## Discrimination Sensor — iteração 3
+
+Tier **P0-estendido**. Toda mutação em estado descartável (edição + `git checkout --`), com `git status --porcelain -- lib/ test/` conferido em **0** após cada uma.
+
+### As 4 da iteração 2, re-executadas
+
+| # | Alvo | Killed? |
+|---|---|---|
+| N7 | `card_da_festa.dart:164` vermelho no span dos confirmados | ✅ **Morto** (1) |
+| N1 | `card_da_festa.dart:108` teto da pilha removido | ✅ **Morto** (1) |
+| N5 | `app_shell.dart:84-85` `SafeArea` removida | ✅ **Morto** (2) |
+| N6 | `festa_repository_em_memoria.dart:57` `emitir` sem cópia | ✅ **Morto** (1) |
+
+**4/4 mortos.**
+
+### As 6 novas — cinco em arquivos que nenhuma rodada tinha tocado
+
+| # | Arquivo:linha | Mutação | Killed? |
+|---|---|---|---|
+| **P1** | `app_shell.dart:84,131` | **o defeito original de `4e4a069`**: `SafeArea` de volta para **dentro** do header, em vez de acima da `Column` | ✅ **Morto** (1) — mas por uma asserção só; ver §P1 |
+| **P2** | `resumo_de_festa.dart:90` | `==` deixa de comparar `other.id == id` | ✅ **Morto** (1) — `resumo_de_festa_test.dart:67` |
+| **P3** | `home_state.dart:91` | `_mesmoConjunto` → `true` (mudança em `comConfirmacaoNova` deixa de tornar dois estados desiguais) | ⚪ **Sobreviveu — julgado equivalente**; ver §P3 |
+| **P4** | `bora_avatar.dart:50` | `this.par ?? avatarPairFor(nome)` → `avatarPairFor(nome)` (o override de E-5 é ignorado) | ✅ **Morto** (2) — `bora_avatar_test.dart:129` e `app_shell_test.dart` |
+| **P5** | `home_bloc.dart:105` | `close()` deixa de cancelar a inscrição | ✅ **Morto** (1) |
+| **P6** | `home_compacta.dart:81` | `confirmacaoNova: estado.temConfirmacaoNova(resumo)` → `false` (**só o mobile** deixa de acender o atalho; o web continua certo) | ✅ **Morto** (3) |
+
+**Resultado da iteração 3: 10 mutações, 9 mortas, 1 equivalente.**
+**Acumulado nas três rodadas: 37 mutações, 32 mortas, 1 equivalente, 0 sobreviventes não explicados.**
+
+P6 merece nota: é o mutante que separa "o web cobre" de "os dois cobrem". Ele morre em **três** testes, o que confirma que RN-28 está afirmada de verdade nas duas plataformas, e não só na que o `home_expandida_test` observa.
+
+---
+
+## §P1 — o mutante que morreu por uma asserção só, e a que não earn seu lugar
+
+Reintroduzi o **defeito exato** que `4e4a069` corrigiu: `SafeArea` **dentro** do `_HeaderDeApp` em vez de acima da `Column`. Ele morre — mas só pela **terceira** asserção do grupo ("em compacto, sem barra, a rota ainda desce a status bar"). A **segunda** — *"e a rota não recebe o inset de novo, abaixo da barra"* — passou tanto sob P1 quanto sob N5 quanto no código correto.
+
+**Motivo, apurado por probe em estado descartável**: o filho de teste é `Scaffold(body: Text('conteúdo da rota'))`, e um `Scaffold` **não** aplica o padding do `MediaQuery` ao seu `body`. A rota real aplica — `home_page.dart:46` põe um `SafeArea` dentro. Montei o shell sob P1 com um filho realista (`Scaffold(body: SafeArea(child: Text(...)))`) e medi:
+
+```
+PROBE barra.bottom=108.0  rota.top=152.0  faixa_em_branco=44.0
+```
+
+A faixa em branco de 44px — o defeito de `4e4a069` — **existe e é observável**, mas o stub do teste não a alcança. A asserção do meio é **vacuosa**.
+
+**Severidade: Minor.** O grupo como um todo mata N5 e P1, então a regressão está de fato em rede; o que falta é a asserção do meio deixar de dar falsa confiança sobre o defeito específico do inset duplicado. Fecha trocando o filho por `Scaffold(body: SafeArea(child: Text(...)))` — uma linha.
+
+---
+
+## §P3 — o único sobrevivente, e por que não o conto como gap
+
+`HomeState._mesmoConjunto` → `true` faz duas emissões com o mesmo `chegando`/`passadas`/`situacao` e `comConfirmacaoNova` **diferentes** parecerem iguais, e o `emit` do bloc as descartaria — o atalho amarelo não apareceria.
+
+Antes de chamar isso de gap, derivei se o bloc consegue produzir esse par. `_confirmacoesNovas(C)` devolve
+`{f.id : anteriores[f.id] < f.confirmados} ∪ (S.comConfirmacaoNova ∩ ids(C))`.
+Se `C == S.chegando` elemento a elemento, então `anteriores[f.id] == f.confirmados` para todo `f`, o primeiro conjunto é vazio, e `S.comConfirmacaoNova` já estava podado para `ids(S.chegando) == ids(C)` — logo a interseção é ele mesmo. **Listas iguais ⇒ conjunto igual.** Não há como o bloc gerar o par, e eu não consegui fundamentar diferença de comportamento.
+
+**Classificação honesta: mutante equivalente sob a lógica atual do bloc — não é gap.** Mas é **gap de contrato latente**: `home_state.dart:9-13` declara igualdade por valor sobre quatro campos, `grep "HomeState("` em `test/features/home/` volta **vazio** (nenhum teste constrói o estado direto), e o quarto campo só é exercido por via indireta, onde a lógica atual o mantém acoplado às listas. **A spec 09 `convidado` é a primeira que grava RSVP de verdade** e é onde esse acoplamento pode se desfazer. Entra como pendência declarada, não como fix.
+
+---
+
+## Cobertura dos 19 requisitos — re-derivada (evidence-or-zero)
+
+Só os requisitos cujo status **mudou** nesta rodada aparecem com evidência detalhada; os demais foram reconferidos e mantêm a evidência tabulada nos históricos.
+
+| Req | Iter. 2 | `file:line` + asserção (iteração 3) | Iter. 3 |
+|---|---|---|---|
+| HOME-04 | ❌ Needs Fix | `card_da_festa_test.dart:144-157` — `expect(vermelhos, ['2 pendentes'])` após varrer todos os spans (mata N7); `:229-246` — 5 iniciais/6 confirmados → `findsNWidgets(3)` + `'+3'` + `'B'` ausente (mata N1) | ✅ **PASS** |
+| HOME-09 | ⚠️ AC5 parcial | AC5 fechado pelo mesmo `card_da_festa_test.dart:229-246`; P6 confirma que o atalho é afirmado **no mobile também** | ✅ **PASS** |
+| HOME-19 | ⚠️ cópia de `emitir` | `festa_repository_em_memoria_test.dart:189-204` — `emitida.clear()` e `emits(const [_rn30])`; P2 confirma que o `id` participa da igualdade (`resumo_de_festa_test.dart:67`) | ✅ **PASS** |
+| HOME-01 | ✅ (sticky declarado) | Reforçado: `app_shell_test.dart:142-207` dá rede ao inset; P4 confirma que o par amarelo de E-5 é afirmado (`bora_avatar_test.dart:129`) | ✅ **PASS** |
+
+**Requisitos com evidência que discrimina: 19/19** (13 → 18 → **19**).
+
+### Edge cases — reconferidos
+
+Os 6 edge cases da spec têm evidência. O que a iteração 2 rebaixou para ⚠️ parcial — *"o '+N' mostra o excedente"* — **volta a ✅**: `card_da_festa_test.dart:229-246` agora exercita o caso no widget, e não só no domínio.
+
+---
+
+## Os 8 spec-precision gaps — estado final
+
+| # | Item | Estado final |
+|---|---|---|
+| 1 | ls do logo de 20px do header | 🔵 Aberto, corretamente declarado — a spec `06` não dá o valor |
+| 2 | "primário compacto" de `06` vs. tokens de §4 | 🔵 Aberto, corretamente declarado — spec e tokens se contradizem |
+| 3 | botão voltar "quando aplicável", sem critério | 🔵 Aberto, corretamente declarado |
+| 4 | emoji do ARQUIVO | 🔵 Aberto, corretamente declarado |
+| 5 | cor dos avatares da pilha | 🔵 Aberto, corretamente declarado |
+| 6 | copy da falha da Home | 🔵 Aberto, corretamente declarado |
+| 7 | "sticky" (P1-1 AC1) | ✅ **Fechado** na iteração 2 como item declarado (`app_shell_test.dart:186-191`) |
+| 8 | avatares de 40px de W-02 | ✅ **Reclassificado** — saiu de spec-precision e virou **requisito deferido de HOME-05** no `tasks.md` |
+
+**6 abertos, todos legítimos** — são a spec que não define, não o código que falhou. Cada um está declarado no arquivo que o carrega, com o argumento. **2 encerrados** (um como item declarado, um como deferido).
+
+---
+
+## Code Quality — iteração 3
+
+| Princípio | Status |
+|---|---|
+| Correção test-only, sem mexer em produção para passar no Verifier | ✅ — zero linha de `lib/` em `ad28628` |
+| Nenhum teste enfraquecido ou removido | ✅ — 1131 → 1136; a asserção substituída de N7 é estritamente mais forte |
+| `reason` descreve o que a asserção **de fato** detecta | ⚠️ — exceção na 2ª asserção do grupo de inset (§P1) |
+| Registro honesto do erro anterior | ✅ — a frase falsa do `tasks.md` foi corrigida **no lugar**, não apagada |
+| Sem scope creep | ✅ |
+| Spec-anchored outcome check | ✅ — 19/19 |
+
+---
+
+## Pendências declaradas que o M1 carrega adiante
+
+Nenhuma é defeito. São escolhas registradas, e cada uma tem onde ser resolvida.
+
+| # | Pendência | Onde está declarada | Quem resolve |
+|---|---|---|---|
+| **D-1** | **Avatares de 40px de W-02** — `BoraStackedAvatars` é fixo em 34px (§5). Os outros três degraus do web (sombra 8px, padding 28px, título 38px) estão aplicados | `card_da_festa.dart:51-55` + `tasks.md` (requisito deferido de HOME-05) | Extensão do componente no design system, com emenda de fronteira própria |
+| **D-2** | **6 spec-precision gaps abertos** — ls do logo do header, "primário compacto", botão voltar "quando aplicável", emoji do ARQUIVO, cor dos avatares da pilha, copy da falha | cada um no arquivo que o carrega, com o argumento | A spec, quando a tela correspondente for revisitada |
+| **D-3** | **Contrato de igualdade de `HomeState`** — `comConfirmacaoNova` não tem teste direto; hoje é inseparável das listas pela lógica do bloc (§P3), mas nada garante que continue | `home_state.dart:9-13` e §P3 deste relatório | Spec 09 `convidado` — a primeira que grava RSVP de verdade. Fecha com um teste de igualdade direto |
+| **D-4** | **2ª asserção do grupo de inset é vacuosa** — o stub `Scaffold(body: Text(...))` não aplica o padding, então nunca observa o inset duplicado | §P1 deste relatório | Uma linha: trocar o stub por `Scaffold(body: SafeArea(child: Text(...)))` |
+| **D-5** | **Custo declarado da AD-022** — contador de Home × lista de nomeados da Galera podem divergir, e o "+N" vai junto | AD-022 no `STATE.md` | Spec 09 `convidado`: grava contador e RSVP na mesma escrita (RN-28) |
+| **D-6** | **`rotaAtual()` usa estado global de módulo** (`_ultimoRouter`) num helper compartilhado por toda a suíte, limpo por `addTearDown` | `test/support/app_de_teste.dart:12-25` | Funciona e é isolado por teste; vira problema só se a suíte passar a rodar testes concorrentes no mesmo isolate |
+| **D-7** | **`FestaRepository` em memória com semente vazia em produção** — o app rodando abre no estado vazio de HOME-15 até a spec 05 criar festa | `festa_repository_em_memoria.dart:12-14`, AD-016 | Spec 05 `montar` (criar) e M2 (Firestore) |
+
+---
+
+## Requirement Traceability — final
+
+| Requisito | Iter. 1 | Iter. 2 | Iter. 3 |
+|---|---|---|---|
+| HOME-01 | ✅ (⚠️ sticky) | ✅ | ✅ **Verified** |
+| HOME-02 | ❌ | ✅ | ✅ **Verified** |
+| HOME-03 | ✅ | ✅ | ✅ **Verified** |
+| HOME-04 | ✅ | ❌ | ✅ **Verified** |
+| HOME-05 | ⚠️ | ✅ | ✅ **Verified** (⚠️ D-1 deferido) |
+| HOME-06 | ✅ | ✅ | ✅ **Verified** |
+| HOME-07 | ❌ | ✅ | ✅ **Verified** |
+| HOME-08 | ❌ | ✅ | ✅ **Verified** |
+| HOME-09 | ✅ | ⚠️ | ✅ **Verified** |
+| HOME-10 | ✅ | ✅ | ✅ **Verified** |
+| HOME-11 | ❌ | ✅ | ✅ **Verified** |
+| HOME-12 | ❌ | ✅ | ✅ **Verified** |
+| HOME-13 | ✅ | ✅ | ✅ **Verified** |
+| HOME-14 | ✅ | ✅ | ✅ **Verified** |
+| HOME-15 | ✅ | ✅ | ✅ **Verified** |
+| HOME-16 | ✅ (⚠️ copy) | ✅ | ✅ **Verified** |
+| HOME-17 | ❌ | ✅ | ✅ **Verified** |
+| HOME-18 | ✅ | ✅ | ✅ **Verified** |
+| HOME-19 | ✅ | ⚠️ | ✅ **Verified** |
+
+**19/19 Verified.**
+
+---
+
+## Summary — iteração 3
+
+**Overall**: ✅ **Ready — com 7 pendências declaradas, nenhuma bloqueante**
+
+**Spec-anchored check**: **19/19** requisitos com evidência que discrimina (13 → 18 → 19)
+**Sensor**: **10 mutações, 9 mortas, 1 equivalente** · acumulado **37 mutações, 32 mortas, 0 sobreviventes não explicados**
+**Gate**: analyze exit 0 · test exit 0, **1136 passaram**
+
+**O que as três rodadas construíram**: a spec entrou com uma suíte que passava inteira enquanto "MONTAR LISTA →" podia levar ao rascunho errado, o níver podia virar clicável sem ninguém ver, e o `SafeArea` podia sumir em silêncio. Sai com 19 requisitos cujos testes **provadamente** matam a mutação correspondente. As três correções foram **test-only** — nenhuma linha de `lib/` mudou em nenhuma delas, o que é o sinal de que o código de produção estava certo desde o começo e o que faltava era a rede.
+
+**O que ainda me faria olhar de novo**: nada nesta spec. A pendência de maior risco é **D-3/D-5** — o acoplamento entre contador e lista de nomeados, que a AD-022 declarou como custo e que a spec 09 `convidado` herda. É lá que o `comConfirmacaoNova` deixa de ser derivável das listas, e é lá que o teste de igualdade direto de `HomeState` passa a valer a pena.
+
+**Nota de método**: o alvo que mais rendeu nas três rodadas foi sempre o mesmo tipo — **defesa escrita e documentada no código, nunca exercida por teste**, porque a fixture já satisfazia a condição que a defesa protege. Foi assim com o teto da pilha (a fixture já cortava em 3), com o `SafeArea` (nenhum teste define inset) e com a cópia de `emitir` (só a semente tinha teste). Vale como heurística de onde apontar o sensor primeiro na spec 05.
+
+---
+---
+
+# Histórico — Iteração 2 (2026-08-26)
+
+> Preservado na íntegra.
+
 
 **Diff range**: `feature/entrar..HEAD` · commit de correção **`1601979`** (`fix(home): testes de navegação passam a afirmar a URL, não a tela`)
 **Escopo da correção**: **test-only** — 6 arquivos, todos sob `test/`. **Zero linha de `lib/` mudou** (`git show --stat 1601979` confirma).

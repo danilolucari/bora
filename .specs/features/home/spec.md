@@ -227,27 +227,27 @@ Esta spec também cumpre a segunda metade da AD-013: revestir o `AppShell` (o he
 
 | ID | História | Origem na spec-fonte | Fase | Status |
 |---|---|---|---|---|
-| HOME-01 | P1-1 AC1,AC2 | `06` §Header de app | Tasks | Pending |
-| HOME-02 | P1-1 AC3,AC4 | `06` §Header de app / A-06 | Tasks | Pending |
-| HOME-03 | P1-1 AC5 | AD-011 (guard de pureza) | Tasks | Pending |
-| HOME-04 | P1-2 AC1,AC2 | T-02 | Tasks | Pending |
-| HOME-05 | P1-2 AC3 | W-02 | Tasks | Pending |
-| HOME-06 | P1-2 AC4 | T-02 / RN-30 / A-05 | Tasks | Pending |
-| HOME-07 | P1-2 AC5 | UC-02 passo 2 | Tasks | Pending |
-| HOME-08 | P1-2 AC6 | UC-02 passo 2 / A-10 | Tasks | Pending |
-| HOME-09 | P1-3 AC1,AC5 | RN-28 / UC-02 A1 | Tasks | Pending |
-| HOME-10 | P1-3 AC2,AC3,AC6 | RN-28 / T-02 / W-02 | Tasks | Pending |
-| HOME-11 | P1-3 AC4 | A-10 | Tasks | Pending |
-| HOME-12 | P1-4 AC1,AC2,AC4 | T-02 / W-02 | Tasks | Pending |
-| HOME-13 | P1-4 AC3 | UC-02 (aceite) | Tasks | Pending |
-| HOME-14 | P2-1 AC1..AC5 | W-02 / UC-24 | Tasks | Pending |
-| HOME-15 | P2-2 AC1..AC4 | A-03 | Tasks | Pending |
-| HOME-16 | dimensões: failure, observability | AD-004 / AD-005 | Tasks | Pending |
-| HOME-17 | dimensão: idempotência | — | Tasks | Pending |
-| HOME-18 | P2-3 AC1,AC2 | AD-013 | Tasks | Pending |
-| HOME-19 | A-01 / A-02 (porta + stream) | AD-016 / RN-28 | Tasks | Pending |
+| HOME-01 | P1-1 AC1,AC2 | `06` §Header de app | Execute | **Done** |
+| HOME-02 | P1-1 AC3,AC4 | `06` §Header de app / A-06 | Execute | **Done** |
+| HOME-03 | P1-1 AC5 | AD-011 (guard de pureza) | Execute | **Done** |
+| HOME-04 | P1-2 AC1,AC2 | T-02 | Execute | **Done** |
+| HOME-05 | P1-2 AC3 | W-02 | Execute | **Done** |
+| HOME-06 | P1-2 AC4 | T-02 / RN-30 / A-05 | Execute | **Done** |
+| HOME-07 | P1-2 AC5 | UC-02 passo 2 | Execute | **Done** |
+| HOME-08 | P1-2 AC6 | UC-02 passo 2 / A-10 | Execute | **Done** |
+| HOME-09 | P1-3 AC1,AC5 | RN-28 / UC-02 A1 | Execute | **Done** |
+| HOME-10 | P1-3 AC2,AC3,AC6 | RN-28 / T-02 / W-02 | Execute | **Done** |
+| HOME-11 | P1-3 AC4 | A-10 | Execute | **Done** |
+| HOME-12 | P1-4 AC1,AC2,AC4 | T-02 / W-02 | Execute | **Done** |
+| HOME-13 | P1-4 AC3 | UC-02 (aceite) | Execute | **Done** |
+| HOME-14 | P2-1 AC1..AC5 | W-02 / UC-24 | Execute | **Done** |
+| HOME-15 | P2-2 AC1..AC4 | A-03 | Execute | **Done** |
+| HOME-16 | dimensões: failure, observability | AD-004 / AD-005 | Execute | **Done** |
+| HOME-17 | dimensão: idempotência | — | Execute | **Done** |
+| HOME-18 | P2-3 AC1,AC2 | AD-013 | Execute | **Done** |
+| HOME-19 | A-01 / A-02 (porta + stream) | AD-016 / RN-28 | Execute | **Done** |
 
-**Cobertura:** 19 requisitos · **19 mapeados a tasks** (T1–T13) · 0 órfãos.
+**Cobertura:** 19 requisitos · 19 mapeados a tasks · **19 com evidência que discrimina**, confirmado por Verifier independente em 2026-08-26 (`validation.md`, iteração 3 · PASS) · 0 órfãos.
 
 ---
 
