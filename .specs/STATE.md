@@ -190,11 +190,11 @@
 
 **Spec 04 `home` — COMPLETA e validada.** Branch `feature/home`, nascida de
 `feature/entrar` (a spec 03 ainda não foi mergeada e a 04 depende da porta de sessão e da
-guarda dela). **28 commits.**
+guarda dela). **30 commits.**
 
 | | |
 |---|---|
-| Testes | **1136 verdes** (baseline da spec 03: 947 · **+189**) |
+| Testes | **1137 verdes** (baseline da spec 03: 947 · **+190**) |
 | `flutter analyze` | zero issues |
 | Verifier | **PASS** na 3ª iteração — **19/19** requisitos com evidência que discrimina |
 | Sensor | 3 rodadas · **37 mutações, 32 mortas**, 0 sobreviventes não explicados |
@@ -206,18 +206,37 @@ guarda dela). **28 commits.**
 ganha `id`). As três nasceram do mesmo padrão: a tela precisava de algo que o design system
 ou o domínio não tinham.
 
-### A primeira coisa a fazer ao retomar
+### Conferência visual — W-02 feita, T-02 **não**
 
-**A conferência visual com a skill `run` não foi feita** — nem em T-02, nem em W-02. É a
-mesma pendência que a spec 03 deixou aberta para T-01/W-01, e agora são quatro telas
-esperando olho humano. A suíte prova valor de token; ela **não** prova que o conjunto
-parece o protótipo. Foi por conferência humana que DS-33 fechou no M0.
+**W-02 conferida e aprovada** (2026-08-26). Build web com um entrypoint de demo
+descartável — semeando sessão e festas pelos pontos de injeção que
+`configureDependencies` já expõe, sem Firebase —, servido local e capturado em headless a
+1180×800 e a 900×820. Nos dois tamanhos a tela bate com a spec: header com logo, ação e
+avatar amarelo; título e subtítulo na mesma linha; grid de duas colunas; ARQUIVO com os
+valores em vermelho. O entrypoint foi **apagado**, não commitado.
 
-Há um obstáculo concreto: **em produção o repositório em memória nasce com semente vazia**
-(a fixture RN-30 é dado de teste, e `lib/` não a importa), então rodar o app abre a Home no
-estado vazio de HOME-15. Conferir T-02/W-02 povoadas exige semear temporariamente — sem
-commitar — ou decidir por um caminho de demo, que hoje não existe e não está em spec
-nenhuma.
+**Ela pagou por si já na primeira captura**: "+ CONVIDAR" renderizava como um retângulo
+preto sólido, com o rótulo invisível. O default transparente do `BoraSecondaryButton`
+deixa a sombra dura de §4 aparecer **através** do botão. A suíte inteira passava, porque a
+asserção era `find.text('+ CONVIDAR')` e o texto estava lá — faltava contraste, que teste
+de widget não vê. Corrigido em `a88fec4`, com teste que mata o defeito.
+
+**T-02 continua sem conferência.** A captura a 390×820 sai com o conteúdo cortado à
+direita, e **não foi possível decidir se é defeito ou artefato**: a mesma página a 900
+renderiza exata, o Flutter não pinta faixa de overflow nenhuma na imagem (o que aponta
+para recorte da captura, provavelmente o piso de largura de janela do Chrome), e a
+hipótese do `<meta name="viewport">` ausente foi **testada e refutada** — injetá-lo não
+mudou um pixel. Fica aberto, e é a primeira coisa a resolver: ou com emulador Android de
+verdade, ou com CDP/device emulation em vez de `--window-size`.
+
+Junto disso seguem sem conferência **T-01 e W-01**, da spec 03.
+
+### Observação para o design system, fora da fronteira desta spec
+
+O default transparente do `BoraSecondaryButton` combinado com a sombra dura de §4 produz o
+retângulo preto sobre **qualquer** fundo claro, não só no card da Home. Quem for mexer no
+componente decide se o default deve virar branco; aqui foi resolvido escolhendo a variante
+que §5 já oferece.
 
 ### Estado do M1, spec a spec
 
@@ -303,7 +322,7 @@ estava, dizendo o que era falso e quando a rede passou a existir.
 ```bash
 export PATH="$PATH:/c/SDKs/flutter/bin"
 cd /c/repos/lucari/bora
-git checkout feature/home && flutter test    # 1136, referência de sanidade
+git checkout feature/home && flutter test    # 1137, referência de sanidade
 python .claude/scripts/cota.py
 
 # ler, nesta ordem:
