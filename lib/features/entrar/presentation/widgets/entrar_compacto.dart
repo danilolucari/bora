@@ -4,7 +4,6 @@ import '../../../../core/design_system/design_system.dart';
 import '../bloc/entrar_bloc.dart';
 import '../entrar_textos.dart';
 import 'formulario_de_entrada.dart';
-import 'marca_bora.dart';
 
 /// T-01 — coluna centralizada, padding lateral 30px.
 class EntrarCompacto extends StatelessWidget {
@@ -44,7 +43,7 @@ class EntrarCompacto extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Center(child: MarcaBora.compacta()),
+            const Center(child: BoraMarca.compacta()),
             const SizedBox(height: 14),
             const Center(
               child: BoraRotatedTag(texto: EntrarTextos.tagline),

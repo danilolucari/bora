@@ -7,6 +7,7 @@ import '../components/bora_expandable_row.dart';
 import '../components/bora_footer_bar.dart';
 import '../components/bora_hero_card.dart';
 import '../components/bora_list_card.dart';
+import '../components/bora_marca.dart';
 import '../components/bora_phone_frame.dart';
 import '../components/bora_poll_option.dart';
 import '../components/bora_press_sink.dart';
@@ -48,6 +49,11 @@ const List<BoraCatalogSection> secoes = <BoraCatalogSection>[
     titulo: 'TOKENS',
     referencia: '§1 · §2 · §4',
     builder: _construirTokens,
+  ),
+  (
+    titulo: 'MARCA',
+    referencia: '§2 · T-01 · W-01 · `06` §Header de app',
+    builder: _construirMarca,
   ),
   (
     titulo: 'SUPERFÍCIE',
@@ -518,6 +524,21 @@ Widget _construirExpansiveis(BuildContext context) {
 /// As cinco personas de RN-30, na ordem em que §1 as declara, mais um nome de
 /// fora da tabela — o caso de A-05.
 const List<String> _pessoas = ['Rafa', 'Ana', 'Léo', 'Bia', 'Duda', 'Marina'];
+
+/// Os três tamanhos da marca, do maior para o menor — é lado a lado que se
+/// confere que o ponto vermelho e a família não mudam com o degrau.
+Widget _construirMarca(BuildContext context) {
+  return const Wrap(
+    spacing: 32,
+    runSpacing: 16,
+    crossAxisAlignment: WrapCrossAlignment.end,
+    children: [
+      BoraMarca.expandida(),
+      BoraMarca.compacta(),
+      BoraMarca.header(),
+    ],
+  );
+}
 
 Widget _construirAvatares(BuildContext context) {
   return Wrap(
