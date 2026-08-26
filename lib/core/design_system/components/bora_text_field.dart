@@ -22,6 +22,7 @@ class BoraTextField extends StatefulWidget {
     required this.controller,
     required this.placeholder,
     this.focusNode,
+    this.obscureText = false,
     super.key,
   });
 
@@ -33,6 +34,16 @@ class BoraTextField extends StatefulWidget {
   /// O nó de foco, quando a tela precisa comandá-lo. Sem ele o campo cria o
   /// seu.
   final FocusNode? focusNode;
+
+  /// Esconde o que foi digitado — o campo "senha" de T-01 e W-01 (ENT-21).
+  ///
+  /// SPEC_DEVIATION: acrescentado pela spec 03 `entrar` a um componente da
+  /// spec 01, que está fechada (emenda E-2). Reason: o arquivo 02 desenha o
+  /// input "senha" e não diz que ele esconde o texto — nem havia AC exigindo
+  /// isso, o que virou ENT-21 —, mas uma senha legível na tela é defeito, não
+  /// escolha de estilo. A mudança é **aditiva**: o default `false` mantém o
+  /// comportamento de todos os usos existentes.
+  final bool obscureText;
 
   @override
   State<BoraTextField> createState() => _BoraTextFieldState();
@@ -77,6 +88,7 @@ class _BoraTextFieldState extends State<BoraTextField> {
       child: TextField(
         controller: widget.controller,
         focusNode: _foco,
+        obscureText: widget.obscureText,
         style: BoraTextStyles.input,
         cursorColor: BoraColors.primary,
         decoration: InputDecoration(
