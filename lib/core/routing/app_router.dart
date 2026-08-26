@@ -1,5 +1,7 @@
 import 'package:go_router/go_router.dart';
 
+import '../autenticacao/autenticacao.dart';
+
 import '../../features/convidado/presentation/pages/convidado_page.dart';
 import '../../features/convite/presentation/pages/convite_page.dart';
 import '../../features/custos/presentation/pages/custos_page.dart';
@@ -11,6 +13,8 @@ import '../../features/montar/presentation/pages/montar_page.dart';
 import '../design_system/catalog/catalog_page.dart';
 import 'app_shell.dart';
 import 'festa_tabs_shell.dart';
+import 'go_router_refresh_stream.dart';
+import 'guarda_de_sessao.dart';
 import 'invite_code_format.dart';
 import 'route_error_page.dart';
 import 'routes.dart';
@@ -31,9 +35,25 @@ const String _festaPattern = '/roles/:${Routes.paramFestaId}';
 /// Três zonas: a pública (sem shell e sem autenticação), o destino de erro, e o
 /// shell do app com as abas da festa. `/c/:codigo` fica deliberadamente fora de
 /// qualquer shell — o convidado não tem conta (FUND-08).
-GoRouter buildAppRouter({String initialLocation = Routes.roles}) {
+///
+/// [autenticacao] é **obrigatório** (AD-017): com um parâmetro opcional, a
+/// produção poderia esquecer a guarda e nada acusaria — o app subiria com
+/// `/roles` aberto a quem digitasse a URL. A regra em si vive em
+/// [guardaDeSessao], que é pura; aqui é só fiação.
+GoRouter buildAppRouter({
+  required AutenticacaoRepository autenticacao,
+  String initialLocation = Routes.roles,
+}) {
   return GoRouter(
     initialLocation: initialLocation,
+    // Reavalia os redirects a cada mudança de sessão — é o que faz o login
+    // levar à Home sem nenhuma feature chamar `context.go` (AD-020).
+    refreshListenable:
+        GoRouterRefreshStream(autenticacao.mudancasDeSessao),
+    redirect: (context, state) => guardaDeSessao(
+      rota: state.uri.path,
+      temSessao: autenticacao.sessaoAtual != null,
+    ),
     errorBuilder: (context, state) =>
         RouteErrorPage(location: state.uri.toString()),
     routes: [

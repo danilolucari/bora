@@ -17,6 +17,10 @@ const _rotasLivres = [
   Routes.erro,
   Routes.catalogo,
   '/c/rafa18',
+  // Rota inexistente entra aqui de propósito: o `redirect` do go_router roda
+  // antes de a rota ser casada, então uma guarda que a desviasse apagaria a
+  // página de erro de FUND-09.
+  '/rota-que-nao-existe',
 ];
 
 void main() {
@@ -87,12 +91,25 @@ void main() {
       );
     });
 
-    test('rota desconhecida sem sessão também é barrada', () {
+    test('rota desconhecida passa, para poder cair no errorBuilder', () {
       expect(
         guardaDeSessao(rota: '/rota-que-nao-existe', temSessao: false),
+        isNull,
+        reason: 'FUND-09 exige que rota inexistente mostre a página de erro '
+            'com a URL tentada. Como o redirect roda antes do casamento de '
+            'rota, uma guarda de default fechado a engoliria e mandaria para '
+            '/entrar — apagando a garantia de que nada cai em tela em branco. '
+            'Rota desconhecida não expõe conteúdo do app.',
+      );
+    });
+
+    test('protege por prefixo: só /roles e o que vive sob ele', () {
+      expect(guardaDeSessao(rota: '/rolesiando', temSessao: false), isNull,
+          reason: 'prefixo tem de casar o segmento inteiro, não o texto');
+      expect(guardaDeSessao(rota: '/roles', temSessao: false), Routes.entrar);
+      expect(
+        guardaDeSessao(rota: '/roles/x/lista', temSessao: false),
         Routes.entrar,
-        reason: 'o default é fechado: rota nova nasce protegida, e quem quiser '
-            'abri-la precisa dizer isso em rotasLivres',
       );
     });
   });

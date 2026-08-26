@@ -1,19 +1,5 @@
 import 'routes.dart';
 
-/// As rotas que abrem **com ou sem sessão** — ENT-17 AC3.
-///
-/// Não é conveniência: `/c/:codigo` é o link do convidado, que por RN-24
-/// responde **sem baixar nada e sem conta**. Barrá-lo mataria o diferencial do
-/// produto. `/erro` precisa ser alcançável de qualquer lugar, inclusive antes
-/// do login, e `/catalogo` é ferramenta interna (AD-014).
-const Set<String> rotasLivres = {
-  Routes.erro,
-  Routes.catalogo,
-};
-
-/// Prefixo da rota pública do convidado, que carrega parâmetro.
-const String _prefixoDoConvidado = '/c/';
-
 /// Decide o destino de [rota] dado o estado da sessão — ENT-15..ENT-18.
 ///
 /// Devolve `null` quando a rota pedida vale, ou o caminho para onde desviar.
@@ -27,19 +13,27 @@ const String _prefixoDoConvidado = '/c/';
 /// chamada imperativa (AD-020): os três caminhos de entrar — e-mail/senha,
 /// Google e cadastro — não navegam; eles mudam a sessão, e quem decide o
 /// destino é esta função.
+///
+/// ## Protege por prefixo, não por lista de exceções
+///
+/// Só `/roles` e o que vive sob ele são protegidos. Tudo o mais passa: o link
+/// do convidado (`/c/:codigo`, que por RN-24 responde **sem conta** — barrá-lo
+/// mataria o diferencial do produto), `/erro`, `/catalogo` e **as rotas que
+/// não existem**.
+///
+/// A última é a que obriga o desenho a ser este. O `redirect` do `go_router`
+/// roda antes de a rota ser casada, então uma guarda de "default fechado"
+/// engoliria `/rota-que-nao-existe` e mandaria para `/entrar` — apagando a
+/// página de erro que FUND-09 construiu para que nada caia em tela em branco.
+/// Rota desconhecida não expõe conteúdo do app: ela cai no `errorBuilder`,
+/// que é exatamente onde deve cair.
 String? guardaDeSessao({required String rota, required bool temSessao}) {
-  if (_ehLivre(rota)) return null;
-
-  if (!temSessao) {
-    // Sem sessão, o único destino possível é a porta de entrada. Devolver
-    // `null` aqui deixaria `/roles` acessível por URL digitada no web.
-    return rota == Routes.entrar ? null : Routes.entrar;
-  }
+  if (!temSessao) return _ehProtegida(rota) ? Routes.entrar : null;
 
   // Com sessão, ficar em `/entrar` não faz sentido — e é literalmente o
   // aceite de UC-01, "pós-login sempre cai na Home".
   return rota == Routes.entrar ? Routes.roles : null;
 }
 
-bool _ehLivre(String rota) =>
-    rotasLivres.contains(rota) || rota.startsWith(_prefixoDoConvidado);
+bool _ehProtegida(String rota) =>
+    rota == Routes.roles || rota.startsWith('${Routes.roles}/');
