@@ -11,6 +11,7 @@ Implemente estas tasks com a skill `tlc-spec-driven`: **ative-a pelo nome e siga
 **Spec**: `.specs/features/home/spec.md`
 **Design**: `.specs/features/home/design.md` (**Aprovado** — AD-022 gravada em 2026-08-26)
 **Status**: Draft — aguardando aprovação para Execute
+**Ferramentas** (confirmadas em 2026-08-26): skill `run` nas tasks de tela (**T10** mobile, **T11** web) para conferência visual; skill `code-review` ao fim de cada batch (após T7 e após T13). Execução das tasks **inline**; **Verifier como sub-agente**, já autorizado no handoff.
 **Baseline**: `flutter test` = **947 passando** · `flutter analyze` = zero issues (`feature/home`, medido em 2026-08-26)
 **Branch**: `feature/home`, nascida de `feature/entrar` — a spec 03 ainda não foi mergeada e `home` depende da porta de sessão e da guarda dela
 
