@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../support/fake_autenticacao_repository.dart';
 import '../../support/recording_app_logger.dart';
 
 void main() {
@@ -34,7 +35,13 @@ void main() {
 
     test('o roteador é singleton preguiçoso: sempre a mesma instância',
         () async {
-      await configureDependencies(logger: RecordingAppLogger());
+      // Desde a AD-017 o roteador exige a porta de sessão, e resolvê-lo
+      // construiria o adaptador Firebase de verdade — que toca o SDK. O duplo
+      // entra pela costura que `configureDependencies` já expõe.
+      await configureDependencies(
+        logger: RecordingAppLogger(),
+        autenticacaoFactory: FakeAutenticacaoRepository.new,
+      );
 
       expect(getIt<GoRouter>(), same(getIt<GoRouter>()));
     });

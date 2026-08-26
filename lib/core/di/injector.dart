@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
+import '../autenticacao/autenticacao.dart';
+import '../autenticacao/dados/firebase_autenticacao_repository.dart';
 import '../observability/app_logger.dart';
 import '../routing/app_router.dart';
 
@@ -26,12 +28,31 @@ bool _configured = false;
 Future<void> configureDependencies({
   AppLogger? logger,
   GoRouter Function()? routerFactory,
+  AutenticacaoRepository Function()? autenticacaoFactory,
 }) async {
   if (_configured) return;
   _configured = true;
 
   getIt.registerSingleton<AppLogger>(logger ?? const DebugAppLogger());
-  getIt.registerLazySingleton<GoRouter>(routerFactory ?? buildAppRouter);
+
+  // Preguiçoso como os demais serviços do Firebase: registrar não pode tocar
+  // no SDK (FUND-17). Quem constrói o repositório é quem primeiro o pede.
+  getIt.registerLazySingleton<AutenticacaoRepository>(
+    () => autenticacaoFactory != null
+        ? autenticacaoFactory()
+        : FirebaseAutenticacaoRepository(
+            getIt<FirebaseAuth>(),
+            getIt<AppLogger>(),
+          ),
+    dispose: (repositorio) => repositorio.dispose(),
+  );
+
+  // Deixou de ser tear-off: o roteador agora exige a porta de sessão (AD-017),
+  // e resolvê-la aqui dentro mantém a construção preguiçosa.
+  getIt.registerLazySingleton<GoRouter>(
+    routerFactory ??
+        () => buildAppRouter(autenticacao: getIt<AutenticacaoRepository>()),
+  );
 
   // Lazy de propósito: registrar não pode tocar no SDK. Com o Firebase caído,
   // o erro aparece em quem usa o serviço, e não no boot (FUND-17).

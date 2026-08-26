@@ -88,6 +88,39 @@ Teste sai do critério de aceite, nunca da implementação. `test/` espelha a es
 
 **Commits:** Conventional Commits em português, assunto simples (`feat(montar): calcula custo ao vivo`). A referência `RN-xx`/`UC-xx` vai no **corpo**, não no assunto. Branches `feature/nome`.
 
+
+## Cota da sessão: monitorar, pausar, retomar
+
+**Processo fixo, não opcional.** Vale para toda sessão neste repositório.
+Detalhe completo na skill `cota` (`.claude/skills/cota/SKILL.md`).
+
+A fonte da cota é `~/.claude.json` → `cachedUsageUtilization` — o mesmo dado do
+`/usage`. **Nunca estime com `ccusage`**: ele soma `cacheReadInputTokens`, que
+incha a cada turno, e não enxerga o limite da conta; em 2026-08-25 isso produziu
+um alarme de 100% com o `/usage` real em 18%, e pausou o trabalho à toa.
+
+```bash
+python .claude/scripts/cota.py        # SEGUIR / ATENCAO / PARAR / INCERTO
+```
+
+Verificar **ao fim de cada task**, em **toda fronteira de fase** e antes de abrir
+trabalho longo. Gatilho pelo pior entre sessão (5h) e semana (7d):
+
+| < 70% | 70–84% | ≥ 85% | cache velho ou janela virada |
+|---|---|---|---|
+| seguir | fechar a task, não abrir task longa | **protocolo de pausa** | `INCERTO` — pedir `/usage` ao usuário, não decidir no escuro |
+
+**Protocolo de pausa**, nesta ordem: fechar a task corrente até o commit (nunca
+deixar meia task no disco) → escrever o handoff na seção `## Handoff` do
+`.specs/STATE.md`, **substituindo só o corpo daquela seção** → commitar →
+agendar a retomada para `resets_at + 10 min` via `Register-ScheduledTask` do
+PowerShell (não `schtasks` pelo Git Bash, onde `/Query` vira caminho) → avisar o
+usuário com o horário agendado.
+
+O que de fato protege o trabalho é o **commit atômico por task** somado ao
+handoff — não o monitor. Não existe vigilância em background: a verificação só
+acontece quando o script roda.
+
 ## Workflow
 
 A skill `tlc-spec-driven` (Specify → Design → Tasks → Execute) está instalada localmente em `.claude/skills/` e é o caminho esperado para features: tasks atômicas, commits atômicos, testes derivados dos critérios de aceite (nunca espelhando a implementação), e um verificador independente com regra evidence-or-zero. `.agents/.skill-lock.json` sincroniza a mesma skill para cursor e windsurf — se editar a skill, o lock precisa ser regerado, não editado à mão.

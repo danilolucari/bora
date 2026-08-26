@@ -1,20 +1,17 @@
-import 'package:bora/app.dart';
-import 'package:bora/core/routing/app_router.dart';
 import 'package:bora/core/routing/app_shell.dart';
 import 'package:bora/core/routing/festa_tabs_shell.dart';
 import 'package:bora/core/routing/placeholder_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../support/app_de_teste.dart';
+
 const String _festaId = 'rafa18';
 
-/// Monta o app inteiro já posicionado em [location].
-Future<void> _abrir(WidgetTester tester, String location) async {
-  await tester.pumpWidget(
-    BoraApp(router: buildAppRouter(initialLocation: location)),
-  );
-  await tester.pumpAndSettle();
-}
+/// Monta o app **com sessão**: desde a AD-017, `/roles/**` sem sessão desvia
+/// para `/entrar` e nenhuma destas asserções de chrome faria sentido.
+Future<void> _abrir(WidgetTester tester, String location) =>
+    abrirApp(tester, location, sessao: sessaoDeTeste);
 
 /// Afirma que a tela [id] está montada e que nenhuma das [outras] está.
 void _apenas(String id, {required List<String> outras}) {

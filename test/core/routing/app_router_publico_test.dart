@@ -1,25 +1,24 @@
-import 'package:bora/app.dart';
-import 'package:bora/core/routing/app_router.dart';
 import 'package:bora/core/routing/placeholder_page.dart';
+import 'package:bora/features/entrar/presentation/pages/entrar_page.dart';
 import 'package:bora/core/routing/route_error_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Monta o app inteiro já posicionado em [location].
-Future<void> _abrir(WidgetTester tester, String location) async {
-  await tester.pumpWidget(
-    BoraApp(router: buildAppRouter(initialLocation: location)),
-  );
-  await tester.pumpAndSettle();
-}
+import '../../support/app_de_teste.dart';
+
+/// Monta o app **sem sessão** — o estado em que estas rotas públicas vivem.
+Future<void> _abrir(WidgetTester tester, String location) =>
+    abrirApp(tester, location);
 
 void main() {
   group('FUND-07 — cada rota pública tem destino identificável', () {
-    testWidgets('/entrar renderiza o placeholder de entrar', (tester) async {
+    testWidgets('/entrar renderiza a tela de entrar', (tester) async {
       await _abrir(tester, Routes.entrar);
 
-      expect(find.byKey(PlaceholderPage.keyFor('entrar')), findsOneWidget);
+      // Deixou de ser placeholder na spec 03: a asserção passou a apontar o
+      // destino real, sem afrouxar — continua exigindo um destino nomeado.
+      expect(find.byKey(EntrarPage.pageKey), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
   });
@@ -36,7 +35,7 @@ void main() {
     testWidgets('/c/rafa18 não desvia para a tela de entrar', (tester) async {
       await _abrir(tester, Routes.convidado('rafa18'));
 
-      expect(find.byKey(PlaceholderPage.keyFor('entrar')), findsNothing);
+      expect(find.byKey(EntrarPage.pageKey), findsNothing);
       expect(find.byKey(RouteErrorPage.pageKey), findsNothing);
     });
   });

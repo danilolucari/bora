@@ -12,7 +12,15 @@ import 'package:flutter_test/flutter_test.dart';
 /// Proibição sem sensor é decoração: aqui as duas leis viram varredura que
 /// quebra a suíte **nomeando o arquivo infrator**, na mesma mecânica de
 /// `test/architecture/calculo_isolation_test.dart`.
-const String _diretorioDoDesignSystem = 'lib/core/design_system';
+/// A varredura cobre **`lib/` inteira**, não só o design system.
+///
+/// Começou apontando para `lib/core/design_system` porque, quando a spec 01
+/// rodou, era o único código que existia. A partir da spec 03 há tela de
+/// produto em `lib/features/` e tema em `lib/app.dart`, e §3/§4 valem para
+/// elas igual — canto arredondado e sombra com blur são proibidos no app
+/// inteiro, não só na biblioteca. O Verifier de `entrar` apontou o alcance
+/// curto (gap nº 7); ampliar fortalece a guarda, não a relaxa.
+const String _diretorioDeLib = 'lib';
 
 /// As formas arredondadas proibidas por §3.
 ///
@@ -139,12 +147,12 @@ Directory _diretorioComInfrator(String nome, String conteudo) {
 }
 
 void main() {
-  final designSystem = Directory(_diretorioDoDesignSystem);
+  final lib = Directory(_diretorioDeLib);
 
   group('DS-05 — forma arredondada não entra no design system', () {
     test('nenhum arquivo sob lib/core/design_system usa forma arredondada', () {
       expect(
-        _varrer(designSystem, violacoesDeFormaEm),
+        _varrer(lib, violacoesDeFormaEm),
         isEmpty,
         reason: '§3: "border-radius: 0 em tudo" — canto arredondado só nas '
             'duas exceções, e elas moram na allowlist',
@@ -153,9 +161,9 @@ void main() {
 
     test('a varredura não roda vazia: o diretório existe e tem arquivo .dart',
         () {
-      expect(designSystem.existsSync(), isTrue);
+      expect(lib.existsSync(), isTrue);
       expect(
-        arquivosDartEm(designSystem),
+        arquivosDartEm(lib),
         isNotEmpty,
         reason: 'guarda sem alvo passa vacuamente — o falso-verde do risco R-4',
       );
@@ -272,7 +280,7 @@ void main() {
 
   group('DS-07 — a do frame é a única sombra suave do sistema', () {
     test('há exatamente uma sombra com blur, e ela é a do frame', () {
-      final comBlur = _varrer(designSystem, blursNaoZeroEm);
+      final comBlur = _varrer(lib, blursNaoZeroEm);
 
       expect(
         comBlur,

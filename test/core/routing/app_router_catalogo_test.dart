@@ -1,18 +1,19 @@
-import 'package:bora/app.dart';
 import 'package:bora/core/design_system/catalog/catalog_page.dart';
-import 'package:bora/core/routing/app_router.dart';
 import 'package:bora/core/routing/app_shell.dart';
 import 'package:bora/core/routing/route_error_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Monta o app inteiro já posicionado em [location].
-Future<void> _abrir(WidgetTester tester, String location) async {
-  await tester.pumpWidget(
-    BoraApp(router: buildAppRouter(initialLocation: location)),
-  );
-  await tester.pumpAndSettle();
-}
+import '../../support/app_de_teste.dart';
+
+/// Monta o app; sem sessão por default, porque o catálogo é rota livre e tem
+/// de abrir assim. `/roles`, ao contrário, passou a exigir sessão (AD-017).
+Future<void> _abrir(
+  WidgetTester tester,
+  String location, {
+  bool logado = false,
+}) =>
+    abrirApp(tester, location, sessao: logado ? sessaoDeTeste : null);
 
 void main() {
   group('DS-33 — /catalogo é rota alcançável com destino afirmado', () {
@@ -46,7 +47,7 @@ void main() {
 
     testWidgets('a rota nova não muda as existentes: /roles segue no shell',
         (tester) async {
-      await _abrir(tester, Routes.roles);
+      await _abrir(tester, Routes.roles, logado: true);
 
       expect(find.byKey(AppShell.chromeKey), findsOneWidget);
       expect(find.byKey(CatalogPage.pageKey), findsNothing);

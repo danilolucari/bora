@@ -170,4 +170,40 @@ void main() {
       );
     });
   });
+
+  group('ENT-21 — o campo de senha esconde o que foi digitado', () {
+    testWidgets('com obscureText, o TextField esconde', (tester) async {
+      await pumpComponent(
+        tester,
+        BoraTextField(
+          controller: TextEditingController(),
+          placeholder: 'senha',
+          obscureText: true,
+        ),
+      );
+
+      expect(
+        tester.widget<TextField>(find.byType(TextField)).obscureText,
+        isTrue,
+      );
+    });
+
+    testWidgets('por omissão não esconde — o par discriminante',
+        (tester) async {
+      await pumpComponent(
+        tester,
+        BoraTextField(
+          controller: TextEditingController(),
+          placeholder: 'seu e-mail',
+        ),
+      );
+
+      expect(
+        tester.widget<TextField>(find.byType(TextField)).obscureText,
+        isFalse,
+        reason: 'a emenda E-2 é aditiva: todo uso existente do componente '
+            'segue exibindo o texto',
+      );
+    });
+  });
 }
