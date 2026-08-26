@@ -10,7 +10,7 @@ Implemente estas tasks com a skill `tlc-spec-driven`: **ative-a pelo nome e siga
 
 **Spec**: `.specs/features/entrar/spec.md`
 **Design**: `.specs/features/entrar/design.md`
-**Status**: **Approved** (2026-08-25) — pronta para Execute. Duplos de SDK com `mocktail` (**AD-021**); skill `run` em T6, T13, T14 e T15; `code-review` ao fim de cada batch.
+**Status**: **Em execução** — Fase 1 concluída (T1–T4), 772 testes verdes. Aprovada em 2026-08-25. Duplos de SDK com `mocktail` (**AD-021**); skill `run` em T6, T13, T14 e T15; `code-review` ao fim de cada batch.
 **Baseline**: `flutter test` = **742 passando** · `flutter analyze` = zero issues (`main`, medido em 2026-08-25)
 
 ---
@@ -54,7 +54,7 @@ Toda task fecha com `flutter analyze` limpo. **Nenhuma task pode reduzir a conta
 
 Fases ordenadas, executadas em sequência; tasks dentro de uma fase executam em ordem.
 
-### Fase 1 — Tema e contrato (4 tasks)
+### Fase 1 — Tema e contrato (4 tasks) — ✅ **CONCLUÍDA**
 
 O plug da AD-013 e o vocabulário da sessão. Nada aqui toca Firebase.
 
@@ -115,6 +115,7 @@ T15 → T16
 
 **Tests**: widget · **Gate**: full
 **Commit**: `feat(entrar): aplica o tema do design system no app`
+**Status**: ✅ **Concluída** — `f6a1a30` · 742 → 746 testes · mutante de cor em `app.dart` morto pelo guard existente e revertido
 
 ---
 
@@ -138,6 +139,7 @@ T15 → T16
 
 **Tests**: unit · **Gate**: full *(mexe em `test/architecture/`, que observa a árvore inteira)*
 **Commit**: `feat(autenticacao): entidades de sessão e a camada core/autenticacao`
+**Status**: ✅ **Concluída** — `499b4d3` · 746 → 753 testes · SPEC_PRECISION_GAP registrado em `UsuarioLogado.inicial` (usuário sem nome e sem e-mail); a correção de origem é T5
 
 ---
 
@@ -160,6 +162,7 @@ T15 → T16
 
 **Tests**: unit · **Gate**: quick — `flutter test test/support/fake_autenticacao_repository_test.dart`
 **Commit**: `feat(autenticacao): porta de autenticação e duplo de teste`
+**Status**: ✅ **Concluída** — `3834323` · 753 → 760 testes · porta ganhou `dispose()`, que o `design.md` não listava (inscrição vazada contamina teste seguinte)
 
 ---
 
@@ -183,6 +186,7 @@ T15 → T16
 
 **Tests**: unit · **Gate**: quick — `flutter test test/core/autenticacao/dados/falha_de_codigo_test.dart`
 **Commit**: `feat(autenticacao): mapeia código de erro do firebase para falha de domínio`
+**Status**: ✅ **Concluída** — `3d26de9` · 760 → 772 testes · `INVALID_LOGIN_CREDENTIALS` do emulador coberto
 
 ---
 
