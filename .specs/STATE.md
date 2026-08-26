@@ -173,6 +173,14 @@
 - **Date**: 2026-08-25
 - **Status**: active
 
+### AD-022
+- **Decision**: Os contadores "confirmados/pendentes" da Home são **dado da festa** — campos de `ResumoDeFesta` —, nunca derivação da lista de pessoas nomeadas. A divergência de RN-30 (5 nomeados e "4 confirmados/2 pendentes" na mesma frase) mora **inteira no `pendentes`**: `confirmados` coincide com a contagem dos nomeados em toda a spec-fonte (T-05 "5 pessoas · 4 confirmadas", RN-25 "apenas confirmados (4)", T-07 "4 membros", T-08 "4 já confirmaram") e **tem de continuar coincidindo**; `pendentes` não é derivável porque conta também quem recebeu o link (RN-24) e ainda não respondeu, e essa pessoa não é uma `Pessoa` nomeada. O aceite dos contadores é a **transição de RN-28** (`4/2 → 5/1`), não a string estática. A fixture e o teste que afirmam a divergência (`test/fixtures/rn30_estado_inicial_test.dart:88-101`) ficam **intocados**.
+- **Reason**: derivar `pendentes` tornaria o produto incapaz de representar o próprio exemplo. T-02 diz que, com uma confirmação nova, a Home lê "5 confirmados · 1 pendente" — sob derivação, quando Duda confirmasse o pendente iria a zero e o literal da transição ficaria impossível de renderizar. Só fecha se existir convidado sem nome, que é exatamente o que o link de RN-24 produz. Contador em campo é também o formato que sobrevive à troca de impl do M2 (AD-016): derivar significaria ler a subcoleção de pessoas só para pintar o card da Home. E a transição é o que **discrimina** — a string estática "4 confirmados · 2 pendentes" passa igual numa implementação derivada errada, então ela sozinha não é aceite.
+- **Trade-off**: Home e Galera passam a poder divergir sem que nada impeça, e o "+N" tracejado agrava — `excedenteDeAvatares` calcula `confirmados − visíveis`, então contador fora de sincronia com `iniciais` mente também no avatar. No M1 não há mitigação possível: não existe produtor de RSVP. A obrigação recai na spec 09 `convidado` — **quem grava o RSVP atualiza o contador na mesma escrita**, que é o que RN-28 já manda. A alternativa híbrida (`confirmados` derivado, `pendentes` dado) foi considerada e recusada: exigiria a Home carregar a lista inteira de pessoas só para contar, e no M2 viraria leitura de subcoleção por card.
+- **Scope**: `home` agora; `galera` e `convidado` herdam — nenhuma pode invocar esta AD para justificar um `confirmados` que discorde de T-05.
+- **Date**: 2026-08-26
+- **Status**: active
+
 ## Handoff
 
 > **SNAPSHOT — 2026-08-26, fim de sessão pedido pelo usuário.**
@@ -195,23 +203,23 @@ empurrada para `origin` (`HEAD == origin/feature/entrar`).
 **PR a abrir** (o `gh` CLI não está instalado nesta máquina; a URL de compare está pronta):
 `https://github.com/danilolucari/bora/compare/main...feature/entrar?expand=1`
 
-### A primeira coisa a fazer ao retomar
+### O fio solto da sessão anterior — fechado
 
-**Decidir sobre a AD-022, que NÃO foi gravada.** O `design.md` de `home` a referencia como
-"a gravar", então há um documento apontando para uma decisão que não existe no log — é o
-único fio solto do repositório.
+**A AD-022 está gravada** (2026-08-26), aprovada pelo usuário com três apertos sobre a
+redação que o `design.md` propunha:
 
-O conteúdo: os contadores "confirmados/pendentes" da Home são **dado da festa**, não
-derivação da lista de pessoas. RN-30 declara 5 pessoas nomeadas e "4 confirmados / 2
-pendentes" na mesma frase, e 4+2=6 não fecha. A divergência é real e intencional — a
-fundação a preservou e deixou um teste que a **afirma**
-(`test/fixtures/rn30_estado_inicial_test.dart:90-96`), justamente para ninguém "consertar"
-em silêncio. O raciocínio: pendente é quem recebeu o link (RN-24) e ainda não respondeu, e
-essa pessoa não é uma `Pessoa` nomeada. Derivar tornaria o produto incapaz de representar o
-próprio exemplo.
+1. **A divergência mora inteira no `pendentes`.** `confirmados` coincide com a contagem dos
+   nomeados em toda a spec-fonte (T-05, RN-25, T-07, T-08) e tem de continuar coincidindo —
+   a AD não autoriza um `confirmados` que discorde de T-05.
+2. **O aceite é a transição de RN-28** (`4/2 → 5/1`), não a string estática
+   "4 confirmados · 2 pendentes" — essa passa igual numa implementação derivada errada.
+3. **O custo tem dono.** Home e Galera podem divergir sem que nada impeça, e o "+N"
+   tracejado agrava (`excedenteDeAvatares` = `confirmados − visíveis`). No M1 não há
+   mitigação; a obrigação recai na spec 09 `convidado` — quem grava o RSVP atualiza o
+   contador **na mesma escrita**.
 
-O usuário viu o raciocínio e não objetou, **mas também não aprovou explicitamente**.
-Confirmar antes de gravar.
+O `design.md` de `home` foi atualizado para essa redação. Não há mais documento apontando
+para decisão inexistente.
 
 ### Estado do M1, spec a spec
 
