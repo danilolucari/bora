@@ -5,6 +5,7 @@ import '../../domain/resumo_de_festa.dart';
 import '../bloc/home_state.dart';
 import '../home_textos.dart';
 import 'card_da_festa.dart';
+import 'faixa_de_falha.dart';
 import 'comecar_outra.dart';
 
 /// T-02 — a Home no mobile.
@@ -38,8 +39,20 @@ class HomeCompacta extends StatelessWidget {
   final void Function(ResumoDeFesta) aoVerOAcerto;
   final VoidCallback aoComecarChurrasco;
 
+  /// `null` quando a Home não tem contagem verdadeira a dizer — carregando e
+  /// falhando não são "nenhuma festa chegando".
+  String? get _subtitulo => HomeTextos.subtituloDe(
+        estado.situacao,
+        chegando: estado.chegando.length,
+        passadas: estado.passadas.length,
+      );
+
   @override
   Widget build(BuildContext context) {
+    // Getter não promove para não-nulo: a captura local é o que permite
+    // usar o valor dentro do `if`.
+    final subtitulo = _subtitulo;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
       child: Column(
@@ -52,18 +65,13 @@ class HomeCompacta extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          Text(
-            HomeTextos.subtitulo(
-              chegando: estado.chegando.length,
-              passadas: estado.passadas.length,
-            ),
-            style: BoraTextStyles.corpo,
-          ),
+          if (subtitulo != null)
+            Text(subtitulo, style: BoraTextStyles.corpo),
           const SizedBox(height: 28),
           if (estado.situacao == SituacaoDaHome.falhou) ...[
             // HOME-16: falha é mensagem na tela, não tela em branco — e
             // "COMEÇAR OUTRA" continua abaixo, acessível.
-            Text(HomeTextos.falha, style: BoraTextStyles.dica),
+            const FaixaDeFalha(),
             const SizedBox(height: 20),
           ],
           for (final resumo in estado.chegando) ...[

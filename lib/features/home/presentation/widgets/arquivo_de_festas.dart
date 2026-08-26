@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/calculo/calculo.dart';
 import '../../../../core/design_system/design_system.dart';
 import '../../domain/resumo_de_festa.dart';
+import '../home_textos.dart';
 
 /// A seção "ARQUIVO" de W-02 — o histórico de UC-24.
 ///
@@ -64,22 +65,31 @@ class _LinhaDoArquivo extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              '${resumo.festa.nome} · ${resumo.pessoas} pessoas',
+              // A contagem só entra quando existe. `pessoas` é anulável, e
+              // interpolar direto escrevia "null pessoas" na tela; um `?? 0`
+              // seria pior, porque transformaria dado faltando num zero
+              // plausível.
+              [
+                resumo.festa.nome,
+                if (resumo.pessoas != null)
+                  HomeTextos.contagem(resumo.pessoas!, 'pessoa'),
+              ].join(' · '),
               style: BoraTextStyles.linhaLista,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(width: 10),
-          Text(
-            // RN-13 vem inteira de `core/calculo`: a UI nunca formata dinheiro
-            // por conta própria, e nenhum componente conhece a regra de
-            // arredondamento.
-            MoneyFormatter.reais(resumo.total ?? 0),
-            style: BoraTextStyles.linhaLista.copyWith(
-              color: BoraColors.primary,
+          if (resumo.total != null)
+            Text(
+              // RN-13 vem inteira de `core/calculo`: a UI nunca formata
+              // dinheiro por conta própria, e nenhum componente conhece a
+              // regra de arredondamento.
+              MoneyFormatter.reais(resumo.total!),
+              style: BoraTextStyles.linhaLista.copyWith(
+                color: BoraColors.primary,
+              ),
             ),
-          ),
         ],
       ),
     );

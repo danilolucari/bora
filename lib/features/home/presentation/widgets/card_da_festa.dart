@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../domain/resumo_de_festa.dart';
+import '../home_textos.dart';
 
 /// O card da festa que está chegando — T-02 e a coluna esquerda de W-02.
 ///
@@ -66,12 +67,6 @@ class CardDaFesta extends StatelessWidget {
   final VoidCallback aoConvidar;
   final VoidCallback aoMontarLista;
   final VoidCallback aoVerOAcerto;
-
-  /// "{n} confirmados" com o singular certo — T-02 mostra "2 pendentes" antes
-  /// da confirmação e "1 pendente" depois dela, então os dois casos são copy
-  /// da spec, não escolha.
-  static String contagem(int quantos, String palavra) =>
-      '$quantos $palavra${quantos == 1 ? '' : 's'}';
 
   @override
   Widget build(BuildContext context) {
@@ -164,13 +159,15 @@ class _LinhaDeContadores extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text.rich(
       TextSpan(
-        text: CardDaFesta.contagem(resumo.confirmados, 'confirmado'),
+        // T-02 mostra "2 pendentes" antes da confirmação e "1 pendente"
+        // depois dela: as duas formas são copy da spec, não escolha.
+        text: HomeTextos.contagem(resumo.confirmados, 'confirmado'),
         children: [
           const TextSpan(text: ' · '),
           TextSpan(
             // T-02 põe **só** os pendentes em vermelho: é o número que cobra
             // uma ação do anfitrião.
-            text: CardDaFesta.contagem(resumo.pendentes, 'pendente'),
+            text: HomeTextos.contagem(resumo.pendentes, 'pendente'),
             style: const TextStyle(color: BoraColors.primary),
           ),
         ],

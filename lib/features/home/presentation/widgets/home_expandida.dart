@@ -6,6 +6,7 @@ import '../bloc/home_state.dart';
 import '../home_textos.dart';
 import 'arquivo_de_festas.dart';
 import 'card_da_festa.dart';
+import 'faixa_de_falha.dart';
 import 'comecar_outra.dart';
 
 /// W-02 — a Home no web.
@@ -61,7 +62,7 @@ class HomeExpandida extends StatelessWidget {
                 if (estado.situacao == SituacaoDaHome.falhou) ...[
                   // HOME-16: a mesma mensagem de T-02, e a coluna da direita
                   // com "COMEÇAR OUTRA" continua acessível.
-                  Text(HomeTextos.falha, style: BoraTextStyles.dica),
+                  const FaixaDeFalha(),
                   const SizedBox(height: vaoDoGrid),
                 ],
                 Row(
@@ -123,8 +124,20 @@ class _LinhaDeTitulo extends StatelessWidget {
 
   final HomeState estado;
 
+  /// `null` quando a Home não tem contagem verdadeira a dizer — carregando e
+  /// falhando não são "nenhuma festa chegando".
+  String? get _subtitulo => HomeTextos.subtituloDe(
+        estado.situacao,
+        chegando: estado.chegando.length,
+        passadas: estado.passadas.length,
+      );
+
   @override
   Widget build(BuildContext context) {
+    // Getter não promove para não-nulo: a captura local é o que permite
+    // usar o valor dentro do `if`.
+    final subtitulo = _subtitulo;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
@@ -136,13 +149,8 @@ class _LinhaDeTitulo extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        Text(
-          HomeTextos.subtitulo(
-            chegando: estado.chegando.length,
-            passadas: estado.passadas.length,
-          ),
-          style: BoraTextStyles.corpo,
-        ),
+        if (subtitulo != null)
+          Text(subtitulo, style: BoraTextStyles.corpo),
       ],
     );
   }

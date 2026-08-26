@@ -1,3 +1,5 @@
+import 'bloc/home_state.dart';
+
 /// A copy da Home — T-02 e W-02.
 ///
 /// Fica junta e nomeada pelo mesmo motivo de `entrar_textos.dart`: literal de
@@ -11,11 +13,11 @@ abstract final class HomeTextos {
   ///
   /// SPEC_PRECISION_GAP: nenhuma tela de `04` ou `06` desenha a Home falhando,
   /// e nenhuma spec dá esta copy. O `design.md` só diz "mensagem de falha, e
-  /// COMEÇAR OUTRA permanece acessível". A frase segue a voz do produto —
-  /// corpo em sentence case (§7) — e fica declarada aqui como premissa, não
-  /// como literal de spec.
-  static const String falha =
-      'não deu pra carregar seus rolês agora. tenta de novo daqui a pouco.';
+  /// COMEÇAR OUTRA permanece acessível". A frase copia a **voz** que a spec 03
+  /// já fixou para falha de carregamento (`EntrarTextos.indisponivel`, "NÃO
+  /// DEU PRA ENTRAR AGORA"), em caixa alta como §7 manda para label. Fica
+  /// declarada como premissa, não como literal de spec.
+  static const String falha = 'NÃO DEU PRA CARREGAR SEUS ROLÊS';
 
   /// O subtítulo, **derivado** da contagem real (A-05).
   ///
@@ -29,13 +31,33 @@ abstract final class HomeTextos {
   static String subtitulo({required int chegando, required int passadas}) {
     final esquerda = chegando == 0
         ? 'nenhuma festa chegando'
-        : '$chegando ${_plural(chegando, 'festa')} chegando';
+        : '$chegando ${plural(chegando, 'festa')} chegando';
 
     if (passadas == 0) return esquerda;
 
-    return '$esquerda · $passadas ${_plural(passadas, 'passada')}';
+    return '$esquerda · $passadas ${plural(passadas, 'passada')}';
   }
 
-  static String _plural(int quantos, String palavra) =>
+  /// O subtítulo **desta situação**, ou `null` quando a Home não tem o que
+  /// dizer sobre contagem.
+  ///
+  /// Carregando e falhando não são "nenhuma festa chegando": a tela afirmaria
+  /// que o usuário não tem rolê nenhum no mesmo instante em que diz que não
+  /// conseguiu carregá-los. Sem contagem verdadeira, a Home cala.
+  static String? subtituloDe(
+    SituacaoDaHome situacao, {
+    required int chegando,
+    required int passadas,
+  }) =>
+      situacao == SituacaoDaHome.comFestas || situacao == SituacaoDaHome.vazia
+          ? subtitulo(chegando: chegando, passadas: passadas)
+          : null;
+
+  /// "{n} {palavra}" com o plural em PT-BR — a regra mora num lugar só.
+  static String contagem(int quantos, String palavra) =>
+      '$quantos ${plural(quantos, palavra)}';
+
+  /// [palavra] no plural quando [quantos] não é 1.
+  static String plural(int quantos, String palavra) =>
       quantos == 1 ? palavra : '${palavra}s';
 }

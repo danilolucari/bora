@@ -2,6 +2,7 @@ import 'package:bora/core/calculo/calculo.dart';
 import 'package:bora/core/design_system/design_system.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
+import 'package:bora/features/home/domain/resumo_de_festa.dart';
 import 'package:bora/features/home/presentation/pages/home_page.dart';
 import 'package:bora/features/home/presentation/widgets/arquivo_de_festas.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,22 @@ Future<void> _abrirHome(
     Routes.roles,
     sessao: sessaoDeTeste,
     festas: repositorio,
+  );
+}
+
+/// Abre a Home no web semeada só com as [passadas] pedidas.
+Future<void> _abrirCom(
+  WidgetTester tester,
+  List<ResumoDeFesta> passadas,
+) async {
+  addTearDown(() => tester.binding.setSurfaceSize(null));
+  await tester.binding.setSurfaceSize(_janelaExpandida);
+
+  await abrirApp(
+    tester,
+    Routes.roles,
+    sessao: sessaoDeTeste,
+    festas: FestaRepositoryEmMemoria(inicial: passadas),
   );
 }
 
@@ -98,6 +115,39 @@ void main() {
         ),
         findsNWidgets(festasPassadas.length),
       );
+    });
+  });
+
+  group('HOME-14 — a linha não inventa dado que não tem', () {
+    testWidgets('festa passada sem pessoas nem total não escreve "null"',
+        (tester) async {
+      final incompleta = ResumoDeFesta(
+        id: 'incompleta',
+        festa: festasPassadas.first.festa,
+      );
+      await _abrirCom(tester, [incompleta]);
+
+      expect(find.textContaining('null'), findsNothing);
+      expect(
+        find.textContaining('R\$ 0'),
+        findsNothing,
+        reason: 'um `?? 0` transformaria dado faltando num zero plausível, '
+            'que é pior do que a ausência',
+      );
+      expect(find.textContaining(incompleta.festa.nome), findsOneWidget);
+    });
+
+    testWidgets('uma pessoa só lê "1 pessoa", no singular', (tester) async {
+      final deUmaPessoa = ResumoDeFesta(
+        id: 'sozinho',
+        festa: festasPassadas.first.festa,
+        pessoas: 1,
+        total: 40,
+      );
+      await _abrirCom(tester, [deUmaPessoa]);
+
+      expect(find.textContaining('· 1 pessoa'), findsOneWidget);
+      expect(find.textContaining('1 pessoas'), findsNothing);
     });
   });
 

@@ -173,6 +173,47 @@ void main() {
       });
     }
 
+    testWidgets('a Home não diz "nenhuma festa" enquanto falha em carregar',
+        (tester) async {
+      final repositorio = _RepositorioQueFalha();
+      addTearDown(repositorio.dispose);
+      await _abrir(tester, repositorio, janela: _janelaCompacta);
+
+      repositorio.falhar(StateError('conexão caiu'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('nenhuma festa chegando'),
+        findsNothing,
+        reason: 'afirmar que o usuário não tem rolê nenhum no mesmo instante '
+            'em que se diz que não deu para carregar é a tela se contradizendo',
+      );
+      expect(find.text(HomeTextos.falha), findsOneWidget);
+    });
+
+    testWidgets('e também não diz enquanto ainda está carregando',
+        (tester) async {
+      final repositorio = _RepositorioQueFalha();
+      addTearDown(repositorio.dispose);
+      await _abrir(tester, repositorio, janela: _janelaCompacta);
+
+      expect(
+        find.text('nenhuma festa chegando'),
+        findsNothing,
+        reason: 'com fonte assíncrona, a Home piscaria o estado de quem acabou '
+            'de se cadastrar antes de o dado chegar',
+      );
+
+      repositorio.emitir(const []);
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('nenhuma festa chegando'),
+        findsOneWidget,
+        reason: 'é o par: com a lista vazia confirmada, aí sim',
+      );
+    });
+
     testWidgets('a falha não apaga da tela o que já tinha chegado',
         (tester) async {
       final repositorio = _RepositorioQueFalha();
