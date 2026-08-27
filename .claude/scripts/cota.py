@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Lê a cota da sessão do Claude Code e diz se é hora de parar.
+"""Lê a cota da conta no Claude Code e diz se é hora de parar.
 
 A fonte é `~/.claude.json` -> `cachedUsageUtilization`, o **mesmo dado que o
-`/usage` mostra**. O Claude Code reescreve esse cache enquanto a sessão roda.
+`/usage` mostra**. O Claude Code reescreve esse cache a cada resposta da API
+enquanto a sessão trabalha, então durante trabalho ativo ele é fresco por
+construção. O cache é da conta, não da sessão: outra sessão queimando cota
+nesta máquina aparece aqui também.
 
 NÃO use `ccusage` para isto. Ele soma `cacheReadInputTokens`, que cresce a cada
 turno porque o contexto inteiro é relido, e não enxerga o limite da conta. Em
@@ -17,7 +20,7 @@ Uso:
 Saída (exit code):
     0  SEGUIR    - abaixo de 70%
     0  ATENCAO   - 70..84%, fechar a task corrente e evitar abrir task longa
-    1  PARAR     - >= 85%: escrever handoff, commitar, pausar
+    1  PARAR     - >= 85%: escrever handoff, commitar, agendar retomada, pausar
     2  INCERTO   - cache ausente, velho ou de janela já encerrada
 """
 
@@ -30,7 +33,9 @@ import json
 import os
 import sys
 
-CAMINHO = os.path.expanduser("~/.claude.json")
+# COTA_ARQUIVO existe para os testes conseguirem simular 85% sem esperar
+# a conta chegar lá de verdade.
+CAMINHO = os.environ.get("COTA_ARQUIVO") or os.path.expanduser("~/.claude.json")
 
 # Combinados com o usuário: 85% dispara o handoff; 70% é o aviso amarelo.
 LIMITE_PARAR = 85
@@ -43,9 +48,81 @@ IDADE_MAXIMA_MIN = 30
 # Quanto esperar depois do reset antes de retomar (combinado com o usuário).
 ESPERA_APOS_RESET_MIN = 10
 
+# Nome legível de cada janela, para a mensagem dizer o que estourou.
+NOMES = {
+    "five_hour": "sessão (5h)",
+    "seven_day": "semana (7d)",
+    "seven_day_opus": "semana Opus (7d)",
+    "seven_day_sonnet": "semana Sonnet (7d)",
+    "seven_day_oauth_apps": "semana apps (7d)",
+    "seven_day_cowork": "semana cowork (7d)",
+    "session": "sessão (5h)",
+    "weekly_all": "semana (7d)",
+    "weekly_opus": "semana Opus (7d)",
+}
+
 
 def _agora() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
+
+
+def _nome(chave: str) -> str:
+    return NOMES.get(chave, chave)
+
+
+def _coletar_janelas(uso: dict) -> list[dict]:
+    """Toda janela de limite que o cache conhece, não só as duas óbvias.
+
+    O `/usage` expõe mais buckets do que `five_hour`/`seven_day` — planos Max
+    têm um teto semanal separado de Opus, que pode estourar com o semanal geral
+    ainda baixo. Ler só os dois nomes conhecidos deixa esse passar em branco.
+    """
+    janelas: dict[str, dict] = {}
+
+    # Os buckets nomeados no topo de `utilization`.
+    for chave, valor in uso.items():
+        if not isinstance(valor, dict):
+            continue
+        pct = valor.get("utilization")
+        if not isinstance(pct, (int, float)):
+            continue
+        # Bucket zerado e sem data de reset é placeholder inerte do plano
+        # (nimbus_quill e afins). Um que chegue a passar de zero volta a contar.
+        if pct == 0 and not valor.get("resets_at"):
+            continue
+        janelas[_nome(chave)] = {
+            "janela": _nome(chave),
+            "chave": chave,
+            "pct": pct,
+            "reseta_em": valor.get("resets_at"),
+        }
+
+    # A lista `limits[]`, que traz as mesmas janelas em forma uniforme e às
+    # vezes alguma que não aparece como bucket nomeado.
+    for limite in uso.get("limits") or []:
+        if not isinstance(limite, dict):
+            continue
+        pct = limite.get("percent")
+        if not isinstance(pct, (int, float)):
+            continue
+        nome = _nome(limite.get("kind") or limite.get("group") or "?")
+        anterior = janelas.get(nome)
+        # Na dúvida entre duas leituras da mesma janela, fica a mais alta.
+        if anterior is None or pct > anterior["pct"]:
+            janelas[nome] = {
+                "janela": nome,
+                "chave": limite.get("kind"),
+                "pct": pct,
+                "reseta_em": limite.get("resets_at") or (anterior or {}).get("reseta_em"),
+            }
+
+    return sorted(janelas.values(), key=lambda janela: janela["pct"], reverse=True)
+
+
+def _local(iso: str | None) -> str | None:
+    if not iso:
+        return None
+    return dt.datetime.fromisoformat(iso).astimezone().isoformat(timespec="seconds")
 
 
 def ler_cota(caminho: str = CAMINHO) -> dict:
@@ -60,12 +137,11 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
     if not cache:
         return {
             "veredito": "INCERTO",
-            "motivo": "cachedUsageUtilization ausente — a sessão já chamou /usage nesta máquina?",
+            "motivo": "cachedUsageUtilization ausente — a sessão já falou com a API nesta máquina?",
         }
 
     uso = cache.get("utilization") or {}
-    cinco_h = uso.get("five_hour") or {}
-    sete_d = uso.get("seven_day") or {}
+    janelas = _coletar_janelas(uso)
 
     agora = _agora()
     buscado_em = dt.datetime.fromtimestamp(
@@ -73,24 +149,20 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
     )
     idade_min = (agora - buscado_em).total_seconds() / 60
 
-    reseta_em = cinco_h.get("resets_at")
-    reseta = dt.datetime.fromisoformat(reseta_em) if reseta_em else None
+    cinco_h = uso.get("five_hour") or {}
+    reseta_sessao = cinco_h.get("resets_at")
+    reseta = dt.datetime.fromisoformat(reseta_sessao) if reseta_sessao else None
     faltam_min = (reseta - agora).total_seconds() / 60 if reseta else None
 
     estado = {
+        "janelas": janelas,
         "sessao_pct": cinco_h.get("utilization"),
-        "semana_pct": sete_d.get("utilization"),
+        "semana_pct": (uso.get("seven_day") or {}).get("utilization"),
         "reseta_em_utc": reseta.isoformat(timespec="seconds") if reseta else None,
-        "reseta_em_local": reseta.astimezone().isoformat(timespec="seconds")
-        if reseta
-        else None,
+        "reseta_em_local": _local(reseta_sessao),
         "faltam_min": round(faltam_min, 1) if faltam_min is not None else None,
         "cache_idade_min": round(idade_min, 1),
-        "semana_reseta_em_local": (
-            dt.datetime.fromisoformat(sete_d["resets_at"]).astimezone().isoformat(timespec="seconds")
-            if sete_d.get("resets_at")
-            else None
-        ),
+        "semana_reseta_em_local": _local((uso.get("seven_day") or {}).get("resets_at")),
     }
 
     # Guarda 1: a janela de 5h já virou. O número em cache é da janela que
@@ -100,7 +172,7 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
         estado["veredito"] = "INCERTO"
         estado["motivo"] = (
             "a janela de 5h já resetou e o cache ainda é da janela anterior "
-            f"({estado['sessao_pct']}%). Rode /usage para forçar a atualização."
+            f"({estado['sessao_pct']}%). Rode /usage ou faça uma chamada para atualizar."
         )
         return estado
 
@@ -113,35 +185,39 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
         )
         return estado
 
-    sessao = estado["sessao_pct"]
-    semana = estado["semana_pct"]
-    if sessao is None or semana is None:
+    if not janelas:
         estado["veredito"] = "INCERTO"
-        estado["motivo"] = "o cache não trouxe as duas utilizações"
+        estado["motivo"] = "o cache não trouxe nenhuma janela de utilização"
         return estado
 
-    pior = max(sessao, semana)
-    if pior >= LIMITE_PARAR:
+    pior = janelas[0]
+    estado["gatilho"] = pior
+    if pior["pct"] >= LIMITE_PARAR:
         estado["veredito"] = "PARAR"
-        estado["motivo"] = f"{'sessão' if sessao >= semana else 'semana'} em {pior}%"
-    elif pior >= LIMITE_ATENCAO:
+        estado["motivo"] = f"{pior['janela']} em {pior['pct']}%"
+    elif pior["pct"] >= LIMITE_ATENCAO:
         estado["veredito"] = "ATENCAO"
-        estado["motivo"] = f"{pior}% — não abrir task longa"
+        estado["motivo"] = f"{pior['janela']} em {pior['pct']}% — não abrir task longa"
     else:
         estado["veredito"] = "SEGUIR"
-        estado["motivo"] = f"{pior}%"
+        estado["motivo"] = f"{pior['janela']} em {pior['pct']}%"
 
     return estado
 
 
 def horario_de_retomada(estado: dict) -> str | None:
-    """Quando retomar: reset + 10 min, no fuso local."""
-    if not estado.get("reseta_em_utc"):
+    """Quando retomar: reset **da janela que estourou** + 10 min, no fuso local.
+
+    Usar sempre o reset de 5h é errado quando quem estourou foi a semana: a
+    sessão volta em cinco horas e bate na mesma parede. O reset que importa é
+    o da janela do gatilho.
+    """
+    gatilho = estado.get("gatilho") or {}
+    alvo = gatilho.get("reseta_em") or estado.get("reseta_em_utc")
+    if not alvo:
         return None
 
-    reseta = dt.datetime.fromisoformat(estado["reseta_em_utc"])
-    retoma = reseta + dt.timedelta(minutes=ESPERA_APOS_RESET_MIN)
-
+    retoma = dt.datetime.fromisoformat(alvo) + dt.timedelta(minutes=ESPERA_APOS_RESET_MIN)
     return retoma.astimezone().isoformat(timespec="seconds")
 
 
@@ -165,19 +241,23 @@ def main() -> int:
         _imprimir(f"{veredito} · {estado.get('motivo', '')}")
     else:
         _imprimir(f"COTA: {veredito} — {estado.get('motivo', '')}")
-        if estado.get("sessao_pct") is not None:
-            _imprimir(f"  sessão (5h) : {estado['sessao_pct']}%")
-            _imprimir(f"  semana (7d) : {estado['semana_pct']}%")
+        for janela in estado.get("janelas", []):
+            marca = "<<" if janela is estado.get("gatilho") else ""
+            _imprimir(f"  {janela['janela']:<20}: {janela['pct']:>3}% {marca}")
         if estado.get("reseta_em_local"):
             _imprimir(
-                f"  reseta em   : {estado['reseta_em_local']} "
+                f"  reseta em (5h)      : {estado['reseta_em_local']} "
                 f"(faltam {estado['faltam_min']} min)"
             )
         if estado.get("semana_reseta_em_local"):
-            _imprimir(f"  semana reset: {estado['semana_reseta_em_local']}")
-        _imprimir(f"  cache idade : {estado['cache_idade_min']} min")
+            _imprimir(f"  reseta em (7d)      : {estado['semana_reseta_em_local']}")
+        _imprimir(f"  cache idade         : {estado['cache_idade_min']} min")
         if estado.get("retomar_em"):
-            _imprimir(f"  retomar em  : {estado['retomar_em']} (reset + 10 min)")
+            gatilho = estado.get("gatilho") or {}
+            _imprimir(
+                f"  retomar em          : {estado['retomar_em']} "
+                f"(reset de {gatilho.get('janela', '?')} + {ESPERA_APOS_RESET_MIN} min)"
+            )
 
     return {"SEGUIR": 0, "ATENCAO": 0, "PARAR": 1, "INCERTO": 2}[veredito]
 

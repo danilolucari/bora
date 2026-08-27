@@ -91,20 +91,29 @@ Teste sai do critério de aceite, nunca da implementação. `test/` espelha a es
 
 ## Cota da sessão: monitorar, pausar, retomar
 
-**Processo fixo, não opcional.** Vale para toda sessão neste repositório.
-Detalhe completo na skill `cota` (`.claude/skills/cota/SKILL.md`).
+**Processo fixo, não opcional, e automático.** Detalhe completo na skill `cota`
+(`.claude/skills/cota/SKILL.md`).
+
+**Você não precisa lembrar de verificar.** Três hooks em
+`.claude/settings.json` mantêm a monitoria ligada em toda sessão:
+`SessionStart` (relata o estado ao abrir), `PostToolUse` (relê a cada chamada
+de ferramenta e fala a cada 5 min quando não está verde) e `Stop` (em ≥85%
+**bloqueia** o fim do turno e injeta o protocolo de pausa). Em verde o monitor
+fica calado — silêncio é o normal, não sinal de que morreu.
 
 A fonte da cota é `~/.claude.json` → `cachedUsageUtilization` — o mesmo dado do
-`/usage`. **Nunca estime com `ccusage`**: ele soma `cacheReadInputTokens`, que
-incha a cada turno, e não enxerga o limite da conta; em 2026-08-25 isso produziu
-um alarme de 100% com o `/usage` real em 18%, e pausou o trabalho à toa.
+`/usage`, e da **conta**, não da sessão. **Nunca estime com `ccusage`**: ele
+soma `cacheReadInputTokens`, que incha a cada turno, e não enxerga o limite da
+conta; em 2026-08-25 isso produziu um alarme de 100% com o `/usage` real em
+18%, e pausou o trabalho à toa.
 
 ```bash
 python .claude/scripts/cota.py        # SEGUIR / ATENCAO / PARAR / INCERTO
 ```
 
-Verificar **ao fim de cada task**, em **toda fronteira de fase** e antes de abrir
-trabalho longo. Gatilho pelo pior entre sessão (5h) e semana (7d):
+Gatilho pela **pior de todas as janelas** que o cache conhece — não só sessão
+(5h) e semana (7d): planos Max têm teto semanal separado de Opus, que estoura
+com o semanal geral ainda baixo.
 
 | < 70% | 70–84% | ≥ 85% | cache velho ou janela virada |
 |---|---|---|---|
@@ -113,13 +122,17 @@ trabalho longo. Gatilho pelo pior entre sessão (5h) e semana (7d):
 **Protocolo de pausa**, nesta ordem: fechar a task corrente até o commit (nunca
 deixar meia task no disco) → escrever o handoff na seção `## Handoff` do
 `.specs/STATE.md`, **substituindo só o corpo daquela seção** → commitar →
-agendar a retomada para `resets_at + 10 min` via `Register-ScheduledTask` do
-PowerShell (não `schtasks` pelo Git Bash, onde `/Query` vira caminho) → avisar o
-usuário com o horário agendado.
+`pwsh -File .claude/scripts/agendar-retomada.ps1` → avisar o usuário com a
+janela que estourou e o horário agendado.
 
-O que de fato protege o trabalho é o **commit atômico por task** somado ao
-handoff — não o monitor. Não existe vigilância em background: a verificação só
-acontece quando o script roda.
+A retomada é **headless**: a tarefa `bora-retomar` chama o Claude Code com
+`-p --permission-mode acceptEdits`, loga em `.claude/logs/` e se desagenda. O
+alvo é o reset **da janela que estourou** + 10 min — se foi a semana, voltar em
+cinco horas bate na mesma parede.
+
+O que de fato protege o trabalho continua sendo o **commit atômico por task**
+somado ao handoff. O monitor não sobrevive à sessão morrer entre dois turnos;
+o commit sobrevive.
 
 ## Workflow
 

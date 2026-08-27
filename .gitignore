@@ -46,3 +46,7 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Estado do monitor de cota (por sessão, local)
+.claude/.cota-estado.json
+.claude/logs/
