@@ -232,141 +232,137 @@
 
 ## Handoff
 
-> **SNAPSHOT — 2026-08-26.** Spec 04 `home` com Execute concluído e Verifier **PASS**.
+> **SNAPSHOT — 2026-08-27.** Specify das cinco specs restantes (06 `lista`, 07 `galera`,
+> 08 `convite`, 09 `convidado`, 10 `custos`) concluído. **Nenhuma linha de código foi
+> escrita** nesta sessão — o trabalho todo é documento.
 > O que está abaixo de "Histórico — sessão do M0" é história, não estado corrente.
 
-### Onde parou
+### O que esta sessão entregou
 
-**Spec 04 `home` — COMPLETA, validada e mergeada na `main`.** Branch `feature/home`, nascida
-de `feature/entrar` porque a 04 depende da porta de sessão e da guarda dela. **31
-commits.**
+**As seis zonas cinzentas do ROADMAP §4 foram fechadas com o usuário e viraram
+AD-023..AD-028** (`849e0f2`), todas na opção recomendada:
 
-| | |
-|---|---|
-| Testes | **1137 verdes** (baseline da spec 03: 947 · **+190**) |
-| `flutter analyze` | zero issues |
-| Verifier | **PASS** na 3ª iteração — **19/19** requisitos com evidência que discrimina |
-| Sensor | 3 rodadas · **37 mutações, 32 mortas**, 0 sobreviventes não explicados |
-| `code-review` | 2 rodadas · 27 achados · 17 defeitos reais fechados com regressão |
-| Relatório | `.specs/features/home/validation.md` — 752 linhas, as 3 iterações preservadas |
+| Zona | Decisão | AD |
+|---|---|---|
+| G2 | Preços de RN-11 são tabela curada em Dart puro, sem geolocalização | AD-023 |
+| G3 | Pedido de delivery implementado inteiro atrás de porta, adaptador falso, copy literal | AD-024 |
+| G4 | Grupo e enquete são estado do BORA; o WhatsApp recebe texto por share sheet | AD-025 |
+| G5 | Link perpétuo, papel lido na abertura, identidade anônima por dispositivo | AD-026 |
+| G6a | Despesa não se cria à mão — nasce de RN-20, do delivery e do que o anfitrião assume | AD-027 |
+| G6b | Cobrança é aviso + estado; sem chave Pix, sem BR Code, sem app de banco | AD-028 |
 
-**16 tasks executadas**: as 13 planejadas mais **T3a** (`BoraAvatar` aceita par de cores),
-**T4a** (`MarcaBora` promovida a `BoraMarca` com `.header()`) e **T9a** (`ResumoDeFesta`
-ganha `id`). As três nasceram do mesmo padrão: a tela precisava de algo que o design system
-ou o domínio não tinham.
+**Duas dessas carregam ressalva escrita dentro da própria AD.** AD-024 e AD-025 fazem a
+tela afirmar coisas que não acontecem ("PEDIDO A CAMINHO!", "GRUPO CRIADO NO WHATSAPP ✅").
+Ficou registrado nas duas que **o produto não vai a público com essas telas ativas** sem
+revisitar a decisão. Não é dívida técnica esquecida; é escolha declarada.
 
-### Conferência visual — W-02 feita, T-02 **não**
-
-**W-02 conferida e aprovada** (2026-08-26). Build web com um entrypoint de demo
-descartável — semeando sessão e festas pelos pontos de injeção que
-`configureDependencies` já expõe, sem Firebase —, servido local e capturado em headless a
-1180×800 e a 900×820. Nos dois tamanhos a tela bate com a spec: header com logo, ação e
-avatar amarelo; título e subtítulo na mesma linha; grid de duas colunas; ARQUIVO com os
-valores em vermelho. O entrypoint foi **apagado**, não commitado.
-
-**Ela pagou por si já na primeira captura**: "+ CONVIDAR" renderizava como um retângulo
-preto sólido, com o rótulo invisível. O default transparente do `BoraSecondaryButton`
-deixa a sombra dura de §4 aparecer **através** do botão. A suíte inteira passava, porque a
-asserção era `find.text('+ CONVIDAR')` e o texto estava lá — faltava contraste, que teste
-de widget não vê. Corrigido em `a88fec4`, com teste que mata o defeito.
-
-**T-02 continua sem conferência.** A captura a 390×820 sai com o conteúdo cortado à
-direita, e **não foi possível decidir se é defeito ou artefato**: a mesma página a 900
-renderiza exata, o Flutter não pinta faixa de overflow nenhuma na imagem (o que aponta
-para recorte da captura, provavelmente o piso de largura de janela do Chrome), e a
-hipótese do `<meta name="viewport">` ausente foi **testada e refutada** — injetá-lo não
-mudou um pixel. Fica aberto, e é a primeira coisa a resolver: ou com emulador Android de
-verdade, ou com CDP/device emulation em vez de `--window-size`.
-
-Junto disso seguem sem conferência **T-01 e W-01**, da spec 03.
-
-### Observação para o design system, fora da fronteira desta spec
-
-O default transparente do `BoraSecondaryButton` combinado com a sombra dura de §4 produz o
-retângulo preto sobre **qualquer** fundo claro, não só no card da Home. Quem for mexer no
-componente decide se o default deve virar branco; aqui foi resolvido escolhendo a variante
-que §5 já oferece.
-
-### Estado do M1, spec a spec
+### Estado das specs
 
 | Spec | Specify | Design | Tasks | Execute | Verifier |
 |---|---|---|---|---|---|
 | 03 `entrar` | ✅ | ✅ | ✅ 16 tasks | ✅ | ✅ **PASS** |
 | 04 `home` | ✅ | ✅ | ✅ 16 tasks | ✅ | ✅ **PASS** |
-| 05 `montar` | ✅ | ⬜ **próximo passo** | ⬜ | ⬜ | ⬜ |
-| 06 `lista` | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 05 `montar` | ✅ | ✅ | ✅ | ⬜ | ⬜ |
+| 06 `lista` | ✅ **novo** | ⬜ | ⬜ | ⬜ | ⬜ |
+| 07 `galera` | ✅ **novo** | ⬜ | ⬜ | ⬜ | ⬜ |
+| 08 `convite` | ✅ **novo** | ⬜ | ⬜ | ⬜ | ⬜ |
+| 09 `convidado` | ✅ **novo** | ⬜ | ⬜ | ⬜ | ⬜ |
+| 10 `custos` | ✅ **novo** | ⬜ | ⬜ | ⬜ | ⬜ |
 
-`montar` tem `spec.md` e `context.md` prontos — **falta o `design.md`**. `lista` nunca foi
-especificada e segue com as premissas G2/G3 registradas, por decisão do usuário.
+**Todas as onze specs do ROADMAP têm agora `spec.md`.** Nenhuma das cinco novas tem
+`design.md` nem `tasks.md` — **o próximo passo é Design**, na ordem de dependência do
+ROADMAP §2: `lista` e `galera` podem andar em paralelo; `convite` e `convidado` dependem
+das duas; `custos` depende de `convidado`.
 
-### As duas specs estão mergeadas na `main`
+Prefixos de ID: `LIST-`, `GAL-`, `CVT-` (convite), `CVD-` (convidado), `CUST-`.
 
-Por decisão do usuário em 2026-08-26, as duas entraram por **merge local** em vez de PR — o
-`gh` CLI não está instalado nesta máquina. Na ordem da dependência, e com `--no-ff`, como os
-merges do M0:
+### As specs novas, commit a commit
 
-- `582f63e merge(entrar): integra a tela de entrar na main` — 947 testes na `main`
-- `34eb1dc merge(home): integra o painel de rolês na main` — **1137 testes na `main`**
+| Spec | Commit | Requisitos | Assumptions | Divergências |
+|---|---|---|---|---|
+| 07 `galera` | `309a14f` + `8034819` | GAL-01..28 | 19 | — |
+| 09 `convidado` | `81055fa` | CVD-01..44 | 26 | 7 |
+| 06 `lista` | `1e55911` | LIST-01..35 | 23 | 7 |
+| 08 `convite` | `95754d6` | CVT-01..37 | 28 | 7 |
+| 10 `custos` | `fa92fd8` | CUST-01..37 | 22 | 6 |
 
-As branches `feature/entrar` e `feature/home` continuam existindo e apontam para o que foi
-mergeado. **A `main` local está à frente de `origin/main` e não foi empurrada.**
+### O que as specs decidiram e o M1/M2/M3 herda
 
-### Pendências declaradas que o M1 carrega adiante
+Cada `spec.md` tem uma seção **Divergências encontradas na spec-fonte**. As que mudam
+comportamento, e não só redação:
 
-Numeradas como o Verifier as deixou no `validation.md`:
+1. **`lista` D-1 — a spec-fonte tem duas moedas para o preço de um item.** Três trechos
+   (micro-label "MÉDIA" de T-04, total R$ 286 de RN-11, arquivo 01 §6) pedem a média de
+   mercado; três (R$ 271 de RN-10, aceite "por adulto" de UC-04, `CLAUDE.md`) pedem o
+   preço-base. **Diferença de exatos R$ 15 no estado padrão.** Resolvido a favor da
+   calculadora; o R$ 286 / faixa R$ 234–356 permanece caso de teste **da camada**, não da
+   tela, porque nenhuma lista montável iguala a tabela de RN-11 (a linguiça toscana não tem
+   chip que a produza).
+2. **`convidado` D-3 — "papel lido na abertura" é forjável por cliente anônimo.** A AD-026
+   diz que o papel vale o do instante da abertura; um cliente anônimo pode mentir sobre isso.
+   A spec resolve decidindo o papel **no servidor, no momento da escrita**, e congelando-o.
+   **Isso é mais forte que a AD-026 literal e ajusta o que ela diz** — vale conferir com o
+   usuário quando o Design da 09 começar.
+3. **`convidado` — o nome do convidado**, ambiguidade central que a spec-fonte nunca
+   resolveu. O flyer abre genérico (RN-24 exige abrir "direto no flyer") e o nome é pedido
+   **uma vez**, no primeiro toque em BORA!/NÃO VOU, colado ao uid anônimo. Campo de nome não
+   é cadastro, então o aceite duro de UC-08 continua de pé — e há requisito que o afirma por
+   **ausência** na árvore.
+4. **`convite` D-7 — a enquete HORÁRIO soma 101%.** UC-18 diz "somam ~100%"; com votos
+   5/2/1 o `round()` por opção dá 101. **Não se normaliza** — 101 entra literal no critério.
+5. **`convite` D-6 — "toggle" significa coisas opostas** em T-06 (blocos aditivos) e T-07
+   (modelos exclusivos). O comportamento descrito vence o vocabulário.
+6. **`convidado` fecha a pendência D-5** herdada da spec 04, que estava sem dono desde
+   26/08: pessoa, papel, atribuições e contadores caem numa **transação única**, e o
+   invariante da AD-022 é reavaliado a cada uma das seis transições de RSVP.
 
-1. **D-1 · avatares de 40px de W-02.** `BoraStackedAvatars` é fixo nos 34px de §5, e os
-   outros três degraus do web (sombra 8px, padding 28px, título 38px) já estão aplicados.
-   **Não é imprecisão de spec** — W-02 define os 40px com precisão. É requisito deferido de
-   HOME-05, e precisa de emenda de fronteira no design system.
-2. **D-2 · seis spec-precision gaps abertos** — ls do logo do header, "primário compacto",
-   botão voltar "quando aplicável", emoji do ARQUIVO, cor dos avatares da pilha, copy da
-   falha da Home. Todos legítimos: é a spec que não define, e cada um está declarado no
-   arquivo que o carrega.
-3. **D-3 · contrato de igualdade de `HomeState`** — `comConfirmacaoNova` não tem teste
-   direto; hoje é inseparável das listas pela lógica do bloc. É o maior risco da lista.
-4. **D-5 · o custo declarado da AD-022** — deriva entre o contador da Home e os nomeados da
-   Galera, com o "+N" junto. Dono: spec 09 `convidado`, que grava contador e RSVP na mesma
-   escrita.
-5. **D-6 · `rotaAtual()` usa estado global de módulo** em `app_de_teste.dart`, isolado por
-   `addTearDown`. Vira problema só com testes concorrentes no mesmo isolate.
-6. **D-7 · semente vazia em produção** (AD-016) — ver o obstáculo da conferência visual.
-7. Da spec 03, ainda aberta: **o código de cancelamento do Google nunca foi capturado
-   empiricamente**. O `firebase` CLI está instalado (15.28.1) e o project id é `bora-87050`.
+7. **`custos` fecha a premissa A-16 de `calculo`**, aberta desde 25/08 e explicitamente
+   delegada a esta spec. A resposta não é trocar `1.0` por `0.0`: **a tela nunca renderiza
+   barra com zero linhas**, então o valor deixa de ser observável e `core/calculo` **não
+   muda**. O argumento: `1.0` mente para cima, `0.0` mente para baixo, e não pintar a barra
+   é a única saída honesta.
+8. **`custos` resolve a reentrância**, que era o maior risco da spec — o que acontece com
+   linhas já pagas quando uma despesa nova chega depois de o acerto começar. O acerto é
+   **sempre derivado** e a marcação fica guardada por **par `(de, para)`**: valor que não
+   subiu mantém pago; valor que subiu volta a PENDENTE e perde a cobrança; par que some
+   perde o registro; par novo nasce pendente; progresso recomputado, nunca acumulado.
+9. **`custos` D-3 — quem são os "adultos participantes" de RN-14.** A regra supõe que
+   coincidem com as pessoas nomeadas, mas RN-01 e a premissa A-05 de `calculo` dizem que
+   não: na fixture RN-30 são **6 contra 5**. A cota justa divide por `adultos`, e a
+   diferença **não vira linha de acerto**. Vale conferir no Design da 10.
 
-### O padrão que o sensor achou três vezes — vale mirar primeiro na spec 05
+### Colisão de numeração de AD — resolvida
 
-**Defesa escrita e documentada no código, nunca exercida por teste, porque a fixture já
-satisfazia a condição que ela protege.** Aconteceu com o teto da pilha de avatares (a
-fixture já cortava em 3), com o `SafeArea` (nenhum teste definia inset) e com a cópia
-defensiva de `emitir` (só a da semente tinha teste). Nas três rodadas foi o alvo mais
-produtivo do sensor.
+O `design.md` da spec 05 `montar` reservava **AD-023** para a porta de edição de festa em
+`lib/core/festas/`, e o `STATE.md` passou a usar AD-023 para a tabela de preços quando as
+zonas cinzentas foram resolvidas. Quem renumerou foi a proposta da 05, que ainda não estava
+registrada: virou **AD-029** (`19f77a7`), em `design.md` e nas 5 ocorrências de `tasks.md`,
+incluindo a task T1 que a grava. Achado pelo worker de Specify da spec 06.
 
-Um segundo padrão, das duas rodadas de `code-review`: **asserção que confere o objeto
-errado** — `Text.style` em vez dos spans, `getRect` do widget em vez do texto pintado,
-`findsOneWidget` sem `skipOffstage` numa tela empilhada. Todas passavam com o defeito
-presente.
+**A AD-029 continua proposta, não registrada** — ela entra no `STATE.md` na T1 do Execute
+de `montar`.
 
-### Correção de registro
+### O que a próxima sessão precisa saber sobre cota e orquestração
 
-O `tasks.md` de `home` afirmava que os sete achados do primeiro `code-review` foram fechados
-"cada um com teste de regressão que falha sem a correção". O Verifier conferiu e mostrou que
-**para os dois de `SafeArea`/inset isso era falso**. A frase foi corrigida no lugar onde
-estava, dizendo o que era falso e quando a rede passou a existir.
+Esta sessão **estourou a janela de 5h duas vezes**. A primeira derrubou cinco workers de
+uma vez; quatro estavam ainda lendo arquivo e perderam tudo, e só sobreviveu o que já estava
+escrito em disco.
 
-### Combinados que seguem valendo
-
-- **Um PR por spec**, não por fase interna.
-- Execução das tasks **inline**; **Verifier como sub-agente**; `code-review` ao fim de cada
-  batch; skill `run` nas tasks de tela.
-- Bloqueio de acesso: tentar emular/simular local; se não der, **pular e anotar no relatório
-  final** — não travar.
-- Cota: `python .claude/scripts/cota.py` ao fim de cada task e em fronteira de fase.
-- **Confira o exit code do `flutter test` explicitamente.** `flutter test | tail` engole o
-  código de saída, e isso já produziu um commit com o gate vermelho nesta sessão.
-- **Arquivo markdown longo em português vai pela ferramenta Write, não por heredoc** — o
-  heredoc estoura em conteúdo com acento, crase e aspas. Custou duas falhas aqui e uma no
-  sub-agente.
+1. **Não dispare mais de 2 subagentes pesados em paralelo.** Cinco workers Opus, cada um
+   lendo ~40KB e escrevendo ~40KB, consomem uma janela de 5h inteira em minutos.
+2. **O `cota.py` não antecipa fan-out.** No instante do primeiro 429 ele reportava
+   `sessão 49%` — leitura com 31 min de idade, que ele mesmo classificou como `INCERTO`. O
+   gasto paralelo não chega ao `cachedUsageUtilization` a tempo. Em orquestração com
+   subagentes, verde não é garantia.
+3. **Retomar agente morto por mensagem é muito mais barato que abrir agente novo** — o
+   transcript preserva as leituras, que é a parte cara. Foi assim que o `context.md` da
+   `galera` foi salvo.
+4. **Worker não roda git.** Vários processos disputando o `index.lock` quebram. O
+   orquestrador commita cada artefato assim que chega — foi o que limitou a perda a zero
+   nas duas quedas.
+5. `cota.py` tem um bug pequeno: quando `cachedUsageUtilization` está ausente ele imprime o
+   veredito e **depois** estoura `KeyError: 'cache_idade_min'`. O veredito chega ao hook, então
+   o impacto é cosmético, mas o traceback assusta.
 
 ### Como retomar
 
@@ -377,15 +373,29 @@ git checkout main && flutter test            # 1137, referência de sanidade
 python .claude/scripts/cota.py
 
 # ler, nesta ordem:
-#   .specs/features/home/validation.md   (o que o Verifier cobra e o que ficou pendente)
-#   .specs/features/montar/spec.md       (o próximo passo é o design.md dele)
-#   .specs/ROADMAP.md §2 e §3
+#   .specs/STATE.md  secao Decisions (AD-023..AD-028 sao novas)
+#   .specs/ROADMAP.md secoes 2 e 3
+#   o spec.md da feature que for entrar em Design
 ```
 
-Ordem obrigatória do que resta no M1: **`montar` (Design → Tasks → Execute → Verifier → PR)**
-→ **`lista` (Specify com premissas → Design → Tasks → Execute → Verifier → PR)**.
+**Ordem obrigatória do que resta:** Design → Tasks → Execute → Verifier → PR de cada spec,
+respeitando as dependências do ROADMAP §2. `montar` já tem tasks e está pronta para Execute;
+as cinco novas precisam de Design primeiro.
+
+### Combinados que seguem valendo
+
+- **Um PR por spec**, não por fase interna.
+- **Verifier como sub-agente** ao fim de cada spec; `code-review` ao fim de cada batch; skill
+  `run` nas tasks de tela.
+- Bloqueio de acesso: tentar emular/simular local; se não der, **pular e anotar no relatório
+  final** — não travar.
+- **Confira o exit code do `flutter test` explicitamente.** `flutter test | tail` engole o
+  código de saída.
+- **Arquivo markdown longo em português vai pela ferramenta Write, não por heredoc.**
+- Conferência visual ainda pendente de **T-01, W-01 e T-02** (W-02 foi conferida em 26/08).
 
 ---
+
 ## Histórico — sessão do M0
 
 

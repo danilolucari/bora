@@ -71,6 +71,31 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > menciona UC-06 e UC-16, que são dela.
 
 
+> ## ✅ Specify de todas as onze specs concluído — 2026-08-27
+>
+> As cinco que faltavam — **06 `lista`, 07 `galera`, 08 `convite`, 09 `convidado` e
+> 10 `custos`** — foram especificadas nesta sessão. **Todas as onze specs do ROADMAP têm
+> agora `spec.md`.** Nenhuma linha de código foi escrita: o trabalho todo é documento.
+>
+> Antes disso, as **seis zonas cinzentas de §4 foram fechadas com o usuário** e viraram
+> **AD-023..AD-028** (`849e0f2`). O Discuss das quatro specs que o exigiam rodou por elas.
+>
+> | Spec | Commit | Requisitos | Assumptions | Divergências |
+> |---|---|---|---|---|
+> | 06 `lista` | `1e55911` | LIST-01..35 | 23 | 7 |
+> | 07 `galera` | `309a14f` + `8034819` | GAL-01..28 | 19 | — |
+> | 08 `convite` | `95754d6` | CVT-01..37 | 28 | 7 |
+> | 09 `convidado` | `81055fa` | CVD-01..44 | 26 | 7 |
+> | 10 `custos` | `fa92fd8` | CUST-01..37 | 22 | 6 |
+>
+> **181 requisitos rastreáveis, 118 assumptions e 27 divergências da spec-fonte**, cada
+> uma com default e racional no arquivo que a carrega. Duas fecham pendências antigas: a
+> **D-5** da spec 04 (dono era a 09) e a **premissa A-16** de `calculo` (dono era a 10).
+>
+> **Próximo passo das cinco é Design**, na ordem de dependência de §2: `lista` e `galera`
+> em paralelo → `convite` e `convidado` → `custos`. Detalhe no `## Handoff` do `STATE.md`.
+
+
 ---
 
 ## 2. Tabela mestre das specs
@@ -87,11 +112,11 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 | 04 | `home` | `features/home/` | T-02, W-02 · UC-02, UC-24 · RN-28 (consumo) | **Grande** ✱✱ | ✅ feito | ✅ feito | ✅ feito | 00, 01, 03 |
 | — | **`home` mergeada** | — | 16 tasks · Verifier PASS 19/19 · 1137 testes · `34eb1dc` | — | — | — | — | — |
 | 05 | `montar` | `features/montar/` | T-03, W-03 · UC-03, UC-04 · RN-01..10, RN-21 (consumo) | Grande | ✅ feito | sim | sim | 01, 02, 04 |
-| 06 | `lista` | `features/lista/` | T-04, W-03/W-04 · UC-05, UC-06, UC-14, UC-15, UC-16 · RN-10, RN-11, RN-12, RN-27 | Grande | **sim** | sim | sim | 01, 02, 05 |
+| 06 | `lista` | `features/lista/` | T-04, W-03/W-04 · UC-05, UC-06, UC-14, UC-15, UC-16 · RN-10, RN-11, RN-12, RN-27 | Grande | ✅ feito | sim | sim | 01, 02, 05 |
 | 07 | `galera` | `features/galera/` | T-05, W-04 · UC-11, UC-12, UC-13 · RN-21, RN-22, RN-23 | Grande | — | sim | sim | 01, 02, 04 |
-| 08 | `convite` | `features/convite/` | T-06, T-07, W-04 · UC-07, UC-17, UC-18 · RN-25, RN-26, RN-26b | **Complexo** | **sim** | sim + pesquisa | sim | 06, 07 |
-| 09 | `convidado` | `features/convidado/` | T-08, W-04 (standalone) · UC-08, UC-09, UC-10 · RN-20, RN-23 (consumo), RN-24, RN-28 | **Complexo** | **sim** | sim + pesquisa | sim | 02, 06, 07 |
-| 10 | `custos` | `features/custos/` | T-09, W-04 · UC-19..UC-23 · RN-14..RN-19 (consumo), RN-20 | Grande | **sim** | sim | sim | 02, 09 |
+| 08 | `convite` | `features/convite/` | T-06, T-07, W-04 · UC-07, UC-17, UC-18 · RN-25, RN-26, RN-26b | **Complexo** | ✅ feito | sim | sim | 06, 07 |
+| 09 | `convidado` | `features/convidado/` | T-08, W-04 (standalone) · UC-08, UC-09, UC-10 · RN-20, RN-23 (consumo), RN-24, RN-28 | **Complexo** | ✅ feito | sim | sim | 02, 06, 07 |
+| 10 | `custos` | `features/custos/` | T-09, W-04 · UC-19..UC-23 · RN-14..RN-19 (consumo), RN-20 | Grande | ✅ feito | sim | sim | 02, 09 |
 
 ✱ **Revisão pós-Specify (2026-08-12):** a spec 00 subiu de Médio para Grande. O Discuss ampliou o "pronto" da fundação para incluir navegação, DI + BlocObserver, README e espelho de testes (~10 tasks), e essas escolhas — pacote de rotas, container de DI, wiring do emulador — são herdadas por todas as dez specs seguintes. Escolha herdada por dez specs é decisão de arquitetura, então **Design deixou de ser pulado**. Ver `.specs/features/fundacao/spec.md` §Porte.
 
