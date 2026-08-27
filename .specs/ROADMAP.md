@@ -178,11 +178,11 @@ Registradas aqui para nenhuma se perder; cada uma é resolvida no Discuss da spe
 | # | Zona cinzenta | Spec dona |
 |---|---|---|
 | ~~G1~~ | ✅ **Resolvida** (2026-08-25, **AD-015**): vale a spec — **e-mail/senha + Google**. Telefone/SMS é **descartado**, não adiado: T-01, W-01 e UC-01 não o mencionam e não há UI desenhada para ele. O `CLAUDE.md` foi corrigido. | `entrar` |
-| G2 | Fonte real dos preços médios "de N mercados perto de você" (RN-11) — dado vivo ou tabela curada? | `lista` |
-| G3 | Delivery iFood/Rappi/Zé (RN-27): integração real inexistente — simular, linkar ou cortar do MVP? | `lista` |
-| G4 | WhatsApp (RN-25/26): grupo e enquete não são criáveis por API pública — o que é real no produto? | `convite` |
-| G5 | Segurança do link público: expiração, revogação, mudança de nível pós-abertura, identidade do anônimo | `convidado` |
-| G6 | Origem das despesas (não há UC de criação) e mecânica real da cobrança Pix | `custos` |
+| ~~G2~~ | ✅ **Resolvida** (2026-08-27, **AD-023**): **tabela curada em Dart puro**. A tabela de RN-11 vira fixture tipada em `core/calculo` sobre `PrecoDeMercado`; sem geolocalização e sem consulta — "perto de você" e o `N` de "média de N mercados" são copy e coluna da própria tabela. | `lista` |
+| ~~G3~~ | ✅ **Resolvida** (2026-08-27, **AD-024**): **fluxo completo atrás de porta, com adaptador falso**. Sheet, parceiros, subtotal+frete, overlay e a despesa de RN-20 são todos reais; a chamada ao parceiro não. Copy de T-04 fica literal, sem selo de "simulado". | `lista` |
+| ~~G4~~ | ✅ **Resolvida** (2026-08-27, **AD-025**): **grupo e enquete são estado do BORA**; o WhatsApp recebe texto por share sheet / `wa.me`. Ação única, voto trocável, `%` e a trava "CRIE O GRUPO PRIMEIRO ☝️" continuam verdadeiros e testáveis. | `convite` |
+| ~~G5~~ | ✅ **Resolvida** (2026-08-27, **AD-026**): link **perpétuo**, sem expiração nem revogação; papel lido **no instante da abertura**; identidade do anônimo = uid da auth anônima persistido no dispositivo. Portador do código com papel vigente é modelo de ameaça **aceito**. | `convidado` |
+| ~~G6~~ | ✅ **Resolvida** (2026-08-27, **AD-027** e **AD-028**): despesa **não se cria à mão** — nasce de "EU LEVO" (RN-20), do pedido de delivery e do que o anfitrião assume; T-09 não ganha "+ DESPESA". E a cobrança é **aviso + estado**, sem chave Pix, sem BR Code, sem app de banco. | `custos` |
 | ~~G7~~ | ✅ **Resolvida** (2026-08-12): RN-30 é **fixture de teste/demo** em Dart puro, não seed de onboarding — nenhum usuário novo ganha festa de exemplo. Nasce como dado bruto na `fundacao` e é tipada pela spec `calculo`. | `fundacao` |
 | ~~G8~~ | ✅ **Resolvida** (2026-08-25, **AD-016**): o projeto na nuvem continua adiado. No M1, **auth é real contra o emulador e dado de festa é em memória**, atrás de `FestaRepository` como porta abstrata semeada pela fixture RN-30. **Firestore, Hosting e Functions entram no M2**, com a spec `convidado` — que é quem produz o realtime de RN-28 e a rota pública. | `convidado` |
 

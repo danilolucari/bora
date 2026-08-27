@@ -181,6 +181,55 @@
 - **Date**: 2026-08-26
 - **Status**: active
 
+### AD-023
+- **Decision**: Os preços de RN-11 ("média de N mercados perto de você") são uma **tabela curada em Dart puro**, não dado vivo. A tabela do arquivo 03 (média, mín, máx e nº de fontes por item) entra como fixture tipada em `core/calculo`, sobre a entidade `PrecoDeMercado` que a AD-008 já colocou lá. **Não há geolocalização nem consulta**: "perto de você" e "média de N mercados" são copy literal da spec, e o `N` do rótulo vem da coluna "Fontes" da própria tabela.
+- **Reason**: Resolve a zona cinzenta **G2**. Não existe fornecedor de preços definido, e a tabela do arquivo 03 já é dado literal — com o total (R$ 286) e a faixa (R$ 234–356) que UC-14 cobra na tela. Curar no código mantém o aceite reproduzível por teste e não antecipa o Firestore, que a AD-016 coloca no M2.
+- **Trade-off**: os preços envelhecem e só mudam por deploy, e o rótulo "perto de você" é honesto quanto à origem (mercados reais pesquisados) mas não quanto ao "perto". Trocar por fonte viva depois é substituir a implementação atrás da mesma porta, sem tocar em tela.
+- **Scope**: spec 06 `lista` (UC-14, RN-11); `montar` consome no rail do web.
+- **Date**: 2026-08-27
+- **Status**: active
+
+### AD-024
+- **Decision**: O pedido por delivery de RN-27/UC-16 é **implementado inteiro** — sheet com endereço trocável, três parceiros com ETA e frete, subtotal + frete = total, overlay "PEDIDO A CAMINHO! 🛵" e a despesa entrando no acerto por RN-20 — **atrás de uma porta abstrata de pedido**, cujo único adaptador do MVP é falso: nenhuma chamada de rede, nenhum pedido real. A copy de T-04 fica **literal**, sem selo de "simulado".
+- **Reason**: Resolve **G3**. iFood, Rappi e Zé não expõem API pública de pedido — nenhuma opção disponível entrega o pedido de verdade. Entre as que não entregam, a que preserva o aceite de UC-16 (total = subtotal + frete, Zé com frete grátis) e o de RN-20 (o pedido vira despesa rachada) é o fluxo completo atrás de porta. Quando houver contrato com um parceiro, troca-se o adaptador sem tocar em tela nem em teste de aceite.
+- **Trade-off**: a tela afirma "PEDIDO A CAMINHO!" sem pedido a caminho. Decisão consciente do usuário em 2026-08-27 — o selo "simulado" foi oferecido e recusado por alterar copy literal. Enquanto o adaptador for falso, **o produto não vai a público com essa tela ativa** sem revisão desta AD.
+- **Scope**: spec 06 `lista` (UC-16, RN-27); spec 10 `custos` recebe a despesa gerada.
+- **Date**: 2026-08-27
+- **Status**: active
+
+### AD-025
+- **Decision**: "Grupo" e "enquete" de RN-25/RN-26 são **estado do BORA**, não objetos do WhatsApp. "CRIAR GRUPO" cria no BORA um grupo com o nome da festa contendo **apenas os confirmados** (RN-25) e vira chip irreversível; as três enquetes de RN-26 vivem no BORA, com um voto por enquete por pessoa, trocável, e `%` calculado lá; "POSTAR ENQUETE NO GRUPO 📲" e "ENVIAR NO WHATSAPP →" saem por **share sheet / `wa.me`**, levando o texto montado. A trava "CRIE O GRUPO PRIMEIRO ☝️" passa a valer sobre o grupo do BORA. Toasts e estados seguem RN-29, literais.
+- **Reason**: Resolve **G4**. A API pública do WhatsApp não cria grupo nem posta enquete, e a Cloud API — número comercial, aprovação da Meta, custo por conversa — também não cria nenhum dos dois. Com grupo e enquete como estado próprio, todo o comportamento de UC-17/UC-18 (ação única e persistente, voto trocável, percentuais somando ~100, trava sem grupo) fica verdadeiro e testável, e o WhatsApp recebe o que de fato aceita: texto por link.
+- **Trade-off**: o chip "✅ '<nome>' · N membros" descreve um grupo que não existe no WhatsApp do usuário — a copy de RN-25 promete mais do que o produto faz. Mesma ressalva de exposição pública da AD-024.
+- **Scope**: spec 08 `convite` (T-06, T-07, UC-07, UC-17, UC-18).
+- **Date**: 2026-08-27
+- **Status**: active
+
+### AD-026
+- **Decision**: O link público `bora.app/c/<codigo>` é **perpétuo** — sem expiração e sem revogação. O papel de RN-23 é lido **no instante da abertura** (aceite literal de UC-13): trocar o nível no segmented não altera o papel de quem já entrou. A identidade do convidado sem conta é o **uid da auth anônima do Firebase, persistido no dispositivo** — o mesmo aparelho volta como a mesma pessoa (é o que faz "MUDEI DE IDEIA ✊" de UC-10 funcionar), outro aparelho é outra pessoa.
+- **Reason**: Resolve **G5**. Nem T-05 nem W-04 desenham controle de revogação ou de expiração; inventá-los seria UI fora da spec-fonte num produto de copy literal. Expiração automática quebraria tanto o retorno tardio de UC-10 quanto o acesso do convidado ao acerto pós-festa.
+- **Trade-off**: quem repassa o link dá o mesmo papel a um desconhecido, e não há como cortar o acesso sem trocar o código da festa; limpar os dados do navegador faz o convidado voltar como pessoa nova, duplicando o RSVP. As security rules do Firestore assumem "qualquer portador do código, com o papel vigente na abertura" como modelo de ameaça **aceito**, não como falha.
+- **Scope**: spec 09 `convidado` (RN-23, RN-24, security rules); spec 07 `galera` configura o nível.
+- **Date**: 2026-08-27
+- **Status**: active
+
+### AD-027
+- **Decision**: No MVP, **despesa não se cria à mão**. Toda `Despesa` nasce de uma das três fontes que já existem: o que o convidado assume em "EU LEVO" (RN-20), o pedido por delivery (RN-27 / AD-024, lançado no nome de quem pediu) e o que o anfitrião assume na lista. **T-09 não ganha "+ DESPESA"** e UC-19 continua sendo só leitura, exatamente como a spec-fonte o escreve.
+- **Reason**: Resolve **G6a**. Nenhum arquivo da spec-fonte desenha tela de criação de despesa — inventá-la seria layout e copy nossos num produto onde a copy é literal. As três fontes existentes já produzem o Teste B de RN-16 (total 380 → cota 95), que é o aceite de UC-19 e UC-20.
+- **Trade-off**: gasto fora da lista — uber, gás, aluguel de churrasqueira — não tem onde entrar, e o acerto fica incompleto para festas reais. É lacuna declarada do MVP, candidata a spec própria, não descuido.
+- **Scope**: spec 10 `custos` (UC-19); specs 06 `lista` e 09 `convidado` como origens.
+- **Date**: 2026-08-27
+- **Status**: active
+
+### AD-028
+- **Decision**: "COBRAR NO PIX 📲", "COBRAR PENDENTES NO PIX 📲" e "LEMBRAR TODO MUNDO 📲" são **aviso mais mudança de estado**, não movimentação financeira: a linha passa a COBRADO ✓, o progresso de RN-18 atualiza e o devedor é notificado. **Nenhuma chave Pix é cadastrada, nenhum BR Code é gerado, nenhum app de banco é aberto.** O segmented PIX / CARTÃO / DINHEIRO de RN-19 é **etiqueta** das linhas de acerto, não meio de execução.
+- **Reason**: Resolve **G6b**. É exatamente o que T-09 e RN-19 descrevem, e o aceite de UC-23 é "linhas pagas nunca são cobradas" — não "o dinheiro chegou". Pix copia-e-cola exigiria um campo "chave Pix" por pessoa que a spec não tem, e deep link de banco não tem padrão confiável em Android/iOS.
+- **Trade-off**: quem marca PAGO ✓ está declarando, não comprovando — o app confia no combinado da galera. É coerente com a promessa do produto ("é isso que evita a treta"), que organiza o racha e não intermedeia pagamento.
+- **Scope**: spec 10 `custos` (RN-19, UC-21, UC-22, UC-23).
+- **Date**: 2026-08-27
+- **Status**: active
+
+
 ## Handoff
 
 > **SNAPSHOT — 2026-08-26.** Spec 04 `home` com Execute concluído e Verifier **PASS**.
