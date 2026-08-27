@@ -1,8 +1,8 @@
 # Montar — A conta do rolê — Specification
 
 **ID prefix:** `MONT` · **Porte:** **Grande** (confirmado)
-**Design:** `.specs/features/montar/design.md` (a produzir)
-**Tasks:** `.specs/features/montar/tasks.md` (a produzir)
+**Design:** `.specs/features/montar/design.md` ✅
+**Tasks:** `.specs/features/montar/tasks.md` ✅ (24 tasks, 7 fases)
 **Context:** `.specs/features/montar/context.md`
 **Spec-fonte:** T-03 (`04-telas-ux.md`) · W-03 + W-R1..W-R5 (`06-telas-web.md`) · UC-03, UC-04 (`05-casos-de-uso.md`) · RN-01..RN-10, RN-13, RN-21 — **consumo**, não implementação (`03-regras-de-negocio.md`)
 **Roadmap:** `.specs/ROADMAP.md` — spec 05, marco M1
@@ -235,32 +235,32 @@ O segundo risco é estrutural. W-03 funde Montar e Lista numa tela só no web �
 
 | ID | História | Origem na spec-fonte | Fase | Status |
 |---|---|---|---|---|
-| MONT-01 | P1-1 AC1 | T-03 | Design | Pending |
-| MONT-02 | P1-1 AC2,AC3,AC4 | T-03 | Design | Pending |
-| MONT-03 | P1-1 AC5 | T-03 (rodapé) | Design | Pending |
-| MONT-04 | P1-2 AC1 | UC-04 | Design | Pending |
-| MONT-05 | P1-2 AC2 | **UC-03 (aceite) / RN-30** | Design | Pending |
-| MONT-06 | P1-2 AC3 | UC-04 / RN-14 / A-05 | Design | Pending |
-| MONT-07 | P1-2 AC4,AC5 | RN-13 / RN-02 | Design | Pending |
-| MONT-08 | P1-2 AC6 | `CLAUDE.md` (fórmula não vaza) | Design | Pending |
-| MONT-09 | P1-3 AC1,AC2 | W-03 / A-09 | Design | Pending |
-| MONT-10 | P1-3 AC3 | W-03 (rail) | Design | Pending |
-| MONT-11 | P1-3 AC4 | W-03 / A-02 / A-06 / A-07 | Design | Pending |
-| MONT-12 | P1-3 AC5 | W-03 (comportamento) / W-R1 | Design | Pending |
-| MONT-13 | P1-3 AC6,AC7 | W-R2 / W-R4 | Design | Pending |
-| MONT-14 | P1-4 AC1..AC4 | **UC-03 E1** | Design | Pending |
-| MONT-15 | P1-5 AC1,AC2,AC3,AC6 | A-03 / A-04 | Design | Pending |
-| MONT-16 | P1-5 AC5 | UC-03 (pré) | Design | Pending |
-| MONT-17 | P1-5 AC4 | dimensão: state transition | Design | Pending |
-| MONT-18 | P2-1 AC5 / A-12 | W-R1 | Design | Pending |
-| MONT-19 | dimensões: failure, observability | AD-004 / AD-005 | Design | Pending |
-| MONT-20 | dimensão: idempotência | — | Design | Pending |
-| MONT-21 | dimensão: concurrency | UC-04 (latência imperceptível) | Design | Pending |
-| MONT-22 | P2-1 AC1,AC2 | T-03 / W-03 / A-13 | Design | Pending |
-| MONT-23 | P2-1 AC3,AC4 | W-03 (lacuna) / RN-29 / A-14 | Design | Pending |
-| MONT-24 | P2-2 AC1..AC4 | RN-21 (consumo) | Design | Pending |
+| MONT-01 | P1-1 AC1 | T-03 | Tasks | Mapeado |
+| MONT-02 | P1-1 AC2,AC3,AC4 | T-03 | Tasks | Mapeado |
+| MONT-03 | P1-1 AC5 | T-03 (rodapé) | Tasks | Mapeado |
+| MONT-04 | P1-2 AC1 | UC-04 | Tasks | Mapeado |
+| MONT-05 | P1-2 AC2 | **UC-03 (aceite) / RN-30** | Tasks | Mapeado |
+| MONT-06 | P1-2 AC3 | UC-04 / RN-14 / A-05 | Tasks | Mapeado |
+| MONT-07 | P1-2 AC4,AC5 | RN-13 / RN-02 | Tasks | Mapeado |
+| MONT-08 | P1-2 AC6 | `CLAUDE.md` (fórmula não vaza) | Tasks | Mapeado |
+| MONT-09 | P1-3 AC1,AC2 | W-03 / A-09 | Tasks | Mapeado |
+| MONT-10 | P1-3 AC3 | W-03 (rail) | Tasks | Mapeado |
+| MONT-11 | P1-3 AC4 | W-03 / A-02 / A-06 / A-07 | Tasks | Mapeado |
+| MONT-12 | P1-3 AC5 | W-03 (comportamento) / W-R1 | Tasks | Mapeado |
+| MONT-13 | P1-3 AC6,AC7 | W-R2 / W-R4 | Tasks | Mapeado |
+| MONT-14 | P1-4 AC1..AC4 | **UC-03 E1** | Tasks | Mapeado |
+| MONT-15 | P1-5 AC1,AC2,AC3,AC6 | A-03 / A-04 | Tasks | Mapeado |
+| MONT-16 | P1-5 AC5 | UC-03 (pré) | Tasks | Mapeado |
+| MONT-17 | P1-5 AC4 | dimensão: state transition | Tasks | Mapeado |
+| MONT-18 | P2-1 AC5 / A-12 | W-R1 | Tasks | Mapeado |
+| MONT-19 | dimensões: failure, observability | AD-004 / AD-005 | Tasks | Mapeado |
+| MONT-20 | dimensão: idempotência | — | Tasks | Mapeado |
+| MONT-21 | dimensão: concurrency | UC-04 (latência imperceptível) | Tasks | Mapeado |
+| MONT-22 | P2-1 AC1,AC2 | T-03 / W-03 / A-13 | Tasks | Mapeado |
+| MONT-23 | P2-1 AC3,AC4 | W-03 (lacuna) / RN-29 / A-14 | Tasks | Mapeado |
+| MONT-24 | P2-2 AC1..AC4 | RN-21 (consumo) | Tasks | Mapeado |
 
-**Cobertura:** 24 requisitos · 0 mapeados a tasks (Design pendente) · 0 órfãos.
+**Cobertura:** 24 requisitos · **24 mapeados a tasks** · 0 órfãos. Mapa completo em `tasks.md` §Rastreabilidade.
 
 ---
 
