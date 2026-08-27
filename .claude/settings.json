@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/scripts/cota_hook.py\" SessionStart",
+            "timeout": 15,
+            "statusMessage": "Armando a monitoria de cota..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/scripts/cota_hook.py\" PostToolUse",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "python \"$CLAUDE_PROJECT_DIR/.claude/scripts/cota_hook.py\" Stop",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(python .claude/scripts/cota.py:*)",
+      "Bash(pwsh -File .claude/scripts/agendar-retomada.ps1:*)",
+      "Bash(flutter test:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
