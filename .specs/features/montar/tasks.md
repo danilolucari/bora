@@ -118,9 +118,9 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 
 ## Task Breakdown
 
-### T1: Registrar AD-023 no `STATE.md`
+### T1: Registrar AD-029 no `STATE.md`
 
-**What**: Acrescentar a decisão AD-023 (porta de edição de festa em `lib/core/festas/`) à seção `## Decisions` do `.specs/STATE.md`, com o texto que o `design.md` §12 já redigiu.
+**What**: Acrescentar a decisão AD-029 (porta de edição de festa em `lib/core/festas/`) à seção `## Decisions` do `.specs/STATE.md`, com o texto que o `design.md` §12 já redigiu.
 **Where**: `.specs/STATE.md` (só a seção `## Decisions`, ao fim)
 **Depends on**: None
 **Reuses**: O formato das AD-019 e AD-022 (Decision / Reason / Trade-off / Scope / Date / Status)
@@ -129,13 +129,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `AD-023` existe com os seis campos, `Status: active`, `Date: 2026-08-27`
+- [ ] `AD-029` existe com os seis campos, `Status: active`, `Date: 2026-08-27`
 - [ ] Nenhuma AD existente é editada (nada vira `superseded`)
 - [ ] Nenhum arquivo de código é tocado
 
 **Tests**: none (camada "Documentação / spec")
 **Gate**: none
-**Commit**: `docs(montar): registra a AD-023 da porta de edição de festa`
+**Commit**: `docs(montar): registra a AD-029 da porta de edição de festa`
 
 ---
 
@@ -887,4 +887,4 @@ Não há MCP configurado neste projeto — todas as tasks usam as ferramentas na
 - [ ] Guard de MONT-08 verde, sem exceção declarada
 - [ ] W-03 funcional: rail sticky, lista viva rolando dentro de si, zero scroll horizontal, sem rodapé fixo
 - [ ] Zerar a festa dá `R$ 0` e lista vazia; steppers não descem de 0
-- [ ] AD-023 registrada no `STATE.md`
+- [ ] AD-029 registrada no `STATE.md`

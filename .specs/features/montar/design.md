@@ -3,8 +3,8 @@
 **Spec**: `.specs/features/montar/spec.md`
 **Context**: `.specs/features/montar/context.md`
 **Status**: Draft
-**Decisões ativas conferidas**: AD-001..AD-022 (todas `active`) — nenhuma superseded por esta spec.
-**Decisão nova proposta**: **AD-023** (porta de edição de festa em `lib/core/festas/`) — ver §Tech Decisions.
+**Decisões ativas conferidas**: AD-001..AD-028 (todas `active`) — nenhuma superseded por esta spec.
+**Decisão nova proposta**: **AD-029** (porta de edição de festa em `lib/core/festas/`) — ver §Tech Decisions.
 **Lições confirmadas**: `python .claude/skills/tlc-spec-driven/scripts/lessons.py list --status confirmed` devolveu **`(no confirmed lessons)`** — o store tem candidatas, nenhuma confirmada. Nada a aplicar por esse canal; as duas lições que o handoff do `home` deixou em prosa estão aplicadas em §Riscos (defesa nunca exercida, asserção que confere o objeto errado).
 
 ---
@@ -370,7 +370,7 @@ Os quatro rótulos que divergem ficam divergindo: unificar seria escolher qual s
 
 | Decisão | Escolha | Racional |
 |---|---|---|
-| Onde mora a escrita da festa | Porta nova em `core/festas/`, falando só em tipos de `core/calculo` | §2, abordagem B. **Vira AD-023** |
+| Onde mora a escrita da festa | Porta nova em `core/festas/`, falando só em tipos de `core/calculo` | §2, abordagem B. **Vira AD-029** |
 | Onde mora o `ResultadoDoCalculo` | No `MontarState` | Um cálculo por transição; rodapé, card-herói e lista viva leem o mesmo objeto (MONT-12 estrutural) |
 | Rail sticky | Coluna irmã que **não rola**, ao lado de um formulário que rola | Sticky por construção — o mesmo truque do header do `AppShell`. Sem `Sliver` e sem plugin |
 | Subtotal por categoria | `totalExato(itensDaCategoria)` de `core/calculo` | A soma já existe na camada; a feature não escreve `fold` |
@@ -379,7 +379,7 @@ Os quatro rótulos que divergem ficam divergindo: unificar seria escolher qual s
 | Navegação | `context.go` nos CTAs, `context.replace` no rascunho→persistido | `go` é idempotente (HOME-17); `replace` não deixa `/roles/novo` no histórico |
 | Guard de MONT-08 | Varredura léxica + teste comportamental | §13 |
 
-### AD-023 (a registrar em `.specs/STATE.md` ao fim do Execute)
+### AD-029 (a registrar em `.specs/STATE.md` ao fim do Execute)
 
 > **Decision**: A escrita de festa mora em `lib/core/festas/` — `FestaEmEdicao` e a porta `FestaEmEdicaoRepository`, atrás do barrel `festas.dart`, falando **só** em tipos de `core/calculo`. `FestaRepository` (leitura da Home) permanece em `features/home/domain/` e **não** é tocada; `FestaRepositoryEmMemoria` implementa as duas sobre o mesmo store. Nenhuma feature importa a porta da outra.
 > **Reason**: dois consumidores (a Home lê, `montar` escreve) obrigam a subida, exatamente como a AD-019 decidiu para `autenticacao`. E o próprio doc de `FestaRepository` declara que ela é "um método de leitura só" e que `/roles/novo` é da spec 05 — engordá-la contrariaria o contrato herdado por seis specs e quebraria `FestaRepositoryQueFalha`.
