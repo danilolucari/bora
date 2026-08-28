@@ -232,29 +232,38 @@
 
 ## Handoff
 
-> **SNAPSHOT — 2026-08-27.** Specify das cinco specs restantes (06 `lista`, 07 `galera`,
-> 08 `convite`, 09 `convidado`, 10 `custos`) concluído. **Nenhuma linha de código foi
-> escrita** nesta sessão — o trabalho todo é documento.
-> O que está abaixo de "Histórico — sessão do M0" é história, não estado corrente.
+> **SNAPSHOT — 2026-08-28.** Sessão pausada por **cota da janela de 5h em 92%**
+> (limite de pausa: 85%). **Nada ficou pela metade** — o único artefato da sessão
+> está commitado. O que está abaixo de "Histórico — sessão do M0" é história, não
+> estado corrente.
 
 ### O que esta sessão entregou
 
-**As seis zonas cinzentas do ROADMAP §4 foram fechadas com o usuário e viraram
-AD-023..AD-028** (`849e0f2`), todas na opção recomendada:
+**Fase Tasks da spec 06 `lista`** — `.specs/features/lista/tasks.md`, commit `0d24e60`
+na branch **`worktree-feature-lista-tasks`** (worktree `.claude/worktrees/feature-lista-tasks`,
+base `4b8cefd`). Nenhuma linha de código foi escrita.
 
-| Zona | Decisão | AD |
-|---|---|---|
-| G2 | Preços de RN-11 são tabela curada em Dart puro, sem geolocalização | AD-023 |
-| G3 | Pedido de delivery implementado inteiro atrás de porta, adaptador falso, copy literal | AD-024 |
-| G4 | Grupo e enquete são estado do BORA; o WhatsApp recebe texto por share sheet | AD-025 |
-| G5 | Link perpétuo, papel lido na abertura, identidade anônima por dispositivo | AD-026 |
-| G6a | Despesa não se cria à mão — nasce de RN-20, do delivery e do que o anfitrião assume | AD-027 |
-| G6b | Cobrança é aviso + estado; sem chave Pix, sem BR Code, sem app de banco | AD-028 |
+- **27 tasks em 7 fases**, acima da estimativa de ~17 do `design.md` §15 — o corte
+  mais fino foi aprovado pelo usuário. Fatiamento: (1) T1–T6 a AD-030 e as cinco
+  emendas em `core` (E-a corredor no catálogo · E-b carrinho na composição ·
+  E-e `itensCobraveis` · E-d `faixaRealDaLista` · E-c despesas na festa),
+  (2) T7–T8 domínio da feature e a porta de pedido da AD-024, (3) T9–T11 o
+  `ListaBloc` em três fatias, (4) T12–T15 modo PLANEJAR, (5) T16–T18 modo COMPRAR,
+  (6) T19–T22 o pedido, (7) T23–T27 telas, rota, guard de LIST-07 e as abas.
+- **Empacotamento previsto para o Execute: 5 batches sequenciais** (6·5·7·4·5),
+  fases inteiras, nunca partidas. Sequencial, não fan-out — a lição de 2026-08-25.
+- **Cobertura: 35 de 35 requisitos** (LIST-01..LIST-35) com task dona. 0 órfãos,
+  0 tasks sem requisito. As três tabelas de pré-aprovação (granularidade,
+  diagrama × definição, co-localização de teste) passam sem ❌.
+- `spec.md` teve **só** a linha de cabeçalho `**Tasks:**` atualizada para
+  "concluído (2026-08-28) · 27 tasks em 7 fases".
 
-**Duas dessas carregam ressalva escrita dentro da própria AD.** AD-024 e AD-025 fazem a
-tela afirmar coisas que não acontecem ("PEDIDO A CAMINHO!", "GRUPO CRIADO NO WHATSAPP ✅").
-Ficou registrado nas duas que **o produto não vai a público com essas telas ativas** sem
-revisitar a decisão. Não é dívida técnica esquecida; é escolha declarada.
+**Infra da sessão:** servidor MCP **`context7` plugado em escopo `user`**
+(`~/.claude.json`, transporte HTTP, `https://mcp.context7.com/mcp`, health check
+✔ Connected). Escopo de usuário de propósito — vale em todos os worktrees e
+**não** entra no repositório. Nenhum arquivo do projeto foi tocado por isso.
+Consequência a saber: consultas de biblioteca passam a sair para um serviço
+externo (Upstash).
 
 ### Estado das specs
 
@@ -262,140 +271,49 @@ revisitar a decisão. Não é dívida técnica esquecida; é escolha declarada.
 |---|---|---|---|---|---|
 | 03 `entrar` | ✅ | ✅ | ✅ 16 tasks | ✅ | ✅ **PASS** |
 | 04 `home` | ✅ | ✅ | ✅ 16 tasks | ✅ | ✅ **PASS** |
-| 05 `montar` | ✅ | ✅ | ✅ | ⬜ | ⬜ |
-| 06 `lista` | ✅ **novo** | ⬜ | ⬜ | ⬜ | ⬜ |
-| 07 `galera` | ✅ **novo** | ⬜ | ⬜ | ⬜ | ⬜ |
-| 08 `convite` | ✅ **novo** | ⬜ | ⬜ | ⬜ | ⬜ |
-| 09 `convidado` | ✅ **novo** | ⬜ | ⬜ | ⬜ | ⬜ |
-| 10 `custos` | ✅ **novo** | ⬜ | ⬜ | ⬜ | ⬜ |
+| 05 `montar` | ✅ | ✅ | ✅ 24 tasks | ⬜ | ⬜ |
+| 06 `lista` | ✅ | ✅ | ✅ **27 tasks — novo** | ⬜ **bloqueado** | ⬜ |
+| 07 `galera` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 08 `convite` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 09 `convidado` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 10 `custos` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
 
-**Todas as onze specs do ROADMAP têm agora `spec.md`.** Nenhuma das cinco novas tem
-`design.md` nem `tasks.md` — **o próximo passo é Design**, na ordem de dependência do
-ROADMAP §2: `lista` e `galera` podem andar em paralelo; `convite` e `convidado` dependem
-das duas; `custos` depende de `convidado`.
+### ⛔ Bloqueio ativo — o Execute de `lista` não pode começar
 
-Prefixos de ID: `LIST-`, `GAL-`, `CVT-` (convite), `CVD-` (convidado), `CUST-`.
+**`lista` executa depois do merge de `montar` em `main`** (`design.md` §1). São três
+dependências de compilação que não existem no disco:
 
-### As specs novas, commit a commit
+| O que falta | Nasce em | Quem usa em `lista` |
+|---|---|---|
+| `lib/core/festas/` (`FestaEmEdicao`, `FestaEmEdicaoRepository`, barrel) | `montar` T2/T3 | T6, T9, T10, T11, T25 |
+| `core/calculo/formatacao/rotulo_de_quantidade.dart` | `montar` T5 | T13, T17 |
+| `FestaRepositoryEmMemoria` implementando a 2ª porta | `montar` T4 | T25 |
 
-| Spec | Commit | Requisitos | Assumptions | Divergências |
-|---|---|---|---|---|
-| 07 `galera` | `309a14f` + `8034819` | GAL-01..28 | 19 | — |
-| 09 `convidado` | `81055fa` | CVD-01..44 | 26 | 7 |
-| 06 `lista` | `1e55911` | LIST-01..35 | 23 | 7 |
-| 08 `convite` | `95754d6` | CVT-01..37 | 28 | 7 |
-| 10 `custos` | `fa92fd8` | CUST-01..37 | 22 | 6 |
+**Arquivo de colisão:** a T6 de `lista` edita `core/festas/dominio/festa_em_edicao.dart`,
+que nasce em `montar`. Depois do merge, vira edição trivial de arquivo já em `main`.
 
-### O que as specs decidiram e o M1/M2/M3 herda
+**Numeração de AD:** `montar` reserva a **AD-029** e ainda não a registrou; `lista` é a
+**AD-030** e só é gravada depois daquela. Se a ordem inverter, renumera-se em `lista`,
+nunca em `montar`. A última AD no log é a **AD-028**.
 
-Cada `spec.md` tem uma seção **Divergências encontradas na spec-fonte**. As que mudam
-comportamento, e não só redação:
+### Próximo passo, em ordem
 
-1. **`lista` D-1 — a spec-fonte tem duas moedas para o preço de um item.** Três trechos
-   (micro-label "MÉDIA" de T-04, total R$ 286 de RN-11, arquivo 01 §6) pedem a média de
-   mercado; três (R$ 271 de RN-10, aceite "por adulto" de UC-04, `CLAUDE.md`) pedem o
-   preço-base. **Diferença de exatos R$ 15 no estado padrão.** Resolvido a favor da
-   calculadora; o R$ 286 / faixa R$ 234–356 permanece caso de teste **da camada**, não da
-   tela, porque nenhuma lista montável iguala a tabela de RN-11 (a linguiça toscana não tem
-   chip que a produza).
-2. **`convidado` D-3 — "papel lido na abertura" é forjável por cliente anônimo.** A AD-026
-   diz que o papel vale o do instante da abertura; um cliente anônimo pode mentir sobre isso.
-   A spec resolve decidindo o papel **no servidor, no momento da escrita**, e congelando-o.
-   **Isso é mais forte que a AD-026 literal e ajusta o que ela diz** — vale conferir com o
-   usuário quando o Design da 09 começar.
-3. **`convidado` — o nome do convidado**, ambiguidade central que a spec-fonte nunca
-   resolveu. O flyer abre genérico (RN-24 exige abrir "direto no flyer") e o nome é pedido
-   **uma vez**, no primeiro toque em BORA!/NÃO VOU, colado ao uid anônimo. Campo de nome não
-   é cadastro, então o aceite duro de UC-08 continua de pé — e há requisito que o afirma por
-   **ausência** na árvore.
-4. **`convite` D-7 — a enquete HORÁRIO soma 101%.** UC-18 diz "somam ~100%"; com votos
-   5/2/1 o `round()` por opção dá 101. **Não se normaliza** — 101 entra literal no critério.
-5. **`convite` D-6 — "toggle" significa coisas opostas** em T-06 (blocos aditivos) e T-07
-   (modelos exclusivos). O comportamento descrito vence o vocabulário.
-6. **`convidado` fecha a pendência D-5** herdada da spec 04, que estava sem dono desde
-   26/08: pessoa, papel, atribuições e contadores caem numa **transação única**, e o
-   invariante da AD-022 é reavaliado a cada uma das seis transições de RSVP.
+1. **Executar `montar`** (24 tasks, 7 fases, `tasks.md` pronto e aprovado) — é o que
+   destrava tudo. Registrar a AD-029 na T1 de lá.
+2. Só então **Executar `lista`** a partir de `.specs/features/lista/tasks.md`, batch 1
+   (T1–T6, as emendas em `core`), registrando a AD-030 na T1.
+3. Em paralelo e sem conflito: **Design das specs 07 `galera`, 08 `convite`,
+   09 `convidado`, 10 `custos`** — as quatro têm `spec.md` e nenhuma toca código.
 
-7. **`custos` fecha a premissa A-16 de `calculo`**, aberta desde 25/08 e explicitamente
-   delegada a esta spec. A resposta não é trocar `1.0` por `0.0`: **a tela nunca renderiza
-   barra com zero linhas**, então o valor deixa de ser observável e `core/calculo` **não
-   muda**. O argumento: `1.0` mente para cima, `0.0` mente para baixo, e não pintar a barra
-   é a única saída honesta.
-8. **`custos` resolve a reentrância**, que era o maior risco da spec — o que acontece com
-   linhas já pagas quando uma despesa nova chega depois de o acerto começar. O acerto é
-   **sempre derivado** e a marcação fica guardada por **par `(de, para)`**: valor que não
-   subiu mantém pago; valor que subiu volta a PENDENTE e perde a cobrança; par que some
-   perde o registro; par novo nasce pendente; progresso recomputado, nunca acumulado.
-9. **`custos` D-3 — quem são os "adultos participantes" de RN-14.** A regra supõe que
-   coincidem com as pessoas nomeadas, mas RN-01 e a premissa A-05 de `calculo` dizem que
-   não: na fixture RN-30 são **6 contra 5**. A cota justa divide por `adultos`, e a
-   diferença **não vira linha de acerto**. Vale conferir no Design da 10.
+### Contagem de testes e árvore
 
-### Colisão de numeração de AD — resolvida
-
-O `design.md` da spec 05 `montar` reservava **AD-023** para a porta de edição de festa em
-`lib/core/festas/`, e o `STATE.md` passou a usar AD-023 para a tabela de preços quando as
-zonas cinzentas foram resolvidas. Quem renumerou foi a proposta da 05, que ainda não estava
-registrada: virou **AD-029** (`19f77a7`), em `design.md` e nas 5 ocorrências de `tasks.md`,
-incluindo a task T1 que a grava. Achado pelo worker de Specify da spec 06.
-
-**A AD-029 continua proposta, não registrada** — ela entra no `STATE.md` na T1 do Execute
-de `montar`.
-
-### O que a próxima sessão precisa saber sobre cota e orquestração
-
-Esta sessão **estourou a janela de 5h duas vezes**. A primeira derrubou cinco workers de
-uma vez; quatro estavam ainda lendo arquivo e perderam tudo, e só sobreviveu o que já estava
-escrito em disco.
-
-1. **Não dispare mais de 2 subagentes pesados em paralelo.** Cinco workers Opus, cada um
-   lendo ~40KB e escrevendo ~40KB, consomem uma janela de 5h inteira em minutos.
-2. **O `cota.py` não antecipa fan-out.** No instante do primeiro 429 ele reportava
-   `sessão 49%` — leitura com 31 min de idade, que ele mesmo classificou como `INCERTO`. O
-   gasto paralelo não chega ao `cachedUsageUtilization` a tempo. Em orquestração com
-   subagentes, verde não é garantia.
-3. **Retomar agente morto por mensagem é muito mais barato que abrir agente novo** — o
-   transcript preserva as leituras, que é a parte cara. Foi assim que o `context.md` da
-   `galera` foi salvo.
-4. **Worker não roda git.** Vários processos disputando o `index.lock` quebram. O
-   orquestrador commita cada artefato assim que chega — foi o que limitou a perda a zero
-   nas duas quedas.
-5. `cota.py` tem um bug pequeno: quando `cachedUsageUtilization` está ausente ele imprime o
-   veredito e **depois** estoura `KeyError: 'cache_idade_min'`. O veredito chega ao hook, então
-   o impacto é cosmético, mas o traceback assusta.
-
-### Como retomar
-
-```bash
-export PATH="$PATH:/c/SDKs/flutter/bin"
-cd /c/repos/lucari/bora
-git checkout main && flutter test            # 1137, referência de sanidade
-python .claude/scripts/cota.py
-
-# ler, nesta ordem:
-#   .specs/STATE.md  secao Decisions (AD-023..AD-028 sao novas)
-#   .specs/ROADMAP.md secoes 2 e 3
-#   o spec.md da feature que for entrar em Design
-```
-
-**Ordem obrigatória do que resta:** Design → Tasks → Execute → Verifier → PR de cada spec,
-respeitando as dependências do ROADMAP §2. `montar` já tem tasks e está pronta para Execute;
-as cinco novas precisam de Design primeiro.
-
-### Combinados que seguem valendo
-
-- **Um PR por spec**, não por fase interna.
-- **Verifier como sub-agente** ao fim de cada spec; `code-review` ao fim de cada batch; skill
-  `run` nas tasks de tela.
-- Bloqueio de acesso: tentar emular/simular local; se não der, **pular e anotar no relatório
-  final** — não travar.
-- **Confira o exit code do `flutter test` explicitamente.** `flutter test | tail` engole o
-  código de saída.
-- **Arquivo markdown longo em português vai pela ferramenta Write, não por heredoc.**
-- Conferência visual ainda pendente de **T-01, W-01 e T-02** (W-02 foi conferida em 26/08).
-
----
-
+- Baseline declarada na `main`: **1137 testes verdes**, `flutter analyze` com zero issues.
+  **Não foi rodada nesta sessão** — nenhum código foi tocado, então não havia o que
+  regredir. Confirmar com `flutter test; echo "exit=$?"` antes de abrir o Execute.
+- `lista` projeta **~230 testes novos**; `montar` projeta outros ~230.
+- Arquivos não commitados: **nenhum**. `git status` limpo na branch da worktree.
+- Worktree `.claude/worktrees/feature-lista-tasks` continua aberta, com o commit
+  `0d24e60` só de documento — mergear em `main` ou rebasear quando conveniente.
 ## Histórico — sessão do M0
 
 
