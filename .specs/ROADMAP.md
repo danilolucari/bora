@@ -45,7 +45,7 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > em **2026-08-25** nas duas plataformas — web (Chrome 151) e mobile (emulador `Pixel_10`).
 > **DS-33 verificada.**
 
-> ## 🟢 M1 em Execute — 2026-08-26
+> ## 🟢 M1 em Execute — 2026-08-26 (histórico)
 >
 > **Spec 03 `entrar` e spec 04 `home` estão completas, validadas e mergeadas na `main`**,
 > cada uma com Verifier independente em PASS. A `main` está com **1137 testes verdes** e
@@ -71,7 +71,7 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > menciona UC-06 e UC-16, que são dela.
 
 
-> ## ✅ Specify de todas as onze specs concluído — 2026-08-27
+> ## ✅ Specify de todas as onze specs concluído — 2026-08-27 (histórico)
 >
 > As cinco que faltavam — **06 `lista`, 07 `galera`, 08 `convite`, 09 `convidado` e
 > 10 `custos`** — foram especificadas nesta sessão. **Todas as onze specs do ROADMAP têm
@@ -96,6 +96,38 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > em paralelo → `convite` e `convidado` → `custos`. Detalhe no `## Handoff` do `STATE.md`.
 
 
+> ## ✅ Design das onze specs concluído — 2026-08-28
+>
+> **As onze specs do ROADMAP têm agora `spec.md` + `design.md`.** As quatro que faltavam —
+> **07 `galera`, 08 `convite`, 09 `convidado` e 10 `custos`** — foram desenhadas em sessões
+> paralelas, e a `main` recebeu tudo por merge. Continua sem uma linha de código novo: o
+> trabalho todo é documento, e a baseline segue **1137 testes verdes** com `flutter analyze`
+> limpo (conferido em 2026-08-28).
+>
+> | Spec | Commit do design | Requisitos | AD nova proposta | Tasks |
+> |---|---|---|---|---|
+> | 05 `montar` | `e7cd070` | MONT-01..24 | **AD-029** — porta de edição em `core/festas/` | ✅ 24 em 7 fases |
+> | 06 `lista` | `2854cff` | LIST-01..35 | **AD-030** — estado de lista nas entidades de `core/` | ✅ 27 em 7 fases |
+> | 07 `galera` | `02d4571` | GAL-01..28 | **AD-031** — dado do link em `core/festas/`, regra de RN-22 em `permissoes.dart` | ⬜ |
+> | 08 `convite` | `b4ef1fd` | CVT-01..37 | **AD-032** — `share_plus` atrás de `CompartilhadorDeTexto` | ⬜ |
+> | 09 `convidado` | `4b8cefd` | CVD-01..44 | **AD-033** (um documento por festa, RSVP só pela Function) · **AD-034** (identidade do portador; anônimo nunca vira `UsuarioLogado`) | ⬜ |
+> | 10 `custos` | `9ca798e` | CUST-01..37 | **AD-035** (estado do acerto derivado na leitura, marcação por par) · **AD-036** (`fimPrevisto` contra relógio injetado) | ⬜ |
+>
+> **Cobertura requisito → componente: 100% nas seis** (24/24, 35/35, 28/28, 37/37, 44/44, 37/37), zero órfãos.
+>
+> **Nenhuma dessas oito AD está registrada** no `STATE.md` — o log ativo para na **AD-028**.
+> Cada uma é gravada na primeira task do Execute da sua spec, **na ordem numérica**. A reserva
+> está no `STATE.md`, logo abaixo da AD-028; quem inverter a ordem renumera a sua, nunca a
+> anterior.
+>
+> **O gargalo é um só: `montar` não foi executada.** `lib/core/festas/` não existe no disco,
+> e as cinco specs seguintes o declaram como pré-requisito bloqueante de compilação. As
+> `lib/features/{montar,lista,galera,convite,convidado,custos}/` têm hoje só `PlaceholderPage`.
+>
+> **Próximo passo:** Execute de `montar` (24 tasks, `tasks.md` pronto) → Execute de `lista`
+> (27 tasks) → Tasks + Execute de `galera` → `convite` → `convidado` → `custos`. As specs 09 e
+> 10 declaram-se **não paralelizáveis**: reescrevem a camada de dados que as anteriores consomem.
+
 ---
 
 ## 2. Tabela mestre das specs
@@ -111,17 +143,19 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 | — | **`entrar` mergeada** | — | 16 tasks · Verifier PASS · 947 testes · `582f63e` | — | — | — | — | — |
 | 04 | `home` | `features/home/` | T-02, W-02 · UC-02, UC-24 · RN-28 (consumo) | **Grande** ✱✱ | ✅ feito | ✅ feito | ✅ feito | 00, 01, 03 |
 | — | **`home` mergeada** | — | 16 tasks · Verifier PASS 19/19 · 1137 testes · `34eb1dc` | — | — | — | — | — |
-| 05 | `montar` | `features/montar/` | T-03, W-03 · UC-03, UC-04 · RN-01..10, RN-21 (consumo) | Grande | ✅ feito | sim | sim | 01, 02, 04 |
-| 06 | `lista` | `features/lista/` | T-04, W-03/W-04 · UC-05, UC-06, UC-14, UC-15, UC-16 · RN-10, RN-11, RN-12, RN-27 | Grande | ✅ feito | sim | sim | 01, 02, 05 |
-| 07 | `galera` | `features/galera/` | T-05, W-04 · UC-11, UC-12, UC-13 · RN-21, RN-22, RN-23 | Grande | — | sim | sim | 01, 02, 04 |
-| 08 | `convite` | `features/convite/` | T-06, T-07, W-04 · UC-07, UC-17, UC-18 · RN-25, RN-26, RN-26b | **Complexo** | ✅ feito | sim | sim | 06, 07 |
-| 09 | `convidado` | `features/convidado/` | T-08, W-04 (standalone) · UC-08, UC-09, UC-10 · RN-20, RN-23 (consumo), RN-24, RN-28 | **Complexo** | ✅ feito | sim | sim | 02, 06, 07 |
-| 10 | `custos` | `features/custos/` | T-09, W-04 · UC-19..UC-23 · RN-14..RN-19 (consumo), RN-20 | Grande | ✅ feito | sim | sim | 02, 09 |
+| 05 | `montar` | `features/montar/` | T-03, W-03 · UC-03, UC-04 · RN-01..10, RN-21 (consumo) | Grande | ✅ feito | ✅ feito | ✅ feito | 01, 02, 04 |
+| 06 | `lista` | `features/lista/` | T-04, W-03/W-04 · UC-05, UC-06, UC-14, UC-15, UC-16 · RN-10, RN-11, RN-12, RN-27 | Grande | ✅ feito | ✅ feito | ✅ feito | 01, 02, 05 |
+| 07 | `galera` | `features/galera/` | T-05, W-04 · UC-11, UC-12, UC-13 · RN-21, RN-22, RN-23 | Grande | — | ✅ feito | sim | 01, 02, 04 |
+| 08 | `convite` | `features/convite/` | T-06, T-07, W-04 · UC-07, UC-17, UC-18 · RN-25, RN-26, RN-26b | **Complexo** | ✅ feito | ✅ feito | sim | 06, 07 |
+| 09 | `convidado` | `features/convidado/` | T-08, W-04 (standalone) · UC-08, UC-09, UC-10 · RN-20, RN-23 (consumo), RN-24, RN-28 | **Complexo** | ✅ feito | ✅ feito | sim | 02, 06, 07 |
+| 10 | `custos` | `features/custos/` | T-09, W-04 · UC-19..UC-23 · RN-14..RN-19 (consumo), RN-20 | Grande | ✅ feito | ✅ feito | sim | 02, 09 |
 
 ✱ **Revisão pós-Specify (2026-08-12):** a spec 00 subiu de Médio para Grande. O Discuss ampliou o "pronto" da fundação para incluir navegação, DI + BlocObserver, README e espelho de testes (~10 tasks), e essas escolhas — pacote de rotas, container de DI, wiring do emulador — são herdadas por todas as dez specs seguintes. Escolha herdada por dez specs é decisão de arquitetura, então **Design deixou de ser pulado**. Ver `.specs/features/fundacao/spec.md` §Porte.
 
 ✱✱ **Revisão pós-Specify (2026-08-25):** `entrar` e `home` subiram de **Médio para Grande**, pelo mesmo critério que subiu a `fundacao` — não por volume de tela, mas porque cada uma origina uma escolha que as specs seguintes herdam. Em `entrar`: a guarda de sessão da **AD-017**, que passa a governar a navegação de sete specs, e a porta `AutenticacaoRepository`. Em `home`: a porta `FestaRepository` e o formato do stream de RN-28 (**AD-016**), consumidos por seis specs e obrigados a sobreviver à troca da impl em memória por Firestore no M2. **Design e Tasks deixam de ser inline nas duas.** Corte estimado: ~11 tasks cada, ~12 em `montar` — **~34 no M1 sem a spec 06**, o que aciona a oferta de sub-agentes no Execute de cada spec.
 
+
+**Reserva de numeração de AD (2026-08-28).** Os designs propuseram oito decisões que **ainda não estão registradas** no `STATE.md` — o log ativo para na **AD-028**. Cada uma é gravada na primeira task do Execute da sua spec: **AD-029** (`montar`) · **AD-030** (`lista`) · **AD-031** (`galera`) · **AD-032** (`convite`) · **AD-033/AD-034** (`convidado`) · **AD-035/AD-036** (`custos`). A ordem é a da coluna "Depende de"; quem executar fora de ordem renumera **a sua**, nunca a anterior. Tabela completa em `.specs/STATE.md`, logo abaixo da AD-028.
 
 Notas de recorte:
 
@@ -174,25 +208,35 @@ Decisões do Specify: a fixture RN-30 ganha **duas festas concluídas** — uma 
 
 Porte revisto para **Grande** (✱✱): a porta `FestaRepository` e o formato do stream são herdados por seis specs. ~11 tasks. Design e Tasks formais.
 
-### 05 · `montar` — Grande · **Specify concluído** (MONT-01..24, 2026-08-25) → `.specs/features/montar/`
+### 05 · `montar` — Grande · **Specify + Design + Tasks concluídos** (MONT-01..24 · 24 tasks em 7 fases, 2026-08-27) → `.specs/features/montar/`
 T-03/W-03 + UC-03, UC-04: steppers de extras sem app, chips de itens, segmented de duração e rodapé "SAI POR" recalculando **a cada toque** via `core/calculo`. No web, a tela única com rail sticky (card-herói + lista viva). Aceite: o exemplo literal do arquivo 03 (**R$ 211 / ≈R$ 30 por cabeça**) renderizado **na tela**, nas duas plataformas.
 
 Decisões do Specify (**AD-018**): **"PROS FORTES" passa a existir nas duas plataformas** — o arquivo 04 a marcava como web-only, mas sem o chip 🍹 CACHAÇA o total mobile fecha R$ 196 e o aceite de UC-03 fica impossível na própria tela que ele descreve · o seletor **"QUEM LEVA?" fica fora do M1**, junto com a dica 💡 que o instrui, entrando com `galera`/`lista` já no formato popover que W-03 pede · o rodapé mostra o total **sem** essenciais (R$ 211/≈R$ 30 por pessoa); o R$ 271/≈R$ 45 por adulto é da tela Lista, e os dois não se unificam · `/roles/novo` abre um **rascunho** com nome e data default editáveis no header, resolvendo a pré-condição de UC-03 que nenhuma tela da spec-fonte cobria.
 
-### 06 · `lista` — Grande, com Discuss
-T-04 + UC-05, UC-06, UC-14, UC-15, UC-16: modos PLANEJAR (média real, faixa mín/máx, overrides com ponto vermelho e RESTAURAR) ⇄ COMPRAR (checklist por corredor, ordem fixa RN-27, contador do carrinho) + sheet de pedido por delivery e overlay "PEDIDO A CAMINHO!". Estado dos checks persiste ao alternar modos; overrides sobrevivem à navegação. **Zonas cinzentas:** origem dos dados de "média de N mercados perto de você" (RN-11 — a tabela da spec é fixture; o produto real precisa de fonte de preços + localização) e integração de delivery (RN-27 — iFood/Rappi/Zé não têm API pública de pedido; decidir o que é real vs. simulado).
+### 06 · `lista` — Grande · **Specify + Design + Tasks concluídos** (LIST-01..35 · 27 tasks em 7 fases, 2026-08-28) → `.specs/features/lista/`
+T-04 + UC-05, UC-06, UC-14, UC-15, UC-16: modos PLANEJAR (média real, faixa mín/máx, overrides com ponto vermelho e RESTAURAR) ⇄ COMPRAR (checklist por corredor, ordem fixa RN-27, contador do carrinho) + sheet de pedido por delivery e overlay "PEDIDO A CAMINHO!". Estado dos checks persiste ao alternar modos; overrides sobrevivem à navegação. ~~**Zonas cinzentas:** origem dos dados de "média de N mercados perto de você" (RN-11) e integração de delivery (RN-27).~~ ✅ **Resolvidas** em 2026-08-27 pelas **AD-023** e **AD-024** (§4, G2 e G3).
 
-### 07 · `galera` — Grande
+Do Design (**AD-030** proposta): o estado de lista da festa — overrides, carrinho, despesas — mora nas entidades de `core/`, nunca na feature. Cinco emendas em `core` nascem aqui (corredor no catálogo, `noCarrinho` na composição, `itensCobraveis`, `faixaRealDaLista`, `despesas` na festa). As zonas cinzentas G2 e G3 já vinham resolvidas por **AD-023** (tabela de preços curada em Dart puro) e **AD-024** (pedido inteiro atrás de porta, com adaptador falso). **27 tasks em 7 fases, 5 batches sequenciais** — Execute bloqueado até `montar` mergear.
+
+### 07 · `galera` — Grande · **Specify + Design concluídos** (GAL-01..28, design em 2026-08-28) · **Tasks pendente** → `.specs/features/galera/`
 T-05 + UC-11, UC-12, UC-13: card do link com nível (RN-23), pessoas com preferências (RN-21) e papéis (RN-22), accordion de edição, faixa-resumo "A lista já se ajusta…". As preferências **realimentam a calculadora** — este spec liga a UI ao efeito RN-21 já implementado em `calculo`. RN-22 (tabela de permissões) nasce aqui como regra de domínio, mas o enforcement é transversal (cada feature respeita o papel; security rules do Firestore entram na spec `convidado`).
 
-### 08 · `convite` — Complexo, com Discuss
-T-06 + T-07 + UC-07, UC-17, UC-18: mensagem por blocos com preview fiel de bolha (RN-26b), criação de grupo só com confirmados (RN-25), enquetes com voto trocável e trava "CRIE O GRUPO PRIMEIRO" (RN-26). **Zona cinzenta central:** a API pública do WhatsApp **não permite criar grupo nem postar enquete programaticamente** — o Discuss precisa decidir o que RN-25/RN-26 significam no produto real (deep link `wa.me`/share sheet + estado interno? Cloud API com template? simulação assumida?). O design exige pesquisa (Knowledge Verification Chain) antes de fixar abordagem.
+Do Design (**AD-031** proposta): o **dado** do acesso (`codigo`, `NivelDoLink`) mora em `core/festas/`, e a **regra** RN-22 × RN-23 mora em `lib/features/galera/domain/permissoes.dart` — consultável, nunca reimplementada. As specs 08, 09 e 10 a importam, e o acoplamento feature↔feature fica registrado como candidato à promoção para `core/` no M2. Lacuna declarada: a bebida é toggle de dois estados e não volta a "não declarado" (T-05 literal), o que muda a cerveja de RN-21.
 
-### 09 · `convidado` — Complexo, com Discuss
-T-08 (standalone, sem header de app) + UC-08, UC-09, UC-10: link público `bora.app/c/xxx` abre flyer **sem conta** (auth anônima), RSVP BORA!/NÃO VOU, escolha "eu levo" que desconta da cota (RN-20), confirmação refletindo na Home do anfitrião em tempo real (RN-28). Envolve Hosting (rota pública), Functions (gerar link, notificar anfitrião), security rules por papel do link (RN-23 + RN-22). **Zonas cinzentas:** modelo de segurança do link (qualquer portador entra com o papel configurado — expiração? revogação? troca de nível após aberturas?), identidade do convidado anônimo entre sessões/dispositivos. É a feature mais crítica do diferencial "responde sem baixar nada".
+### 08 · `convite` — Complexo · **Specify + Design concluídos** (CVT-01..37, design em 2026-08-28) · **Tasks pendente** → `.specs/features/convite/`
+T-06 + T-07 + UC-07, UC-17, UC-18: mensagem por blocos com preview fiel de bolha (RN-26b), criação de grupo só com confirmados (RN-25), enquetes com voto trocável e trava "CRIE O GRUPO PRIMEIRO" (RN-26). ~~**Zona cinzenta central:** a API pública do WhatsApp não permite criar grupo nem postar enquete programaticamente.~~ ✅ **Resolvida** em 2026-08-27 pela **AD-025** (§4, G4): grupo e enquete são **estado do BORA**; o WhatsApp recebe texto por share sheet / `wa.me`.
 
-### 10 · `custos` — Grande, com Discuss
-T-09 + UC-19..UC-23: as duas faces da tela (custos da festa com despesas/split/progresso; acerto pós-festa com saldos e quem-paga-quem), meio de pagamento, marcar pago, cobrar pendentes. Toda a aritmética vem de `calculo` (RN-14..RN-18); aceite ancorado nos testes A e B de RN-16. **Zonas cinzentas:** a spec **não tem UC de criar/editar despesa** (UC-19 só lista — de onde nascem as despesas além do pedido RN-20?) e a cobrança "no Pix" precisa de definição (Pix copia-e-cola? deep link? só notificação?).
+Do Design (**AD-032** proposta): `share_plus` como canal único de saída de texto, atrás da porta `CompartilhadorDeTexto`. A zona cinzenta G4 já vinha resolvida por **AD-025** (grupo e enquete são estado do BORA). **Achado do design:** `ItemDeLista.quemLeva` existe e é consumido por RN-20, mas **nenhuma spec o preenchia** — `ComposicaoDaFesta` não tinha campo de origem. A emenda E-3 abre o canal (`atribuicoes`, aditivo); quem escreve continua sendo a spec 09. Sem ela, CVT-04 ("Rafa leva") seria insatisfazível até com a fixture RN-30.
+
+### 09 · `convidado` — Complexo · **Specify + Design concluídos** (CVD-01..44, design em 2026-08-28) · **Tasks pendente** → `.specs/features/convidado/`
+T-08 (standalone, sem header de app) + UC-08, UC-09, UC-10: link público `bora.app/c/xxx` abre flyer **sem conta** (auth anônima), RSVP BORA!/NÃO VOU, escolha "eu levo" que desconta da cota (RN-20), confirmação refletindo na Home do anfitrião em tempo real (RN-28). Envolve Hosting (rota pública), Functions (gerar link, notificar anfitrião), security rules por papel do link (RN-23 + RN-22). ~~**Zonas cinzentas:** modelo de segurança do link e identidade do convidado anônimo.~~ ✅ **Resolvidas** em 2026-08-27 pela **AD-026** (§4, G5): link perpétuo, papel lido no instante da abertura, identidade = uid anônimo persistido no dispositivo. É a feature mais crítica do diferencial "responde sem baixar nada".
+
+Do Design (**AD-033** e **AD-034** propostas, com duas decisões do usuário em 2026-08-28): **um documento por festa**, `convites/{codigo}` como índice, e o RSVP escrito **só pela Cloud Function**; a identidade do portador é o uid anônimo do Firebase, que **nunca vira `UsuarioLogado`**. É onde Firestore, Hosting e Functions entram de fato (fecha **G8**), e traz `cloud_functions` — a primeira dependência de produção nova desde o M0. **Não é paralelizável com nenhuma outra spec:** reescreve a camada de dados que as quatro anteriores consomem. Deploy de Functions exige plano Blaze — pré-condição de ida ao ar, não de desenvolvimento.
+
+### 10 · `custos` — Grande · **Specify + Design concluídos** (CUST-01..37, design em 2026-08-28) · **Tasks pendente** → `.specs/features/custos/`
+T-09 + UC-19..UC-23: as duas faces da tela (custos da festa com despesas/split/progresso; acerto pós-festa com saldos e quem-paga-quem), meio de pagamento, marcar pago, cobrar pendentes. Toda a aritmética vem de `calculo` (RN-14..RN-18); aceite ancorado nos testes A e B de RN-16. ~~**Zonas cinzentas:** de onde nascem as despesas, e o que "cobrar no Pix" significa.~~ ✅ **Resolvidas** em 2026-08-27 pelas **AD-027** e **AD-028** (§4, G6): despesa nunca se cria à mão (nasce de "EU LEVO", do pedido e do que o anfitrião assume) e a cobrança é **aviso + estado**, sem chave Pix e sem app de banco.
+
+Do Design (**AD-035** e **AD-036** propostas): o estado do acerto (meio de pagamento + marcação **por par**, com o valor no instante da marcação) mora em `core/festas`, é derivado na leitura e escrito por caminho de campo — chave por par é o que sobrevive à regeneração das linhas de RN-16 a cada despesa nova; e o momento da festa vira dado (`fimPrevisto`) lido contra um **relógio injetado**, nunca um controle na tela. Lacunas declaradas: `fimPrevisto` nasce sem quem o preencha (nenhuma tela coleta data/hora reais — `Festa.data` é rótulo), então a face ACERTO degrada para o `status`; e o lembrete de UC-23 não alcança ninguém, por decisão de **AD-028**.
 
 ---
 

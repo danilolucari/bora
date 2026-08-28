@@ -230,92 +230,137 @@
 - **Status**: active
 
 
+### Reserva de numeração — AD-029..AD-036 (propostas, **não** ativas)
+
+Os designs das seis specs restantes propuseram oito decisões. **Nenhuma está registrada
+acima** — o log ativo para na **AD-028**. Cada uma é gravada como AD completa na **primeira
+task do Execute** da sua spec, na ordem da coluna "Depende de" do ROADMAP §2. Quem executar
+fora dessa ordem **renumera a sua**, nunca a anterior. Esta tabela existe para que sessões
+paralelas não reivindiquem o mesmo número — foi o que já aconteceu uma vez (`19f77a7`,
+AD-023 → AD-029).
+
+| Nº | Spec dona | Proposta | Onde está escrita |
+|---|---|---|---|
+| **AD-029** | 05 `montar` | Porta de edição da festa em `lib/core/festas/` (`FestaEmEdicao`, `FestaEmEdicaoRepository`), falando só em tipos de `core/calculo` | `montar/design.md` §Tech Decisions |
+| **AD-030** | 06 `lista` | O estado de lista da festa (overrides, carrinho, despesas) mora nas entidades de `core/`, nunca na feature | `lista/design.md` §12 |
+| **AD-031** | 07 `galera` | O **dado** do acesso (`codigo`, `NivelDoLink`) em `core/festas/`; a **regra** RN-22 × RN-23 em `features/galera/domain/permissoes.dart`, consultável e nunca reimplementada | `galera/design.md` §12 |
+| **AD-032** | 08 `convite` | `share_plus` como canal único de saída de texto, atrás da porta `CompartilhadorDeTexto`, com o mapeamento de `ShareResultStatus` num lugar só | `convite/design.md` §12 |
+| **AD-033** | 09 `convidado` | Forma do dado no Firestore e fronteira de escrita: **um documento por festa**, `convites/{codigo}` como índice, RSVP escrito **só** pela Cloud Function. Traz `cloud_functions` ao `pubspec.yaml` | `convidado/design.md` §13 |
+| **AD-034** | 09 `convidado` | Identidade do portador do link: uid da auth anônima persistido no dispositivo, e **usuário anônimo do Firebase nunca vira `UsuarioLogado`** | `convidado/design.md` §13 |
+| **AD-035** | 10 `custos` | Estado do acerto (meio de pagamento + marcação **por par**, com o valor no instante da marcação) em `core/festas`, derivado na leitura e escrito por caminho de campo; `nomes` como quarto campo só-de-dados do documento | `custos/design.md` §13 |
+| **AD-036** | 10 `custos` | O momento da festa é dado (`fimPrevisto`) lido contra um **relógio injetado** — é ele, nunca um controle na tela, que escolhe a face de T-09 | `custos/design.md` §13 |
+
+**Decisões do usuário já tomadas e ainda não registradas como AD** (2026-08-28, no Design da
+spec 09): forma do dado = um documento por festa; escrita do RSVP = Cloud Function, como
+CVD-31 AC7 manda. Entram no corpo da AD-033.
+
+
 ## Handoff
 
-> **SNAPSHOT — 2026-08-28.** Sessão pausada por **cota da janela de 5h em 92%**
-> (limite de pausa: 85%). **Nada ficou pela metade** — o único artefato da sessão
-> está commitado. O que está abaixo de "Histórico — sessão do M0" é história, não
-> estado corrente.
+> **SNAPSHOT — 2026-08-28**, escrito depois de reconciliar `ROADMAP.md` e `STATE.md` com o
+> que as sessões paralelas mergearam na `main`. Os dois arquivos estavam atrás do repositório:
+> declaravam pendente um Design que já existia no disco em quatro specs. O que está abaixo de
+> "Histórico — sessão do M0" é história, não estado corrente.
 
-### O que esta sessão entregou
+### Onde o projeto está
 
-**Fase Tasks da spec 06 `lista`** — `.specs/features/lista/tasks.md`, commit `0d24e60`
-escrito na worktree `feature-lista-tasks` e **já mergeado em `main`** (merge commit,
-base `4b8cefd`). Nenhuma linha de código foi escrita.
-
-- **27 tasks em 7 fases**, acima da estimativa de ~17 do `design.md` §15 — o corte
-  mais fino foi aprovado pelo usuário. Fatiamento: (1) T1–T6 a AD-030 e as cinco
-  emendas em `core` (E-a corredor no catálogo · E-b carrinho na composição ·
-  E-e `itensCobraveis` · E-d `faixaRealDaLista` · E-c despesas na festa),
-  (2) T7–T8 domínio da feature e a porta de pedido da AD-024, (3) T9–T11 o
-  `ListaBloc` em três fatias, (4) T12–T15 modo PLANEJAR, (5) T16–T18 modo COMPRAR,
-  (6) T19–T22 o pedido, (7) T23–T27 telas, rota, guard de LIST-07 e as abas.
-- **Empacotamento previsto para o Execute: 5 batches sequenciais** (6·5·7·4·5),
-  fases inteiras, nunca partidas. Sequencial, não fan-out — a lição de 2026-08-25.
-- **Cobertura: 35 de 35 requisitos** (LIST-01..LIST-35) com task dona. 0 órfãos,
-  0 tasks sem requisito. As três tabelas de pré-aprovação (granularidade,
-  diagrama × definição, co-localização de teste) passam sem ❌.
-- `spec.md` teve **só** a linha de cabeçalho `**Tasks:**` atualizada para
-  "concluído (2026-08-28) · 27 tasks em 7 fases".
-
-**Infra da sessão:** servidor MCP **`context7` plugado em escopo `user`**
-(`~/.claude.json`, transporte HTTP, `https://mcp.context7.com/mcp`, health check
-✔ Connected). Escopo de usuário de propósito — vale em todos os worktrees e
-**não** entra no repositório. Nenhum arquivo do projeto foi tocado por isso.
-Consequência a saber: consultas de biblioteca passam a sair para um serviço
-externo (Upstash).
-
-### Estado das specs
+**Todas as onze specs têm `spec.md` + `design.md`.** Nenhuma linha de código novo foi escrita
+desde o merge de `home` — o trabalho das últimas três sessões é documento.
 
 | Spec | Specify | Design | Tasks | Execute | Verifier |
 |---|---|---|---|---|---|
+| 00 `fundacao` | ✅ | ✅ | ✅ 18 tasks | ✅ | ✅ |
+| 01 `design-system` | ✅ | ✅ | ✅ 32 tasks | ✅ | ✅ **PASS** |
+| 02 `calculo` | ✅ | ✅ | ✅ 28 tasks | ✅ | ✅ **PASS** |
 | 03 `entrar` | ✅ | ✅ | ✅ 16 tasks | ✅ | ✅ **PASS** |
 | 04 `home` | ✅ | ✅ | ✅ 16 tasks | ✅ | ✅ **PASS** |
-| 05 `montar` | ✅ | ✅ | ✅ 24 tasks | ⬜ | ⬜ |
-| 06 `lista` | ✅ | ✅ | ✅ **27 tasks — novo** | ⬜ **bloqueado** | ⬜ |
-| 07 `galera` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 08 `convite` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 09 `convidado` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 10 `custos` | ✅ | ✅ | ⬜ | ⬜ | ⬜ |
+| 05 `montar` | ✅ | ✅ | ✅ 24 tasks | ⬜ **é o gargalo** | ⬜ |
+| 06 `lista` | ✅ | ✅ | ✅ 27 tasks | ⬜ bloqueado | ⬜ |
+| 07 `galera` | ✅ | ✅ `02d4571` | ⬜ | ⬜ bloqueado | ⬜ |
+| 08 `convite` | ✅ | ✅ `b4ef1fd` | ⬜ | ⬜ bloqueado | ⬜ |
+| 09 `convidado` | ✅ | ✅ `4b8cefd` | ⬜ | ⬜ bloqueado | ⬜ |
+| 10 `custos` | ✅ | ✅ `9ca798e` | ⬜ | ⬜ bloqueado | ⬜ |
 
-### ⛔ Bloqueio ativo — o Execute de `lista` não pode começar
+**Cobertura requisito → componente nos seis designs ainda não executados:** 24/24, 35/35,
+28/28, 37/37, 44/44, 37/37 — **205 requisitos, zero órfãos**.
 
-**`lista` executa depois do merge de `montar` em `main`** (`design.md` §1). São três
-dependências de compilação que não existem no disco:
+**Baseline conferida hoje (2026-08-28), não herdada:** `flutter test` → **1137 testes verdes**;
+`flutter analyze` → **zero issues**. `git status` limpo em `main`, nenhuma worktree aberta,
+nenhum arquivo não commitado.
 
-| O que falta | Nasce em | Quem usa em `lista` |
+### ⛔ O bloqueio é um só, e é o mesmo de três sessões atrás
+
+**`montar` (spec 05) não entrou em Execute.** `lib/core/festas/` não existe no disco, e
+`lib/features/{montar,lista,galera,convite,convidado,custos}/` têm só `PlaceholderPage`. As
+cinco specs seguintes declaram, cada uma no seu §1, o mesmo pré-requisito bloqueante de
+compilação:
+
+| O que falta | Nasce em | Quem espera |
 |---|---|---|
-| `lib/core/festas/` (`FestaEmEdicao`, `FestaEmEdicaoRepository`, barrel) | `montar` T2/T3 | T6, T9, T10, T11, T25 |
-| `core/calculo/formatacao/rotulo_de_quantidade.dart` | `montar` T5 | T13, T17 |
-| `FestaRepositoryEmMemoria` implementando a 2ª porta | `montar` T4 | T25 |
+| `lib/core/festas/` — `FestaEmEdicao`, `FestaEmEdicaoRepository`, barrel | `montar` (**AD-029**) | 06, 07, 08, 09, 10 |
+| `FestaRepositoryEmMemoria` sobre a segunda porta | `montar` | 06, 07 |
+| `core/calculo/formatacao/rotulo_de_quantidade.dart` | `montar` | 06 |
+| `ResumoDeFesta.composicao` | `montar` | 07, 09 |
+| `ComposicaoDaFesta.copyWith` · `NivelDoLink`/`ConviteDaFesta` · `permissoes.dart` | `galera` (**AD-031**) | 08, 09, 10 |
+| `noCarrinho` · `DefinicaoDeItem.corredor` · `FestaEmEdicao.despesas` | `lista` (**AD-030**) | 09, 10 |
+| `FestaEmEdicaoRepositorioFirestore` · `firestore.rules` · `functions/` | `convidado` (**AD-033**) | 10 |
 
-**Arquivo de colisão:** a T6 de `lista` edita `core/festas/dominio/festa_em_edicao.dart`,
-que nasce em `montar`. Depois do merge, vira edição trivial de arquivo já em `main`.
+**Arquivos de colisão entre specs paralelas** — `core/festas/dominio/festa_em_edicao.dart`
+(`lista` acrescenta `despesas`, `galera` acrescenta `convite`, `custos` acrescenta
+`fimPrevisto`) e `core/calculo/dominio/composicao_da_festa.dart` (`lista` acrescenta
+`noCarrinho`, `galera` o `copyWith`, `convite` as `atribuicoes`). Todas as emendas são
+**aditivas**; depois do merge de `montar` viram edição trivial de arquivo já em `main`.
 
-**Numeração de AD:** `montar` reserva a **AD-029** e ainda não a registrou; `lista` é a
-**AD-030** e só é gravada depois daquela. Se a ordem inverter, renumera-se em `lista`,
-nunca em `montar`. A última AD no log é a **AD-028**.
+**Paralelismo:** `lista` e `galera` podem andar juntas, com os dois arquivos de colisão acima.
+**`convidado` e `custos` declaram-se não paralelizáveis com nada** — reescrevem a camada de
+dados que as anteriores consomem.
 
 ### Próximo passo, em ordem
 
-1. **Executar `montar`** (24 tasks, 7 fases, `tasks.md` pronto e aprovado) — é o que
-   destrava tudo. Registrar a AD-029 na T1 de lá.
-2. Só então **Executar `lista`** a partir de `.specs/features/lista/tasks.md`, batch 1
-   (T1–T6, as emendas em `core`), registrando a AD-030 na T1.
-3. Em paralelo e sem conflito: **Design das specs 07 `galera`, 08 `convite`,
-   09 `convidado`, 10 `custos`** — as quatro têm `spec.md` e nenhuma toca código.
+1. **Execute de `montar`** — 24 tasks em 7 fases, `tasks.md` pronto e aprovado. Registrar a
+   **AD-029** na T1. É o que destrava as cinco specs seguintes.
+2. **Execute de `lista`** — 27 tasks, 5 batches sequenciais (não fan-out). AD-030 na T1.
+3. **Tasks + Execute de `galera`** (AD-031), depois **`convite`** (AD-032).
+4. **`convidado`** (AD-033/AD-034) — é aqui que Firestore, Hosting e Functions entram de
+   fato e o M2 fecha. Traz `cloud_functions`, a primeira dependência de produção nova desde
+   o M0; o deploy exige plano Blaze, que é pré-condição de ida ao ar, não de desenvolvimento.
+5. **`custos`** (AD-035/AD-036) — fecha o M3.
 
-### Contagem de testes e árvore
+Sem dependência de código, a qualquer momento: **Tasks das specs 07..10** (nenhuma toca
+código) e a **conferência visual** com a skill `run`, pendente desde 2026-08-26 para T-01,
+W-01, T-02 e W-02.
 
-- Baseline declarada na `main`: **1137 testes verdes**, `flutter analyze` com zero issues.
-  **Não foi rodada nesta sessão** — nenhum código foi tocado, então não havia o que
-  regredir. Confirmar com `flutter test; echo "exit=$?"` antes de abrir o Execute.
-- `lista` projeta **~230 testes novos**; `montar` projeta outros ~230.
-- Arquivos não commitados: **nenhum**. `git status` limpo em `main`.
-- A worktree `feature-lista-tasks` foi mergeada, removida e a branch apagada. Todo o
-  trabalho desta sessão vive em `main`; não há worktree aberta.
-- **A `main` avançou em paralelo**: o `design.md` da spec 10 `custos` entrou por
-  `9ca798e`, de outra sessão, sem conflito com este trabalho.
+### Pendências herdadas que ninguém deve "consertar" adiante
+
+- **`fimPrevisto` nasce sem quem o preencha** (`custos` L-1): nenhuma tela coleta data/hora
+  reais — `Festa.data` e `Festa.hora` são rótulos literais, e `montar` grava hora vazia. A
+  regra da face ACERTO é implementada inteira; enquanto ninguém preencher, ela degrada para
+  o `status` da festa.
+- **`ItemDeLista.quemLeva` só ganha origem na spec 08** (emenda E-3 de `convite`) e só ganha
+  quem o escreva na **spec 09**. Até lá, todo item que sai da calculadora tem `quemLeva` nulo.
+- **Homônimos compartilham contribuição e itens** (`convidado` D-9): `core/calculo` identifica
+  pessoa **pelo nome**, e isso não é corrigível sem reescrever os Testes A e B de RN-16, que
+  são casos literais do arquivo 03.
+- **`permissoes.dart` e `urlDoConvite` ficam em `features/galera/`** e são importados por
+  outras features — acoplamento sancionado pela AD-031, registrado como candidato à promoção
+  para `core/` no M2.
+- **O valor por cabeça do flyer não se move quando alguém confirma** (`convidado` A-21):
+  pessoa nomeada não entra com cabeça; as cabeças vêm dos steppers H/M/C. Está correto.
+- **AD-024 e AD-028 continuam valendo:** a tela afirma "PEDIDO A CAMINHO!" sem pedido real e
+  "COBRADO ✓" sem cobrança financeira. A ressalva de exposição pública segue de pé.
+
+### Infra e ambiente
+
+- **Sem `gh` CLI na máquina** — os merges são locais com `--no-ff`, não PR, e não há issues do
+  GitHub conferíveis a partir daqui. A `main` local ainda **não foi empurrada**.
+- Servidor MCP **`context7`** plugado em escopo `user` (`~/.claude.json`, HTTP). Vale em todos
+  os worktrees e não entra no repositório; consultas de biblioteca saem para um serviço
+  externo (Upstash).
+- Duas sessões paralelas commitaram com mensagem genérica em inglês (`4b8cefd`, `e7cd070` —
+  *"Refactor code structure…"*). Ambas são **só documento**, conferido por `git show --stat`.
+  Vale reforçar o padrão de commit do `CLAUDE.md` nas sessões que não passam pela skill.
+
+
 ## Histórico — sessão do M0
 
 
@@ -420,7 +465,7 @@ uma validação.** O Verifier de `calculo` continua integralmente por fazer.
 
 ### O que falta, em ordem
 
-## 🎉 M0 FECHADO — não há trabalho pendente de código
+### 🎉 M0 FECHADO — não havia trabalho pendente de código *(histórico, 2026-08-25)*
 
 `main` está em **742 testes verdes** com `flutter analyze` limpo, e as duas branches foram
 mergeadas sem conflito (`--no-ff`, um merge commit cada). A aritmética fecha e é a prova de que
