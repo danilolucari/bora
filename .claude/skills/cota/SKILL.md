@@ -66,10 +66,24 @@ python .claude/scripts/cota.py --json   # para script
 | `PARAR` | ≥ 85% | Protocolo de pausa, imediatamente |
 | `INCERTO` | — | Cache ausente, velho (>30 min) ou de janela já encerrada. **Pedir `/usage` ao usuário** e não decidir no escuro |
 
-O gatilho é a **pior de todas as janelas** que o cache conhece — não só
-`five_hour` e `seven_day`. Planos Max têm teto semanal separado de Opus, que
-pode estourar com o semanal geral ainda baixo; ler só os dois nomes óbvios
-deixava esse passar em branco.
+## Qual janela decide
+
+**Só a janela de sessão (5h).** As semanais — `seven_day` e o teto separado de
+Opus dos planos Max — continuam sendo lidas e aparecem no relatório marcadas
+`(informativa)`, mas **não disparam veredito nenhum**: com a semana em 97% e a
+sessão em 5%, o veredito é `SEGUIR`.
+
+Foi decisão do usuário em 2026-08-28, revertendo a regra anterior ("a pior de
+todas as janelas"). O motivo: o teto semanal fica alto por dias seguidos, então
+por ele o projeto vivia em `ATENCAO` permanente — recusando task longa com a
+janela de 5h vazia, que é exatamente o momento em que dá para trabalhar.
+
+O preço, assumido: quando a semana estourar de verdade, a parada vem da API e
+não do monitor. O que protege o trabalho aí é o mesmo de sempre — commit
+atômico por task mais handoff.
+
+Se o cache não trouxer a janela de 5h, o veredito é `INCERTO`, não `SEGUIR`:
+sem a janela que decide, não há decisão.
 
 ## Os guardas que mais importam
 
@@ -122,9 +136,10 @@ pwsh -File .claude/scripts/agendar-retomada.ps1 -Continuar   # --continue em vez
 
 Três decisões embutidas, todas testadas em 2026-08-27:
 
-- **O alvo é o reset da janela que estourou**, não sempre o de 5h. Se quem
-  passou de 85% foi a **semana**, voltar em cinco horas bate na mesma parede —
-  o alvo certo pode ser dias à frente. O script diz qual janela usou.
+- **O alvo é o reset da janela do gatilho + 10 min** — que, como só a sessão
+  dispara, é sempre o reset de 5h. O script lê `gatilho.reseta_em` do JSON em
+  vez de fixar `five_hour`, para não mentir se um dia outra janela voltar a
+  decidir; ele diz qual janela usou.
 - **Sessão nova, não `--continue`.** O handoff no `STATE.md` existe justamente
   para isso, e recarregar o contexto gigante que acabou de bater no teto queima
   cota logo na volta. Use `-Continuar` quando o contexto anterior for

@@ -111,9 +111,9 @@ conta; em 2026-08-25 isso produziu um alarme de 100% com o `/usage` real em
 python .claude/scripts/cota.py        # SEGUIR / ATENCAO / PARAR / INCERTO
 ```
 
-Gatilho pela **pior de todas as janelas** que o cache conhece — não só sessão
-(5h) e semana (7d): planos Max têm teto semanal separado de Opus, que estoura
-com o semanal geral ainda baixo.
+Gatilho **só pela janela de sessão (5h)**. As semanais (`seven_day` e o teto
+de Opus) continuam no relatório como `(informativa)` e não pausam nada: semana
+em 97% com sessão em 5% é `SEGUIR`. Sem a janela de 5h no cache, `INCERTO`.
 
 | < 70% | 70–84% | ≥ 85% | cache velho ou janela virada |
 |---|---|---|---|
@@ -127,8 +127,7 @@ janela que estourou e o horário agendado.
 
 A retomada é **headless**: a tarefa `bora-retomar` chama o Claude Code com
 `-p --permission-mode acceptEdits`, loga em `.claude/logs/` e se desagenda. O
-alvo é o reset **da janela que estourou** + 10 min — se foi a semana, voltar em
-cinco horas bate na mesma parede.
+alvo é o reset da janela do gatilho + 10 min — na prática, o reset de 5h.
 
 O que de fato protege o trabalho continua sendo o **commit atômico por task**
 somado ao handoff. O monitor não sobrevive à sessão morrer entre dois turnos;

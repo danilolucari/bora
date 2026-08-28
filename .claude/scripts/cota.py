@@ -12,6 +12,12 @@ turno porque o contexto inteiro é relido, e não enxerga o limite da conta. Em
 2026-08-25 uma estimativa por `ccusage` gritou 100% quando o `/usage` real
 marcava 18%, e o trabalho foi pausado à toa.
 
+O gatilho é **só a janela de sessão (5h)**. As janelas semanais continuam
+aparecendo no relatório como informação, mas não pausam mais o trabalho:
+quem decide se dá para seguir agora é a cota da sessão corrente. Escolha do
+usuário em 2026-08-28 — o teto semanal fica alto por dias seguidos e pausar
+por ele parava a sessão com a janela de 5h vazia.
+
 Uso:
     python .claude/scripts/cota.py          # relatório legível
     python .claude/scripts/cota.py --curto  # uma linha
@@ -61,6 +67,9 @@ NOMES = {
     "weekly_opus": "semana Opus (7d)",
 }
 
+# A única janela que dispara veredito. Tudo o mais é informativo.
+NOME_SESSAO = "sessão (5h)"
+
 
 def _agora() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
@@ -73,9 +82,10 @@ def _nome(chave: str) -> str:
 def _coletar_janelas(uso: dict) -> list[dict]:
     """Toda janela de limite que o cache conhece, não só as duas óbvias.
 
-    O `/usage` expõe mais buckets do que `five_hour`/`seven_day` — planos Max
-    têm um teto semanal separado de Opus, que pode estourar com o semanal geral
-    ainda baixo. Ler só os dois nomes conhecidos deixa esse passar em branco.
+    Coletar tudo é para o **relatório**: o `/usage` expõe mais buckets do que
+    `five_hour`/`seven_day` (planos Max têm teto semanal separado de Opus) e
+    ver todos ajuda a entender o dia. Quem **decide** o veredito é só a janela
+    de sessão — ver `NOME_SESSAO` em `ler_cota`.
     """
     janelas: dict[str, dict] = {}
 
@@ -190,27 +200,37 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
         estado["motivo"] = "o cache não trouxe nenhuma janela de utilização"
         return estado
 
-    pior = janelas[0]
-    estado["gatilho"] = pior
-    if pior["pct"] >= LIMITE_PARAR:
+    # O veredito sai **só** da janela de sessão. As semanais ficam em
+    # `janelas` para o relatório mostrar, mas não pausam o trabalho.
+    gatilho = next((j for j in janelas if j["janela"] == NOME_SESSAO), None)
+    if gatilho is None:
+        estado["veredito"] = "INCERTO"
+        estado["motivo"] = (
+            "o cache não trouxe a janela de sessão (5h), que é a única que "
+            "decide. Rode /usage para atualizar."
+        )
+        return estado
+
+    estado["gatilho"] = gatilho
+    if gatilho["pct"] >= LIMITE_PARAR:
         estado["veredito"] = "PARAR"
-        estado["motivo"] = f"{pior['janela']} em {pior['pct']}%"
-    elif pior["pct"] >= LIMITE_ATENCAO:
+        estado["motivo"] = f"{gatilho['janela']} em {gatilho['pct']}%"
+    elif gatilho["pct"] >= LIMITE_ATENCAO:
         estado["veredito"] = "ATENCAO"
-        estado["motivo"] = f"{pior['janela']} em {pior['pct']}% — não abrir task longa"
+        estado["motivo"] = f"{gatilho['janela']} em {gatilho['pct']}% — não abrir task longa"
     else:
         estado["veredito"] = "SEGUIR"
-        estado["motivo"] = f"{pior['janela']} em {pior['pct']}%"
+        estado["motivo"] = f"{gatilho['janela']} em {gatilho['pct']}%"
 
     return estado
 
 
 def horario_de_retomada(estado: dict) -> str | None:
-    """Quando retomar: reset **da janela que estourou** + 10 min, no fuso local.
+    """Quando retomar: reset da janela do gatilho + 10 min, no fuso local.
 
-    Usar sempre o reset de 5h é errado quando quem estourou foi a semana: a
-    sessão volta em cinco horas e bate na mesma parede. O reset que importa é
-    o da janela do gatilho.
+    Como só a sessão dispara veredito, na prática o alvo é sempre o reset de
+    5h. A função continua lendo `gatilho.reseta_em` em vez de fixar `five_hour`
+    para não mentir se um dia outra janela voltar a decidir.
     """
     gatilho = estado.get("gatilho") or {}
     alvo = gatilho.get("reseta_em") or estado.get("reseta_em_utc")
@@ -241,8 +261,14 @@ def main() -> int:
         _imprimir(f"{veredito} · {estado.get('motivo', '')}")
     else:
         _imprimir(f"COTA: {veredito} — {estado.get('motivo', '')}")
+        gatilho = estado.get("gatilho")
         for janela in estado.get("janelas", []):
-            marca = "<<" if janela is estado.get("gatilho") else ""
+            if janela is gatilho:
+                marca = "<< decide"
+            elif janela["janela"] == NOME_SESSAO:
+                marca = ""
+            else:
+                marca = "(informativa)"
             _imprimir(f"  {janela['janela']:<20}: {janela['pct']:>3}% {marca}")
         if estado.get("reseta_em_local"):
             _imprimir(

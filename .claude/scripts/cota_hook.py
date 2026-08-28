@@ -9,6 +9,9 @@ configurados em `.claude/settings.json` cobrem a sessão inteira:
     Stop         -> em PARAR, **bloqueia** o fim do turno e manda executar o
                     protocolo de pausa
 
+O que ele vigia é **só a janela de sessão (5h)**; as semanais viajam junto no
+relatório como informação e não disparam pausa (ver `cota.py`).
+
 Ler `~/.claude.json` custa ~0,5 ms e o processo custa ~30 ms, então a leitura
 acontece em toda chamada de ferramenta — mais frequente que os 5 minutos
 combinados. O intervalo de 5 min governa quando o monitor **fala**, porque
@@ -79,10 +82,23 @@ def _gravar_estado(dados: dict) -> None:
 
 
 def _resumo(estado: dict) -> str:
-    janelas = ", ".join(
-        f"{janela['janela']} {janela['pct']}%" for janela in estado.get("janelas", [])
+    """A janela que decide vem primeiro; as semanais entram como informação.
+
+    Sem isso a linha ficava "semana (7d) 83%, sessão (5h) 0%" e parecia que a
+    semana tinha pausado o trabalho — ela não pausa mais nada.
+    """
+    gatilho = estado.get("gatilho")
+    partes = []
+    if gatilho:
+        partes.append(f"{gatilho['janela']} {gatilho['pct']}% (decide)")
+    outras = ", ".join(
+        f"{janela['janela']} {janela['pct']}%"
+        for janela in estado.get("janelas", [])
+        if janela is not gatilho
     )
-    return janelas or estado.get("motivo", "?")
+    if outras:
+        partes.append(f"informativas: {outras}")
+    return " · ".join(partes) or estado.get("motivo", "?")
 
 
 def _protocolo(estado: dict) -> str:
