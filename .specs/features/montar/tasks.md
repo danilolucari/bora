@@ -198,14 +198,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `observarFesta(id)` entrega o estado corrente **antes** de acompanhar mudanças, e emite de novo a cada `salvarFesta`
-- [ ] `observarFesta(id)` de festa inexistente emite `null` — não lança e não fica em silêncio
-- [ ] `criarFesta` devolve um id **novo e único** a cada chamada e a festa criada aparece em `observarFestas()` — a propriedade que faz o rolê de `/roles/novo` chegar na Home
-- [ ] `salvarFesta` de id inexistente é no-op observável (não cria festa fantasma) — comportamento declarado no doc
-- [ ] `salvarFesta` preserva `confirmados`, `pendentes` e `iniciais` do resumo: montar grava identidade e composição, **não** contadores (AD-022)
-- [ ] `observarFestas()` continua com o comportamento e a cobertura de antes — nenhum teste da spec 04 editado
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] `observarFesta(id)` entrega o estado corrente **antes** de acompanhar mudanças, e emite de novo a cada `salvarFesta`
+- [x] `observarFesta(id)` de festa inexistente emite `null` — não lança e não fica em silêncio
+- [x] `criarFesta` devolve um id **novo e único** a cada chamada e a festa criada aparece em `observarFestas()` — a propriedade que faz o rolê de `/roles/novo` chegar na Home
+- [x] `salvarFesta` de id inexistente é no-op observável (não cria festa fantasma) — comportamento declarado no doc
+- [x] `salvarFesta` preserva `confirmados`, `pendentes` e `iniciais` do resumo: montar grava identidade e composição, **não** contadores (AD-022)
+- [x] `observarFestas()` continua com o comportamento e a cobertura de antes — nenhum teste da spec 04 editado
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 10 testes novos
 
 **Tests**: unit
 **Gate**: build
