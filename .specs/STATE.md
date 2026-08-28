@@ -240,7 +240,7 @@
 ### O que esta sessão entregou
 
 **Fase Tasks da spec 06 `lista`** — `.specs/features/lista/tasks.md`, commit `0d24e60`
-na branch **`worktree-feature-lista-tasks`** (worktree `.claude/worktrees/feature-lista-tasks`,
+escrito na worktree `feature-lista-tasks` e **já mergeado em `main`** (merge commit,
 base `4b8cefd`). Nenhuma linha de código foi escrita.
 
 - **27 tasks em 7 fases**, acima da estimativa de ~17 do `design.md` §15 — o corte
@@ -276,7 +276,7 @@ externo (Upstash).
 | 07 `galera` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
 | 08 `convite` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
 | 09 `convidado` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 10 `custos` | ✅ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 10 `custos` | ✅ | ✅ | ⬜ | ⬜ | ⬜ |
 
 ### ⛔ Bloqueio ativo — o Execute de `lista` não pode começar
 
@@ -311,9 +311,11 @@ nunca em `montar`. A última AD no log é a **AD-028**.
   **Não foi rodada nesta sessão** — nenhum código foi tocado, então não havia o que
   regredir. Confirmar com `flutter test; echo "exit=$?"` antes de abrir o Execute.
 - `lista` projeta **~230 testes novos**; `montar` projeta outros ~230.
-- Arquivos não commitados: **nenhum**. `git status` limpo na branch da worktree.
-- Worktree `.claude/worktrees/feature-lista-tasks` continua aberta, com o commit
-  `0d24e60` só de documento — mergear em `main` ou rebasear quando conveniente.
+- Arquivos não commitados: **nenhum**. `git status` limpo em `main`.
+- A worktree `feature-lista-tasks` foi mergeada, removida e a branch apagada. Todo o
+  trabalho desta sessão vive em `main`; não há worktree aberta.
+- **A `main` avançou em paralelo**: o `design.md` da spec 10 `custos` entrou por
+  `9ca798e`, de outra sessão, sem conflito com este trabalho.
 ## Histórico — sessão do M0
 
 
