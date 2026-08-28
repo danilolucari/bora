@@ -150,12 +150,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `FestaEmEdicao` importa **só** de `core/calculo` — nenhum import de `features/**`, de Flutter ou de Firebase
-- [ ] `==` é por valor profundo: duas instâncias com a mesma festa e a mesma composição são iguais; trocar **qualquer** um dos dois campos as separa
-- [ ] `copyWith` preserva o campo não informado
-- [ ] O barrel exporta os dois arquivos de `dominio/` e nada mais
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 6 testes novos, suíte total ≥ 1143
+- [x] `FestaEmEdicao` importa **só** de `core/calculo` — nenhum import de `features/**`, de Flutter ou de Firebase
+- [x] `==` é por valor profundo: duas instâncias com a mesma festa e a mesma composição são iguais; trocar **qualquer** um dos dois campos as separa
+- [x] `copyWith` preserva o campo não informado
+- [x] O barrel exporta os dois arquivos de `dominio/` e nada mais
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 6 testes novos, suíte total ≥ 1143
 
 **Tests**: unit
 **Gate**: quick
