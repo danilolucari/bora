@@ -1,7 +1,7 @@
 # Custos & acerto — Specification
 
 **ID prefix:** `CUST` · **Porte:** **Grande** (ver §Porte)
-**Design:** `.specs/features/custos/design.md` — pendente
+**Design:** `.specs/features/custos/design.md` ✅
 **Tasks:** `.specs/features/custos/tasks.md` — pendente
 **Context:** `.specs/features/custos/context.md`
 **Spec-fonte:** T-09 (`04-telas-ux.md`, as **duas faces**) · W-04 linha "Custos & acerto" + W-R1..W-R5 (`06-telas-web.md`) · UC-19, UC-20, UC-21, UC-22, UC-23 (`05-casos-de-uso.md`) · **RN-19** (origem, estado de UI) · RN-14, RN-15, RN-16, RN-17, RN-18, RN-20 (consumo) · RN-13, RN-22, RN-29 (consumo) · arquivo 01 §6
@@ -319,43 +319,43 @@ Nenhuma dimensão ficou em branco. As duas resolvidas como `N/A because` são a 
 
 | ID | História | Origem na spec-fonte | Fase | Status |
 |---|---|---|---|---|
-| CUST-01 | P1-1 AC1 | T-09 (as duas faces) · AD-003 · A-01, A-02 | Design | Pending |
-| CUST-02 | P1-1 AC2 | T-09 (face custos) · **RN-14** | Design | Pending |
-| CUST-03 | P1-1 AC3 | T-09 · **RN-18** | Design | Pending |
-| CUST-04 | P1-1 AC4 | T-09 · **RN-17** · **UC-19** | Design | Pending |
-| CUST-05 | P1-1 AC5 | T-09 · **RN-16** · RN-19 (etiqueta) · A-18 | Design | Pending |
-| CUST-06 | P1-1 AC6 | **RN-16 Teste B** · **UC-19 (aceite)** | Design | Pending |
-| CUST-07 | P1-1 AC7, AC8 | **RN-13** · CLAUDE.md ("nunca duplique uma fórmula na UI") · AD-009 | Design | Pending |
-| CUST-08 | P1-2 AC1, AC2 | **RN-18** · **UC-22** + A1 · A-06 | Design | Pending |
-| CUST-09 | P1-2 AC3, AC4 | **RN-18** · **UC-22 (aceite)** | Design | Pending |
-| CUST-10 | P1-2 AC5 | **UC-22 (ator)** · RN-22 · A-05 | Design | Pending |
-| CUST-11 | P1-3 AC1, AC2 | T-09 (face acerto) · **RN-14** (copy literal) · A-02 | Design | Pending |
-| CUST-12 | P1-3 AC3 | T-09 (dica literal) | Design | Pending |
-| CUST-13 | P1-3 AC4 | T-09 · **RN-15** · A-16 | Design | Pending |
-| CUST-14 | P1-3 AC5, AC6 | **RN-16 Teste A** · **UC-20 (aceite)** | Design | Pending |
-| CUST-15 | P1-3 AC7 | **RN-14** · CLAUDE.md (os dois números coexistem) | Design | Pending |
-| CUST-16 | P1-4 AC1, AC2 | T-09 · **UC-23 (variante)** · **AD-028** · A-06 | Design | Pending |
-| CUST-17 | P1-4 AC3 | T-09 · **UC-23** · **RN-29** (toast) · **AD-028** | Design | Pending |
-| CUST-18 | P1-4 AC4, AC5 | **UC-23 (aceite)** · RN-18 · A-07 | Design | Pending |
-| CUST-19 | P1-4 AC6 | **UC-23 (pré)** · dimensão idempotência · precedente `lista` A-07 | Design | Pending |
-| CUST-20 | P1-4 AC7, AC8 | dimensões failure / external-dependency / observability · AD-005 · A-13, A-14 | Design | Pending |
-| CUST-21 | P1-4 AC9 | **UC-23 (ator)** · RN-22 | Design | Pending |
-| CUST-22 | P1-5 AC1, AC3 | **RN-19** · **UC-21 (aceite)** | Design | Pending |
-| CUST-23 | P1-5 AC2, AC4 | **RN-19** · W-R1 · A-11, A-13 | Design | Pending |
-| CUST-24 | P1-5 AC5 | RN-22 · A-12 | Design | Pending |
-| CUST-25 | P1-6 AC1 | **UC-20 (ator)** · A-04 | Design | Pending |
-| CUST-26 | P1-6 AC2, AC3 | **RN-22** · UC-22, UC-23 · `convidado` CVD-31(e) | Design | Pending |
-| CUST-27 | P1-7 AC1 | **RN-20** · AD-024 · AD-027 · UC-19 | Design | Pending |
-| CUST-28 | P1-7 AC2..AC5 | **RN-16** + **RN-18** · A-08 | Design | Pending |
-| CUST-29 | P1-7 AC6 | **W-R1** · RN-28 (consumo) | Design | Pending |
-| CUST-30 | P1-7 AC7 | dimensão concorrência · A-07 | Design | Pending |
-| CUST-31 | P2-1 AC1, AC2, AC5 | **W-04** (linha "Custos & acerto") · W-R1, W-R2, W-R3 | Design | Pending |
-| CUST-32 | P2-1 AC3, AC4 | **W-R4**, **W-R5** | Design | Pending |
-| CUST-33 | P2-2 AC1..AC3 | **A-09** (fecha A-16 de `calculo`) · CALC-19 | Design | Pending |
-| CUST-34 | P2-2 AC4 | **RN-15** ("NO ZERO") · A-10 | Design | Pending |
-| CUST-35 | P2-2 AC5 | **AD-026** · dimensão data lifecycle | Design | Pending |
-| CUST-36 | P3-1 AC1, AC2 | T-09 (CTA) · **UC-23 (variante)** · **RN-29** · A-15 | Design | Pending |
-| CUST-37 | P3-1 AC3 | dimensões failure / observability · AD-005 | Design | Pending |
+| CUST-01 | P1-1 AC1 | T-09 (as duas faces) · AD-003 · A-01, A-02 | Tasks | Mapeado |
+| CUST-02 | P1-1 AC2 | T-09 (face custos) · **RN-14** | Tasks | Mapeado |
+| CUST-03 | P1-1 AC3 | T-09 · **RN-18** | Tasks | Mapeado |
+| CUST-04 | P1-1 AC4 | T-09 · **RN-17** · **UC-19** | Tasks | Mapeado |
+| CUST-05 | P1-1 AC5 | T-09 · **RN-16** · RN-19 (etiqueta) · A-18 | Tasks | Mapeado |
+| CUST-06 | P1-1 AC6 | **RN-16 Teste B** · **UC-19 (aceite)** | Tasks | Mapeado |
+| CUST-07 | P1-1 AC7, AC8 | **RN-13** · CLAUDE.md ("nunca duplique uma fórmula na UI") · AD-009 | Tasks | Mapeado |
+| CUST-08 | P1-2 AC1, AC2 | **RN-18** · **UC-22** + A1 · A-06 | Tasks | Mapeado |
+| CUST-09 | P1-2 AC3, AC4 | **RN-18** · **UC-22 (aceite)** | Tasks | Mapeado |
+| CUST-10 | P1-2 AC5 | **UC-22 (ator)** · RN-22 · A-05 | Tasks | Mapeado |
+| CUST-11 | P1-3 AC1, AC2 | T-09 (face acerto) · **RN-14** (copy literal) · A-02 | Tasks | Mapeado |
+| CUST-12 | P1-3 AC3 | T-09 (dica literal) | Tasks | Mapeado |
+| CUST-13 | P1-3 AC4 | T-09 · **RN-15** · A-16 | Tasks | Mapeado |
+| CUST-14 | P1-3 AC5, AC6 | **RN-16 Teste A** · **UC-20 (aceite)** | Tasks | Mapeado |
+| CUST-15 | P1-3 AC7 | **RN-14** · CLAUDE.md (os dois números coexistem) | Tasks | Mapeado |
+| CUST-16 | P1-4 AC1, AC2 | T-09 · **UC-23 (variante)** · **AD-028** · A-06 | Tasks | Mapeado |
+| CUST-17 | P1-4 AC3 | T-09 · **UC-23** · **RN-29** (toast) · **AD-028** | Tasks | Mapeado |
+| CUST-18 | P1-4 AC4, AC5 | **UC-23 (aceite)** · RN-18 · A-07 | Tasks | Mapeado |
+| CUST-19 | P1-4 AC6 | **UC-23 (pré)** · dimensão idempotência · precedente `lista` A-07 | Tasks | Mapeado |
+| CUST-20 | P1-4 AC7, AC8 | dimensões failure / external-dependency / observability · AD-005 · A-13, A-14 | Tasks | Mapeado |
+| CUST-21 | P1-4 AC9 | **UC-23 (ator)** · RN-22 | Tasks | Mapeado |
+| CUST-22 | P1-5 AC1, AC3 | **RN-19** · **UC-21 (aceite)** | Tasks | Mapeado |
+| CUST-23 | P1-5 AC2, AC4 | **RN-19** · W-R1 · A-11, A-13 | Tasks | Mapeado |
+| CUST-24 | P1-5 AC5 | RN-22 · A-12 | Tasks | Mapeado |
+| CUST-25 | P1-6 AC1 | **UC-20 (ator)** · A-04 | Tasks | Mapeado |
+| CUST-26 | P1-6 AC2, AC3 | **RN-22** · UC-22, UC-23 · `convidado` CVD-31(e) | Tasks | Mapeado |
+| CUST-27 | P1-7 AC1 | **RN-20** · AD-024 · AD-027 · UC-19 | Tasks | Mapeado |
+| CUST-28 | P1-7 AC2..AC5 | **RN-16** + **RN-18** · A-08 | Tasks | Mapeado |
+| CUST-29 | P1-7 AC6 | **W-R1** · RN-28 (consumo) | Tasks | Mapeado |
+| CUST-30 | P1-7 AC7 | dimensão concorrência · A-07 | Tasks | Mapeado |
+| CUST-31 | P2-1 AC1, AC2, AC5 | **W-04** (linha "Custos & acerto") · W-R1, W-R2, W-R3 | Tasks | Mapeado |
+| CUST-32 | P2-1 AC3, AC4 | **W-R4**, **W-R5** | Tasks | Mapeado |
+| CUST-33 | P2-2 AC1..AC3 | **A-09** (fecha A-16 de `calculo`) · CALC-19 | Tasks | Mapeado |
+| CUST-34 | P2-2 AC4 | **RN-15** ("NO ZERO") · A-10 | Tasks | Mapeado |
+| CUST-35 | P2-2 AC5 | **AD-026** · dimensão data lifecycle | Tasks | Mapeado |
+| CUST-36 | P3-1 AC1, AC2 | T-09 (CTA) · **UC-23 (variante)** · **RN-29** · A-15 | Tasks | Mapeado |
+| CUST-37 | P3-1 AC3 | dimensões failure / observability · AD-005 | Tasks | Mapeado |
 
 **ID format:** `CUST-NN` · **Status:** Pending → In Design → In Tasks → Implementing → Verified
 
