@@ -174,12 +174,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] A porta declara os três métodos com a assinatura do `design.md` §6.2 e **não** declara `dispose` (o ciclo de vida é da porta de leitura)
-- [ ] `ResumoDeFesta.composicao` tem default (composição vazia, 4h) e entra em `==` e `hashCode`
-- [ ] Dois `ResumoDeFesta` sem composição continuam iguais — a suíte da spec 04 roda **intacta**, sem edição de teste nenhum
-- [ ] Dois `ResumoDeFesta` que só diferem na composição **não** são iguais
-- [ ] `flutter analyze` limpo (o campo novo não quebra nenhum call site)
-- [ ] ≥ 4 testes novos; **nenhum** teste existente editado ou removido
+- [x] A porta declara os três métodos com a assinatura do `design.md` §6.2 e **não** declara `dispose` (o ciclo de vida é da porta de leitura)
+- [x] `ResumoDeFesta.composicao` tem default (composição vazia, 4h) e entra em `==` e `hashCode`
+- [x] Dois `ResumoDeFesta` sem composição continuam iguais — a suíte da spec 04 roda **intacta**, sem edição de teste nenhum
+- [x] Dois `ResumoDeFesta` que só diferem na composição **não** são iguais
+- [x] `flutter analyze` limpo (o campo novo não quebra nenhum call site)
+- [x] ≥ 4 testes novos; **nenhum** teste existente editado ou removido
 
 **Tests**: unit
 **Gate**: build (toca `core/**` e `features/home/domain/**`)

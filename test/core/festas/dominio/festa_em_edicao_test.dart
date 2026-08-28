@@ -10,9 +10,19 @@ import 'package:flutter_test/flutter_test.dart';
 const String _diretorioDaPorta = 'lib/core/festas';
 const String _barrel = 'lib/core/festas/festas.dart';
 
-/// O **único** alvo que `core/festas/dominio/` pode importar (AD-029): o
-/// barrel de `core/calculo`.
-const String _unicoImportPermitido = '../../calculo/calculo.dart';
+/// O **único** alvo de fora da camada que `core/festas/dominio/` pode
+/// importar (AD-029): o barrel de `core/calculo`.
+const String _unicoImportDeFora = '../../calculo/calculo.dart';
+
+/// Um irmão dentro da própria `dominio/` — `festa_em_edicao.dart`. Não sai da
+/// camada, então não é import "de fora": a regra da AD-029 é sobre o que a
+/// porta **conhece** (nada de `features/`, Flutter ou Firebase), não sobre a
+/// porta se referenciar. `dart:ui` não escapa por aqui — tem `:`, e o padrão
+/// exige nome de arquivo puro.
+final RegExp _irmaoDaCamada = RegExp(r'^[a-z_]+\.dart$');
+
+bool _saiDaCamada(String alvo) =>
+    alvo != _unicoImportDeFora && !_irmaoDaCamada.hasMatch(alvo);
 
 final RegExp _diretivaDeImport = RegExp(
   r'''^\s*(?:import|export)\s+['"]([^'"]+)['"]''',
@@ -35,7 +45,7 @@ List<File> _arquivosDartEm(String caminho) => Directory(caminho)
 List<String> _importsForaDeCalculo(String diretorio) => [
       for (final arquivo in _arquivosDartEm('$diretorio/dominio'))
         for (final alvo in _alvosDe(arquivo.readAsStringSync()))
-          if (alvo != _unicoImportPermitido) '${arquivo.path}: $alvo',
+          if (_saiDaCamada(alvo)) '${arquivo.path}: $alvo',
     ];
 
 Festa _festa({String nome = 'CHURRAS DO RAFA 🔥', int duracaoHoras = 4}) =>
@@ -190,15 +200,27 @@ void main() {
       });
       infrator.writeAsStringSync(
         "import 'package:flutter/material.dart';\n"
-        "import '../../../features/home/domain/resumo_de_festa.dart';\n",
+        "import 'dart:ui';\n"
+        "import '../../../features/home/domain/resumo_de_festa.dart';\n"
+        // O irmão da própria camada não é violação — se fosse, a porta não
+        // poderia declarar o próprio tipo de retorno.
+        "import 'festa_em_edicao.dart';\n",
       );
 
       final violacoes = _importsForaDeCalculo(_diretorioDaPorta);
 
-      expect(violacoes, hasLength(2));
-      expect(violacoes.first, contains('infrator_de_teste.dart'));
-      expect(violacoes.first, contains('package:flutter/material.dart'));
-      expect(violacoes.last, contains('resumo_de_festa.dart'));
+      expect(violacoes, hasLength(3));
+      expect(violacoes.every((v) => v.contains('infrator_de_teste.dart')), isTrue);
+      expect(violacoes[0], contains('package:flutter/material.dart'));
+      expect(violacoes[1], contains('dart:ui'));
+      expect(violacoes[2], contains('resumo_de_festa.dart'));
+    });
+
+    test('import de irmão da própria camada não é acusado', () {
+      expect(_saiDaCamada('festa_em_edicao.dart'), isFalse);
+      expect(_saiDaCamada('../../calculo/calculo.dart'), isFalse);
+      expect(_saiDaCamada('package:firebase_core/firebase_core.dart'), isTrue);
+      expect(_saiDaCamada('package:flutter_bloc/flutter_bloc.dart'), isTrue);
     });
 
     test('o barrel é a única porta: só exporta arquivos de dominio/', () {
