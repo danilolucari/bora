@@ -2,7 +2,7 @@
 
 **ID prefix:** `GAL` · **Porte:** **Grande** (ver §Porte)
 **Design:** `.specs/features/galera/design.md` ✅
-**Tasks:** `.specs/features/galera/tasks.md` — pendente
+**Tasks:** `.specs/features/galera/tasks.md` ✅ — 27 tasks em 5 fases, Execute bloqueado por `montar`
 **Context:** `.specs/features/galera/context.md`
 **Spec-fonte:** T-05 (`04-telas-ux.md`) · W-04 linha "A galera" + W-R1..W-R5 (`06-telas-web.md`) · UC-11, UC-12, UC-13 (`05-casos-de-uso.md`) · RN-21, RN-22, RN-23 (`03-regras-de-negocio.md`) · RN-13, RN-29, RN-30 (consumo) · arquivo 01 §4/§5/§6/§7
 **Roadmap:** `.specs/ROADMAP.md` — spec 07, marco M2
