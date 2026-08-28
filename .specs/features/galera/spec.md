@@ -1,7 +1,7 @@
 # A galera — Specification
 
 **ID prefix:** `GAL` · **Porte:** **Grande** (ver §Porte)
-**Design:** `.specs/features/galera/design.md` — pendente
+**Design:** `.specs/features/galera/design.md` ✅
 **Tasks:** `.specs/features/galera/tasks.md` — pendente
 **Context:** `.specs/features/galera/context.md`
 **Spec-fonte:** T-05 (`04-telas-ux.md`) · W-04 linha "A galera" + W-R1..W-R5 (`06-telas-web.md`) · UC-11, UC-12, UC-13 (`05-casos-de-uso.md`) · RN-21, RN-22, RN-23 (`03-regras-de-negocio.md`) · RN-13, RN-29, RN-30 (consumo) · arquivo 01 §4/§5/§6/§7
@@ -305,38 +305,38 @@ O ROADMAP **não marcou Discuss** para esta spec, e nenhuma destas ambiguidades 
 
 | ID | História | Origem na spec-fonte | Fase | Status |
 |---|---|---|---|---|
-| GAL-01 | P1-1 AC1, AC2 | T-05 (card do link) · RN-23 · A-03 | Design | Pending |
-| GAL-02 | P1-1 AC3, AC4, AC5 | **RN-23** (notas literais) · UC-13 passo 2 | Design | Pending |
-| GAL-03 | P1-1 AC6, AC7 | T-05 (rodapé) · UC-13 passo 3 · **RN-29** | Design | Pending |
-| GAL-04 | P1-2 AC1..AC4 | **UC-13 aceite** · **AD-026** · A-09 | Design | Pending |
-| GAL-05 | P2-2 AC4 | A-07 · AD-005 (dimensões: failure, external-dependency) | Design | Pending |
-| GAL-06 | P1-3 AC1, AC2 | T-05 (header) · A-10 | Design | Pending |
-| GAL-07 | P1-3 AC3, AC4, AC5, AC6 | T-05 (seção PESSOAS) · **RN-21** (rótulos) · A-13, A-14, A-15 | Design | Pending |
-| GAL-08 | P1-3 AC7 | arquivo 02 §5 · **RN-22** (cores por papel) | Design | Pending |
-| GAL-09 | P1-3 AC8, AC9 | **AD-022** · T-05 "5 pessoas · 4 confirmadas" · A-11 | Design | Pending |
-| GAL-10 | P1-4 AC1, AC2 | T-05 (expandido) · arquivo 02 §5 (accordion) | Design | Pending |
-| GAL-11 | P1-4 AC3 | **RN-21** (dieta) · UC-11 passo 2 | Design | Pending |
-| GAL-12 | P1-4 AC4 | **RN-21** (bebida) · UC-11 passo 2 | Design | Pending |
-| GAL-13 | P1-4 AC5, AC6, AC7 | T-05 (faixa amarela) · **RN-21** (resumo agregado) · A-08 | Design | Pending |
-| GAL-14 | P1-4 AC8, AC9, AC10 | **UC-11 aceite** · **RN-21** (efeitos) via `core/calculo` | Design | Pending |
-| GAL-15 | P1-4 AC11, AC12 | CLAUDE.md ("nunca duplique uma fórmula na UI") · **RN-12** · A-06 | Design | Pending |
-| GAL-16 | P1-5 AC4 | **UC-12 E1** · T-05 (painel do anfitrião) · A-05 | Design | Pending |
-| GAL-17 | P1-5 AC1, AC2, AC3 | **UC-12** passos 1 e 2 · **RN-22** | Design | Pending |
-| GAL-18 | P1-5 AC5, AC6 | **RN-22** ("ANFITRIÃO fixo, 1") | Design | Pending |
-| GAL-19 | P1-6 AC1..AC4 | **RN-22** (tabela) · A-19 | Design | Pending |
-| GAL-20 | P1-6 AC5, AC6 | **RN-23** × RN-22 · UC-12/UC-13 (ator) · A-12, A-19 | Design | Pending |
-| GAL-21 | P1-6 AC6, AC7 | A-12 (dimensão: input bounds / auth) | Design | Pending |
-| GAL-22 | P2-1 AC1, AC2, AC6 | **W-04** linha "A galera" · W-R2 · A-17 | Design | Pending |
-| GAL-23 | P2-1 AC3, AC4, AC5 | **W-R1, W-R3, W-R4** | Design | Pending |
-| GAL-24 | P2-2 AC1, AC2 | A-08 (estado vazio) | Design | Pending |
-| GAL-25 | P2-2 AC3 | AD-005 (dimensões: failure, observability) | Design | Pending |
-| GAL-26 | P2-2 AC5 | **RN-28** (lado consumidor) · AD-016 (dimensão: concurrency) | Design | Pending |
-| GAL-27 | P3-1 AC1, AC2, AC3 | arquivo 01 §4 · UC-11/UC-12/UC-13 (atores) · A-19 | Design | Pending |
-| GAL-28 | P2-2 AC6 | dimensão: idempotência · RN-29 (1 toast por vez) | Design | Pending |
+| GAL-01 | P1-1 AC1, AC2 | T-05 (card do link) · RN-23 · A-03 | Tasks | Mapeado |
+| GAL-02 | P1-1 AC3, AC4, AC5 | **RN-23** (notas literais) · UC-13 passo 2 | Tasks | Mapeado |
+| GAL-03 | P1-1 AC6, AC7 | T-05 (rodapé) · UC-13 passo 3 · **RN-29** | Tasks | Mapeado |
+| GAL-04 | P1-2 AC1..AC4 | **UC-13 aceite** · **AD-026** · A-09 | Tasks | Mapeado |
+| GAL-05 | P2-2 AC4 | A-07 · AD-005 (dimensões: failure, external-dependency) | Tasks | Mapeado |
+| GAL-06 | P1-3 AC1, AC2 | T-05 (header) · A-10 | Tasks | Mapeado |
+| GAL-07 | P1-3 AC3, AC4, AC5, AC6 | T-05 (seção PESSOAS) · **RN-21** (rótulos) · A-13, A-14, A-15 | Tasks | Mapeado |
+| GAL-08 | P1-3 AC7 | arquivo 02 §5 · **RN-22** (cores por papel) | Tasks | Mapeado |
+| GAL-09 | P1-3 AC8, AC9 | **AD-022** · T-05 "5 pessoas · 4 confirmadas" · A-11 | Tasks | Mapeado |
+| GAL-10 | P1-4 AC1, AC2 | T-05 (expandido) · arquivo 02 §5 (accordion) | Tasks | Mapeado |
+| GAL-11 | P1-4 AC3 | **RN-21** (dieta) · UC-11 passo 2 | Tasks | Mapeado |
+| GAL-12 | P1-4 AC4 | **RN-21** (bebida) · UC-11 passo 2 | Tasks | Mapeado |
+| GAL-13 | P1-4 AC5, AC6, AC7 | T-05 (faixa amarela) · **RN-21** (resumo agregado) · A-08 | Tasks | Mapeado |
+| GAL-14 | P1-4 AC8, AC9, AC10 | **UC-11 aceite** · **RN-21** (efeitos) via `core/calculo` | Tasks | Mapeado |
+| GAL-15 | P1-4 AC11, AC12 | CLAUDE.md ("nunca duplique uma fórmula na UI") · **RN-12** · A-06 | Tasks | Mapeado |
+| GAL-16 | P1-5 AC4 | **UC-12 E1** · T-05 (painel do anfitrião) · A-05 | Tasks | Mapeado |
+| GAL-17 | P1-5 AC1, AC2, AC3 | **UC-12** passos 1 e 2 · **RN-22** | Tasks | Mapeado |
+| GAL-18 | P1-5 AC5, AC6 | **RN-22** ("ANFITRIÃO fixo, 1") | Tasks | Mapeado |
+| GAL-19 | P1-6 AC1..AC4 | **RN-22** (tabela) · A-19 | Tasks | Mapeado |
+| GAL-20 | P1-6 AC5, AC6 | **RN-23** × RN-22 · UC-12/UC-13 (ator) · A-12, A-19 | Tasks | Mapeado |
+| GAL-21 | P1-6 AC6, AC7 | A-12 (dimensão: input bounds / auth) | Tasks | Mapeado |
+| GAL-22 | P2-1 AC1, AC2, AC6 | **W-04** linha "A galera" · W-R2 · A-17 | Tasks | Mapeado |
+| GAL-23 | P2-1 AC3, AC4, AC5 | **W-R1, W-R3, W-R4** | Tasks | Mapeado |
+| GAL-24 | P2-2 AC1, AC2 | A-08 (estado vazio) | Tasks | Mapeado |
+| GAL-25 | P2-2 AC3 | AD-005 (dimensões: failure, observability) | Tasks | Mapeado |
+| GAL-26 | P2-2 AC5 | **RN-28** (lado consumidor) · AD-016 (dimensão: concurrency) | Tasks | Mapeado |
+| GAL-27 | P3-1 AC1, AC2, AC3 | arquivo 01 §4 · UC-11/UC-12/UC-13 (atores) · A-19 | Tasks | Mapeado |
+| GAL-28 | P2-2 AC6 | dimensão: idempotência · RN-29 (1 toast por vez) | Tasks | Mapeado |
 
 **Formato do ID:** `GAL-[NN]` · **Status:** Pending → In Design → In Tasks → Implementing → Verified
 
-**Cobertura:** 28 requisitos · P1: 21 (GAL-01..GAL-04, GAL-06..GAL-21) · P2: 6 (GAL-05, GAL-22..GAL-26, GAL-28 — GAL-05 e GAL-28 nascem de dimensão dentro da história P2-2) · P3: 1 (GAL-27) · 0 órfãos · mapeamento a tasks pendente do Design.
+**Cobertura:** 28 requisitos · P1: 21 (GAL-01..GAL-04, GAL-06..GAL-21) · P2: 6 (GAL-05, GAL-22..GAL-26, GAL-28 — GAL-05 e GAL-28 nascem de dimensão dentro da história P2-2) · P3: 1 (GAL-27) · 0 órfãos · mapeamento a componente em `design.md` §15; mapeamento a tasks pendente do Tasks.
 
 ---
 
