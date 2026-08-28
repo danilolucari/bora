@@ -229,11 +229,20 @@
 - **Date**: 2026-08-27
 - **Status**: active
 
+### AD-029
+- **Decision**: A escrita de festa mora em `lib/core/festas/` — `FestaEmEdicao` e a porta `FestaEmEdicaoRepository`, atrás do barrel `festas.dart`, falando **só** em tipos de `core/calculo`. `FestaRepository` (leitura da Home) permanece em `features/home/domain/` e **não** é tocada; `FestaRepositoryEmMemoria` implementa as duas sobre o mesmo store. Nenhuma feature importa a porta da outra.
+- **Reason**: dois consumidores (a Home lê, `montar` escreve) obrigam a subida, exatamente como a AD-019 decidiu para `autenticacao`. E o próprio doc de `FestaRepository` declara que ela é "um método de leitura só" e que `/roles/novo` é da spec 05 — engordá-la contrariaria o contrato herdado por seis specs e quebraria `FestaRepositoryQueFalha`.
+- **Trade-off**: uma porta em `core/` cuja única implementação mora numa feature, até o M2. Mover `FestaRepository` inteira agora (abordagem C) tocaria ~15 arquivos de teste da spec 04 e arriscaria a baseline de 1137 testes.
+- **Scope**: `montar` agora; `lista`, `galera`, `convite`, `convidado` e `custos` herdam — quem precisar escrever festa usa esta porta, e a promoção completa para `core/festas/` acontece no M2, com o Firestore.
+- **Date**: 2026-08-27
+- **Status**: active
+
 
 ### Reserva de numeração — AD-029..AD-036 (propostas, **não** ativas)
 
-Os designs das seis specs restantes propuseram oito decisões. **Nenhuma está registrada
-acima** — o log ativo para na **AD-028**. Cada uma é gravada como AD completa na **primeira
+Os designs das seis specs restantes propuseram oito decisões. A **AD-029 já foi gravada
+acima**, na primeira task do Execute de `montar`; as sete restantes continuam **propostas** —
+o log ativo para na **AD-029**. Cada uma é gravada como AD completa na **primeira
 task do Execute** da sua spec, na ordem da coluna "Depende de" do ROADMAP §2. Quem executar
 fora dessa ordem **renumera a sua**, nunca a anterior. Esta tabela existe para que sessões
 paralelas não reivindiquem o mesmo número — foi o que já aconteceu uma vez (`19f77a7`,
@@ -241,7 +250,7 @@ AD-023 → AD-029).
 
 | Nº | Spec dona | Proposta | Onde está escrita |
 |---|---|---|---|
-| **AD-029** | 05 `montar` | Porta de edição da festa em `lib/core/festas/` (`FestaEmEdicao`, `FestaEmEdicaoRepository`), falando só em tipos de `core/calculo` | `montar/design.md` §Tech Decisions |
+| ~~**AD-029**~~ | 05 `montar` | ✅ **registrada acima** — porta de edição da festa em `lib/core/festas/` (`FestaEmEdicao`, `FestaEmEdicaoRepository`), falando só em tipos de `core/calculo` | `montar/design.md` §Tech Decisions |
 | **AD-030** | 06 `lista` | O estado de lista da festa (overrides, carrinho, despesas) mora nas entidades de `core/`, nunca na feature | `lista/design.md` §12 |
 | **AD-031** | 07 `galera` | O **dado** do acesso (`codigo`, `NivelDoLink`) em `core/festas/`; a **regra** RN-22 × RN-23 em `features/galera/domain/permissoes.dart`, consultável e nunca reimplementada | `galera/design.md` §12 |
 | **AD-032** | 08 `convite` | `share_plus` como canal único de saída de texto, atrás da porta `CompartilhadorDeTexto`, com o mapeamento de `ShareResultStatus` num lugar só | `convite/design.md` §12 |

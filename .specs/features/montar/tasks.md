@@ -129,9 +129,9 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `AD-029` existe com os seis campos, `Status: active`, `Date: 2026-08-27`
-- [ ] Nenhuma AD existente é editada (nada vira `superseded`)
-- [ ] Nenhum arquivo de código é tocado
+- [x] `AD-029` existe com os seis campos, `Status: active`, `Date: 2026-08-27`
+- [x] Nenhuma AD existente é editada (nada vira `superseded`)
+- [x] Nenhum arquivo de código é tocado
 
 **Tests**: none (camada "Documentação / spec")
 **Gate**: none
