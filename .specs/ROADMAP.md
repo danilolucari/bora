@@ -108,7 +108,7 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > |---|---|---|---|---|
 > | 05 `montar` | `e7cd070` | MONT-01..24 | **AD-029** — porta de edição em `core/festas/` | ✅ 24 em 7 fases |
 > | 06 `lista` | `2854cff` | LIST-01..35 | **AD-030** — estado de lista nas entidades de `core/` | ✅ 27 em 7 fases |
-> | 07 `galera` | `02d4571` | GAL-01..28 | **AD-031** — dado do link em `core/festas/`, regra de RN-22 em `permissoes.dart` | ⬜ |
+> | 07 `galera` | `02d4571` | GAL-01..28 | **AD-031** — dado do link em `core/festas/`, regra de RN-22 em `permissoes.dart` | ✅ 27 em 5 fases |
 > | 08 `convite` | `b4ef1fd` | CVT-01..37 | **AD-032** — `share_plus` atrás de `CompartilhadorDeTexto` | ⬜ |
 > | 09 `convidado` | `4b8cefd` | CVD-01..44 | **AD-033** (um documento por festa, RSVP só pela Function) · **AD-034** (identidade do portador; anônimo nunca vira `UsuarioLogado`) | ⬜ |
 > | 10 `custos` | `9ca798e` | CUST-01..37 | **AD-035** (estado do acerto derivado na leitura, marcação por par) · **AD-036** (`fimPrevisto` contra relógio injetado) | ⬜ |
@@ -125,8 +125,12 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > `lib/features/{montar,lista,galera,convite,convidado,custos}/` têm hoje só `PlaceholderPage`.
 >
 > **Próximo passo:** Execute de `montar` (24 tasks, `tasks.md` pronto) → Execute de `lista`
-> (27 tasks) → Tasks + Execute de `galera` → `convite` → `convidado` → `custos`. As specs 09 e
-> 10 declaram-se **não paralelizáveis**: reescrevem a camada de dados que as anteriores consomem.
+> (27 tasks) → Execute de `galera` (27 tasks, `tasks.md` pronto desde 2026-08-28) → Tasks +
+> Execute de `convite` → `convidado` → `custos`. As specs 09 e 10 declaram-se **não
+> paralelizáveis**: reescrevem a camada de dados que as anteriores consomem.
+>
+> **Três specs já têm `tasks.md`** (05, 06 e 07) e **nenhuma** entrou em Execute — o gargalo
+> não é planejamento, é o merge de `montar`.
 
 ---
 
@@ -145,7 +149,7 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 | — | **`home` mergeada** | — | 16 tasks · Verifier PASS 19/19 · 1137 testes · `34eb1dc` | — | — | — | — | — |
 | 05 | `montar` | `features/montar/` | T-03, W-03 · UC-03, UC-04 · RN-01..10, RN-21 (consumo) | Grande | ✅ feito | ✅ feito | ✅ feito | 01, 02, 04 |
 | 06 | `lista` | `features/lista/` | T-04, W-03/W-04 · UC-05, UC-06, UC-14, UC-15, UC-16 · RN-10, RN-11, RN-12, RN-27 | Grande | ✅ feito | ✅ feito | ✅ feito | 01, 02, 05 |
-| 07 | `galera` | `features/galera/` | T-05, W-04 · UC-11, UC-12, UC-13 · RN-21, RN-22, RN-23 | Grande | — | ✅ feito | sim | 01, 02, 04 |
+| 07 | `galera` | `features/galera/` | T-05, W-04 · UC-11, UC-12, UC-13 · RN-21, RN-22, RN-23 | Grande | — | ✅ feito | ✅ feito | 01, 02, 04 |
 | 08 | `convite` | `features/convite/` | T-06, T-07, W-04 · UC-07, UC-17, UC-18 · RN-25, RN-26, RN-26b | **Complexo** | ✅ feito | ✅ feito | sim | 06, 07 |
 | 09 | `convidado` | `features/convidado/` | T-08, W-04 (standalone) · UC-08, UC-09, UC-10 · RN-20, RN-23 (consumo), RN-24, RN-28 | **Complexo** | ✅ feito | ✅ feito | sim | 02, 06, 07 |
 | 10 | `custos` | `features/custos/` | T-09, W-04 · UC-19..UC-23 · RN-14..RN-19 (consumo), RN-20 | Grande | ✅ feito | ✅ feito | sim | 02, 09 |
@@ -218,10 +222,10 @@ T-04 + UC-05, UC-06, UC-14, UC-15, UC-16: modos PLANEJAR (média real, faixa mí
 
 Do Design (**AD-030** proposta): o estado de lista da festa — overrides, carrinho, despesas — mora nas entidades de `core/`, nunca na feature. Cinco emendas em `core` nascem aqui (corredor no catálogo, `noCarrinho` na composição, `itensCobraveis`, `faixaRealDaLista`, `despesas` na festa). As zonas cinzentas G2 e G3 já vinham resolvidas por **AD-023** (tabela de preços curada em Dart puro) e **AD-024** (pedido inteiro atrás de porta, com adaptador falso). **27 tasks em 7 fases, 5 batches sequenciais** — Execute bloqueado até `montar` mergear.
 
-### 07 · `galera` — Grande · **Specify + Design concluídos** (GAL-01..28, design em 2026-08-28) · **Tasks pendente** → `.specs/features/galera/`
+### 07 · `galera` — Grande · **Specify + Design + Tasks concluídos** (GAL-01..28 · 27 tasks em 5 fases, 2026-08-28) → `.specs/features/galera/`
 T-05 + UC-11, UC-12, UC-13: card do link com nível (RN-23), pessoas com preferências (RN-21) e papéis (RN-22), accordion de edição, faixa-resumo "A lista já se ajusta…". As preferências **realimentam a calculadora** — este spec liga a UI ao efeito RN-21 já implementado em `calculo`. RN-22 (tabela de permissões) nasce aqui como regra de domínio, mas o enforcement é transversal (cada feature respeita o papel; security rules do Firestore entram na spec `convidado`).
 
-Do Design (**AD-031** proposta): o **dado** do acesso (`codigo`, `NivelDoLink`) mora em `core/festas/`, e a **regra** RN-22 × RN-23 mora em `lib/features/galera/domain/permissoes.dart` — consultável, nunca reimplementada. As specs 08, 09 e 10 a importam, e o acoplamento feature↔feature fica registrado como candidato à promoção para `core/` no M2. Lacuna declarada: a bebida é toggle de dois estados e não volta a "não declarado" (T-05 literal), o que muda a cerveja de RN-21.
+Do Design (**AD-031** proposta): o **dado** do acesso (`codigo`, `NivelDoLink`) mora em `core/festas/`, e a **regra** RN-22 × RN-23 mora em `lib/features/galera/domain/permissoes.dart` — consultável, nunca reimplementada. As specs 08, 09 e 10 a importam, e o acoplamento feature↔feature fica registrado como candidato à promoção para `core/` no M2. Lacuna declarada: a bebida é toggle de dois estados e não volta a "não declarado" (T-05 literal), o que muda a cerveja de RN-21. **27 tasks em 5 fases, 5 batches sequenciais** — Execute bloqueado até `montar` mergear, e os dois arquivos de colisão com `lista` (`festa_em_edicao.dart`, `composicao_da_festa.dart`) estão declarados nas tasks T3 e T4.
 
 ### 08 · `convite` — Complexo · **Specify + Design concluídos** (CVT-01..37, design em 2026-08-28) · **Tasks pendente** → `.specs/features/convite/`
 T-06 + T-07 + UC-07, UC-17, UC-18: mensagem por blocos com preview fiel de bolha (RN-26b), criação de grupo só com confirmados (RN-25), enquetes com voto trocável e trava "CRIE O GRUPO PRIMEIRO" (RN-26). ~~**Zona cinzenta central:** a API pública do WhatsApp não permite criar grupo nem postar enquete programaticamente.~~ ✅ **Resolvida** em 2026-08-27 pela **AD-025** (§4, G4): grupo e enquete são **estado do BORA**; o WhatsApp recebe texto por share sheet / `wa.me`.
