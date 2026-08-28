@@ -1,7 +1,7 @@
 # O convidado (link público) — Specification
 
 **ID prefix:** `CVD` · **Porte:** **Complexo** (ver §Porte)
-**Design:** `.specs/features/convidado/design.md` — pendente
+**Design:** `.specs/features/convidado/design.md` — **concluído** (2026-08-28)
 **Tasks:** `.specs/features/convidado/tasks.md` — pendente
 **Context:** `.specs/features/convidado/context.md`
 **Spec-fonte:** T-08 (`04-telas-ux.md`) · W-04 linha "Convidado (link)" + W-R1..W-R5 (`06-telas-web.md`) · UC-08, UC-09, UC-10 (`05-casos-de-uso.md`) · **RN-24**, **RN-28** (origem) · RN-20, RN-22, RN-23 (consumo) · RN-13, RN-29, RN-30 · arquivo 01 §4/§5/§6/§7
