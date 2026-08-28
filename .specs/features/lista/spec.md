@@ -2,7 +2,7 @@
 
 **ID prefix:** `LIST` · **Porte:** **Grande** (ver §Porte)
 **Design:** `.specs/features/lista/design.md` — **concluído** (2026-08-27)
-**Tasks:** `.specs/features/lista/tasks.md` — pendente
+**Tasks:** `.specs/features/lista/tasks.md` — **concluído** (2026-08-28) · 27 tasks em 7 fases
 **Context:** `.specs/features/lista/context.md`
 **Spec-fonte:** T-04 (`04-telas-ux.md`) · W-03 + W-04 linha "Sua lista (turbinada)" + W-R1..W-R5 (`06-telas-web.md`) · UC-04, UC-05, UC-06, UC-14, UC-15, UC-16 (`05-casos-de-uso.md`) · RN-10, RN-11, RN-12, RN-13, RN-14, RN-20, RN-27, RN-29 (`03-regras-de-negocio.md`) · arquivo 01 §5 (abas permanentes) e §6 (modelo conceitual de Item de lista e Pedido)
 **Roadmap:** `.specs/ROADMAP.md` — spec 06, marco M1
