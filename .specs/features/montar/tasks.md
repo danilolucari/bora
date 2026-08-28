@@ -224,13 +224,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O doc do arquivo abre com o **SPEC_DEVIATION** declarado: nenhuma RN define este rótulo, e ele nasce aqui porque a `spec.md` de `montar` proíbe formatação de número em `lib/features/montar/**`
-- [ ] Quantidade inteira sai **sem** casa decimal (`2 garrafas`, não `2,0 garrafas`)
-- [ ] Quantidade fracionária sai com **uma** casa decimal e vírgula do pt-BR (`1,2 kg`)
-- [ ] Plural correto por unidade nas sete de `UnidadeDeItem`, com o singular em 1 (`1 lata` / `2 latas`)
-- [ ] Zero tem rótulo definido e não quebra
-- [ ] O arquivo continua Dart puro — `calculo_isolation_test.dart` segue verde
-- [ ] Gate `build` passa; ≥ 12 testes novos (todas as sete unidades × inteiro/fracionário/singular)
+- [x] O doc do arquivo abre com o **SPEC_DEVIATION** declarado: nenhuma RN define este rótulo, e ele nasce aqui porque a `spec.md` de `montar` proíbe formatação de número em `lib/features/montar/**`
+- [x] Quantidade inteira sai **sem** casa decimal (`2 garrafas`, não `2,0 garrafas`)
+- [x] Quantidade fracionária sai com **uma** casa decimal e vírgula do pt-BR (`1,2 kg`)
+- [x] Plural correto por unidade nas sete de `UnidadeDeItem`, com o singular em 1 (`1 lata` / `2 latas`)
+- [x] Zero tem rótulo definido e não quebra
+- [x] O arquivo continua Dart puro — `calculo_isolation_test.dart` segue verde
+- [x] Gate `build` passa; ≥ 12 testes novos (todas as sete unidades × inteiro/fracionário/singular)
 
 **Tests**: unit
 **Gate**: build
