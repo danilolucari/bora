@@ -1,7 +1,7 @@
 # O convite (mensagem, grupo e enquetes) — Specification
 
 **ID prefix:** `CVT` · **Porte:** **Complexo** (ver §Porte)
-**Design:** `.specs/features/convite/design.md` — pendente
+**Design:** `.specs/features/convite/design.md` — **concluído** (2026-08-28)
 **Tasks:** `.specs/features/convite/tasks.md` — pendente
 **Context:** `.specs/features/convite/context.md`
 **Spec-fonte:** T-06, T-07 (`04-telas-ux.md`) · W-04 linha "WhatsApp" + W-R1..W-R5 (`06-telas-web.md`) · UC-07, UC-17, UC-18 (`05-casos-de-uso.md`) · RN-25, RN-26, RN-26b (`03-regras-de-negocio.md`) · RN-13, RN-14, RN-22, RN-29, RN-30 (consumo) · arquivo 01 §4/§5/§6 · arquivo 02 §5/§8
