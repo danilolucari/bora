@@ -276,7 +276,7 @@ desde o merge de `home` — o trabalho das últimas três sessões é documento.
 | 04 `home` | ✅ | ✅ | ✅ 16 tasks | ✅ | ✅ **PASS** |
 | 05 `montar` | ✅ | ✅ | ✅ 24 tasks | ⬜ **é o gargalo** | ⬜ |
 | 06 `lista` | ✅ | ✅ | ✅ 27 tasks | ⬜ bloqueado | ⬜ |
-| 07 `galera` | ✅ | ✅ `02d4571` | ⬜ | ⬜ bloqueado | ⬜ |
+| 07 `galera` | ✅ | ✅ `02d4571` | ✅ 27 tasks | ⬜ bloqueado | ⬜ |
 | 08 `convite` | ✅ | ✅ `b4ef1fd` | ⬜ | ⬜ bloqueado | ⬜ |
 | 09 `convidado` | ✅ | ✅ `4b8cefd` | ⬜ | ⬜ bloqueado | ⬜ |
 | 10 `custos` | ✅ | ✅ `9ca798e` | ⬜ | ⬜ bloqueado | ⬜ |
@@ -320,15 +320,26 @@ dados que as anteriores consomem.
 1. **Execute de `montar`** — 24 tasks em 7 fases, `tasks.md` pronto e aprovado. Registrar a
    **AD-029** na T1. É o que destrava as cinco specs seguintes.
 2. **Execute de `lista`** — 27 tasks, 5 batches sequenciais (não fan-out). AD-030 na T1.
-3. **Tasks + Execute de `galera`** (AD-031), depois **`convite`** (AD-032).
+3. **Execute de `galera`** — 27 tasks em 5 fases, `tasks.md` escrito em 2026-08-28 (commit
+   `0b0404b`, worktree `feature-galera-tasks`). AD-031 na T1, com a numeração conferida na
+   hora de gravar. Depois, **Tasks + Execute de `convite`** (AD-032).
 4. **`convidado`** (AD-033/AD-034) — é aqui que Firestore, Hosting e Functions entram de
    fato e o M2 fecha. Traz `cloud_functions`, a primeira dependência de produção nova desde
    o M0; o deploy exige plano Blaze, que é pré-condição de ida ao ar, não de desenvolvimento.
 5. **`custos`** (AD-035/AD-036) — fecha o M3.
 
-Sem dependência de código, a qualquer momento: **Tasks das specs 07..10** (nenhuma toca
-código) e a **conferência visual** com a skill `run`, pendente desde 2026-08-26 para T-01,
-W-01, T-02 e W-02.
+Sem dependência de código, a qualquer momento: **Tasks das specs 08..10** (nenhuma toca
+código — a 07 já saiu) e a **conferência visual** com a skill `run`, pendente desde
+2026-08-26 para T-01, W-01, T-02 e W-02.
+
+**O que a sessão de 2026-08-28 (tarde) fez:** só a fase Tasks de `galera`. Três specs — 05,
+06 e 07 — têm agora `tasks.md` pronto e **nenhuma** entrou em Execute; o gargalo continua
+sendo o merge de `montar`, não o planejamento. Os pontos do `tasks.md` da 07 que o Execute
+não pode perder: a T1 grava a AD-031 conferindo a numeração na hora; a T3 e a T4 são os dois
+arquivos de colisão com `lista`; e o alvo de qualidade declarado é *defesa escrita é defesa
+exercitada* — recusa do alvo anfitrião, chave que sumiu, idempotência das quatro escritas,
+`null` do stream, falha da área de transferência e a tela do não-anfitrião, cada uma com
+teste que falha se a defesa sair.
 
 ### Pendências herdadas que ninguém deve "consertar" adiante
 
