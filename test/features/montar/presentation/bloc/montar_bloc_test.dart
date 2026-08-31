@@ -53,6 +53,7 @@ void main() {
     List<Pessoa> pessoas = const [],
     Set<ChaveItem>? itens,
     ContagemDePessoas? contagem,
+    Map<ChaveItem, OverrideDeItem> overrides = const {},
   }) {
     final base = rascunho();
 
@@ -62,6 +63,7 @@ void main() {
         duracaoHoras: base.composicao.duracaoHoras,
         pessoas: pessoas,
         itensSelecionados: itens ?? base.composicao.itensSelecionados,
+        overrides: overrides,
       ),
     );
   }
@@ -389,6 +391,102 @@ void main() {
         _itemDe(bloc.state.resultado, ChaveItem.legumesParaGrelha),
         isNull,
       );
+    });
+
+    // P2-2 fala de "a lista", não de "a lista na abertura": os três efeitos
+    // são propriedade da tela viva, e a tela viva é a que já recebeu toque.
+    // As pessoas nomeadas não vêm de evento nenhum desta tela (A-10, no M1
+    // quem as produz é `galera`), então o primeiro toque de stepper, chip ou
+    // duração é justamente onde elas se perderiam sem ninguém notar.
+    test('AC1: o kit veggie continua na lista depois do primeiro toque no '
+        'stepper', () async {
+      final bloc = blocCom(
+        rascunhoCom(pessoas: [_pessoa('Bia', dieta: Dieta.veggie)]),
+      );
+
+      bloc.add(const ContagemAlterada(TipoDeCabeca.homens, 1));
+      await _assentar();
+
+      expect(bloc.state.composicao.pessoas, hasLength(1));
+      expect(
+        _itemDe(bloc.state.resultado, ChaveItem.legumesParaGrelha),
+        isNotNull,
+        reason: 'RN-21 dimensiona pela galera nomeada: se o toque a apagar, o '
+            'kit some da lista e o anfitrião não vê por quê',
+      );
+    });
+
+    test('AC2: o "sem porco" continua valendo depois de alternar outro chip',
+        () async {
+      final bloc = blocCom(
+        rascunhoCom(
+          pessoas: [_pessoa('Léo', dieta: Dieta.semPorco)],
+          itens: {...rascunho().composicao.itensSelecionados, ChaveItem.suina},
+        ),
+      );
+
+      bloc.add(const ItemAlternado(ChaveItem.agua));
+      await _assentar();
+
+      expect(bloc.state.composicao.pessoas, hasLength(1));
+      expect(_itemDe(bloc.state.resultado, ChaveItem.suina), isNull);
+      expect(
+        bloc.state.composicao.itensSelecionados,
+        contains(ChaveItem.suina),
+        reason: 'o chip permanece no estado em que o usuário o deixou',
+      );
+    });
+
+    test('AC3: a cerveja continua dimensionando por quem bebe depois de '
+        'mudar a duração', () async {
+      final semNomeados = blocCom(rascunhoCom());
+      final comAbstemios = blocCom(
+        rascunhoCom(
+          pessoas: [
+            _pessoa('Duda', bebe: false),
+            _pessoa('Nina', bebe: false),
+          ],
+        ),
+      );
+
+      semNomeados.add(const DuracaoAlterada(6));
+      comAbstemios.add(const DuracaoAlterada(6));
+      await _assentar();
+
+      expect(comAbstemios.state.composicao.pessoas, hasLength(2));
+      expect(
+        _itemDe(comAbstemios.state.resultado, ChaveItem.cerveja)!.quantidade,
+        lessThan(
+          _itemDe(semNomeados.state.resultado, ChaveItem.cerveja)!.quantidade,
+        ),
+        reason: 'RN-21 sobre RN-05: com dois abstêmios a cerveja tem de ficar '
+            'abaixo da que a contagem sozinha pediria, em qualquer duração',
+      );
+    });
+
+    // Non-Goals: nenhuma UI de `montar` **produz** override (isso é RN-12, da
+    // spec 06 `lista`) — mas a camada de cálculo já os aceita, e apagá-los no
+    // primeiro toque faria a tela Montar desfazer, em silêncio, o ajuste
+    // manual que o anfitrião fez na Lista.
+    test('o override de RN-12 sobrevive ao primeiro toque, mesmo sem esta '
+        'tela produzir nenhum', () async {
+      final bloc = blocCom(
+        rascunhoCom(
+          overrides: const {
+            ChaveItem.cerveja: OverrideDeItem(quantidade: 42, preco: 7),
+          },
+        ),
+      );
+
+      bloc.add(const ContagemAlterada(TipoDeCabeca.mulheres, 1));
+      await _assentar();
+
+      final cerveja = _itemDe(bloc.state.resultado, ChaveItem.cerveja)!;
+
+      expect(bloc.state.composicao.overrides, hasLength(1));
+      expect(cerveja.quantidade, 42);
+      expect(cerveja.preco, 7);
+      expect(cerveja.editado, isTrue);
     });
   });
 
