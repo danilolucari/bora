@@ -7,6 +7,7 @@ import 'package:bora/features/montar/presentation/bloc/montar_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../support/festa_em_edicao_repository_fake.dart';
+import '../../../../support/recording_app_logger.dart';
 
 const String _arquivoDoBloc =
     'lib/features/montar/presentation/bloc/montar_bloc.dart';
@@ -38,7 +39,7 @@ void main() {
     final festas = FestaEmEdicaoRepositoryFake();
     addTearDown(festas.dispose);
 
-    final bloc = MontarBloc(festas, inicial: inicial);
+    final bloc = MontarBloc(festas, RecordingAppLogger(), inicial: inicial);
     addTearDown(bloc.close);
     return bloc;
   }

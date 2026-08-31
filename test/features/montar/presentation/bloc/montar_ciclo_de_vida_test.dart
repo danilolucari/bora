@@ -5,6 +5,7 @@ import 'package:bora/features/montar/presentation/bloc/montar_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../support/festa_em_edicao_repository_fake.dart';
+import '../../../../support/recording_app_logger.dart';
 
 const String _id = 'festa-1';
 
@@ -44,7 +45,12 @@ void main() {
   FestaEmEdicao rascunho() => rascunhoInicial(hoje: _hoje);
 
   MontarBloc blocCom({String? festaId}) {
-    final bloc = MontarBloc(festas, inicial: rascunho(), festaId: festaId);
+    final bloc = MontarBloc(
+      festas,
+      RecordingAppLogger(),
+      inicial: rascunho(),
+      festaId: festaId,
+    );
     addTearDown(bloc.close);
     return bloc;
   }

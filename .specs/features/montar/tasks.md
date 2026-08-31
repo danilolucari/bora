@@ -380,14 +380,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] N mudanças em rajada produzem **no máximo 2 gravações em voo**, e a **última** gravação carrega o estado mais novo — teste com repositório lento que registra a ordem e o payload de cada escrita (MONT-21)
-- [ ] Nenhuma gravação com valor antigo chega depois de uma com valor novo — o teste falha se a coalescência sair
-- [ ] Falha ao gravar: `logger.logError` recebe o erro **e** o stack, com `name: 'montar'`; `composicao` e `festa` do estado **não** são revertidas; `falhouAoSalvar` fica `true`
-- [ ] Depois de uma falha a interação continua: a mudança seguinte recalcula e tenta gravar de novo, e `falhouAoSalvar` volta a `false` no sucesso
-- [ ] Falha do stream de `observarFesta` segue o mesmo caminho e **mantém** o último estado bom
-- [ ] `SalvarPedido` grava e sinaliza sucesso no estado, sem navegar (quem mostra o toast é a página)
-- [ ] `close()` cancela a inscrição — nenhuma inscrição vazada entre testes
-- [ ] Gate `quick` passa; ≥ 14 testes novos
+- [x] N mudanças em rajada produzem **no máximo 2 gravações em voo**, e a **última** gravação carrega o estado mais novo — teste com repositório lento que registra a ordem e o payload de cada escrita (MONT-21)
+- [x] Nenhuma gravação com valor antigo chega depois de uma com valor novo — o teste falha se a coalescência sair
+- [x] Falha ao gravar: `logger.logError` recebe o erro **e** o stack, com `name: 'montar'`; `composicao` e `festa` do estado **não** são revertidas; `falhouAoSalvar` fica `true`
+- [x] Depois de uma falha a interação continua: a mudança seguinte recalcula e tenta gravar de novo, e `falhouAoSalvar` volta a `false` no sucesso
+- [x] Falha do stream de `observarFesta` segue o mesmo caminho e **mantém** o último estado bom
+- [x] `SalvarPedido` grava e sinaliza sucesso no estado, sem navegar (quem mostra o toast é a página)
+- [x] `close()` cancela a inscrição — nenhuma inscrição vazada entre testes
+- [x] Gate `quick` passa; ≥ 14 testes novos
 
 **Tests**: unit
 **Gate**: quick

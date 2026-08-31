@@ -70,6 +70,31 @@ class FestaRecebida extends MontarEvent {
   final FestaEmEdicao? festa;
 }
 
+/// O "SALVAR ROLÊ" do rail — MONT-23.
+///
+/// Grava e **sinaliza sucesso no estado**; quem mostra o toast é a página, e
+/// ninguém navega (AD-020).
+class SalvarPedido extends MontarEvent {
+  const SalvarPedido();
+}
+
+/// Uma gravação terminou bem — interno, MONT-19, MONT-23.
+class PersistenciaConcluida extends MontarEvent {
+  const PersistenciaConcluida({required this.porPedido});
+
+  /// `true` quando a gravação veio do "SALVAR ROLÊ", e não de uma mudança do
+  /// formulário — é o que distingue o sucesso que merece toast.
+  final bool porPedido;
+}
+
+/// Uma gravação ou o stream de observação falhou — interno, MONT-19.
+class PersistenciaFalhou extends MontarEvent {
+  const PersistenciaFalhou(this.erro, this.stackTrace);
+
+  final Object erro;
+  final StackTrace stackTrace;
+}
+
 /// `criarFesta` devolveu o id do rolê recém-criado — interno, MONT-17.
 ///
 /// É por ele que o `festaId` entra no estado, e é o estado que a página

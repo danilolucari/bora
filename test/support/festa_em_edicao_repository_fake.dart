@@ -27,9 +27,22 @@ class FestaEmEdicaoRepositoryFake implements FestaEmEdicaoRepository {
   /// O id que a próxima [criarFesta] devolve.
   String proximoId = 'festa-1';
 
+  /// Quando não-nulo, é lançado por [criarFesta] e [salvarFesta] — o caminho
+  /// de falha de MONT-19, sem depender de SDK nenhum.
+  Object? erroDeGravacao;
+
+  /// Quantos assinantes de [observarFesta] estão ativos agora. Zero depois de
+  /// `bloc.close()` é o que prova que a inscrição não vazou.
+  int ouvintes = 0;
+
+  /// Trava que segura toda gravação até [liberarGravacoes] — o repositório
+  /// lento com que a coalescência de MONT-21 é observável.
+  Completer<void>? _trava;
+
   @override
   Stream<FestaEmEdicao?> observarFesta(String id) =>
       Stream<FestaEmEdicao?>.multi((assinante) {
+        ouvintes++;
         assinante.add(_festas[id]);
 
         final inscricao = _controllerDe(id).stream.listen(
@@ -37,12 +50,16 @@ class FestaEmEdicaoRepositoryFake implements FestaEmEdicaoRepository {
               onError: assinante.addError,
               onDone: assinante.close,
             );
-        assinante.onCancel = inscricao.cancel;
+        assinante.onCancel = () {
+          ouvintes--;
+          return inscricao.cancel();
+        };
       });
 
   @override
   Future<String> criarFesta(FestaEmEdicao rascunho) async {
     criadas.add(rascunho);
+    await _esperarALiberacao();
 
     final id = proximoId;
     _festas[id] = rascunho;
@@ -53,6 +70,8 @@ class FestaEmEdicaoRepositoryFake implements FestaEmEdicaoRepository {
   @override
   Future<void> salvarFesta(String id, FestaEmEdicao festa) async {
     salvas.add((id, festa));
+    await _esperarALiberacao();
+
     _festas[id] = festa;
   }
 
@@ -68,7 +87,33 @@ class FestaEmEdicaoRepositoryFake implements FestaEmEdicaoRepository {
     _controllerDe(id).add(festa);
   }
 
+  /// Faz o stream de [id] falhar — o caminho de MONT-19 pela leitura.
+  void falharObservacao(String id, Object erro, StackTrace stack) {
+    _controllerDe(id).addError(erro, stack);
+  }
+
+  /// Segura toda gravação seguinte até [liberarGravacoes].
+  void travarGravacoes() => _trava = Completer<void>();
+
+  /// Solta as gravações seguradas.
+  void liberarGravacoes() {
+    final trava = _trava;
+    _trava = null;
+    if (trava != null && !trava.isCompleted) trava.complete();
+  }
+
+  /// A chamada é **registrada antes** de esperar: `criadas` e `salvas` guardam
+  /// a ordem em que as gravações começaram, que é a ordem que MONT-21 cobra.
+  Future<void> _esperarALiberacao() async {
+    await _trava?.future;
+
+    final erro = erroDeGravacao;
+    if (erro != null) throw erro;
+  }
+
   Future<void> dispose() async {
+    liberarGravacoes();
+
     for (final controller in _controllers.values) {
       await controller.close();
     }

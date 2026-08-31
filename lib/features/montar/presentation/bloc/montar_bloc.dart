@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/calculo/calculo.dart';
 import '../../../../core/festas/festas.dart';
+import '../../../../core/observability/app_logger.dart';
 import '../../domain/rascunho_inicial.dart';
 import 'montar_event.dart';
 import 'montar_state.dart';
@@ -27,10 +28,12 @@ class MontarBloc extends Bloc<MontarEvent, MontarState> {
   /// interno: o relógio é da borda, pelo mesmo motivo de `data_do_role.dart` —
   /// com ele aqui dentro, a data default só seria afirmável no sábado.
   MontarBloc(
-    this._festas, {
+    this._festas,
+    this._logger, {
     required FestaEmEdicao inicial,
     String? festaId,
   })  : _rascunho = inicial,
+        _festaId = festaId,
         super(_estadoDe(inicial, festaId: festaId)) {
     on<ContagemAlterada>(_aoMudarContagem);
     on<ItemAlternado>(_aoAlternarItem);
@@ -39,21 +42,43 @@ class MontarBloc extends Bloc<MontarEvent, MontarState> {
     on<DataAlterada>(_aoMudarData);
     on<FestaRecebida>(_aoReceberFesta);
     on<FestaCriada>(_aoCriarFesta);
+    on<SalvarPedido>(_aoPedirSalvar);
+    on<PersistenciaConcluida>(_aoConcluirPersistencia);
+    on<PersistenciaFalhou>(_aoFalharPersistencia);
 
     if (festaId != null) {
-      _inscricao = _festas
-          .observarFesta(festaId)
-          .listen((festa) => add(FestaRecebida(festa)));
+      _inscricao = _festas.observarFesta(festaId).listen(
+            (festa) => add(FestaRecebida(festa)),
+            onError: (Object erro, StackTrace stack) =>
+                add(PersistenciaFalhou(erro, stack)),
+          );
     }
   }
 
   final FestaEmEdicaoRepository _festas;
+  final AppLogger _logger;
 
   /// O rascunho de abertura, guardado para o caso de a festa observada não
   /// existir: a tela abre montável em vez de quebrar (MONT-16).
   final FestaEmEdicao _rascunho;
 
   StreamSubscription<FestaEmEdicao?>? _inscricao;
+
+  /// O id da festa **para efeito de gravação**.
+  ///
+  /// Existe além de `state.festaId` porque `criarFesta` responde antes de o
+  /// `FestaCriada` chegar ao estado: uma segunda gravação nessa janela leria
+  /// `festaId == null` e criaria a festa **de novo**.
+  String? _festaId;
+
+  /// Já existe uma gravação em voo.
+  bool _gravando = false;
+
+  /// Chegou mudança enquanto a gravação corrente estava em voo.
+  bool _pendente = false;
+
+  /// A mudança pendente inclui um "SALVAR ROLÊ".
+  bool _pendentePorPedido = false;
 
   /// P1-5 AC6: nome apagado por completo **volta ao default** em vez de ficar
   /// vazio — um rolê sem nome nenhum é o que a Home teria de desenhar depois.
@@ -91,11 +116,27 @@ class MontarBloc extends Bloc<MontarEvent, MontarState> {
     // Festa inexistente: a rota é válida, o dado é que não está lá. Abre
     // montável, como rascunho, em vez de quebrar ou redirecionar para /erro.
     if (festa == null) {
-      emit(_estadoDe(_rascunho));
+      // Sem festa por trás, a próxima mudança tem de criar uma: o id de
+      // gravação some junto com o do estado.
+      _festaId = null;
+      emit(
+        _estadoDe(
+          _rascunho,
+          falhouAoSalvar: state.falhouAoSalvar,
+          salvamentos: state.salvamentos,
+        ),
+      );
       return;
     }
 
-    emit(_estadoDe(festa, festaId: state.festaId));
+    emit(
+      _estadoDe(
+        festa,
+        festaId: state.festaId,
+        falhouAoSalvar: state.falhouAoSalvar,
+        salvamentos: state.salvamentos,
+      ),
+    );
   }
 
   /// `criarFesta` respondeu: o rascunho virou festa e o estado ganha o id.
@@ -104,8 +145,47 @@ class MontarBloc extends Bloc<MontarEvent, MontarState> {
       _estadoDe(
         FestaEmEdicao(festa: state.festa, composicao: state.composicao),
         festaId: evento.festaId,
+        falhouAoSalvar: state.falhouAoSalvar,
+        salvamentos: state.salvamentos,
       ),
     );
+  }
+
+  /// "SALVAR ROLÊ" — MONT-23. Grava e **não navega**.
+  void _aoPedirSalvar(SalvarPedido evento, Emitter<MontarState> emit) {
+    unawaited(_persistir(porPedido: true));
+  }
+
+  /// A gravação terminou bem: o aviso de falha sai, e o "SALVAR ROLÊ" conta.
+  void _aoConcluirPersistencia(
+    PersistenciaConcluida evento,
+    Emitter<MontarState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        falhouAoSalvar: false,
+        salvamentos:
+            evento.porPedido ? state.salvamentos + 1 : state.salvamentos,
+      ),
+    );
+  }
+
+  /// MONT-19 — a falha vai para o log e **o estado da tela fica como está**.
+  ///
+  /// `copyWith`, e não estado reconstruído: reverter a composição perderia o
+  /// toque que o anfitrião acabou de dar, e ele não teria como saber. O
+  /// requisito literal é "não perde o estado da tela nem trava a interação".
+  ///
+  /// *SPEC_PRECISION_GAP*: nenhuma spec desenha montar falhando nem dá copy
+  /// para isso; [MontarState.falhouAoSalvar] existe para a tela poder decidir,
+  /// e no M1 nada é desenhado com ele.
+  void _aoFalharPersistencia(
+    PersistenciaFalhou evento,
+    Emitter<MontarState> emit,
+  ) {
+    _logger.logError(evento.erro, evento.stackTrace, name: 'montar');
+
+    emit(state.copyWith(falhouAoSalvar: true));
   }
 
   void _aoMudarContagem(ContagemAlterada evento, Emitter<MontarState> emit) {
@@ -160,24 +240,66 @@ class MontarBloc extends Bloc<MontarEvent, MontarState> {
     unawaited(_persistir());
   }
 
-  /// Grava o estado corrente — MONT-17, MONT-18.
+  /// Single-flight com coalescência — MONT-21.
   ///
-  /// Sem `festaId`, é a **primeira mudança** num rascunho: cria a festa já
-  /// **com a mudança dentro** e devolve o id pelo estado, que é o que a página
-  /// observa para trocar a URL. Com `festaId`, grava por cima.
-  Future<void> _persistir() async {
+  /// Com uma gravação em voo, a mudança nova não abre outra: ela marca
+  /// pendente, e ao fim da corrente grava-se **o estado de então**, que é o
+  /// mais novo. Assim uma rajada de N toques produz no máximo duas gravações,
+  /// e nenhuma escrita com valor antigo chega depois de uma com valor novo —
+  /// que é o jeito de a lista voltar ao que era enquanto o dedo ainda está na
+  /// tela.
+  Future<void> _persistir({bool porPedido = false}) async {
+    if (_gravando) {
+      _pendente = true;
+      _pendentePorPedido = _pendentePorPedido || porPedido;
+      return;
+    }
+
+    _gravando = true;
+    var pedido = porPedido;
+
+    try {
+      while (true) {
+        _pendente = false;
+        await _gravar(porPedido: pedido);
+
+        if (!_pendente) break;
+
+        pedido = _pendentePorPedido;
+        _pendentePorPedido = false;
+      }
+    } finally {
+      _gravando = false;
+      _pendente = false;
+      _pendentePorPedido = false;
+    }
+  }
+
+  /// Uma gravação do estado corrente — MONT-17, MONT-18, MONT-19.
+  ///
+  /// Sem id, é a **primeira mudança** num rascunho: cria a festa já **com a
+  /// mudança dentro**, e o id devolvido é o que a página observa para trocar a
+  /// URL. Com id, grava por cima.
+  Future<void> _gravar({required bool porPedido}) async {
     final festa = FestaEmEdicao(
       festa: state.festa,
       composicao: state.composicao,
     );
-    final id = state.festaId;
+    final id = _festaId;
 
-    if (id == null) {
-      add(FestaCriada(await _festas.criarFesta(festa)));
-      return;
+    try {
+      if (id == null) {
+        final novo = await _festas.criarFesta(festa);
+        _festaId = novo;
+        add(FestaCriada(novo));
+      } else {
+        await _festas.salvarFesta(id, festa);
+      }
+
+      add(PersistenciaConcluida(porPedido: porPedido));
+    } catch (erro, stack) {
+      add(PersistenciaFalhou(erro, stack));
     }
-
-    await _festas.salvarFesta(id, festa);
   }
 
   @override
@@ -203,6 +325,10 @@ class MontarBloc extends Bloc<MontarEvent, MontarState> {
           composicao: composicao ?? state.composicao,
         ),
         festaId: state.festaId,
+        // A falha só sai quando uma gravação **conclui** — recalcular não é
+        // ter gravado, e apagar o aviso aqui esconderia o erro sem resolvê-lo.
+        falhouAoSalvar: state.falhouAoSalvar,
+        salvamentos: state.salvamentos,
       ),
     );
   }
@@ -216,6 +342,7 @@ class MontarBloc extends Bloc<MontarEvent, MontarState> {
     FestaEmEdicao festa, {
     String? festaId,
     bool falhouAoSalvar = false,
+    int salvamentos = 0,
   }) =>
       MontarState(
         festaId: festaId,
@@ -223,6 +350,7 @@ class MontarBloc extends Bloc<MontarEvent, MontarState> {
         composicao: festa.composicao,
         resultado: CalculadoraDaFesta.calcular(festa.composicao),
         falhouAoSalvar: falhouAoSalvar,
+        salvamentos: salvamentos,
       );
 
   /// A composição corrente com um campo trocado.

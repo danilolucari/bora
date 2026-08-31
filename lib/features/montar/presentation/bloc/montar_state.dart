@@ -22,6 +22,7 @@ class MontarState {
     required this.resultado,
     this.festaId,
     this.falhouAoSalvar = false,
+    this.salvamentos = 0,
   });
 
   /// `null` enquanto o rolê é rascunho não persistido (MONT-17).
@@ -36,8 +37,17 @@ class MontarState {
   /// A saída, recalculada a cada transição — nunca por quem desenha.
   final ResultadoDoCalculo resultado;
 
-  /// A última gravação falhou (MONT-19). Não reverte nada do que está na tela.
+  /// A última operação com o repositório falhou (MONT-19). **Não reverte
+  /// nada** do que está na tela: o anfitrião continua montando.
   final bool falhouAoSalvar;
+
+  /// Quantos "SALVAR ROLÊ" já concluíram com sucesso — MONT-23.
+  ///
+  /// Contador, e não `bool`: com um booleano, salvar duas vezes seguidas sem
+  /// mudar nada emitiria o **mesmo** estado, o `emit` descartaria a segunda
+  /// emissão e o segundo toque não teria toast. O número muda sempre, então o
+  /// sucesso é sempre observável.
+  final int salvamentos;
 
   /// Copia trocando campos. **Trocar [composicao] sem trocar [resultado]
   /// deixaria os dois em desacordo** — só `_emitirComCalculo` faz isso, e ele
@@ -48,6 +58,7 @@ class MontarState {
     ComposicaoDaFesta? composicao,
     ResultadoDoCalculo? resultado,
     bool? falhouAoSalvar,
+    int? salvamentos,
   }) =>
       MontarState(
         festaId: festaId ?? this.festaId,
@@ -55,6 +66,7 @@ class MontarState {
         composicao: composicao ?? this.composicao,
         resultado: resultado ?? this.resultado,
         falhouAoSalvar: falhouAoSalvar ?? this.falhouAoSalvar,
+        salvamentos: salvamentos ?? this.salvamentos,
       );
 
   @override
@@ -64,8 +76,10 @@ class MontarState {
           other.festaId == festaId &&
           other.festa == festa &&
           other.composicao == composicao &&
-          other.falhouAoSalvar == falhouAoSalvar;
+          other.falhouAoSalvar == falhouAoSalvar &&
+          other.salvamentos == salvamentos;
 
   @override
-  int get hashCode => Object.hash(festaId, festa, composicao, falhouAoSalvar);
+  int get hashCode =>
+      Object.hash(festaId, festa, composicao, falhouAoSalvar, salvamentos);
 }
