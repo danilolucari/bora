@@ -300,13 +300,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Nome = `CHURRAS NOVO`; data = próximo sábado; `hora` e `local` **vazios**, com o SPEC_PRECISION_GAP declarado no doc
-- [ ] Contagem = 0/0/0 e duração = 4
-- [ ] `itensSelecionados` = os sete itens padrão de RN-30 (bovina, frango, pão de alho, refrigerante, água, cerveja, cachaça)
-- [ ] **Teste de amarração**: `itensSelecionados` é igual a `itensPadraoRn30Tipados` da fixture — a declaração em `lib/` e a fixture não podem divergir
-- [ ] `lib/` continua sem importar `test/fixtures/` (a varredura existente segue verde)
-- [ ] `Festa.duracaoHoras` e `ComposicaoDaFesta.duracaoHoras` nascem iguais
-- [ ] Gate `quick` passa; ≥ 6 testes novos
+- [x] Nome = `CHURRAS NOVO`; data = próximo sábado; `hora` e `local` **vazios**, com o SPEC_PRECISION_GAP declarado no doc
+- [x] Contagem = 0/0/0 e duração = 4
+- [x] `itensSelecionados` = os sete itens padrão de RN-30 (bovina, frango, pão de alho, refrigerante, água, cerveja, cachaça)
+- [x] **Teste de amarração**: `itensSelecionados` é igual a `itensPadraoRn30Tipados` da fixture — a declaração em `lib/` e a fixture não podem divergir
+- [x] `lib/` continua sem importar `test/fixtures/` (a varredura existente segue verde)
+- [x] `Festa.duracaoHoras` e `ComposicaoDaFesta.duracaoHoras` nascem iguais
+- [x] Gate `quick` passa; ≥ 6 testes novos
 
 **Tests**: unit
 **Gate**: quick
