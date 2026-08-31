@@ -406,13 +406,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Os literais da tabela do `design.md` §9 estão todos declarados, sem paráfrase
-- [ ] Os quatro pares por plataforma existem separados: `CONFIRMADOS + EXTRAS SEM APP` / `QUEM CONFIRMOU` e `QUANTO TEMPO DE FESTA?` / `ATÉ QUE HORAS?`
-- [ ] A frase do dinheiro difere por plataforma (`≈ R$ {x} / cabeça` × `dividido dá R$ {x} por cabeça`) e **as duas** recebem o valor já formatado
-- [ ] O rótulo do card-herói monta `SAI POR · {N} PESSOAS · {duração}` com a duração vinda de `rotuloDeDuracao`
-- [ ] Toast: o arquivo **referencia** `BoraToastTexts.roleSalvo`; nenhum literal `ROLÊ SALVO` é redigitado, e o teste compara com o token *(L-008)*
-- [ ] Nenhum `R$` literal (RN-13 é da camada)
-- [ ] Gate `quick` passa; ≥ 10 testes novos
+- [x] Os literais da tabela do `design.md` §9 estão todos declarados, sem paráfrase
+- [x] Os quatro pares por plataforma existem separados: `CONFIRMADOS + EXTRAS SEM APP` / `QUEM CONFIRMOU` e `QUANTO TEMPO DE FESTA?` / `ATÉ QUE HORAS?`
+- [x] A frase do dinheiro difere por plataforma (`≈ R$ {x} / cabeça` × `dividido dá R$ {x} por cabeça`) e **as duas** recebem o valor já formatado
+- [x] O rótulo do card-herói monta `SAI POR · {N} PESSOAS · {duração}` com a duração vinda de `rotuloDeDuracao`
+- [x] Toast: o arquivo **referencia** `BoraToastTexts.roleSalvo`; nenhum literal `ROLÊ SALVO` é redigitado, e o teste compara com o token *(L-008)*
+- [x] Nenhum `R$` literal (RN-13 é da camada)
+- [x] Gate `quick` passa; ≥ 10 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -431,12 +431,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual, se o caminho de captura estiver disponível)
 
 **Done when**:
-- [ ] As três linhas na ordem de T-03, com os emojis e os rótulos literais
-- [ ] `+` e `−` emitem a intenção com o tipo de cabeça certo — teste que troca dois steppers e afirma que **não** cruzaram
-- [ ] Em 0, o `−` daquela linha vem com `onDecrementar: null` e **não emite** ao ser tocado; as outras linhas seguem ativas
-- [ ] O valor exibido é o recebido — o widget não guarda contagem própria
-- [ ] Zero conta e zero `R$` no arquivo
-- [ ] Gate `full` passa; ≥ 8 testes novos
+- [x] As três linhas na ordem de T-03, com os emojis e os rótulos literais
+- [x] `+` e `−` emitem a intenção com o tipo de cabeça certo — teste que troca dois steppers e afirma que **não** cruzaram
+- [x] Em 0, o `−` daquela linha vem com `onDecrementar: null` e **não emite** ao ser tocado; as outras linhas seguem ativas
+- [x] O valor exibido é o recebido — o widget não guarda contagem própria
+- [x] Zero conta e zero `R$` no arquivo
+- [x] Gate `full` passa; ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -455,13 +455,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Nome e emoji de cada chip vêm de `catalogoDeItens` — **nenhum** redigitado no widget
-- [ ] Tocar um chip emite a `ChaveItem` dele; o chip selecionado renderiza o par `ink`/`cream` de §5 e o não selecionado o par branco/`ink` — afirmado contra o contrato do componente, **não** contra um literal de cor (**SPEC_DEVIATION** do `design.md` §11: a `spec.md` dizia "vermelho")
-- [ ] O segmented tem exatamente uma opção ativa; tocar outra emite o índice tocado e o widget **não** muda sozinho
-- [ ] `Dia` mapeia para 10 horas (RN-02) e o mapeamento é afirmado
-- [ ] Os chips quebram linha (`Wrap`) sem estourar a largura em 390px — nenhum overflow em viewport compacta
-- [ ] Zero conta e zero `R$` nos dois arquivos
-- [ ] Gate `full` passa; ≥ 12 testes novos
+- [x] Nome e emoji de cada chip vêm de `catalogoDeItens` — **nenhum** redigitado no widget
+- [x] Tocar um chip emite a `ChaveItem` dele; o chip selecionado renderiza o par `ink`/`cream` de §5 e o não selecionado o par branco/`ink` — afirmado contra o contrato do componente, **não** contra um literal de cor (**SPEC_DEVIATION** do `design.md` §11: a `spec.md` dizia "vermelho")
+- [x] O segmented tem exatamente uma opção ativa; tocar outra emite o índice tocado e o widget **não** muda sozinho
+- [x] `Dia` mapeia para 10 horas (RN-02) e o mapeamento é afirmado
+- [x] Os chips quebram linha (`Wrap`) sem estourar a largura em 390px — nenhum overflow em viewport compacta
+- [x] Zero conta e zero `R$` nos dois arquivos
+- [x] Gate `full` passa; ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -480,11 +480,11 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Ordem literal: contagem → NA GRELHA → NA GELADEIRA → PROS FORTES → duração
-- [ ] Montado com os rótulos mobile, exibe `CONFIRMADOS + EXTRAS SEM APP` e `QUANTO TEMPO DE FESTA?`; com os rótulos web, exibe `QUEM CONFIRMOU` e `ATÉ QUE HORAS?` — **e o resto da árvore é o mesmo** (é a prova de W-R1)
-- [ ] Os 11 chips estão presentes nas duas configurações, incluindo PROS FORTES no mobile (AD-018)
-- [ ] Todo callback chega a quem montou, sem transformação
-- [ ] Gate `full` passa; ≥ 8 testes novos
+- [x] Ordem literal: contagem → NA GRELHA → NA GELADEIRA → PROS FORTES → duração
+- [x] Montado com os rótulos mobile, exibe `CONFIRMADOS + EXTRAS SEM APP` e `QUANTO TEMPO DE FESTA?`; com os rótulos web, exibe `QUEM CONFIRMOU` e `ATÉ QUE HORAS?` — **e o resto da árvore é o mesmo** (é a prova de W-R1)
+- [x] Os 11 chips estão presentes nas duas configurações, incluindo PROS FORTES no mobile (AD-018)
+- [x] Todo callback chega a quem montou, sem transformação
+- [x] Gate `full` passa; ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
