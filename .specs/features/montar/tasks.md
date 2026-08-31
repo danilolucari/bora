@@ -352,16 +352,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Construído **sem** `festaId`: emite o rascunho e **não** grava nada — abrir `/roles/novo` não cria festa
-- [ ] Primeira mudança no rascunho: chama `criarFesta` **uma vez**, com a mudança já dentro, e o estado passa a ter `festaId`
-- [ ] Segunda mudança no mesmo rascunho **não** chama `criarFesta` de novo — chama `salvarFesta`
-- [ ] Construído **com** `festaId`: carrega a composição salva, não um rascunho novo (MONT-16)
-- [ ] `festaId` inexistente: emite rascunho em vez de quebrar; nenhuma exceção sobe
-- [ ] Nome apagado por completo volta ao default `CHURRAS NOVO` (P1-5 AC6) — e o teste falha se a defesa sair
-- [ ] Data editada é normalizada para CAIXA ALTA
-- [ ] Mudar a duração mantém `Festa.duracaoHoras` e `ComposicaoDaFesta.duracaoHoras` **iguais** no que é gravado
-- [ ] Emissão do repositório com a tela aberta atualiza o estado (é o contrato que sobrevive ao Firestore do M2)
-- [ ] Gate `quick` passa; ≥ 16 testes novos
+- [x] Construído **sem** `festaId`: emite o rascunho e **não** grava nada — abrir `/roles/novo` não cria festa
+- [x] Primeira mudança no rascunho: chama `criarFesta` **uma vez**, com a mudança já dentro, e o estado passa a ter `festaId`
+- [x] Segunda mudança no mesmo rascunho **não** chama `criarFesta` de novo — chama `salvarFesta`
+- [x] Construído **com** `festaId`: carrega a composição salva, não um rascunho novo (MONT-16)
+- [x] `festaId` inexistente: emite rascunho em vez de quebrar; nenhuma exceção sobe
+- [x] Nome apagado por completo volta ao default `CHURRAS NOVO` (P1-5 AC6) — e o teste falha se a defesa sair
+- [x] Data editada é normalizada para CAIXA ALTA
+- [x] Mudar a duração mantém `Festa.duracaoHoras` e `ComposicaoDaFesta.duracaoHoras` **iguais** no que é gravado
+- [x] Emissão do repositório com a tela aberta atualiza o estado (é o contrato que sobrevive ao Firestore do M2)
+- [x] Gate `quick` passa; ≥ 16 testes novos
 
 **Tests**: unit
 **Gate**: quick

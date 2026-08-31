@@ -6,6 +6,8 @@ import 'package:bora/features/montar/domain/rascunho_inicial.dart';
 import 'package:bora/features/montar/presentation/bloc/montar_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../support/festa_em_edicao_repository_fake.dart';
+
 const String _arquivoDoBloc =
     'lib/features/montar/presentation/bloc/montar_bloc.dart';
 
@@ -33,7 +35,10 @@ ItemDeLista? _itemDe(ResultadoDoCalculo resultado, ChaveItem chave) {
 
 void main() {
   MontarBloc blocCom(FestaEmEdicao inicial) {
-    final bloc = MontarBloc(inicial: inicial);
+    final festas = FestaEmEdicaoRepositoryFake();
+    addTearDown(festas.dispose);
+
+    final bloc = MontarBloc(festas, inicial: inicial);
     addTearDown(bloc.close);
     return bloc;
   }
