@@ -627,12 +627,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run`
 
 **Done when**:
-- [ ] Em 1180×800 renderiza `A CONTA DO ROLÊ` à esquerda e `{NOME} · {DATA}` à direita da linha de título
-- [ ] Usa os rótulos de W-03 (`QUEM CONFIRMOU`, `ATÉ QUE HORAS?`), não os do mobile
-- [ ] **Não existe** `BoraFooterBar` na árvore (W-R2, MONT-13) — asserção de ausência
-- [ ] **Zero scroll horizontal** em 1180×800 e em 900×800 (W-R4) — afirmado pela extensão do scrollable, não por inspeção visual
-- [ ] Mudar um chip atualiza card-herói **e** lista viva na mesma interação (MONT-12), provado com um único `pump`
-- [ ] Gate `full` passa; ≥ 10 testes novos
+- [x] Em 1180×800 renderiza `A CONTA DO ROLÊ` à esquerda e `{NOME} · {DATA}` à direita da linha de título
+- [x] Usa os rótulos de W-03 (`QUEM CONFIRMOU`, `ATÉ QUE HORAS?`), não os do mobile
+- [x] **Não existe** `BoraFooterBar` na árvore (W-R2, MONT-13) — asserção de ausência
+- [x] **Zero scroll horizontal** em 1180×800 e em 900×800 (W-R4) — afirmado pela extensão do scrollable, não por inspeção visual
+- [x] Mudar um chip atualiza card-herói **e** lista viva na mesma interação (MONT-12), provado com um único `pump`
+- [x] Gate `full` passa; ≥ 10 testes novos
 
 **Tests**: widget
 **Gate**: full
