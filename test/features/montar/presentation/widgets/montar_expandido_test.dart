@@ -39,10 +39,20 @@ class _Emitidos {
 /// calculadora e reconstrói. É o que permite afirmar que **uma** interação
 /// atualiza os dois lados da tela.
 class _Palco extends StatefulWidget {
-  const _Palco({required this.inicial, required this.emitidos});
+  const _Palco({
+    required this.inicial,
+    required this.emitidos,
+    this.festa,
+  });
 
   final ComposicaoDaFesta inicial;
   final _Emitidos emitidos;
+
+  /// A festa que o palco reflete. `null` = o rascunho de `/roles/novo`, cujo
+  /// nome e data **são** os defaults — por isso ela é parâmetro: com o
+  /// rascunho sozinho, um título chumbado no widget seria indistinguível do
+  /// título que lê `festa.nome` (P1-5 AC3).
+  final Festa? festa;
 
   @override
   State<_Palco> createState() => _PalcoState();
@@ -52,7 +62,7 @@ class _PalcoState extends State<_Palco> {
   late ComposicaoDaFesta _composicao = widget.inicial;
 
   MontarState get _estado => MontarState(
-        festa: rascunhoInicial(hoje: DateTime(2026, 7, 15)).festa,
+        festa: widget.festa ?? rascunhoInicial(hoje: DateTime(2026, 7, 15)).festa,
         composicao: _composicao,
         resultado: CalculadoraDaFesta.calcular(_composicao),
       );
@@ -91,6 +101,7 @@ Future<_Emitidos> _montar(
   WidgetTester tester, {
   Size janela = _janelaExpandida,
   ComposicaoDaFesta? composicao,
+  Festa? festa,
 }) async {
   final emitidos = _Emitidos();
 
@@ -102,6 +113,7 @@ Future<_Emitidos> _montar(
       home: _Palco(
         inicial: composicao ?? _composicaoRn30(),
         emitidos: emitidos,
+        festa: festa,
       ),
     ),
   );
@@ -155,6 +167,46 @@ void main() {
 
       expect(estilo.fontSize, MontarExpandido.tamanhoDoTitulo);
       expect(estilo.fontFamily, BoraTextStyles.tituloTela.fontFamily);
+    });
+
+    // P1-5 AC3: "o título da festa SHALL refletir a mudança onde ele aparece
+    // — no header mobile e **na linha de título do web**". A metade mobile é
+    // afirmada na página; esta é a metade web, e ela só discrimina se a festa
+    // montada tiver nome e data **diferentes** dos defaults do rascunho.
+    testWidgets('MONT-15 AC3: a identidade é a da festa montada, não o '
+        'default do rascunho', (tester) async {
+      const nome = 'CHURRAS DO RAFA 🔥';
+      // Diferente do default do rascunho, que para `hoje` = 15/07/2026 é
+      // justamente 'SÁB · 18 JUL' — coincidir com ele não discriminaria nada.
+      const data = 'SEX · 25 DEZ';
+
+      await _montar(
+        tester,
+        festa: const Festa(
+          nome: nome,
+          data: data,
+          hora: '',
+          local: '',
+          duracaoHoras: duracaoDefaultDoRole,
+        ),
+      );
+
+      final padrao = rascunhoInicial(hoje: DateTime(2026, 7, 15)).festa;
+
+      expect(nome, isNot(nomeDefaultDoRole));
+      expect(data, isNot(padrao.data));
+      expect(
+        find.text(MontarTextos.identidadeExpandida(nome: nome, data: data)),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining(nomeDefaultDoRole),
+        findsNothing,
+        reason: 'a linha de título lê festa.nome; um literal chumbado no '
+            'widget continuaria mostrando o default depois de o anfitrião '
+            'renomear o rolê',
+      );
+      expect(find.textContaining(padrao.data), findsNothing);
     });
   });
 
