@@ -27,6 +27,7 @@ class FormularioDeMontagem extends StatelessWidget {
     required this.aoAlterarContagem,
     required this.aoAlternarItem,
     required this.aoSelecionarDuracao,
+    this.larguraMaximaDaDuracao,
     super.key,
   });
 
@@ -46,6 +47,11 @@ class FormularioDeMontagem extends StatelessWidget {
   final void Function(TipoDeCabeca tipo, int delta) aoAlterarContagem;
   final void Function(ChaveItem chave) aoAlternarItem;
   final void Function(int horas) aoSelecionarDuracao;
+
+  /// O teto de largura do segmented de duração, quando a plataforma declara
+  /// um — W-03 dá "máx 360px" e T-03 não dá nenhum. Só atravessa; quem o
+  /// aplica é a [SecaoDeDuracao].
+  final double? larguraMaximaDaDuracao;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +78,7 @@ class FormularioDeMontagem extends StatelessWidget {
           rotulo: rotuloDaDuracao,
           duracaoHoras: composicao.duracaoHoras,
           aoSelecionar: aoSelecionarDuracao,
+          larguraMaxima: larguraMaximaDaDuracao,
         ),
       ],
     );

@@ -19,6 +19,7 @@ class SecaoDeDuracao extends StatelessWidget {
     required this.rotulo,
     required this.duracaoHoras,
     required this.aoSelecionar,
+    this.larguraMaxima,
     super.key,
   });
 
@@ -40,6 +41,15 @@ class SecaoDeDuracao extends StatelessWidget {
   /// fala em duração, não em posição de botão.
   final void Function(int horas) aoSelecionar;
 
+  /// O teto de largura do segmented, quando a plataforma declara um.
+  ///
+  /// W-03 escreve "segmented 2h/4h/6h/Dia (**máx 360px**)"; T-03 não declara
+  /// teto nenhum, e num celular de 390px o controle já ocupa a coluna
+  /// inteira. Por isso o número **não** mora aqui: ele é da tela expandida,
+  /// pelo mesmo motivo que os rótulos divergentes entram por parâmetro
+  /// (A-09). `null` ⇒ sem teto, que é o comportamento de T-03.
+  final double? larguraMaxima;
+
   /// A posição da opção ativa, ou `-1` quando [duracaoHoras] não é nenhuma
   /// das quatro. Nesse caso o segmented não acende nenhuma — mentir sobre
   /// qual está ativa seria pior do que não acender.
@@ -47,17 +57,26 @@ class SecaoDeDuracao extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final segmented = BoraSegmentedControl(
+      opcoes: MontarTextos.opcoesDeDuracao,
+      indiceAtivo: indiceAtivo,
+      onSelecionar: (indice) => aoSelecionar(horasPorOpcao[indice]),
+    );
+    final teto = larguraMaxima;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(rotulo, style: BoraTextStyles.labelSecao),
         SizedBox(height: BoraSpacing.chip.top),
-        BoraSegmentedControl(
-          opcoes: MontarTextos.opcoesDeDuracao,
-          indiceAtivo: indiceAtivo,
-          onSelecionar: (indice) => aoSelecionar(horasPorOpcao[indice]),
-        ),
+        if (teto == null)
+          segmented
+        else
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: teto),
+            child: segmented,
+          ),
       ],
     );
   }

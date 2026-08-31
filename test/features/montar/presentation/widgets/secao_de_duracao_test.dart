@@ -13,11 +13,13 @@ Future<List<int>> _montar(
   WidgetTester tester, {
   String rotulo = MontarTextos.duracaoCompacto,
   int duracaoHoras = 4,
+  double? larguraMaxima,
+  Size janela = const Size(390, 820),
 }) async {
   final emitidas = <int>[];
 
   addTearDown(() => tester.binding.setSurfaceSize(null));
-  await tester.binding.setSurfaceSize(const Size(390, 820));
+  await tester.binding.setSurfaceSize(janela);
   await tester.pumpWidget(
     MaterialApp(
       theme: boraTheme(),
@@ -29,6 +31,7 @@ Future<List<int>> _montar(
             rotulo: rotulo,
             duracaoHoras: duracaoHoras,
             aoSelecionar: emitidas.add,
+            larguraMaxima: larguraMaxima,
           ),
         ),
       ),
@@ -170,6 +173,38 @@ void main() {
             .indiceAtivo,
         1,
       );
+    });
+  });
+
+  group('W-03 — o teto de largura do segmented é da plataforma', () {
+    /// Larga o bastante para o segmented esticar muito além de 360px se
+    /// ninguém o segurasse.
+    const Size janelaLarga = Size(900, 800);
+
+    testWidgets('sem teto, o segmented ocupa a coluna inteira — o default de '
+        'T-03', (tester) async {
+      await _montar(tester, janela: janelaLarga);
+
+      expect(
+        tester.getSize(find.byType(BoraSegmentedControl)).width,
+        greaterThan(360),
+      );
+    });
+
+    testWidgets('com o teto de W-03, o segmented para em 360px',
+        (tester) async {
+      await _montar(tester, janela: janelaLarga, larguraMaxima: 360);
+
+      expect(tester.getSize(find.byType(BoraSegmentedControl)).width, 360);
+    });
+
+    testWidgets('o teto não muda o que o segmented emite', (tester) async {
+      final emitidas =
+          await _montar(tester, janela: janelaLarga, larguraMaxima: 360);
+
+      await tester.tap(find.text('6H'));
+
+      expect(emitidas, [6]);
     });
   });
 }
