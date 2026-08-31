@@ -527,12 +527,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Exibe `SAI POR`, o total e a sublinha, com os dois valores vindos de `MoneyFormatter.reais` — comparados no teste com o **token**, nunca com um literal *(L-008)*
-- [ ] Com a composição de RN-30, a árvore renderizada contém `R$ 211` e `≈ R$ 30 / cabeça` — **o aceite de UC-03 na tela**
-- [ ] O divisor é **pessoas** (criança inclusive) e o rótulo é `/ cabeça`; um teste com composição em que "por cabeça" e "por adulto" **divergem** prova que a tela mostra o primeiro (RN-14, A-05)
-- [ ] Total com centavos exibe o inteiro de RN-13
-- [ ] O CTA emite uma vez por toque
-- [ ] Gate `full` passa; ≥ 10 testes novos
+- [x] Exibe `SAI POR`, o total e a sublinha, com os dois valores vindos de `MoneyFormatter.reais` — comparados no teste com o **token**, nunca com um literal *(L-008)*
+- [x] Com a composição de RN-30, a árvore renderizada contém `R$ 211` e `≈ R$ 30 / cabeça` — **o aceite de UC-03 na tela**
+- [x] O divisor é **pessoas** (criança inclusive) e o rótulo é `/ cabeça`; um teste com composição em que "por cabeça" e "por adulto" **divergem** prova que a tela mostra o primeiro (RN-14, A-05)
+- [x] Total com centavos exibe o inteiro de RN-13
+- [x] O CTA emite uma vez por toque
+- [x] Gate `full` passa; ≥ 10 testes novos
 
 **Tests**: widget
 **Gate**: full
