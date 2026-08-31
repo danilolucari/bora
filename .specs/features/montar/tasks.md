@@ -575,15 +575,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Agrupa por `SecaoDaMontagem` na ordem NA GRELHA → NA GELADEIRA → PROS FORTES, e dentro de cada uma na ordem de `ordemCanonicaDaLista` (A-07)
-- [ ] Subtotal por categoria vem de `totalExato` — o arquivo **não** contém `fold`, `reduce`, `*`, `/` nem `R$`
-- [ ] **Sem** botão `QUEM LEVA?` e **sem** a dica 💡 (A-02, AD-018)
-- [ ] **Sem** essenciais: com a composição de RN-30, carvão, gelo, sal grosso e copos & pratos **não** aparecem, e a soma dos subtotais bate com o total do card-herói (A-05, A-06)
-- [ ] Categoria sem item selecionado **não** renderiza seção vazia
-- [ ] Lista vazia (0 pessoas) não renderiza card nenhum e não quebra
-- [ ] Com pessoas veggie, `Legumes p/ grelha` aparece em NA GRELHA sem ter chip (A-08, MONT-24)
-- [ ] Excedendo 330px, rola **dentro do próprio contêiner** — o teste prova rolando a lista sem rolar a página
-- [ ] Gate `full` passa; ≥ 14 testes novos
+- [x] Agrupa por `SecaoDaMontagem` na ordem NA GRELHA → NA GELADEIRA → PROS FORTES, e dentro de cada uma na ordem de `ordemCanonicaDaLista` (A-07)
+- [x] Subtotal por categoria vem de `totalExato` — o arquivo **não** contém `fold`, `reduce`, `*`, `/` nem `R$`
+- [x] **Sem** botão `QUEM LEVA?` e **sem** a dica 💡 (A-02, AD-018)
+- [x] **Sem** essenciais: com a composição de RN-30, carvão, gelo, sal grosso e copos & pratos **não** aparecem, e a soma dos subtotais bate com o total do card-herói (A-05, A-06)
+- [x] Categoria sem item selecionado **não** renderiza seção vazia
+- [x] Lista vazia (0 pessoas) não renderiza card nenhum e não quebra
+- [x] Com pessoas veggie, `Legumes p/ grelha` aparece em NA GRELHA sem ter chip (A-08, MONT-24)
+- [x] Excedendo 330px, rola **dentro do próprio contêiner** — o teste prova rolando a lista sem rolar a página
+- [x] Gate `full` passa; ≥ 14 testes novos
 
 **Tests**: widget
 **Gate**: full
