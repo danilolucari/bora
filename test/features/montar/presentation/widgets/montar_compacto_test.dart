@@ -171,6 +171,22 @@ void main() {
     });
   });
 
+  // P1-2 AC1 / UC-04: "sem botão 'calcular'". O aceite é uma **ausência**, e
+  // ausência só se prova afirmando que ela não está lá — sem isto, plantar um
+  // CTA "CALCULAR" na tela não acusa nada, ou acusa por acidente noutro teste.
+  group('MONT-04 / UC-04 — não existe passo de "calcular" na tela compacta', () {
+    testWidgets('nenhum controle da tela oferece "calcular"', (tester) async {
+      await _montar(tester);
+
+      expect(
+        find.textContaining(RegExp('CALCULAR', caseSensitive: false)),
+        findsNothing,
+        reason: 'o custo recalcula a cada toque: um botão de confirmar a '
+            'conta seria um passo que UC-04 nega',
+      );
+    });
+  });
+
   group('MONT-14 / UC-03 E1 — a festa sem ninguém', () {
     testWidgets('o rodapé mostra o zero de MoneyFormatter nos dois valores',
         (tester) async {

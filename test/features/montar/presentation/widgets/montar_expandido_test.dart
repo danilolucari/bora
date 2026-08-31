@@ -210,6 +210,22 @@ void main() {
     });
   });
 
+  // P1-2 AC1 / UC-04: "sem botão 'calcular'". O aceite é uma **ausência**, e
+  // ausência só se prova afirmando que ela não está lá — sem isto, plantar um
+  // CTA "CALCULAR" na tela não acusa nada, ou acusa por acidente noutro teste.
+  group('MONT-04 / UC-04 — não existe passo de "calcular" na tela expandida', () {
+    testWidgets('nenhum controle da tela oferece "calcular"', (tester) async {
+      await _montar(tester);
+
+      expect(
+        find.textContaining(RegExp('CALCULAR', caseSensitive: false)),
+        findsNothing,
+        reason: 'o custo recalcula a cada toque: um botão de confirmar a '
+            'conta seria um passo que UC-04 nega',
+      );
+    });
+  });
+
   group('MONT-09 — os rótulos são os de W-03, não os do mobile (A-09)', () {
     testWidgets('QUEM CONFIRMOU e ATÉ QUE HORAS? no lugar dos rótulos de T-03',
         (tester) async {
