@@ -325,15 +325,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `MontarState` carrega `festaId?`, `festa`, `composicao`, `resultado` e `falhouAoSalvar`, com `==` por valor
-- [ ] **Não existe** caminho de emissão que não passe por `_emitirComCalculo` — teste percorre todos os eventos e afirma que `resultado` mudou junto com `composicao`
-- [ ] **MONT-05, o aceite de UC-03**: com a composição de RN-30 (3H+3M+1C, 4h, os sete itens padrão), `resultado.totalDosItens` arredonda para `R$ 211` por `MoneyFormatter.reais` e `resultado.porCabeca` para `R$ 30` — afirmado contra o **token**, não contra o literal *(L-008)*
-- [ ] Stepper não desce de 0: `ContagemAlterada(homens, -1)` em 0 mantém 0 e **não** lança (MONT-14)
-- [ ] Zerar os três dá `totalDosItens == 0`, `porCabeca == 0` e `itens` vazia mesmo com chips marcados (UC-03 E1)
-- [ ] Alternar o mesmo chip duas vezes volta ao estado inicial — determinístico (MONT-20)
-- [ ] Duração 2h / 6h / 10h muda `resultado.fator` conforme RN-02 vindo da camada
-- [ ] Composição com pessoas nomeadas veggie / sem porco / que não bebem produz os efeitos de RN-21 em `resultado.itens` (MONT-24, lado consumo)
-- [ ] Gate `quick` passa; ≥ 20 testes novos
+- [x] `MontarState` carrega `festaId?`, `festa`, `composicao`, `resultado` e `falhouAoSalvar`, com `==` por valor
+- [x] **Não existe** caminho de emissão que não passe por `_emitirComCalculo` — teste percorre todos os eventos e afirma que `resultado` mudou junto com `composicao`
+- [x] **MONT-05, o aceite de UC-03**: com a composição de RN-30 (3H+3M+1C, 4h, os sete itens padrão), `resultado.totalDosItens` arredonda para `R$ 211` por `MoneyFormatter.reais` e `resultado.porCabeca` para `R$ 30` — afirmado contra o **token**, não contra o literal *(L-008)*
+- [x] Stepper não desce de 0: `ContagemAlterada(homens, -1)` em 0 mantém 0 e **não** lança (MONT-14)
+- [x] Zerar os três dá `totalDosItens == 0`, `porCabeca == 0` e `itens` vazia mesmo com chips marcados (UC-03 E1)
+- [x] Alternar o mesmo chip duas vezes volta ao estado inicial — determinístico (MONT-20)
+- [x] Duração 2h / 6h / 10h muda `resultado.fator` conforme RN-02 vindo da camada
+- [x] Composição com pessoas nomeadas veggie / sem porco / que não bebem produz os efeitos de RN-21 em `resultado.itens` (MONT-24, lado consumo)
+- [x] Gate `quick` passa; ≥ 20 testes novos
 
 **Tests**: unit
 **Gate**: quick
