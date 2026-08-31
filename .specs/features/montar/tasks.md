@@ -551,12 +551,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run`
 
 **Done when**:
-- [ ] Em 390×820 renderiza, na ordem de T-03: voltar, título, identidade, as cinco seções, rodapé fixo
-- [ ] O rodapé fica **fixo** — o formulário rola por baixo dele, e o teste prova rolando
-- [ ] Zerar os três steppers deixa o rodapé em `R$ 0` e o `−` inerte nas três linhas (UC-03 E1 na tela)
-- [ ] Nenhum overflow em 390×820, com todos os chips e as quatro seções (AD-018 alonga a rolagem)
-- [ ] O voltar emite a intenção de voltar (quem navega é a página)
-- [ ] Gate `full` passa; ≥ 10 testes novos
+- [x] Em 390×820 renderiza, na ordem de T-03: voltar, título, identidade, as cinco seções, rodapé fixo
+- [x] O rodapé fica **fixo** — o formulário rola por baixo dele, e o teste prova rolando
+- [x] Zerar os três steppers deixa o rodapé em `R$ 0` e o `−` inerte nas três linhas (UC-03 E1 na tela)
+- [x] Nenhum overflow em 390×820, com todos os chips e as quatro seções (AD-018 alonga a rolagem)
+- [x] O voltar emite a intenção de voltar (quem navega é a página)
+- [x] Gate `full` passa; ≥ 10 testes novos
 
 **Tests**: widget
 **Gate**: full
