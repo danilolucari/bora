@@ -702,13 +702,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] A varredura remove comentários (`//`, `///`, `/* */`) e literais de string antes de procurar operador — `import '../../x.dart'` não é falso positivo
-- [ ] As cinco regras do `design.md` §13 estão implementadas e **cada uma** tem teste próprio provando que ela pega o caso que devia pegar (a varredura é exercitada contra um trecho sintético infrator, não só contra o código limpo)
-- [ ] A mensagem de falha nomeia o **arquivo e a regra** violada
-- [ ] **Teste comportamental**: uma composição com total fracionário renderiza o valor igual a `MoneyFormatter.reais(resultado.totalDosItens)` — um formatador próprio que arredondasse diferente morre aqui, mesmo passando na varredura
-- [ ] `lib/features/montar/**` passa nas cinco regras **sem exceção declarada**
-- [ ] Gate `build` passa; suíte inteira verde; `flutter analyze` zero issues
-- [ ] ≥ 8 testes novos
+- [x] A varredura remove comentários (`//`, `///`, `/* */`) e literais de string antes de procurar operador — `import '../../x.dart'` não é falso positivo
+- [x] As cinco regras do `design.md` §13 estão implementadas e **cada uma** tem teste próprio provando que ela pega o caso que devia pegar (a varredura é exercitada contra um trecho sintético infrator, não só contra o código limpo)
+- [x] A mensagem de falha nomeia o **arquivo e a regra** violada
+- [x] **Teste comportamental**: uma composição com total fracionário renderiza o valor igual a `MoneyFormatter.reais(resultado.totalDosItens)` — um formatador próprio que arredondasse diferente morre aqui, mesmo passando na varredura
+- [x] `lib/features/montar/**` passa nas cinco regras **sem exceção declarada**
+- [x] Gate `build` passa; suíte inteira verde; `flutter analyze` zero issues
+- [x] ≥ 8 testes novos
 
 **Tests**: unit (varredura) + widget (comportamental)
 **Gate**: build
@@ -881,10 +881,10 @@ Não há MCP configurado neste projeto — todas as tasks usam as ferramentas na
 
 ## Success Criteria da feature (da `spec.md`, conferidos ao fim)
 
-- [ ] `flutter analyze` zero issues · suíte verde · **≥ 1137 + ~230 testes novos**, baseline preservada
-- [ ] Aceite de UC-03 **na tela**, nas duas plataformas: `R$ 211` e `≈ R$ 30 / cabeça` renderizados
-- [ ] Aceite de UC-04: nenhum botão "calcular"; qualquer toque atualiza total e per capita
-- [ ] Guard de MONT-08 verde, sem exceção declarada
-- [ ] W-03 funcional: rail sticky, lista viva rolando dentro de si, zero scroll horizontal, sem rodapé fixo
-- [ ] Zerar a festa dá `R$ 0` e lista vazia; steppers não descem de 0
-- [ ] AD-029 registrada no `STATE.md`
+- [x] `flutter analyze` zero issues · suíte verde · **≥ 1137 + ~230 testes novos**, baseline preservada
+- [x] Aceite de UC-03 **na tela**, nas duas plataformas: `R$ 211` e `≈ R$ 30 / cabeça` renderizados
+- [x] Aceite de UC-04: nenhum botão "calcular"; qualquer toque atualiza total e per capita
+- [x] Guard de MONT-08 verde, sem exceção declarada
+- [x] W-03 funcional: rail sticky, lista viva rolando dentro de si, zero scroll horizontal, sem rodapé fixo
+- [x] Zerar a festa dá `R$ 0` e lista vazia; steppers não descem de 0
+- [x] AD-029 registrada no `STATE.md`
