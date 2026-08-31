@@ -274,14 +274,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `hoje` entra **por parâmetro** — nenhuma chamada a `DateTime.now()` dentro da função (é o que torna o default testável sem esperar sábado)
-- [ ] Sábado devolve o **próximo** sábado, não hoje — o caso que decide a regra
-- [ ] Domingo devolve o sábado dali a 6 dias
-- [ ] Virada de mês e virada de ano produzem o rótulo certo
-- [ ] O rótulo casa com o formato de `Festa.data` de T-02 (`SÁB · 18 JUL`), com o mês abreviado em CAIXA ALTA e em pt-BR
-- [ ] Os 12 meses têm abreviação declarada e testada
-- [ ] Dart puro, sem Flutter
-- [ ] Gate `quick` passa; ≥ 10 testes novos
+- [x] `hoje` entra **por parâmetro** — nenhuma chamada a `DateTime.now()` dentro da função (é o que torna o default testável sem esperar sábado)
+- [x] Sábado devolve o **próximo** sábado, não hoje — o caso que decide a regra
+- [x] Domingo devolve o sábado dali a 6 dias
+- [x] Virada de mês e virada de ano produzem o rótulo certo
+- [x] O rótulo casa com o formato de `Festa.data` de T-02 (`SÁB · 18 JUL`), com o mês abreviado em CAIXA ALTA e em pt-BR
+- [x] Os 12 meses têm abreviação declarada e testada
+- [x] Dart puro, sem Flutter
+- [x] Gate `quick` passa; ≥ 10 testes novos
 
 **Tests**: unit
 **Gate**: quick
