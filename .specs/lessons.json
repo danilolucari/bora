@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 27,
+  "next_id": 30,
   "lessons": [
     {
       "id": "L-001",
@@ -472,6 +472,60 @@
       ],
       "created": "2026-08-26T20:13:39Z",
       "last_seen": "2026-08-26T20:13:39Z"
+    },
+    {
+      "id": "L-027",
+      "key": "surviving_mutant::guard de varredura que procura um literal de string tem de procur lo como a linguagem obriga a escrev lo na fonte em dart o cifr o s existe escapado ou em raw string e o teste da regra tem de passar a fonte crua n o a string j desescapada",
+      "text": "Guard de varredura que procura um literal de string tem de procurá-lo como a linguagem obriga a escrevê-lo na fonte (em Dart, o cifrão só existe escapado ou em raw string) — e o teste da regra tem de passar a fonte crua, não a string já desescapada.",
+      "signal": "surviving_mutant",
+      "scope": "test/**/architecture",
+      "status": "candidate",
+      "features": [
+        "montar"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "M5 — formula_nao_vaza_test.dart:140 (test/**/architecture)"
+      ],
+      "created": "2026-08-31T19:30:00Z",
+      "last_seen": "2026-08-31T19:30:00Z"
+    },
+    {
+      "id": "L-028",
+      "key": "surviving_mutant::quando um copywith escrito m o porque a entidade n o tem um cada campo apenas repassado precisa de um teste que dispare um evento e reafirme o campo depois sen o a preserva o sobrevive por acidente",
+      "text": "Quando um copyWith é escrito à mão porque a entidade não tem um, cada campo apenas repassado precisa de um teste que dispare um evento e reafirme o campo depois — senão a preservação sobrevive por acidente.",
+      "signal": "surviving_mutant",
+      "scope": "presentation/bloc",
+      "status": "candidate",
+      "features": [
+        "montar"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "M7/M18 — montar_bloc.dart:373-386 (presentation/bloc)"
+      ],
+      "created": "2026-08-31T19:30:00Z",
+      "last_seen": "2026-08-31T19:30:00Z"
+    },
+    {
+      "id": "L-029",
+      "key": "surviving_mutant::teste de tela montado s com os valores default n o discrimina o campo do literal use dado diferente do default e afirme tamb m a aus ncia do default",
+      "text": "Teste de tela montado só com os valores default não discrimina o campo do literal: use dado diferente do default e afirme também a ausência do default.",
+      "signal": "surviving_mutant",
+      "scope": "test/**/widgets",
+      "status": "candidate",
+      "features": [
+        "montar"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "M8 — montar_expandido.dart:150 (test/**/widgets)"
+      ],
+      "created": "2026-08-31T19:30:00Z",
+      "last_seen": "2026-08-31T19:30:00Z"
     }
   ]
 }
