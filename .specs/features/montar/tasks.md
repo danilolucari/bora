@@ -651,13 +651,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `MontarPage({String? festaId, required FestaEmEdicaoRepository festas, required AppLogger logger})` com `static const Key pageKey = Key('montar')`
-- [ ] O bloc vive **acima** do `ResponsiveBuilder`: cruzar 900px com a tela montada preserva a composição inteira (W-R3 + W-R1) — o teste redimensiona e afirma o estado
-- [ ] `FECHAR LISTA →` chama `Routes.lista(festaId)`; `MANDAR NO GRUPO 📲` chama `Routes.whatsapp(festaId)`; o voltar chama `Routes.roles` (MONT-22)
-- [ ] Toque duplo no CTA navega **uma vez** (MONT-20)
-- [ ] `SALVAR ROLÊ` concluído mostra o toast comparado com `BoraToastTexts.roleSalvo` — 1 por vez, some sozinho (RN-29)
-- [ ] Ganhar `festaId` dispara `context.replace` para `/roles/{festaId}/montar` — **não** `go`, para o rascunho não ficar no histórico
-- [ ] Gate `full` passa; ≥ 12 testes novos
+- [x] `MontarPage({String? festaId, required FestaEmEdicaoRepository festas, required AppLogger logger})` com `static const Key pageKey = Key('montar')`
+- [x] O bloc vive **acima** do `ResponsiveBuilder`: cruzar 900px com a tela montada preserva a composição inteira (W-R3 + W-R1) — o teste redimensiona e afirma o estado
+- [x] `FECHAR LISTA →` chama `Routes.lista(festaId)`; `MANDAR NO GRUPO 📲` chama `Routes.whatsapp(festaId)`; o voltar chama `Routes.roles` (MONT-22)
+- [x] Toque duplo no CTA navega **uma vez** (MONT-20)
+- [x] `SALVAR ROLÊ` concluído mostra o toast comparado com `BoraToastTexts.roleSalvo` — 1 por vez, some sozinho (RN-29)
+- [x] Ganhar `festaId` dispara `context.replace` para `/roles/{festaId}/montar` — **não** `go`, para o rascunho não ficar no histórico
+- [x] Gate `full` passa; ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
