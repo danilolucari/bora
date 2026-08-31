@@ -249,13 +249,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Dart puro: nenhum import de Flutter (varredura própria ou asserção de import no teste)
-- [ ] `chipsPorSecao` tem exatamente 3 + 5 + 3 = **11** chips, na ordem literal de T-03/W-03
-- [ ] `PROS FORTES` existe (AD-018) com vodka, cachaça e whisky
-- [ ] `secaoDe(legumesParaGrelha)` = `naGrelha` **sem** que ele apareça em `chipsPorSecao` (A-08)
-- [ ] `secaoDe` dos quatro essenciais de RN-10 devolve `null` (A-06: não aparecem na lista viva)
-- [ ] Teste exaustivo: **todo** valor de `ChaveItem` tem resultado declarado — um item novo no enum quebra a suíte em vez de sumir da tela
-- [ ] Gate `quick` passa; ≥ 8 testes novos
+- [x] Dart puro: nenhum import de Flutter (varredura própria ou asserção de import no teste)
+- [x] `chipsPorSecao` tem exatamente 3 + 5 + 3 = **11** chips, na ordem literal de T-03/W-03
+- [x] `PROS FORTES` existe (AD-018) com vodka, cachaça e whisky
+- [x] `secaoDe(legumesParaGrelha)` = `naGrelha` **sem** que ele apareça em `chipsPorSecao` (A-08)
+- [x] `secaoDe` dos quatro essenciais de RN-10 devolve `null` (A-06: não aparecem na lista viva)
+- [x] Teste exaustivo: **todo** valor de `ChaveItem` tem resultado declarado — um item novo no enum quebra a suíte em vez de sumir da tela
+- [x] Gate `quick` passa; ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: quick
