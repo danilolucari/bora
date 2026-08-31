@@ -676,15 +676,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `/roles/novo` monta `MontarPage(festaId: null, …)` e `/roles/:festaId/montar` monta com o id **da URL** — o `const MontarPage()` some das duas rotas
-- [ ] O comentário do desvio (**E-4**) fica no roteador, no formato `SPEC_DEVIATION` que o arquivo já usa
-- [ ] `FestaRepository` e `FestaEmEdicaoRepository` resolvem para a **mesma instância** — teste que cria festa pela porta de edição e a vê em `observarFestas()`
-- [ ] O `dispose` continua registrado **uma vez só** — nenhum controller fechado duas vezes
-- [ ] `abrirApp` aceita a porta de edição com **default**; nenhum teste existente muda
-- [ ] Testes de rota afirmam `rotaAtual()`, não o widget montado — as duas rotas montam a mesma tela
-- [ ] `/roles/novo` sem sessão continua indo para `/entrar` (AD-017 herdada)
-- [ ] Da Home, `🔥 CHURRASCO` chega em `/roles/novo` montável; a primeira mudança leva a rota a `/roles/{id}/montar` **e a composição segue igual** (MONT-17 + MONT-18 ponta a ponta)
-- [ ] Gate `build` passa; ≥ 12 testes novos; suíte inteira verde
+- [x] `/roles/novo` monta `MontarPage(festaId: null, …)` e `/roles/:festaId/montar` monta com o id **da URL** — o `const MontarPage()` some das duas rotas
+- [x] O comentário do desvio (**E-4**) fica no roteador, no formato `SPEC_DEVIATION` que o arquivo já usa
+- [x] `FestaRepository` e `FestaEmEdicaoRepository` resolvem para a **mesma instância** — teste que cria festa pela porta de edição e a vê em `observarFestas()`
+- [x] O `dispose` continua registrado **uma vez só** — nenhum controller fechado duas vezes
+- [x] `abrirApp` aceita a porta de edição com **default**; nenhum teste existente muda
+- [x] Testes de rota afirmam `rotaAtual()`, não o widget montado — as duas rotas montam a mesma tela
+- [x] `/roles/novo` sem sessão continua indo para `/entrar` (AD-017 herdada)
+- [x] Da Home, `🔥 CHURRASCO` chega em `/roles/novo` montável; a primeira mudança leva a rota a `/roles/{id}/montar` **e a composição segue igual** (MONT-17 + MONT-18 ponta a ponta)
+- [x] Gate `build` passa; ≥ 12 testes novos; suíte inteira verde
 **Tests**: widget (rota)
 **Gate**: build
 **Commit**: `feat(montar): liga as rotas de montar à porta de edição`
