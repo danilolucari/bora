@@ -1,5 +1,4 @@
 
-import 'package:bora/core/routing/placeholder_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
 import 'package:bora/features/home/domain/festa_repository.dart';
@@ -8,6 +7,7 @@ import 'package:bora/features/home/presentation/pages/home_page.dart';
 import 'package:bora/features/home/presentation/widgets/arquivo_de_festas.dart';
 import 'package:bora/features/home/presentation/widgets/card_da_festa.dart';
 import 'package:bora/features/home/presentation/widgets/comecar_outra.dart';
+import 'package:bora/features/montar/presentation/pages/montar_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -74,7 +74,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(
-          find.byKey(PlaceholderPage.keyFor('montar')),
+          find.byKey(MontarPage.pageKey),
           findsOneWidget,
           reason: 'é o único caminho adiante de quem acabou de se cadastrar — '
               'presente mas inerte seria pior que ausente',

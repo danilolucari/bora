@@ -7,6 +7,7 @@ import '../../features/home/data/festa_repository_em_memoria.dart';
 import '../../features/home/domain/festa_repository.dart';
 import '../autenticacao/autenticacao.dart';
 import '../autenticacao/dados/firebase_autenticacao_repository.dart';
+import '../festas/festas.dart';
 import '../observability/app_logger.dart';
 import '../routing/app_router.dart';
 
@@ -58,6 +59,20 @@ Future<void> configureDependencies({
     dispose: (repositorio) => repositorio.dispose(),
   );
 
+  // A **segunda porta sobre a mesma instância** (AD-029): a Home lê a lista,
+  // `montar` cria e grava. Sem `dispose`: quem detém o ciclo de vida do store
+  // é a porta de leitura, que já o registra com `dispose` — fechar o mesmo
+  // controller duas vezes lançaria.
+  //
+  // O `as` é a expressão honesta de "é o mesmo objeto": `FestaRepositoryEmMemoria`
+  // implementa as duas portas, e resolver por aqui é o que garante que criar
+  // um rolê em montar aparece na Home. Um duplo **só de leitura** injetado por
+  // [festasFactory] continua servindo a Home; quem o injetar e depois abrir
+  // `/roles/novo` é que descobre, alto, que faltou a metade de escrita.
+  getIt.registerLazySingleton<FestaEmEdicaoRepository>(
+    () => getIt<FestaRepository>() as FestaEmEdicaoRepository,
+  );
+
   // Deixou de ser tear-off: o roteador agora exige a porta de sessão (AD-017),
   // e resolvê-la aqui dentro mantém a construção preguiçosa.
   getIt.registerLazySingleton<GoRouter>(
@@ -65,6 +80,7 @@ Future<void> configureDependencies({
         () => buildAppRouter(
               autenticacao: getIt<AutenticacaoRepository>(),
               festas: getIt<FestaRepository>(),
+              festasEmEdicao: getIt<FestaEmEdicaoRepository>(),
               logger: getIt<AppLogger>(),
             ),
   );

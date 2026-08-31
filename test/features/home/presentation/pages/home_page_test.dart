@@ -5,6 +5,7 @@ import 'package:bora/features/home/domain/resumo_de_festa.dart';
 import 'package:bora/features/home/presentation/pages/home_page.dart';
 import 'package:bora/features/home/presentation/widgets/card_da_festa.dart';
 import 'package:bora/features/home/presentation/widgets/comecar_outra.dart';
+import 'package:bora/features/montar/presentation/pages/montar_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -144,7 +145,7 @@ void main() {
             'afirmar a tela deixaria passar o destino errado — e é aqui que o '
             '`id` de `ResumoDeFesta` prova que serve para alguma coisa',
       );
-      expect(find.byKey(PlaceholderPage.keyFor('montar')), findsOneWidget);
+      expect(find.byKey(MontarPage.pageKey), findsOneWidget);
       expect(find.byKey(HomePage.pageKey), findsNothing);
     });
 
@@ -236,7 +237,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.byKey(PlaceholderPage.keyFor('montar'), skipOffstage: false),
+        find.byKey(MontarPage.pageKey, skipOffstage: false),
         findsOneWidget,
         reason: '`skipOffstage: false` é o que discrimina: com `push`, a '
             'segunda cópia empilhada fica **fora de tela** e o findsOneWidget '

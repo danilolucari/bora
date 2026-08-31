@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/home/domain/festa_repository.dart';
 import '../autenticacao/autenticacao.dart';
+import '../festas/festas.dart';
 import '../observability/app_logger.dart';
 
 import '../../features/convidado/presentation/pages/convidado_page.dart';
@@ -32,6 +33,16 @@ import 'routes.dart';
 // `/roles/:festaId/lista`.
 const String _festaPattern = '/roles/:${Routes.paramFestaId}';
 
+// SPEC_DEVIATION (E-4): o `design.md` da fundação desenha o roteador falando
+// só em telas, e as duas rotas de montar montavam `const MontarPage()` —
+// descartando o `:festaId` da URL. Com isso `/roles/novo` e
+// `/roles/:festaId/montar` renderizavam exatamente a mesma tela, e MONT-16 e
+// MONT-17 eram impossíveis.
+// Reason: a tela precisa do id da rota e da porta de escrita (AD-029), e a
+// porta chega **pelo roteador**, como a de sessão chega à `EntrarPage` e a de
+// leitura à `HomePage` — resolver `getIt` dentro da página faria todo teste de
+// rota configurar DI só para montar uma tela.
+
 /// Monta a tabela de rotas do app.
 ///
 /// Três zonas: a pública (sem shell e sem autenticação), o destino de erro, e o
@@ -45,6 +56,7 @@ const String _festaPattern = '/roles/:${Routes.paramFestaId}';
 GoRouter buildAppRouter({
   required AutenticacaoRepository autenticacao,
   required FestaRepository festas,
+  required FestaEmEdicaoRepository festasEmEdicao,
   required AppLogger logger,
   String initialLocation = Routes.roles,
 }) {
@@ -98,7 +110,10 @@ GoRouter buildAppRouter({
           // palavra reservada da rota, não um id de festa.
           GoRoute(
             path: Routes.novoRole,
-            builder: (context, state) => const MontarPage(),
+            builder: (context, state) => MontarPage(
+              festas: festasEmEdicao,
+              logger: logger,
+            ),
           ),
           GoRoute(
             path: _festaPattern,
@@ -110,7 +125,11 @@ GoRouter buildAppRouter({
             routes: [
               GoRoute(
                 path: 'montar',
-                builder: (context, state) => const MontarPage(),
+                builder: (context, state) => MontarPage(
+                  festaId: state.pathParameters[Routes.paramFestaId],
+                  festas: festasEmEdicao,
+                  logger: logger,
+                ),
               ),
               StatefulShellRoute.indexedStack(
                 builder: (context, state, navigationShell) =>

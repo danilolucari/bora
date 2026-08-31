@@ -1,5 +1,6 @@
 import 'package:bora/app.dart';
 import 'package:bora/core/autenticacao/autenticacao.dart';
+import 'package:bora/core/festas/festas.dart';
 import 'package:bora/core/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
@@ -38,6 +39,7 @@ Future<FakeAutenticacaoRepository> abrirApp(
   String location, {
   UsuarioLogado? sessao,
   FestaRepository? festas,
+  FestaEmEdicaoRepository? festasEmEdicao,
 }) async {
   final autenticacao = FakeAutenticacaoRepository(sessaoInicial: sessao);
   addTearDown(autenticacao.dispose);
@@ -49,9 +51,17 @@ Future<FakeAutenticacaoRepository> abrirApp(
   final repositorio = festas ?? FestaRepositoryEmMemoria();
   addTearDown(repositorio.dispose);
 
+  // A porta de escrita é a **mesma instância**, quando o duplo de leitura a
+  // implementa — é o caso do store em memória, e é o que faz "criar em montar
+  // aparece na Home" valer também no teste de ponta a ponta (AD-029). Um duplo
+  // só-leitura, como o `FestaRepositoryQueFalha`, ganha um store próprio: com
+  // `default` em vez de parâmetro obrigatório, nenhum teste existente muda.
+  final emEdicao = festasEmEdicao ?? _portaDeEdicao(repositorio);
+
   final router = buildAppRouter(
     autenticacao: autenticacao,
     festas: repositorio,
+    festasEmEdicao: emEdicao,
     logger: RecordingAppLogger(),
     initialLocation: location,
   );
@@ -62,6 +72,19 @@ Future<FakeAutenticacaoRepository> abrirApp(
   await tester.pumpAndSettle();
 
   return autenticacao;
+}
+
+/// A porta de escrita de [repositorio], ou um store próprio quando ele só
+/// sabe ler.
+FestaEmEdicaoRepository _portaDeEdicao(FestaRepository repositorio) {
+  if (repositorio is FestaEmEdicaoRepository) {
+    return repositorio as FestaEmEdicaoRepository;
+  }
+
+  final proprio = FestaRepositoryEmMemoria();
+  addTearDown(proprio.dispose);
+
+  return proprio;
 }
 
 /// Uma sessão qualquer, para os testes que só precisam de "está logado".
