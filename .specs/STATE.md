@@ -310,6 +310,19 @@ A Phase 1 fechou **quatro das sete linhas** da tabela de bloqueio antiga: `lib/c
 `FestaRepositoryEmMemoria` sobre a segunda porta, `rotuloDeQuantidade` e `ResumoDeFesta.composicao`.
 **A spec 06 `lista` está desbloqueada.**
 
+### ⏸️ PAUSA POR COTA — 2026-08-31, sessão (5h) em 97%
+
+O protocolo de pausa disparou (limite 85%). **Nada ficou pela metade**: árvore limpa em `a812ffb`,
+1528 testes verdes, `flutter analyze` limpo, todas as 24 tasks e as 4 fixes commitadas.
+
+Um Verifier de re-verificação **chegou a ser despachado** pouco antes de a leitura saltar de 75%
+para 97%; ele quase certamente morreu de 429 sem escrever nada. **Confira `git status` e
+`.specs/features/montar/validation.md` ao retomar**: se o arquivo ainda descrever os 4 gaps como
+abertos, a re-verificação não aconteceu e é ela o próximo passo. O Verifier não toca código de
+produto, então uma morte dele não põe nada em risco.
+
+Reset da janela de 5h: **2026-08-31 19:19:59 BRT**. Retomada agendada para **19:29:59**.
+
 ### ⏭️ O único passo que falta antes do merge
 
 **Re-despachar o Verifier** (agente fresco, autor ≠ verificador) para confirmar que os 4 gaps
