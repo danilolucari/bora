@@ -266,139 +266,150 @@ CVD-31 AC7 manda. Entram no corpo da AD-033.
 
 ## Handoff
 
-> **SNAPSHOT — 2026-08-31**, escrito ao ser interrompido por **limite semanal de cota (HTTP 429)**
-> no meio do Execute de `montar`. Nada ficou pela metade: a árvore está limpa e a Phase 1 está
-> inteira commitada. O que está abaixo de "Histórico — sessão do M0" é história, não estado corrente.
+> **SNAPSHOT — 2026-08-31**, escrito ao ser interrompido pelo **limite da janela de 5h (HTTP 429)**
+> no meio do Execute de `montar`, com **19 das 24 tasks feitas**. Nada ficou pela metade: a árvore
+> está limpa e cada task fechada tem seu commit. O que está abaixo de "Histórico — sessão do M0" é
+> história, não estado corrente.
 
 ### Onde o projeto está
 
-**O Execute de `montar` começou** — é o primeiro código novo desde o merge de `home`. A branch
-`feature/montar` existe e tem **a Phase 1 completa: T1..T5, cinco commits atômicos**.
+**O Execute de `montar` está em 19/24**, na branch `feature/montar` — é o primeiro código novo desde
+o merge de `home`.
 
 | Spec | Specify | Design | Tasks | Execute | Verifier |
 |---|---|---|---|---|---|
 | 00..04 (`fundacao`, `design-system`, `calculo`, `entrar`, `home`) | ✅ | ✅ | ✅ | ✅ | ✅ **PASS** |
-| 05 `montar` | ✅ | ✅ | ✅ 24 tasks | 🟡 **5/24 — Phase 1 feita** | ⬜ |
-| 06 `lista` | ✅ | ✅ | ✅ 27 tasks | ⬜ desbloqueada em parte (ver abaixo) | ⬜ |
+| 05 `montar` | ✅ | ✅ | ✅ 24 tasks | 🟡 **19/24 — falta T20..T24** | ⬜ |
+| 06 `lista` | ✅ | ✅ | ✅ 27 tasks | ⬜ | ⬜ |
 | 07..10 (`galera`, `convite`, `convidado`, `custos`) | ✅ | ✅ | ⬜ | ⬜ | ⬜ |
 
-**Baseline conferida hoje, não herdada** (na `feature/montar`, com exit code conferido):
-`flutter test` → **1206 testes verdes** (main tinha 1137, +69); `flutter analyze` → **zero issues**;
-`git status` limpo.
+**Baseline conferida por mim, não herdada do worker** (na `feature/montar`, exit code conferido):
+`flutter test` → **1442 testes verdes** (main tinha 1137, **+305**); `flutter analyze` → **zero
+issues**; `git status` limpo em `0649b4f`.
 
-### O que a Phase 1 entregou — e o que ela destravou
+### O que já está feito — Phases 1 a 6 (parcial)
 
-Branch `feature/montar`, cinco commits sobre `fc09a76`:
-
-| Task | Commit | O que entrou |
+| Fase | Tasks | O que entregou |
 |---|---|---|
-| T1 | `7a2811f` | **AD-029 registrada** no `## Decisions` (6 campos, `active`). A tabela de reserva de AD deixou de anunciar como proposta o que virou log ativo. |
-| T2 | `8559855` | `lib/core/festas/`: `FestaEmEdicao` (`copyWith`, `==`, `hashCode` à mão, **sem `id`**) + barrel `festas.dart`, com varredura de import policiando a camada. +13 testes |
-| T3 | `dea009e` | Porta `FestaEmEdicaoRepository` (`observar`/`criar`/`salvar`, sem `dispose`) + `ResumoDeFesta.composicao` aditiva (emenda E-3). +15 testes |
-| T4 | `b681150` | `FestaRepositoryEmMemoria` implementa **as duas portas** sobre o mesmo store (emenda E-2). +18 testes |
-| T5 | `2f28f50` | `rotuloDeQuantidade` em `core/calculo/formatacao/` + export no barrel. +23 testes |
+| 1 | T1–T5 | **AD-029** gravada · `lib/core/festas/` (`FestaEmEdicao` + porta `FestaEmEdicaoRepository` + barrel) · `FestaRepositoryEmMemoria` sobre **as duas** portas · `ResumoDeFesta.composicao` · `rotuloDeQuantidade` |
+| 2 | T6–T8 | `SecaoDaMontagem`/`chipsPorSecao`/`secaoDe` · `proximoSabado` + `rotuloDeSabado` (relógio injetado) · `rascunhoInicial` com os 7 itens de RN-30 |
+| 3 | T9–T11 | `MontarBloc` — **o único ponto do app que chama a calculadora** · porta de edição (rascunho não grava; 1ª mudança cria) · gravação single-flight com coalescência e caminho de falha |
+| 4 | T12–T15 | `MontarTextos` (copy literal) · `CardDeContagem` · `SecaoDeChips` + `SecaoDeDuracao` · `FormularioDeMontagem` (as 5 seções escritas **uma vez só** — é o que faz W-R1 ser estrutural) |
+| 5 | T16–T18 | `CabecalhoDoRole` · `RodapeDoCusto` · **`MontarCompacto` — T-03 inteiro** |
+| 6 | **T19 só** | `ListaViva` — categorias com subtotal de `totalExato`, rolando em 330px |
 
-Isso fecha **quatro das sete linhas** da tabela de bloqueio da sessão anterior: `lib/core/festas/`,
-`FestaRepositoryEmMemoria` sobre a segunda porta, `rotuloDeQuantidade` e `ResumoDeFesta.composicao`.
-As specs 06 e 07 deixam de estar bloqueadas **por compilação** — seguem bloqueadas por dependência
-de comportamento, porque a tela de `montar` ainda não existe.
+**O aceite de UC-03 está provado em duas camadas**, e da forma forte — o estado de RN-30 é alcançado
+**despachando os eventos dos steppers**, não montando composição à mão:
 
-### ⛔ Por que parou
+- bloc: `test/features/montar/presentation/bloc/montar_bloc_test.dart:162` — `closeTo(210.6, 0.001)` e `MoneyFormatter.reais(...) == 'R$ 211'`; `:173` — `porCabeca` ≈ 30,0857 → `'R$ 30'`
+- tela T-03: `test/features/montar/presentation/widgets/montar_compacto_test.dart:169` — `find.text('R$ 211')` e `find.text('≈ R$ 30 / cabeça')` na árvore
 
-O batch worker da Phase 2 morreu na **primeira chamada de API**, com
-`HTTP 429 — You've hit your weekly limit`. Não escreveu nada: `git status` limpo, `git log` em
-`2f28f50`. **Não é falha de código nem de teste.**
+A Phase 1 fechou **quatro das sete linhas** da tabela de bloqueio antiga (`lib/core/festas/`,
+`FestaRepositoryEmMemoria` sobre a segunda porta, `rotuloDeQuantidade`, `ResumoDeFesta.composicao`).
 
-O script `.claude/scripts/cota.py` agora devolve **`INCERTO`**: o `cachedUsageUtilization` sumiu do
-`~/.claude.json` (e o script quebra com `KeyError: 'cache_idade_min'` nesse caminho — bug pequeno,
-o diagnóstico já sai antes do traceback). **Não dá para medir a cota daqui.** Quem retomar deve
-pedir `/usage` ao usuário antes de despachar worker, em vez de decidir no escuro.
+### ⛔ Por que parou, e o que falta
 
-⚠️ **Data do reset a conferir:** a mensagem do 429 dizia *"resets Aug 30, 6am (America/Sao_Paulo)"*,
-mas a sessão corria em **2026-08-31** — ou seja, a data anunciada já tinha passado. Não confie nela;
-confirme com `/usage`.
+O batch worker da Phase 6+7 morreu com `HTTP 429 — You've hit your session limit · resets 2:10pm`,
+**exatamente ao commitar a T19**. O commit `74d7160` entrou; o que não entrou foi a marcação no
+plano, feita depois à mão em `0649b4f` após conferir que os nove critérios estão cobertos em
+`lista_viva_test.dart` (+17 testes, o mínimo pedido era 14). **Não é falha de código nem de teste.**
 
-### Próximo passo, em ordem
+Antes disso, na mesma sessão, o worker da Phase 2 já tinha morrido por **limite semanal** sem
+escrever nada. Os dois casos foram absorvidos sem perda pelo commit atômico por task.
 
-1. **Retomar o Execute de `montar` na T6**, na branch `feature/montar`. Restam **19 tasks**:
+**Faltam 5 tasks**, todas em `.specs/features/montar/tasks.md`:
 
-   | Batch | Fases | Tasks | O que é |
-   |---|---|---|---|
-   | 2 | Phase 2 + 3 | T6–T11 | domínio de `montar` (seções, `proximoSabado`, `rascunhoInicial`) + o `MontarBloc` |
-   | 3 | Phase 4 + 5 | T12–T18 | widgets do formulário + T-03, a tela compacta |
-   | 4 | Phase 6 + 7 | T19–T24 | W-03, a tela expandida + página, rota e o guard da fórmula |
+| Task | O que é |
+|---|---|
+| T20 | `RailDoCusto` — o rail sticky de W-03 |
+| T21 | `MontarExpandido` — W-03 inteiro. **É a dona do `larguraMaxima` (360px)** que a T14 deixou deliberadamente não implementado em `SecaoDeDuracao`, para não deixar parâmetro sem uso |
+| T22 | `MontarPage` — bloc, responsivo, navegação e toast. É quem passa `rascunhoInicial(hoje: DateTime.now())` |
+| T23 | Fiação de rota e injeção (E-4, E-5). Rota nova ⇒ destino afirmado por `rotaAtual()`, **não** pelo widget montado (AD-014) |
+| T24 | **O guard que impede a fórmula de vazar** para a apresentação (MONT-08) |
 
-   O empacotamento está no `## Execution Plan` de `.specs/features/montar/tasks.md` e foi
-   **aprovado pelo usuário** nesta sessão (4 batch workers sequenciais, branch `feature/montar`).
-2. **Verifier independente** ao fim da T24 (autor ≠ verificador, evidence-or-zero, sensor de
-   discriminação), depois merge local `--no-ff` em `main`.
-3. Só então `lista` → `galera` → `convite` → `convidado` → `custos`.
+Depois da T24: conferir a seção `## Success Criteria da feature` do `tasks.md`, rodar o **Verifier
+independente** (autor ≠ verificador, evidence-or-zero, sensor de discriminação) e só então merge
+local `--no-ff` em `main`.
 
-### Herdado do Batch 1 — o que quem escrever a T6+ precisa saber
+### Refinamentos de design decididos durante o Execute — não "consertar" adiante
 
-- **`ResumoDeFesta.composicao` é getter sobre campo privado nulo**, não campo com default. O
-  `design.md` §6.3 desenhou `final ComposicaoDaFesta composicao;` com valor default, e isso **não
-  compila**: default de parâmetro tem de ser constante e `ContagemDePessoas` não é `const` (o
-  construtor valida). Há `// SPEC_DEVIATION` no arquivo. O contrato público ficou idêntico ao do
-  design e o `const ResumoDeFesta(...)` sobreviveu — que era a condição para a suíte da spec 04
-  rodar intacta. Nenhum teste pré-existente foi editado.
-- **Primeira supressão de lint do projeto**: `// ignore: prefer_initializing_formals` em
-  `resumo_de_festa.dart:32`, comentada. A sugestão do lint (`this._composicao`) é impossível —
-  parâmetro nomeado não pode começar com `_`. **Decisão do usuário pendente:** aceitar ou redesenhar.
-- **`ResumoDeFesta` não tem `copyWith`** (fora do escopo da T4), então `salvarFesta` reconstrói o
-  registro campo a campo — um campo novo na entidade seria silenciosamente descartado ali.
-  Candidato a task própria.
-- **Gap de precisão de spec na T5**, declarado no doc do arquivo: a spec-fonte só escreve
-  quantidade abreviada (`Pão 4 un`, `Refri 2 gf`, em RN-30) e o `design.md` §7.2 dá quatro exemplos
-  (`kg`, `latas`, `garrafas`, `kit`). Os nomes de `unidade`, `litro` e `saco` seguiram o mesmo padrão
-  (substantivo pluralizado); `kg` não pluraliza.
-- **Varredura da T2 ajustada durante a própria task**: a regra original proibia *qualquer* import em
-  `core/festas/dominio/` fora do barrel de `core/calculo`, o que barraria o irmão
-  `festa_em_edicao.dart` de que a porta da T3 precisa. Virou "sai da camada" (nada de `features/**`,
-  Flutter, Firebase) e o sensor foi **fortalecido**, não enfraquecido: o infrator plantado inclui
-  `dart:ui` e um irmão legítimo, afirmando 3 violações e o irmão não acusado.
+- **O rascunho entra no bloc por parâmetro (`inicial:`)**, em vez do `rascunhoInicial(hoje: DateTime.now())`
+  interno que o `design.md` §7.3 desenha. Põe o relógio na borda, como em `data_do_role.dart`. Quem
+  injeta é a T22.
+- **`MontarState.salvamentos` é contador, não `bool`** — com booleano, dois "SALVAR ROLÊ" seguidos sem
+  mudança emitiriam o mesmo estado e o segundo toque ficaria sem toast.
+- **`ResumoDeFesta.composicao` é getter sobre campo privado nulo**, não campo com default: default de
+  parâmetro tem de ser constante e `ContagemDePessoas` não é `const`. Há `// SPEC_DEVIATION` no
+  arquivo; o contrato público é o do design e o `const ResumoDeFesta(...)` sobreviveu.
+- **Varredura da T2 ajustada durante a própria task**: virou "sai da camada" (nada de `features/**`,
+  Flutter, Firebase) em vez de "só o barrel de calculo", que barraria o irmão legítimo. O sensor foi
+  **fortalecido**, não enfraquecido.
 
-### Regras operacionais que custaram caro para aprender — repassar a todo worker
+### Decisões do usuário pendentes — nenhuma bloqueia o Execute
+
+1. **`// ignore: prefer_initializing_formals`** em `resumo_de_festa.dart:32`, a **primeira supressão de
+   lint do projeto**. A sugestão do lint (`this._composicao`) é impossível: parâmetro nomeado não pode
+   começar com `_`. Aceitar ou redesenhar.
+2. **"Confirmar" o nome/data do rolê virou "sair do campo"** (T16): `BoraTextField` não expõe callback
+   de submissão e a spec 05 não tem licença para mexer no design system. Consequência declarada e
+   testada: nada digitado se perde, e edição que não muda nada **não** emite evento (senão encostar no
+   nome de um rascunho criaria a festa por MONT-17). Enter confirmando é emenda no `BoraTextField`.
+3. **`"1 PESSOAS"`** — W-03 escreve `{N} PESSOAS` e não dá forma singular; o literal da spec foi
+   mantido em vez de inventar plural. Uma linha para corrigir se quiser.
+4. **`ResumoDeFesta` não tem `copyWith`** (fora do escopo da T4), então `salvarFesta` reconstrói o
+   registro campo a campo — um campo novo na entidade seria silenciosamente descartado ali.
+
+### Gaps de precisão de spec declarados no código (todos documentados no arquivo que os carrega)
+
+Rótulos de `unidade`/`litro`/`saco` em `rotuloDeQuantidade` (a spec só dá `kg`, `latas`, `garrafas`,
+`kit`) · dia de um dígito sem zero à esquerda (`SÁB · 2 JAN`) · `hora`/`local` do rascunho nascem
+vazios (previsto no design §6.6) · falha de gravação sem copy na tela (previsto no design §10) ·
+placeholders de nome/data em minúsculas · o "←" do header de T-03.
+
+### Regras operacionais que custaram caro — repassar a todo worker
 
 - `export PATH="$PATH:/c/SDKs/flutter/bin"` **em cada chamada** do Bash; env não persiste.
 - **Conferir o exit code do gate**: `flutter test; echo "exit=$?"`. `flutter test | tail` engole o
   código de saída e isso já produziu um commit com gate vermelho neste projeto.
+- **Ao amarrar componente a token, compare com o token, nunca com o literal** (lição L-008).
 - Commit atômico por task, assunto em português, `RN-xx`/`UC-xx`/`MONT-xx` **no corpo**.
-- O número canônico de `montar` é **R$ 211 / ≈R$ 30 por cabeça**, sem essenciais. O R$ 271/≈R$ 45
-  por adulto é da tela Lista e os dois **não se unificam**.
+- O número canônico de `montar` é **R$ 211 / ≈R$ 30 por cabeça**, sem essenciais. O R$ 271/≈R$ 45 por
+  adulto é da tela Lista e os dois **não se unificam**.
+- **Nenhum componente novo de design system foi criado** em `montar` — o catálogo da spec 01 bastou.
+  Se um worker sentir falta de um, é para reportar, não inventar.
 
 ### Pendências herdadas que ninguém deve "consertar" adiante
 
-Continuam valendo, sem alteração nesta sessão: `fimPrevisto` nasce sem quem o preencha
-(`custos` L-1) · `ItemDeLista.quemLeva` só ganha origem na spec 08 e escritor na 09 · homônimos
-compartilham contribuição e itens (`convidado` D-9, não corrigível sem reescrever os Testes A e B
-de RN-16) · `permissoes.dart` e `urlDoConvite` ficam em `features/galera/` por AD-031 · o valor por
-cabeça do flyer não se move quando alguém confirma (`convidado` A-21, está correto) · AD-024 e
-AD-028 seguem de pé, com a ressalva de exposição pública.
+Sem alteração nesta sessão: `fimPrevisto` nasce sem quem o preencha (`custos` L-1) ·
+`ItemDeLista.quemLeva` só ganha origem na spec 08 e escritor na 09 · homônimos compartilham
+contribuição e itens (`convidado` D-9) · `permissoes.dart` e `urlDoConvite` ficam em
+`features/galera/` por AD-031 · o valor por cabeça do flyer não se move quando alguém confirma
+(`convidado` A-21, está correto) · AD-024 e AD-028 seguem de pé.
 
-Abertas de antes, ainda sem decisão do usuário: **FUND-17 AC4** (spec nomeia "handler global", a
-implementação registra pelo `try/catch` do boot) e a **premissa A-16** de `calculo`
-(`progressoDeQuitacao` sem nenhuma linha devolve `1.0`).
+Abertas de antes: **FUND-17 AC4** e a **premissa A-16** de `calculo` (`progressoDeQuitacao` sem
+nenhuma linha devolve `1.0`).
 
 ### Infra e ambiente
 
-- **Sem `gh` CLI na máquina** — merges locais com `--no-ff`, não PR. A `main` local ainda **não foi
-  empurrada**, e agora `feature/montar` também não.
+- **Sem `gh` CLI** — merges locais com `--no-ff`, não PR. A `main` local **não foi empurrada**, e
+  `feature/montar` também não.
 - Flutter 3.47.1 / Dart 3.13.1, SDK em `C:\SDKs\flutter`. `flutter run -d chrome` **falha** aqui
   (handshake do debug service com o Chrome 151); use `-d web-server`.
-- **Conferência visual pendente desde 2026-08-26** para T-01, W-01, T-02 e W-02 — não depende de
-  cota de agente, depende de alguém abrir o app.
-- `.claude/worktrees/` aparece como não rastreado no `git status`; não é trabalho pendente.
+- **Conferência visual pendente** para T-01, W-01, T-02, W-02 e agora T-03. O `tasks.md` manda pular
+  e anotar enquanto a captura em 390×820 estiver cortando. As telas estão verificadas por **teste de
+  widget**, não por olho — testes provam token, não aparência.
+- `.claude/scripts/cota.py` fica `INCERTO` logo após o reset da janela, com o cache da janela
+  anterior. Não é o script quebrado: é cache velho. Peça `/usage` ao usuário nesse estado.
 
 ### Como retomar
 
 ```bash
 export PATH="$PATH:/c/SDKs/flutter/bin"
 cd /c/repos/lucari/bora
-git checkout feature/montar        # deve estar em 2f28f50, árvore limpa
-flutter analyze && flutter test    # esperado: zero issues, 1206 verdes
-# pedir /usage ao usuário ANTES de despachar batch worker — cota.py está INCERTO
-# retomar em .specs/features/montar/tasks.md, task T6
+git checkout feature/montar        # deve estar em 0649b4f, árvore limpa
+flutter analyze && flutter test    # esperado: zero issues, 1442 verdes
+# retomar em .specs/features/montar/tasks.md, task T20 (fases 6+7, 5 tasks)
+# depois da T24: Success Criteria + Verifier independente + merge --no-ff em main
 ```
 
 
