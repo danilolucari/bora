@@ -602,13 +602,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] A ordem dos blocos é afirmada por posição na árvore, não por presença
-- [ ] O card-herói exibe `SAI POR · {N} PESSOAS · {duração}`, o total e `dividido dá R$ {x} por cabeça` — todos os valores por `MoneyFormatter` / `rotuloDeDuracao`
-- [ ] Duração 10h exibe `Dia todo`, não `10 horas` (A-15)
-- [ ] `SALVAR ROLÊ` é ação secundária e emite sem navegar; `MANDAR NO GRUPO 📲` emite a saída
-- [ ] O rail tem 370px e **não rola com a página** — sticky por construção
-- [ ] Zero conta e zero `R$` literal no arquivo
-- [ ] Gate `full` passa; ≥ 10 testes novos
+- [x] A ordem dos blocos é afirmada por posição na árvore, não por presença
+- [x] O card-herói exibe `SAI POR · {N} PESSOAS · {duração}`, o total e `dividido dá R$ {x} por cabeça` — todos os valores por `MoneyFormatter` / `rotuloDeDuracao`
+- [x] Duração 10h exibe `Dia todo`, não `10 horas` (A-15)
+- [x] `SALVAR ROLÊ` é ação secundária e emite sem navegar; `MANDAR NO GRUPO 📲` emite a saída
+- [x] O rail tem 370px e **não rola com a página** — sticky por construção
+- [x] Zero conta e zero `R$` literal no arquivo
+- [x] Gate `full` passa; ≥ 10 testes novos
 
 **Tests**: widget
 **Gate**: full
