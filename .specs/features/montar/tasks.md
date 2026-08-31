@@ -503,12 +503,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Fora de edição mostra nome e data como texto; ao ser acionado, vira campo **na própria tela**, sem navegação e sem tela nova (A-03)
-- [ ] Confirmar emite o novo valor; o widget **não** guarda o valor como verdade — ele reflete o que recebe
-- [ ] Nome apagado por completo emite vazio, e é o bloc que devolve o default (a divisão de responsabilidade é afirmada nos dois lados)
-- [ ] Data editada é emitida em CAIXA ALTA
-- [ ] Sair do campo sem confirmar não perde o que foi digitado nem grava lixo — comportamento declarado e testado
-- [ ] Gate `full` passa; ≥ 8 testes novos
+- [x] Fora de edição mostra nome e data como texto; ao ser acionado, vira campo **na própria tela**, sem navegação e sem tela nova (A-03)
+- [x] Confirmar emite o novo valor; o widget **não** guarda o valor como verdade — ele reflete o que recebe
+- [x] Nome apagado por completo emite vazio, e é o bloc que devolve o default (a divisão de responsabilidade é afirmada nos dois lados)
+- [x] Data editada é emitida em CAIXA ALTA
+- [x] Sair do campo sem confirmar não perde o que foi digitado nem grava lixo — comportamento declarado e testado
+- [x] Gate `full` passa; ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
