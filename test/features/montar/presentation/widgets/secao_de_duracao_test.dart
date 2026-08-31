@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/design_system/support/font_loading.dart';
+import '../../../../support/cifrao_na_fonte.dart';
 
 Future<List<int>> _montar(
   WidgetTester tester, {
@@ -57,7 +58,7 @@ void main() {
   group('MONT-08 — o bloco de duração não faz conta', () {
     testWidgets('não escreve dinheiro: RN-13 é da camada de cálculo',
         (tester) async {
-      expect(File(_arquivoDaSecao).readAsStringSync(), isNot(contains(r'R$')));
+      expect(cifraoEm(File(_arquivoDaSecao).readAsStringSync()), isEmpty);
     });
   });
 

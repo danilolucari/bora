@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/design_system/support/font_loading.dart';
+import '../../../../support/cifrao_na_fonte.dart';
 
 /// O rail de W-03 tem 370px; a lista viva vive nessa largura.
 const double _larguraDoRail = 370;
@@ -370,7 +371,7 @@ void main() {
         'lib/features/montar/presentation/widgets/lista_viva.dart',
       ).readAsStringSync();
 
-      expect(fonte, isNot(contains(r'R$')));
+      expect(cifraoEm(fonte), isEmpty);
       expect(fonte, isNot(contains('.fold(')));
       expect(fonte, isNot(contains('.reduce(')));
       expect(fonte, isNot(contains('.sum')));

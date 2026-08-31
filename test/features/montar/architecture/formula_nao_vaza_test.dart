@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../core/design_system/support/font_loading.dart';
+import '../../../support/cifrao_na_fonte.dart';
 
 const String _diretorioDeMontar = 'lib/features/montar';
 
@@ -137,16 +138,26 @@ const List<RegraDaFronteira> regrasDaFronteira = [
   RegraDaFronteira('importa arquivo interno de core/calculo', _importaInterno),
 ];
 
-List<String> _escreveDinheiro(String fonte) =>
-    _ocorrenciasDe(semComentarios(fonte), [r'R$']);
+/// Regra 1, sobre as **duas** formas do cifrão na fonte — ver
+/// [formasDoCifraoNaFonte]. Procurar só a contígua deixava passar exatamente
+/// a forma que um infrator escreveria (`Text('R\$ …')`).
+List<String> _escreveDinheiro(String fonte) => cifraoEm(semComentarios(fonte));
 
+/// Regra 2, com a **família inteira** de arredondamento e conversão: quem quer
+/// o inteiro de RN-13 sem passar por `MoneyFormatter` chega lá por qualquer
+/// uma delas, e `.toInt(` é a mais curta.
 List<String> _arredonda(String fonte) => _ocorrenciasDe(codigoDe(fonte), [
       '.round(',
       '.floor(',
       '.ceil(',
       '.truncate(',
       '.roundToDouble(',
+      '.floorToDouble(',
+      '.ceilToDouble(',
+      '.truncateToDouble(',
+      '.toInt(',
       '.toStringAsFixed(',
+      '.toStringAsPrecision(',
     ]);
 
 List<String> _fazConta(String fonte) =>
@@ -238,6 +249,35 @@ void main() {
       expect(violacoes.single, contains('escreve R\$ na tela'));
     });
 
+    test('regra 1: a fonte como ela se escreve em Dart — com o cifrão '
+        'escapado — é acusada', () {
+      // Os três caracteres que estão **no disco** quando alguém escreve
+      // `Text('R\$ ${total}')`: `R`, barra invertida, `$`. É a única forma de
+      // pôr o cifrão numa string comum, e era por onde a regra 1 passava.
+      final violacoes = violacoesNaFonte(
+        r"Text('R\$ ${resultado.totalDosItens}');",
+        'infrator.dart',
+      );
+
+      expect(
+        violacoes.where((v) => v.contains('escreve R\$ na tela')),
+        hasLength(1),
+        reason: 'a varredura lê a fonte do disco, onde o cifrão está '
+            'escapado — não a string já desescapada',
+      );
+      expect(
+        violacoes.where((v) => v.contains('escreve R\$ na tela')).single,
+        contains('infrator.dart'),
+      );
+    });
+
+    test('regra 1: as duas formas do cifrão na fonte estão declaradas', () {
+      expect(formasDoCifraoNaFonte, hasLength(2));
+      expect(cifraoEm(r'const cifrao = "R\$";'), isNotEmpty);
+      expect(cifraoEm(r"const cifrao = r'R$';"), isNotEmpty);
+      expect(cifraoEm("Text(MoneyFormatter.reais(total));"), isEmpty);
+    });
+
     test('regra 2: o arredondamento próprio é acusado', () {
       for (final infrator in [
         'final v = total.round();',
@@ -245,7 +285,12 @@ void main() {
         'final v = total.ceil();',
         'final v = total.truncate();',
         'final v = total.roundToDouble();',
+        'final v = total.floorToDouble();',
+        'final v = total.ceilToDouble();',
+        'final v = total.truncateToDouble();',
+        'final v = total.toInt();',
         'final v = total.toStringAsFixed(2);',
+        'final v = total.toStringAsPrecision(3);',
       ]) {
         final violacoes = violacoesNaFonte(infrator, 'infrator.dart');
 

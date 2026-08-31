@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/design_system/support/font_loading.dart';
+import '../../../../support/cifrao_na_fonte.dart';
 
 /// A janela de referência de W-03.
 const Size _janelaExpandida = Size(1180, 800);
@@ -276,7 +277,7 @@ void main() {
         'lib/features/montar/presentation/widgets/rail_do_custo.dart',
       ).readAsStringSync();
 
-      expect(fonte, isNot(contains(r'R$')));
+      expect(cifraoEm(fonte), isEmpty);
       expect(fonte, isNot(contains('.round(')));
       expect(fonte, isNot(contains('.toStringAsFixed(')));
     });

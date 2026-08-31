@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/design_system/support/font_loading.dart';
+import '../../../../support/cifrao_na_fonte.dart';
 
 const String _arquivoDaSecao =
     'lib/features/montar/presentation/widgets/secao_de_chips.dart';
@@ -127,7 +128,7 @@ void main() {
 
     testWidgets('a seção de chips não escreve dinheiro — RN-13 é da camada',
         (tester) async {
-      expect(File(_arquivoDaSecao).readAsStringSync(), isNot(contains(r'R$')));
+      expect(cifraoEm(File(_arquivoDaSecao).readAsStringSync()), isEmpty);
     });
   });
 

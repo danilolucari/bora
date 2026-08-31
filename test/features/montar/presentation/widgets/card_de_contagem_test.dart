@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/design_system/support/font_loading.dart';
+import '../../../../support/cifrao_na_fonte.dart';
 
 const String _arquivoDoCard =
     'lib/features/montar/presentation/widgets/card_de_contagem.dart';
@@ -193,7 +194,7 @@ void main() {
 
     testWidgets('o card não escreve dinheiro — RN-13 é da camada',
         (tester) async {
-      expect(File(_arquivoDoCard).readAsStringSync(), isNot(contains(r'R$')));
+      expect(cifraoEm(File(_arquivoDoCard).readAsStringSync()), isEmpty);
     });
   });
 }

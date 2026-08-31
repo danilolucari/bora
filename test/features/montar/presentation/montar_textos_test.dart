@@ -5,6 +5,8 @@ import 'package:bora/features/montar/domain/secao_da_montagem.dart';
 import 'package:bora/features/montar/presentation/montar_textos.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../support/cifrao_na_fonte.dart';
+
 const String _arquivoDosTextos =
     'lib/features/montar/presentation/montar_textos.dart';
 
@@ -134,7 +136,7 @@ void main() {
     });
 
     test('o arquivo de copy não escreve dinheiro — RN-13 é da camada', () {
-      expect(File(_arquivoDosTextos).readAsStringSync(), isNot(contains(r'R$')));
+      expect(cifraoEm(File(_arquivoDosTextos).readAsStringSync()), isEmpty);
     });
   });
 

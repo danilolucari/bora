@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../core/design_system/support/font_loading.dart';
+import '../../../../support/cifrao_na_fonte.dart';
 
 const String _arquivoDoRodape =
     'lib/features/montar/presentation/widgets/rodape_do_custo.dart';
@@ -123,7 +124,7 @@ void main() {
 
     testWidgets('o rodapé não escreve dinheiro por conta própria',
         (tester) async {
-      expect(File(_arquivoDoRodape).readAsStringSync(), isNot(contains(r'R$')));
+      expect(cifraoEm(File(_arquivoDoRodape).readAsStringSync()), isEmpty);
     });
   });
 
