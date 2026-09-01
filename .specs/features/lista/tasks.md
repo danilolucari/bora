@@ -502,14 +502,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Os dois steppers renderizam com os rótulos literais `QUANTIDADE` e `PREÇO`
-- [ ] Incrementar e decrementar disparam os callbacks com o sinal correto (`+1` / `-1` passo) — o widget **não** calcula o novo valor
-- [ ] No piso de quantidade (um passo) o decremento é **inerte**: `onDecrementar` é `null` e o toque não dispara callback — teste que falha se a guarda sair
-- [ ] No piso de preço (R$ 1) idem
-- [ ] O valor exibido no stepper de preço vem de `MoneyFormatter`; o de quantidade, de `rotuloDeQuantidade`
-- [ ] Nenhuma aritmética no arquivo — o guard de T26 cobre, mas o teste desta task afirma o comportamento
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] Os dois steppers renderizam com os rótulos literais `QUANTIDADE` e `PREÇO`
+- [x] Incrementar e decrementar disparam os callbacks com o sinal correto (`+1` / `-1` passo) — o widget **não** calcula o novo valor
+- [x] No piso de quantidade (um passo) o decremento é **inerte**: `onDecrementar` é `null` e o toque não dispara callback — teste que falha se a guarda sair
+- [x] No piso de preço (R$ 1) idem
+- [x] O valor exibido no stepper de preço vem de `MoneyFormatter`; o de quantidade, de `rotuloDeQuantidade`
+- [x] Nenhuma aritmética no arquivo — o guard de T26 cobre, mas o teste desta task afirma o comportamento
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
