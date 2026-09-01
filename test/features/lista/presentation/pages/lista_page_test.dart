@@ -295,4 +295,50 @@ void main() {
       );
     });
   });
+
+  group('LIST-25 — o modo COMPRAR chega ao pedido', () {
+    testWidgets('a sheet aberta em COMPRAR pede só o que falta, e o subtotal '
+        'reflete só ele', (tester) async {
+      final duplo = PedidoFalsoDeTeste();
+      await _abrir(tester, pedidos: duplo);
+
+      await _irParaComprar(tester);
+      await tester.tap(find.byType(CheckboxDaLista).first);
+      await tester.pumpAndSettle();
+
+      final estado = _estado(tester);
+      final marcada = estado.festa!.composicao.noCarrinho.single;
+      final cobraveis = itensCobraveis(estado.resultado!.todosOsItens);
+      final soOQueFalta = subtotalDoQueFalta(cobraveis);
+
+      // Sem esta desigualdade o resto do teste não discriminaria nada: se o
+      // item marcado valesse 0, "só o que falta" e "a lista inteira" dariam o
+      // mesmo número e a sheet passaria nos dois modos.
+      expect(soOQueFalta, lessThan(subtotalDeItens(cobraveis)));
+
+      await tester.tap(find.byKey(RodapeDaLista.ctaKey));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.descendant(
+          of: find.byKey(ConteudoDoPedido.resumoKey),
+          matching: find.text(MoneyFormatter.reais(soOQueFalta)),
+        ),
+        findsOneWidget,
+        reason: 'UC-16 A2: o Subtotal do resumo é o do que falta, e quem diz '
+            'que é o modo COMPRAR é a página',
+      );
+
+      await tester.tap(find.byKey(ConteudoDoPedido.confirmarKey));
+      await tester.pumpAndSettle();
+
+      final enviado = duplo.enviados.single;
+      expect(enviado.subtotal, closeTo(soOQueFalta, 1e-9));
+      expect(
+        enviado.itens.map((item) => item.chave),
+        isNot(contains(marcada)),
+        reason: 'o item já no carrinho não vai no pedido',
+      );
+    });
+  });
 }
