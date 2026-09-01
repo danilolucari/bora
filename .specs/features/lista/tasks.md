@@ -556,13 +556,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `SizedBox(26, 26)`, borda 2px `BoraColors.ink`, `borderRadius: 0`
-- [ ] Desmarcado: fundo branco, sem ✓. Marcado: fundo verde `#0B6B3A`, ✓ branco
-- [ ] **Nenhum literal de cor no arquivo** — vem dos tokens, senão a varredura de cor da spec 01 morde
-- [ ] O teste compara com o **token**, nunca com o hexadecimal escrito no teste (L-008)
-- [ ] **Nenhum componente novo em `core/design_system/`** — teste de fronteira afirma que o arquivo mora na feature
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 5 testes novos
+- [x] `SizedBox(26, 26)`, borda 2px `BoraColors.ink`, `borderRadius: 0`
+- [x] Desmarcado: fundo branco, sem ✓. Marcado: fundo verde `#0B6B3A`, ✓ branco
+- [x] **Nenhum literal de cor no arquivo** — vem dos tokens, senão a varredura de cor da spec 01 morde
+- [x] O teste compara com o **token**, nunca com o hexadecimal escrito no teste (L-008)
+- [x] **Nenhum componente novo em `core/design_system/`** — teste de fronteira afirma que o arquivo mora na feature
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 5 testes novos
 
 **Tests**: widget
 **Gate**: full
