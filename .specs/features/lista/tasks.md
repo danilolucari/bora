@@ -606,15 +606,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] A ordem dos cinco corredores é a de RN-27 e **não depende do `index` do enum** — a ordem é da feature, declarada como lista literal, e um teste a afirma
-- [ ] A ordem é **estável**: marcar itens **não** reordena nada
-- [ ] Cada grupo exibe o rótulo em caixa alta e a contagem `{N} itens`
-- [ ] Corredor **sem item não renderiza** — teste com uma composição só de bebidas afirma que os outros quatro rótulos estão ausentes da árvore
-- [ ] Os itens fora de RN-11 caem no corredor do catálogo (T2): carnes em AÇOUGUE, suco/água/destilados em BEBIDAS, sal grosso e copos & pratos em MERCEARIA
-- [ ] O kit veggie de RN-21 cai em HORTIFRÚTI
-- [ ] Lista vazia renderiza **nenhum** grupo
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] A ordem dos cinco corredores é a de RN-27 e **não depende do `index` do enum** — a ordem é da feature, declarada como lista literal, e um teste a afirma
+- [x] A ordem é **estável**: marcar itens **não** reordena nada
+- [x] Cada grupo exibe o rótulo em caixa alta e a contagem `{N} itens`
+- [x] Corredor **sem item não renderiza** — teste com uma composição só de bebidas afirma que os outros quatro rótulos estão ausentes da árvore
+- [x] Os itens fora de RN-11 caem no corredor do catálogo (T2): carnes em AÇOUGUE, suco/água/destilados em BEBIDAS, sal grosso e copos & pratos em MERCEARIA
+- [x] O kit veggie de RN-21 cai em HORTIFRÚTI
+- [x] Lista vazia renderiza **nenhum** grupo
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 10 testes novos
 
 **Tests**: widget
 **Gate**: full
