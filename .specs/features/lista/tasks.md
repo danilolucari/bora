@@ -230,13 +230,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O doc declara o porquê: 🍽️ Copos & pratos **aparece** na lista e **não soma** (AD-010), e fica fora do total, do pedido (A-19) e da faixa real
-- [ ] `itensCobraveis` remove exatamente os itens com `entraNoTotal == false` e preserva a **ordem** dos demais
-- [ ] Lista vazia devolve vazio; lista sem nenhum item excluído devolve todos, na mesma ordem
-- [ ] Teste que afirma a exclusão de Copos & pratos **nas três superfícies** — total, faixa e subtotal do pedido — usando o predicado, não uma reimplementação
-- [ ] `totalExato(itensCobraveis(...))` não muda o resultado dos casos literais já verdes (RN-10: R$ 271 no padrão) — nenhum número da baseline se move
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 5 testes novos
+- [x] O doc declara o porquê: 🍽️ Copos & pratos **aparece** na lista e **não soma** (AD-010), e fica fora do total, do pedido (A-19) e da faixa real
+- [x] `itensCobraveis` remove exatamente os itens com `entraNoTotal == false` e preserva a **ordem** dos demais
+- [x] Lista vazia devolve vazio; lista sem nenhum item excluído devolve todos, na mesma ordem
+- [x] Teste que afirma a exclusão de Copos & pratos usando o predicado, não uma reimplementação: **total** e **subtotal do pedido** aqui (`totais_test.dart`); a terceira superfície, a **faixa**, é afirmada na T5, que é onde `faixaRealDaLista` nasce
+- [x] `totalExato(itensCobraveis(...))` não muda o resultado dos casos literais já verdes (RN-10: R$ 271 no padrão) — nenhum número da baseline se move
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 5 testes novos
 
 **Tests**: unit
 **Gate**: build
