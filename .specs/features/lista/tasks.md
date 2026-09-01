@@ -389,17 +389,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `QuantidadeAjustada(chave, passos)` e `PrecoAjustado(chave, passos)` produzem uma `ComposicaoDaFesta` nova → `calcular` → `faixaRealDaLista` → emite → `salvarFesta`. **Não existe segundo caminho de cálculo**
-- [ ] Os passos vêm do catálogo: **0,5 kg** nas carnes, **2 latas** na cerveja, **1** nos demais — afirmados contra `comPassoDeQuantidade`, nunca contra número copiado
-- [ ] O passo de preço é **R$ 1** e o mínimo **R$ 1**
-- [ ] **O piso é exercitado**: decrementar no mínimo **não** muda o estado — o teste falha se a guarda sair (item nº 1 da lista de verificação do Verifier)
-- [ ] Um ajuste move `valor` da linha, o subtotal, `totalComEssenciais`, `porAdulto` **e** `faixaReal` na **mesma** emissão — sem botão "calcular" (UC-04)
-- [ ] `resultado.temOverrides` vira `true` no primeiro ajuste e `false` quando o último é desfeito — é ele que T23/T24 leem para exibir o RESTAURAR
-- [ ] `OverridesRestaurados` zera **todos** de uma vez via `semOverrides()`, e o estado seguinte tem `temOverrides == false`
-- [ ] O override é gravado por `salvarFesta` a **cada** passo — afirmado contra a porta duplo, e é o que faz LIST-15 (sobrevive à navegação) ser verdade
-- [ ] Reconstruir o bloc sobre a mesma porta devolve os overrides aplicados — a prova de LIST-15 no nível do bloc
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] `QuantidadeAjustada(chave, passos)` e `PrecoAjustado(chave, passos)` produzem uma `ComposicaoDaFesta` nova → `calcular` → `faixaRealDaLista` → emite → `salvarFesta`. **Não existe segundo caminho de cálculo**
+- [x] Os passos vêm do catálogo: **0,5 kg** nas carnes, **2 latas** na cerveja, **1** nos demais — afirmados contra `comPassoDeQuantidade`, nunca contra número copiado
+- [x] O passo de preço é **R$ 1** e o mínimo **R$ 1**
+- [x] **O piso é exercitado**: decrementar no mínimo **não** muda o estado — o teste falha se a guarda sair (item nº 1 da lista de verificação do Verifier)
+- [x] Um ajuste move `valor` da linha, o subtotal, `totalComEssenciais`, `porAdulto` **e** `faixaReal` na **mesma** emissão — sem botão "calcular" (UC-04)
+- [x] `resultado.temOverrides` vira `true` no primeiro ajuste e `false` quando o último é desfeito — é ele que T23/T24 leem para exibir o RESTAURAR
+- [x] `OverridesRestaurados` zera **todos** de uma vez via `semOverrides()`, e o estado seguinte tem `temOverrides == false`
+- [x] O override é gravado por `salvarFesta` a **cada** passo — afirmado contra a porta duplo, e é o que faz LIST-15 (sobrevive à navegação) ser verdade
+- [x] Reconstruir o bloc sobre a mesma porta devolve os overrides aplicados — a prova de LIST-15 no nível do bloc
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: unit
 **Gate**: quick
