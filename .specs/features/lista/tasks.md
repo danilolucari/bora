@@ -581,13 +581,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] Tocar a linha **inteira** alterna o check (não só o quadradinho)
-- [ ] Marcada: ✓ branco sobre verde e a linha a **45%** de opacidade — a fração comparada com o token, não com `0.45` escrito no teste
-- [ ] Desmarcada: volta ao estado normal, opacidade cheia
-- [ ] O valor exibido não muda ao marcar — marcar é estado de compra, não de preço
-- [ ] Nenhuma barra de faixa e nenhum painel de override no modo COMPRAR
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 7 testes novos
+- [x] Tocar a linha **inteira** alterna o check (não só o quadradinho)
+- [x] Marcada: ✓ branco sobre verde e a linha a **45%** de opacidade — a fração comparada com o token, não com `0.45` escrito no teste
+- [x] Desmarcada: volta ao estado normal, opacidade cheia
+- [x] O valor exibido não muda ao marcar — marcar é estado de compra, não de preço
+- [x] Nenhuma barra de faixa e nenhum painel de override no modo COMPRAR
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 7 testes novos
 
 **Tests**: widget
 **Gate**: full
