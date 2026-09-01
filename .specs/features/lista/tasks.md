@@ -177,14 +177,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O campo é `required` — item novo sem corredor é **erro de compilação**, não item que some do agrupamento em runtime (é a razão da escolha A de §2.2)
-- [ ] Os 16 itens têm corredor, exatamente como a tabela do `design.md` §6.1: `acougue` = bovina, suina, frango · `hortifruti` = legumesParaGrelha · `padaria` = paoDeAlho · `bebidas` = refrigerante, suco, agua, cerveja, vodka, cachaca, whisky · `mercearia` = carvao, gelo, salGrosso, coposEPratos
-- [ ] **Teste de coerência**: para todo `PrecoDeMercado` com `chave != null`, `catalogoDeItens[chave]!.corredor == preco.corredor`; a falha **nomeia o item divergente**
-- [ ] O teste de coerência cobre as **8** chaves comuns e falha se qualquer uma for reclassificada só de um lado
-- [ ] Um teste afirma que **todo** `ChaveItem` tem entrada no catálogo com corredor — a cobertura dos 16 não depende de contagem à mão
-- [ ] O doc de `corredor.dart` deixa de declarar que o corredor dos itens fora de RN-11 "é decisão de `lista`" e passa a apontar para o catálogo
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 6 testes novos
+- [x] O campo é `required` — item novo sem corredor é **erro de compilação**, não item que some do agrupamento em runtime (é a razão da escolha A de §2.2)
+- [x] Os 16 itens têm corredor, exatamente como a tabela do `design.md` §6.1: `acougue` = bovina, suina, frango · `hortifruti` = legumesParaGrelha · `padaria` = paoDeAlho · `bebidas` = refrigerante, suco, agua, cerveja, vodka, cachaca, whisky · `mercearia` = carvao, gelo, salGrosso, coposEPratos
+- [x] **Teste de coerência**: para todo `PrecoDeMercado` com `chave != null`, `catalogoDeItens[chave]!.corredor == preco.corredor`; a falha **nomeia o item divergente**
+- [x] O teste de coerência cobre as chaves comuns e falha se qualquer uma for reclassificada só de um lado — **correção de contagem no Execute**: a tabela de RN-11 tem 8 linhas, mas só **7** têm `chave` (a 🌭 Linguiça toscana entra com `chave: null`, R-6), então são 7 as chaves comuns; o teste afirma as duas contagens
+- [x] Um teste afirma que **todo** `ChaveItem` tem entrada no catálogo com corredor — a cobertura dos 16 não depende de contagem à mão
+- [x] O doc de `corredor.dart` deixa de declarar que o corredor dos itens fora de RN-11 "é decisão de `lista`" e passa a apontar para o catálogo
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 6 testes novos
 
 **Tests**: unit
 **Gate**: build
