@@ -203,15 +203,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `noCarrinho` tem default `const {}` — **nenhum** call site existente quebra e nenhum teste existente é editado
-- [ ] `copyWith` preserva o campo não informado e substitui o informado, inclusive por `{}` vazio
-- [ ] **Igualdade profunda**: duas composições com o mesmo conjunto são `==`; trocar **um** elemento as separa; `hashCode` acompanha. Sem isso a supressão de eco de T11 não funciona (`design.md` §6.2 / §8.2)
-- [ ] `calcular` marca `ItemDeLista.noCarrinho = true` **exatamente** para os itens cuja chave está no conjunto, e `false` para os demais — o campo deixa de nascer sempre `false`
-- [ ] `subtotalDoQueFalta` deixa de ser código morto: teste que monta uma composição com 2 itens marcados e afirma que o subtotal do que falta **exclui** os dois e difere de `subtotalDeItens`
-- [ ] Chave **órfã** no conjunto (item que a seleção não produz) não cria item nem quebra: o edge case "item marcado some da lista" resolve sem código de limpeza
-- [ ] `calcular` com 0 pessoas continua devolvendo listas vazias, com ou sem conjunto preenchido
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 8 testes novos
+- [x] `noCarrinho` tem default `const {}` — **nenhum** call site existente quebra e nenhum teste existente é editado
+- [x] `copyWith` preserva o campo não informado e substitui o informado, inclusive por `{}` vazio
+- [x] **Igualdade profunda**: duas composições com o mesmo conjunto são `==`; trocar **um** elemento as separa; `hashCode` acompanha. Sem isso a supressão de eco de T11 não funciona (`design.md` §6.2 / §8.2)
+- [x] `calcular` marca `ItemDeLista.noCarrinho = true` **exatamente** para os itens cuja chave está no conjunto, e `false` para os demais — o campo deixa de nascer sempre `false`
+- [x] `subtotalDoQueFalta` deixa de ser código morto: teste que monta uma composição com 2 itens marcados e afirma que o subtotal do que falta **exclui** os dois e difere de `subtotalDeItens`
+- [x] Chave **órfã** no conjunto (item que a seleção não produz) não cria item nem quebra: o edge case "item marcado some da lista" resolve sem código de limpeza
+- [x] `calcular` com 0 pessoas continua devolvendo listas vazias, com ou sem conjunto preenchido
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: build

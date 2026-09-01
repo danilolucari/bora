@@ -7,6 +7,7 @@ import 'package:bora/core/calculo/dominio/papel_na_festa.dart';
 import 'package:bora/core/calculo/dominio/pessoa.dart';
 import 'package:bora/core/calculo/dominio/status_de_presenca.dart';
 import 'package:bora/core/calculo/regras/calculadora_da_festa.dart';
+import 'package:bora/core/calculo/regras/total_do_pedido.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Os chips do estado padrão do arquivo 03: bovina + frango + pão de alho +
@@ -27,6 +28,7 @@ ComposicaoDaFesta _composicao({
   List<Pessoa> pessoas = const [],
   Set<ChaveItem> itens = _chipsPadrao,
   Map<ChaveItem, OverrideDeItem> overrides = const {},
+  Set<ChaveItem> noCarrinho = const {},
 }) =>
     ComposicaoDaFesta(
       contagem:
@@ -35,6 +37,7 @@ ComposicaoDaFesta _composicao({
       pessoas: pessoas,
       itensSelecionados: itens,
       overrides: overrides,
+      noCarrinho: noCarrinho,
     );
 
 Pessoa _pessoa(String nome, {Dieta? dieta, bool? bebe}) => Pessoa(
@@ -316,6 +319,117 @@ void main() {
 
     test('sem nenhum ajuste, não há o que restaurar', () {
       expect(CalculadoraDaFesta.calcular(_composicao()).temOverrides, isFalse);
+    });
+  });
+
+  group('LIST-20 — o check do modo COMPRAR chega ao item calculado (AD-030)',
+      () {
+    test('sem conjunto, nenhum item nasce marcado', () {
+      final resultado = CalculadoraDaFesta.calcular(_composicao());
+
+      expect(
+        resultado.todosOsItens.map((item) => item.noCarrinho),
+        everyElement(isFalse),
+      );
+    });
+
+    test('marca exatamente as chaves do conjunto e nenhuma outra', () {
+      final resultado = CalculadoraDaFesta.calcular(
+        _composicao(noCarrinho: {ChaveItem.bovina, ChaveItem.cerveja}),
+      );
+
+      final marcados = resultado.todosOsItens
+          .where((item) => item.noCarrinho)
+          .map((item) => item.chave)
+          .toSet();
+
+      expect(marcados, {ChaveItem.bovina, ChaveItem.cerveja});
+      expect(
+        resultado.itens.firstWhere((i) => i.chave == ChaveItem.frango).noCarrinho,
+        isFalse,
+      );
+    });
+
+    test('essencial de RN-10 também recebe o check — ele está no checklist',
+        () {
+      final resultado = CalculadoraDaFesta.calcular(
+        _composicao(noCarrinho: {ChaveItem.carvao}),
+      );
+
+      expect(
+        resultado.essenciais
+            .firstWhere((item) => item.chave == ChaveItem.carvao)
+            .noCarrinho,
+        isTrue,
+      );
+      expect(
+        resultado.essenciais
+            .firstWhere((item) => item.chave == ChaveItem.gelo)
+            .noCarrinho,
+        isFalse,
+      );
+    });
+
+    test('chave órfã no conjunto não cria item nem quebra o cálculo', () {
+      final semOrfa = CalculadoraDaFesta.calcular(_composicao());
+      final comOrfa = CalculadoraDaFesta.calcular(
+        // A suína não está nos chips do estado padrão.
+        _composicao(noCarrinho: {ChaveItem.suina}),
+      );
+
+      expect(_chaves(comOrfa.itens), _chaves(semOrfa.itens));
+      expect(comOrfa.totalDosItens, semOrfa.totalDosItens);
+      expect(
+        comOrfa.todosOsItens.map((item) => item.noCarrinho),
+        everyElement(isFalse),
+      );
+    });
+
+    test('festa sem ninguém continua com listas vazias, com o conjunto cheio',
+        () {
+      final resultado = CalculadoraDaFesta.calcular(
+        _composicao(
+          contagem: ContagemDePessoas(homens: 0, mulheres: 0, criancas: 0),
+          noCarrinho: {ChaveItem.bovina, ChaveItem.carvao},
+        ),
+      );
+
+      expect(resultado.itens, isEmpty);
+      expect(resultado.essenciais, isEmpty);
+      expect(resultado.totalDosItens, 0);
+    });
+
+    test('o subtotal do que falta exclui os itens marcados e difere do '
+        'subtotal cheio', () {
+      final resultado = CalculadoraDaFesta.calcular(
+        _composicao(noCarrinho: {ChaveItem.bovina, ChaveItem.cerveja}),
+      );
+
+      final bovina = resultado.itens
+          .firstWhere((item) => item.chave == ChaveItem.bovina)
+          .valor;
+      final cerveja = resultado.itens
+          .firstWhere((item) => item.chave == ChaveItem.cerveja)
+          .valor;
+
+      expect(subtotalDeItens(resultado.itens), resultado.totalDosItens);
+      expect(
+        subtotalDoQueFalta(resultado.itens),
+        closeTo(resultado.totalDosItens - bovina - cerveja, 1e-9),
+      );
+      expect(
+        subtotalDoQueFalta(resultado.itens),
+        isNot(closeTo(subtotalDeItens(resultado.itens), 1e-9)),
+      );
+    });
+
+    test('com tudo marcado, o que falta é 0', () {
+      final resultado = CalculadoraDaFesta.calcular(
+        _composicao(noCarrinho: _chipsPadrao),
+      );
+
+      expect(subtotalDoQueFalta(resultado.itens), 0);
+      expect(subtotalDeItens(resultado.itens), greaterThan(0));
     });
   });
 }

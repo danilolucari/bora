@@ -27,6 +27,7 @@ ComposicaoDaFesta _composicao({
   List<Pessoa> pessoas = const [_rafa, _bia],
   Set<ChaveItem> itens = const {ChaveItem.bovina, ChaveItem.cerveja},
   Map<ChaveItem, OverrideDeItem> overrides = const {},
+  Set<ChaveItem> noCarrinho = const {},
 }) =>
     ComposicaoDaFesta(
       contagem: ContagemDePessoas(homens: 3, mulheres: 3, criancas: criancas),
@@ -34,6 +35,7 @@ ComposicaoDaFesta _composicao({
       pessoas: [...pessoas],
       itensSelecionados: {...itens},
       overrides: {...overrides},
+      noCarrinho: {...noCarrinho},
     );
 
 void main() {
@@ -122,6 +124,80 @@ void main() {
         reason: 'o hash do mapa junta chave e valor: trocá-los não pode '
             'colidir',
       );
+    });
+  });
+
+  group('LIST-20 — o conjunto "no carrinho" na composição (AD-030)', () {
+    test('o default é vazio: composição montada sem o campo não tem check', () {
+      final composicao = ComposicaoDaFesta(
+        contagem: ContagemDePessoas(homens: 3, mulheres: 3, criancas: 1),
+        duracaoHoras: 4,
+      );
+
+      expect(composicao.noCarrinho, isEmpty);
+    });
+
+    test('duas composições com o mesmo conjunto são iguais, em instâncias '
+        'distintas', () {
+      final a = _composicao(noCarrinho: {ChaveItem.bovina, ChaveItem.cerveja});
+      final b = _composicao(noCarrinho: {ChaveItem.cerveja, ChaveItem.bovina});
+
+      expect(
+        identical(a.noCarrinho, b.noCarrinho),
+        isFalse,
+        reason: 'o teste só prova algo com conjuntos em instâncias distintas',
+      );
+      expect(a, b);
+      expect(a.hashCode, b.hashCode);
+    });
+
+    test('trocar um elemento do conjunto separa as composições — é disso que '
+        'a supressão de eco depende', () {
+      expect(
+        _composicao(noCarrinho: {ChaveItem.bovina}),
+        isNot(_composicao(noCarrinho: {ChaveItem.cerveja})),
+      );
+      expect(
+        _composicao(noCarrinho: {ChaveItem.bovina}),
+        isNot(_composicao()),
+      );
+      expect(
+        _composicao(noCarrinho: {ChaveItem.bovina, ChaveItem.cerveja}),
+        isNot(_composicao(noCarrinho: {ChaveItem.bovina})),
+      );
+    });
+
+    test('copyWith preserva o conjunto não informado', () {
+      final original = _composicao(noCarrinho: {ChaveItem.bovina});
+
+      expect(original.copyWith(duracaoHoras: 8).noCarrinho, {ChaveItem.bovina});
+      expect(original.copyWith().noCarrinho, {ChaveItem.bovina});
+    });
+
+    test('copyWith substitui o conjunto informado, inclusive por um vazio', () {
+      final original = _composicao(noCarrinho: {ChaveItem.bovina});
+
+      expect(
+        original.copyWith(noCarrinho: {ChaveItem.cerveja}).noCarrinho,
+        {ChaveItem.cerveja},
+      );
+      expect(
+        original.copyWith(noCarrinho: const {}).noCarrinho,
+        isEmpty,
+        reason: 'desmarcar o último item tem de chegar à composição',
+      );
+    });
+
+    test('copyWith preserva os demais campos e troca só o informado', () {
+      final original = _composicao(noCarrinho: {ChaveItem.bovina});
+      final copia = original.copyWith(noCarrinho: {ChaveItem.cerveja});
+
+      expect(copia.contagem, original.contagem);
+      expect(copia.duracaoHoras, original.duracaoHoras);
+      expect(copia.pessoas, original.pessoas);
+      expect(copia.itensSelecionados, original.itensSelecionados);
+      expect(copia.overrides, original.overrides);
+      expect(copia.noCarrinho, {ChaveItem.cerveja});
     });
   });
 }
