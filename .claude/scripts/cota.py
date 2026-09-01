@@ -129,10 +129,36 @@ def _coletar_janelas(uso: dict) -> list[dict]:
     return sorted(janelas.values(), key=lambda janela: janela["pct"], reverse=True)
 
 
-def _local(iso: str | None) -> str | None:
-    if not iso:
+def _instante(iso: str | None) -> dt.datetime | None:
+    """`resets_at` -> datetime **aware**, ou `None` se o campo não servir.
+
+    Nunca levanta. Um `resets_at` corrompido é um cache em que não dá para
+    confiar, e o preço disso é um `INCERTO` — nunca um traceback, que a tabela
+    de exit code leria como `PARAR` (ver `main`).
+
+    Aceita o sufixo `Z`, que `fromisoformat` cobre mal em versões antigas.
+
+    Recusa a data **ingênua**: sem fuso não dá para saber se ela já passou, e
+    chutar UTC ou local erraria por horas justamente no cálculo que decide se a
+    janela virou. Subtraí-la de `_agora()` (aware) também lançaria `TypeError`.
+    Ininterpretável vira `None`, e quem chama transforma isso em `INCERTO`.
+    """
+    if not isinstance(iso, str) or not iso:
         return None
-    return dt.datetime.fromisoformat(iso).astimezone().isoformat(timespec="seconds")
+    try:
+        quando = dt.datetime.fromisoformat(iso.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if quando.tzinfo is None:
+        return None
+    return quando
+
+
+def _local(iso: str | None) -> str | None:
+    quando = _instante(iso)
+    if quando is None:
+        return None
+    return quando.astimezone().isoformat(timespec="seconds")
 
 
 def ler_cota(caminho: str = CAMINHO) -> dict:
@@ -154,14 +180,41 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
     janelas = _coletar_janelas(uso)
 
     agora = _agora()
-    buscado_em = dt.datetime.fromtimestamp(
-        cache.get("fetchedAtMs", 0) / 1000, dt.timezone.utc
-    )
-    idade_min = (agora - buscado_em).total_seconds() / 60
+
+    # Sem `fetchedAtMs` não dá para saber se o número é fresco. O default de 0
+    # transformava isso numa idade de ~30 milhões de minutos, que o guarda 2
+    # relatava como "cache parado há 29804414 min" — verdadeiro no cálculo e
+    # inútil para quem lê.
+    buscado_ms = cache.get("fetchedAtMs")
+    if not isinstance(buscado_ms, (int, float)):
+        return {
+            "veredito": "INCERTO",
+            "motivo": (
+                "o cache não trouxe `fetchedAtMs`, então não dá para saber se o "
+                "número é fresco. Rode /usage para atualizar."
+            ),
+        }
+    idade_min = (agora - dt.datetime.fromtimestamp(
+        buscado_ms / 1000, dt.timezone.utc
+    )).total_seconds() / 60
 
     cinco_h = uso.get("five_hour") or {}
     reseta_sessao = cinco_h.get("resets_at")
-    reseta = dt.datetime.fromisoformat(reseta_sessao) if reseta_sessao else None
+    reseta = _instante(reseta_sessao)
+
+    # Sem um `resets_at` legível na janela de 5h o guarda 1 não roda, e é ele
+    # que pega o caso perigoso: número em cache de uma janela que já fechou.
+    # Seguir aqui seria decidir sem poder conferir a premissa — o mesmo escuro
+    # que o cache velho produz, e a resposta é a mesma.
+    if cinco_h and reseta is None:
+        return {
+            "veredito": "INCERTO",
+            "motivo": (
+                f"a janela de 5h veio com `resets_at` ilegível ({reseta_sessao!r}), "
+                "então não dá para saber se ela já virou. Rode /usage."
+            ),
+        }
+
     faltam_min = (reseta - agora).total_seconds() / 60 if reseta else None
 
     estado = {
@@ -237,7 +290,10 @@ def horario_de_retomada(estado: dict) -> str | None:
     if not alvo:
         return None
 
-    retoma = dt.datetime.fromisoformat(alvo) + dt.timedelta(minutes=ESPERA_APOS_RESET_MIN)
+    quando = _instante(alvo)
+    if quando is None:
+        return None
+    retoma = quando + dt.timedelta(minutes=ESPERA_APOS_RESET_MIN)
     return retoma.astimezone().isoformat(timespec="seconds")
 
 
@@ -245,7 +301,7 @@ def _imprimir(texto: str) -> None:
     sys.stdout.buffer.write((texto + "\n").encode("utf-8"))
 
 
-def main() -> int:
+def _relatar() -> int:
     analisador = argparse.ArgumentParser(description=__doc__)
     analisador.add_argument("--json", action="store_true")
     analisador.add_argument("--curto", action="store_true")
@@ -277,7 +333,8 @@ def main() -> int:
             )
         if estado.get("semana_reseta_em_local"):
             _imprimir(f"  reseta em (7d)      : {estado['semana_reseta_em_local']}")
-        _imprimir(f"  cache idade         : {estado['cache_idade_min']} min")
+        if estado.get("cache_idade_min") is not None:
+            _imprimir(f"  cache idade         : {estado['cache_idade_min']} min")
         if estado.get("retomar_em"):
             gatilho = estado.get("gatilho") or {}
             _imprimir(
@@ -285,7 +342,29 @@ def main() -> int:
                 f"(reset de {gatilho.get('janela', '?')} + {ESPERA_APOS_RESET_MIN} min)"
             )
 
-    return {"SEGUIR": 0, "ATENCAO": 0, "PARAR": 1, "INCERTO": 2}[veredito]
+    return {"SEGUIR": 0, "ATENCAO": 0, "PARAR": 1, "INCERTO": 2}.get(veredito, 2)
+
+
+def main() -> int:
+    """Barreira de exit code: falha inesperada é INCERTO, nunca PARAR.
+
+    `PARAR` é o código 1, que é também o que o Python devolve quando morre de
+    traceback. Sem esta barreira, um defeito no monitor ficava indistinguível
+    de "pare o trabalho e escreva o handoff" — foi o que aconteceu em
+    2026-09-01, quando um `KeyError: 'cache_idade_min'` saiu como 1.
+
+    Um monitor quebrado não sabe nada sobre a cota, e a regra do CLAUDE.md para
+    quem não sabe é `INCERTO`: pedir `/usage` ao usuário em vez de decidir no
+    escuro. Por isso o código 2.
+    """
+    try:
+        return _relatar()
+    except Exception as erro:  # noqa: BLE001 — a barreira é o objetivo
+        _imprimir(
+            f"COTA: INCERTO — o monitor falhou ({type(erro).__name__}: {erro}). "
+            "Isto NÃO é um PARAR: rode /usage e decida com o número na mão."
+        )
+        return 2
 
 
 if __name__ == "__main__":

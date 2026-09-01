@@ -94,9 +94,32 @@ Dois falsos-verdes já aconteceram neste projeto e o script cobre os dois:
 2. **Janela já virada** — `resets_at` no passado com a porcentagem antiga
    ainda em cache. Aconteceu em 2026-08-26 03:54 UTC: o cache marcava 55% de
    uma janela encerrada 4 minutos antes. → `INCERTO`.
+3. **Falha do próprio monitor** — `PARAR` é o exit code 1, que é também o que o
+   Python devolve ao morrer de traceback. Um defeito no script ficava
+   indistinguível de "pare e escreva o handoff": em 2026-09-01 um
+   `KeyError: 'cache_idade_min'` saiu como 1. Hoje o `main` tem uma barreira que
+   converte qualquer exceção inesperada em `INCERTO` (código 2). Um monitor
+   quebrado não sabe nada sobre a cota, e quem não sabe diz `INCERTO`.
+
+Pela mesma razão, `resets_at` ilegível ou **sem fuso** também é `INCERTO`: sem
+ele o guarda 2 não roda, e chutar um fuso erraria por horas justamente no
+cálculo que decide se a janela virou.
 
 `INCERTO` **não é `SEGUIR`**. Peça ao usuário para rodar `/usage`, que força a
 atualização do cache, e verifique de novo.
+
+## Testes
+
+```bash
+python .claude/scripts/cota_test.py   # 18 casos, sem dependência externa
+```
+
+Cada caso sai de um critério deste arquivo, não da implementação: a tabela de
+gatilho, "só a sessão decide", os três guardas acima e as regressões de
+2026-09-01. Os testes rodam o `cota.py` **como subprocesso**, do jeito que o
+hook roda, porque o que importa ali é o exit code — asserção sobre função
+interna não pegaria o defeito que motivou o arquivo. Bateria de mutação de
+2026-09-01: **9 mutantes plantados, 9 mortos**.
 
 ## Protocolo de pausa (≥ 85%)
 
