@@ -334,14 +334,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `Future<Pedido> enviar(Pedido pedido)` é o **único** método da porta
-- [ ] O doc da porta declara: a única implementação do MVP é falsa (AD-024); quando houver contrato, troca-se o adaptador e **nem a tela nem os testes de aceite mudam**
-- [ ] O doc de `PedidoFalso` **repete a ressalva de exposição pública da AD-024** no ponto onde alguém a leria (`design.md` §11): a tela afirma "PEDIDO A CAMINHO!" sem pedido
-- [ ] `PedidoFalso.enviar` devolve o pedido confirmado **sem rede** — nenhum import de `http`, de Firebase ou de `dart:io` no arquivo, afirmado por teste
-- [ ] O pedido devolvido é **quem alimenta o overlay** (LIST-28 AC2) — o contrato está escrito no doc, e T22 o afirma na árvore
-- [ ] `PedidoFalsoDeTeste` (duplo escrito à mão, sem `mocktail`) existe em `test/` com um modo de **falha**, e um teste afirma que a falha propaga como exceção — a defesa que T19 e T21 exercitam
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 5 testes novos
+- [x] `Future<Pedido> enviar(Pedido pedido)` é o **único** método da porta
+- [x] O doc da porta declara: a única implementação do MVP é falsa (AD-024); quando houver contrato, troca-se o adaptador e **nem a tela nem os testes de aceite mudam**
+- [x] O doc de `PedidoFalso` **repete a ressalva de exposição pública da AD-024** no ponto onde alguém a leria (`design.md` §11): a tela afirma "PEDIDO A CAMINHO!" sem pedido
+- [x] `PedidoFalso.enviar` devolve o pedido confirmado **sem rede** — nenhum import de `http`, de Firebase ou de `dart:io` no arquivo, afirmado por teste
+- [x] O pedido devolvido é **quem alimenta o overlay** (LIST-28 AC2) — o contrato está escrito no doc, e T22 o afirma na árvore
+- [x] `PedidoFalsoDeTeste` (duplo escrito à mão, sem `mocktail`) existe em `test/` com um modo de **falha**, e um teste afirma que a falha propaga como exceção — a defesa que T19 e T21 exercitam
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 5 testes novos
 
 **Tests**: unit
 **Gate**: quick
