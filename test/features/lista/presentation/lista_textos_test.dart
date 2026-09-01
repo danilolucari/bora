@@ -112,6 +112,10 @@ void main() {
       expect(ListaTextos.mediaTotal, 'MÉDIA TOTAL');
     });
 
+    test('cada categoria fecha com "SUBTOTAL" — o literal que W-03 já usa', () {
+      expect(ListaTextos.subtotalDaCategoria, 'SUBTOTAL');
+    });
+
     test('a faixa real é "faixa real: de {mín} a {máx}", já formatados', () {
       expect(
         ListaTextos.faixaReal(

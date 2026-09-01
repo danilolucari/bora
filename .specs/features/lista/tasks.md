@@ -528,16 +528,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] Os itens renderizam na `ordemCanonicaDaLista`, **sem** nenhum item que a composição não produza
-- [ ] A categoria literal `ESSENCIAIS · ENTRAM SOZINHOS` contém **os quatro** de RN-10 — 🔥 Carvão, 🧊 Gelo, 🧂 Sal grosso, 🍽️ Copos & pratos — **sem ação nenhuma do usuário**
-- [ ] Cada essencial tem a badge amarela `AUTO ∝ {fonte}` nas fontes literais: `kg de carne`, `volume de bebida gelada`, `kg de carne`, `nº de pessoas`
-- [ ] 🍽️ Copos & pratos **aparece** e **não soma**: o subtotal dos essenciais lê **R$ 60** no estado padrão (AD-010), comparado com `MoneyFormatter.reais(totalDosEssenciais(...))`
-- [ ] Cada categoria exibe o seu subtotal, vindo de `totalExato` / `totalDosEssenciais` — o widget não soma
-- [ ] Lista vazia (0 pessoas) renderiza o card **vazio**, sem item e **sem copy inventada** (A-11) — nem os essenciais aparecem
-- [ ] Abrir um item **fecha o anterior** na árvore renderizada (aceite de UC-06, o lado de UI de LIST-10)
-- [ ] Kit veggie entrando por RN-21 aparece na ordem correta e com a leitura de mercado — o edge case da `spec.md`
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Os itens renderizam na `ordemCanonicaDaLista`, **sem** nenhum item que a composição não produza
+- [x] A categoria literal `ESSENCIAIS · ENTRAM SOZINHOS` contém **os quatro** de RN-10 — 🔥 Carvão, 🧊 Gelo, 🧂 Sal grosso, 🍽️ Copos & pratos — **sem ação nenhuma do usuário**
+- [x] Cada essencial tem a badge amarela `AUTO ∝ {fonte}` nas fontes literais: `kg de carne`, `volume de bebida gelada`, `kg de carne`, `nº de pessoas`
+- [x] 🍽️ Copos & pratos **aparece** e **não soma**: o subtotal dos essenciais lê **R$ 60** no estado padrão (AD-010), comparado com `MoneyFormatter.reais(totalDosEssenciais(...))`
+- [x] Cada categoria exibe o seu subtotal, vindo de `totalExato` / `totalDosEssenciais` — o widget não soma
+- [x] Lista vazia (0 pessoas) renderiza o card **vazio**, sem item e **sem copy inventada** (A-11) — nem os essenciais aparecem
+- [x] Abrir um item **fecha o anterior** na árvore renderizada (aceite de UC-06, o lado de UI de LIST-10)
+- [x] Kit veggie entrando por RN-21 aparece na ordem correta e com a leitura de mercado — o edge case da `spec.md`
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full

@@ -74,6 +74,15 @@ abstract final class ListaTextos {
   /// RN-12: o rótulo do segundo stepper.
   static const String preco = 'PREÇO';
 
+  /// A linha final de cada categoria do card — UC-05 ("cada categoria exibe o
+  /// seu subtotal").
+  ///
+  /// *SPEC_PRECISION_GAP*: T-04 pede o subtotal por categoria e não dá rótulo
+  /// para ele. Fica o literal que W-03 já usa na mesma função, na lista viva
+  /// da tela Montar — em vez de inventar uma palavra nova, o produto repete a
+  /// que ele já diz.
+  static const String subtotalDaCategoria = 'SUBTOTAL';
+
   /// T-04: o rótulo do rodapé no modo PLANEJAR.
   static const String mediaTotal = 'MÉDIA TOTAL';
 
