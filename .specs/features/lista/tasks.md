@@ -687,16 +687,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual nas duas larguras)
 
 **Done when**:
-- [ ] Título **`FAZER PEDIDO`** (A-18), igual nos dois modos de entrada, com o botão ✕
-- [ ] Linha 📍 com o endereço da festa — **"Laje do Rafa — Vila Madalena"** na fixture — e o `TROCAR` vermelho sublinhado ao lado
-- [ ] `TROCAR` abre a edição; o endereço novo vale só para este pedido e **não** altera a festa — teste afirma zero escrita na porta de festa
-- [ ] Os **três** cartões na ordem de RN-27, com **iFood Mercado** pré-selecionado ao abrir
-- [ ] O resumo exibe Subtotal, Frete e Total formatados por `MoneyFormatter`; trocar de parceiro atualiza os três
-- [ ] ✕ **ou toque fora** fecha **sem pedir**: nenhuma `Despesa`, nenhuma alteração na lista (UC-16 A1) — teste afirma os dois caminhos
-- [ ] **Um conteúdo, dois invólucros**: o mesmo widget de conteúdo é montado nos dois, e um teste afirma que compacto e expandido renderizam os **mesmos** literais e os **mesmos** números
-- [ ] Aberta pelo COMPRAR mostra só os não marcados, com o subtotal refletindo só eles
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Título **`FAZER PEDIDO`** (A-18), igual nos dois modos de entrada, com o botão ✕
+- [x] Linha 📍 com o endereço da festa — **"Laje do Rafa — Vila Madalena"** na fixture — e o `TROCAR` vermelho sublinhado ao lado
+- [x] `TROCAR` abre a edição; o endereço novo vale só para este pedido e **não** altera a festa — teste afirma zero escrita na porta de festa
+- [x] Os **três** cartões na ordem de RN-27, com **iFood Mercado** pré-selecionado ao abrir
+- [x] O resumo exibe Subtotal, Frete e Total formatados por `MoneyFormatter`; trocar de parceiro atualiza os três
+- [x] ✕ **ou toque fora** fecha **sem pedir**: nenhuma `Despesa`, nenhuma alteração na lista (UC-16 A1) — teste afirma os dois caminhos
+- [x] **Um conteúdo, dois invólucros**: o mesmo widget de conteúdo é montado nos dois, e um teste afirma que compacto e expandido renderizam os **mesmos** literais e os **mesmos** números
+- [x] Aberta pelo COMPRAR mostra só os não marcados, com o subtotal refletindo só eles
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
