@@ -237,12 +237,20 @@
 - **Date**: 2026-08-27
 - **Status**: active
 
+### AD-030
+- **Decision**: O estado de lista de uma festa — overrides, conjunto "no carrinho" e despesas — mora nas entidades de `core/calculo`/`core/festas` (`ComposicaoDaFesta.overrides`, `ComposicaoDaFesta.noCarrinho`, `FestaEmEdicao.despesas`), atrás de `FestaEmEdicaoRepository`. **Nenhuma feature guarda estado de festa em bloc ou widget.** Estado por item que precisa sobreviver a um recálculo entra na composição; fato sobre a festa que a calculadora não consome entra em `FestaEmEdicao`.
+- **Reason**: os aceites de UC-06 e UC-15 são literalmente "sobrevive à navegação dentro da festa", e trocar de aba destrói o bloc. Guardar no widget torna o aceite impossível; guardar em dois lugares (parte na composição, parte na feature) cria duas fontes para o estado da mesma lista. A fronteira "a calculadora consome?" é o que decide entre as duas entidades, e ela é objetiva.
+- **Trade-off**: `ComposicaoDaFesta` cresce a cada tela que precisar de estado por item, e no M2 tudo isso vira documento do Firestore de uma vez. Em troca, `ItemDeLista.noCarrinho` e `subtotalDoQueFalta` deixam de ser código morto, e nenhuma feature reconcilia estado com a porta.
+- **Scope**: `lista` agora; `galera`, `convidado` e `custos` herdam — quem precisar de estado por item da lista usa a composição, não a feature.
+- **Date**: 2026-08-27
+- **Status**: active
+
 
 ### Reserva de numeração — AD-029..AD-036 (propostas, **não** ativas)
 
-Os designs das seis specs restantes propuseram oito decisões. A **AD-029 já foi gravada
-acima**, na primeira task do Execute de `montar`; as sete restantes continuam **propostas** —
-o log ativo para na **AD-029**. Cada uma é gravada como AD completa na **primeira
+Os designs das seis specs restantes propuseram oito decisões. A **AD-029** e a **AD-030** já
+foram gravadas acima, na primeira task do Execute de `montar` e de `lista`; as seis restantes
+continuam **propostas** — o log ativo para na **AD-030**. Cada uma é gravada como AD completa na **primeira
 task do Execute** da sua spec, na ordem da coluna "Depende de" do ROADMAP §2. Quem executar
 fora dessa ordem **renumera a sua**, nunca a anterior. Esta tabela existe para que sessões
 paralelas não reivindiquem o mesmo número — foi o que já aconteceu uma vez (`19f77a7`,
@@ -251,7 +259,7 @@ AD-023 → AD-029).
 | Nº | Spec dona | Proposta | Onde está escrita |
 |---|---|---|---|
 | ~~**AD-029**~~ | 05 `montar` | ✅ **registrada acima** — porta de edição da festa em `lib/core/festas/` (`FestaEmEdicao`, `FestaEmEdicaoRepository`), falando só em tipos de `core/calculo` | `montar/design.md` §Tech Decisions |
-| **AD-030** | 06 `lista` | O estado de lista da festa (overrides, carrinho, despesas) mora nas entidades de `core/`, nunca na feature | `lista/design.md` §12 |
+| ~~**AD-030**~~ | 06 `lista` | ✅ **registrada acima** — o estado de lista da festa (overrides, carrinho, despesas) mora nas entidades de `core/`, nunca na feature | `lista/design.md` §12 |
 | **AD-031** | 07 `galera` | O **dado** do acesso (`codigo`, `NivelDoLink`) em `core/festas/`; a **regra** RN-22 × RN-23 em `features/galera/domain/permissoes.dart`, consultável e nunca reimplementada | `galera/design.md` §12 |
 | **AD-032** | 08 `convite` | `share_plus` como canal único de saída de texto, atrás da porta `CompartilhadorDeTexto`, com o mapeamento de `ShareResultStatus` num lugar só | `convite/design.md` §12 |
 | **AD-033** | 09 `convidado` | Forma do dado no Firestore e fronteira de escrita: **um documento por festa**, `convites/{codigo}` como índice, RSVP escrito **só** pela Cloud Function. Traz `cloud_functions` ao `pubspec.yaml` | `convidado/design.md` §13 |

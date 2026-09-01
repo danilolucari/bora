@@ -155,10 +155,10 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `AD-030` existe com os seis campos, `Status: active`
-- [ ] A **AD-029 de `montar` já está registrada** antes desta — a numeração de `design.md` §12 exige a ordem; se `montar` ainda não a gravou, renumera-se **aqui**, nunca lá
-- [ ] Nenhuma AD existente é editada (nada vira `superseded`)
-- [ ] Nenhum arquivo de código é tocado
+- [x] `AD-030` existe com os seis campos, `Status: active`
+- [x] A **AD-029 de `montar` já está registrada** antes desta — a numeração de `design.md` §12 exige a ordem; se `montar` ainda não a gravou, renumera-se **aqui**, nunca lá
+- [x] Nenhuma AD existente é editada (nada vira `superseded`)
+- [x] Nenhum arquivo de código é tocado
 
 **Tests**: none (camada "Documentação / spec")
 **Gate**: none
