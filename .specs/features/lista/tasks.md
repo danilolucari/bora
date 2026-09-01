@@ -447,13 +447,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Todos os literais de `design.md` §9 presentes, **palavra por palavra**: header `SUA LISTA`; segmented `🧮 PLANEJAR` / `🛒 COMPRAR`; as duas dicas tracejadas; `ESSENCIAIS · ENTRAM SOZINHOS`; `AUTO ∝ {fonte}` com as quatro fontes de RN-10; `{quantidade} · média de {N} mercados`; `MÉDIA TOTAL`; `faixa real: de R$ {mín} a R$ {máx}`; `≈ R$ {x} por adulto`; `{N} de {M} no carrinho`; `FAZER PEDIDO 🛒`; `PEDIR O QUE FALTA 🛵`; `RESTAURAR`; os cinco corredores; `{N} itens`; `FAZER PEDIDO`, `ENTREGA POR`, `TROCAR`, `Subtotal`, `Frete`, `Total`, `CONFIRMAR PEDIDO →`; `PEDIDO A CAMINHO!`, `Chega em {ETA} na {endereço}.`, `R$ {total} · rachado no acerto da festa`, `VOLTAR À LISTA`; as quatro abas `Lista · Galera · WhatsApp · Custos`
-- [ ] Os templates com `R$` **são** parâmetro de formatação, não formatação: o arquivo **não** monta valor — recebe a string já formatada por `MoneyFormatter`. O guard de T26 tem exceção **declarada e nomeada** só para este arquivo, ou os templates são escritos sem o literal `R$` — a decisão é da task, e o `design.md` §13 exige que seja explícita
-- [ ] **Zero toast** (A-23): um teste afirma que o arquivo não referencia `BoraToastTexts` nem declara texto de toast
-- [ ] O teste compara com o **token/constante**, nunca com o literal duplicado no teste (L-008)
-- [ ] Caixa alta onde a spec pede caixa alta; sentence case no corpo das dicas e do overlay
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] Todos os literais de `design.md` §9 presentes, **palavra por palavra**: header `SUA LISTA`; segmented `🧮 PLANEJAR` / `🛒 COMPRAR`; as duas dicas tracejadas; `ESSENCIAIS · ENTRAM SOZINHOS`; `AUTO ∝ {fonte}` com as quatro fontes de RN-10; `{quantidade} · média de {N} mercados`; `MÉDIA TOTAL`; `faixa real: de R$ {mín} a R$ {máx}`; `≈ R$ {x} por adulto`; `{N} de {M} no carrinho`; `FAZER PEDIDO 🛒`; `PEDIR O QUE FALTA 🛵`; `RESTAURAR`; os cinco corredores; `{N} itens`; `FAZER PEDIDO`, `ENTREGA POR`, `TROCAR`, `Subtotal`, `Frete`, `Total`, `CONFIRMAR PEDIDO →`; `PEDIDO A CAMINHO!`, `Chega em {ETA} na {endereço}.`, `R$ {total} · rachado no acerto da festa`, `VOLTAR À LISTA`; as quatro abas `Lista · Galera · WhatsApp · Custos`
+- [x] Os templates com `R$` **são** parâmetro de formatação, não formatação: o arquivo **não** monta valor — recebe a string já formatada por `MoneyFormatter`. O guard de T26 tem exceção **declarada e nomeada** só para este arquivo, ou os templates são escritos sem o literal `R$` — a decisão é da task, e o `design.md` §13 exige que seja explícita
+- [x] **Zero toast** (A-23): um teste afirma que o arquivo não referencia `BoraToastTexts` nem declara texto de toast
+- [x] O teste compara com o **token/constante**, nunca com o literal duplicado no teste (L-008)
+- [x] Caixa alta onde a spec pede caixa alta; sentence case no corpo das dicas e do overlay
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 10 testes novos
 
 **Tests**: unit
 **Gate**: quick
