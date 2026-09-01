@@ -360,17 +360,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `ListaState { carregando, festa, resultado, modo, chaveExpandida, faixaReal, falhouAoSalvar }` com `==` por valor
-- [ ] Antes da primeira emissão o estado é `carregando` — e um teste afirma que a tela nunca vê `resultado` nulo com `carregando: false`
-- [ ] `ModoAlternado` troca o modo e **não grava** na porta — teste afirma zero chamadas a `salvarFesta`
-- [ ] `ItemExpandido(chave)` guarda **um** campo, não um `Set`: abrir um item **fecha o anterior** por construção (LIST-10); `ItemExpandido(null)` fecha
-- [ ] **Item expandido sobrevive ao recálculo**: com um item aberto, um ajuste de outro item não fecha o aberto (edge case da `spec.md`)
-- [ ] `observarFesta` emitindo `null` produz o estado vazio — card vazio, total 0, `faixaReal` ausente — pelo **mesmo caminho** de 0 pessoas, e **não** redireciona para `/erro` (a rota é válida)
-- [ ] Composição com 0 pessoas: `resultado.itens` e `.essenciais` vazios, `totalComEssenciais == 0`, `porAdulto == 0` — nenhum essencial aparece, porque a guarda de `calcular` vem antes deles
-- [ ] Stream que **falha** loga por `logger.logError(name: 'lista')` (afirmado por duplo, AD-005) e **mantém o último estado bom** — o teste falha se o tratamento sair
-- [ ] Voltar a ter pessoas recalcula normalmente, com os essenciais de volta
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] `ListaState { carregando, festa, resultado, modo, chaveExpandida, faixaReal, falhouAoSalvar }` com `==` por valor
+- [x] Antes da primeira emissão o estado é `carregando` — e um teste afirma que a tela nunca vê `resultado` nulo com `carregando: false`
+- [x] `ModoAlternado` troca o modo e **não grava** na porta — teste afirma zero chamadas a `salvarFesta`
+- [x] `ItemExpandido(chave)` guarda **um** campo, não um `Set`: abrir um item **fecha o anterior** por construção (LIST-10); `ItemExpandido(null)` fecha
+- [x] **Item expandido sobrevive ao recálculo**: com um item aberto, um ajuste de outro item não fecha o aberto (edge case da `spec.md`)
+- [x] `observarFesta` emitindo `null` produz o estado vazio — card vazio, total 0, `faixaReal` ausente — pelo **mesmo caminho** de 0 pessoas, e **não** redireciona para `/erro` (a rota é válida)
+- [x] Composição com 0 pessoas: `resultado.itens` e `.essenciais` vazios, `totalComEssenciais == 0`, `porAdulto == 0` — nenhum essencial aparece, porque a guarda de `calcular` vem antes deles
+- [x] Stream que **falha** loga por `logger.logError(name: 'lista')` (afirmado por duplo, AD-005) e **mantém o último estado bom** — o teste falha se o tratamento sair
+- [x] Voltar a ter pessoas recalcula normalmente, com os essenciais de volta
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: unit
 **Gate**: quick
