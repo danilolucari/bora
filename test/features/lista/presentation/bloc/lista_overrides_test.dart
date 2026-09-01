@@ -51,6 +51,10 @@ Future<void> _assentar() => Future<void>.delayed(Duration.zero);
 ItemDeLista _itemDe(ListaState estado, ChaveItem chave) =>
     estado.resultado!.itens.firstWhere((item) => item.chave == chave);
 
+/// O essencial de [chave] — ele mora em `todosOsItens`, nunca em `itens`.
+ItemDeLista _essencialDe(ListaState estado, ChaveItem chave) =>
+    estado.resultado!.todosOsItens.firstWhere((item) => item.chave == chave);
+
 void main() {
   late FestaEmEdicaoRepositoryFake festas;
   late RecordingAppLogger logger;
@@ -146,6 +150,41 @@ void main() {
       expect(bloc.state, noPiso);
       expect(festas.salvas, hasLength(gravacoes));
     });
+  });
+
+  group('RN-10 — os essenciais não recebem override', () {
+    // A defesa mora em `_itemAjustavel`, que percorre `resultado.itens` e não
+    // `todosOsItens`: a calculadora reconstrói os quatro essenciais a cada
+    // cálculo por `essenciaisAutomaticos()` e nunca lhes aplica override, então
+    // guardar um seria gravar na composição um ajuste que a tela nunca mostra.
+    // O efeito é invisível na tela — `temOverrides` deriva de `item.editado`,
+    // e o essencial reconstruído nunca fica `editado` —, e por isso o sensor
+    // tem de ser aqui: o que discrimina é a **composição gravada**.
+    for (final chave in [ChaveItem.carvao, ChaveItem.coposEPratos]) {
+      test('ajustar ${chave.name} não grava override nem toca a porta',
+          () async {
+        final bloc = await blocPronto();
+        final antes = bloc.state;
+        final quantidade = _essencialDe(bloc.state, chave).quantidade;
+
+        bloc.add(QuantidadeAjustada(chave, 1));
+        bloc.add(PrecoAjustado(chave, 1));
+        await _assentar();
+
+        expect(bloc.state.festa!.composicao.overrides, isEmpty);
+        expect(
+          festas.salvas,
+          isEmpty,
+          reason: 'sem override não há mudança, e sem mudança não há gravação',
+        );
+        expect(
+          _essencialDe(bloc.state, chave).quantidade,
+          closeTo(quantidade, 1e-9),
+        );
+        expect(_essencialDe(bloc.state, chave).editado, isFalse);
+        expect(bloc.state, antes);
+      });
+    }
   });
 
   group('LIST-13 — o recálculo ao vivo (UC-04)', () {
