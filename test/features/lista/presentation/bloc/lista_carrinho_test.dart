@@ -276,16 +276,43 @@ void main() {
   });
 
   group('LIST-34 — a supressão de eco e a concorrência', () {
-    test('o eco da própria gravação é descartado', () async {
+    // O nome antigo — "o eco da própria gravação é descartado" — prometia
+    // discriminar a **primeira** guarda de `_aoReceberFesta`
+    // (`evento.festa == _ultimaGravada`), e não discrimina: removê-la deixa a
+    // suíte verde. Não é furo de teste, é mutante equivalente. O eco recalcula
+    // uma `FestaEmEdicao` igual à corrente, e `ListaState.==` exclui
+    // `resultado`/`faixaReal` de propósito (`lista_state.dart`), então o estado
+    // reconstruído é **igual** ao que está de pé e o `emit` do próprio bloc o
+    // descarta (`bloc 9.2.1`, `bloc_base.dart:102` — `if (state == _state &&
+    // _emitted) return;`): `_state` não é trocado, nem a emissão sai no stream.
+    // A guarda é economia de recálculo, não comportamento observável — como o
+    // doc dela já diz ("só custaria um recálculo idêntico").
+    //
+    // O que este teste afirma, então, é o desfecho de LIST-34 que **é**
+    // observável: o eco não move a tela — nem o estado, nem o objeto de
+    // resultado, nem uma emissão sequer. A guarda que de fato discrimina é a
+    // segunda, e quem a mata é "eco atrasado no meio de uma gravação não
+    // regride o estado", logo abaixo.
+    test('o eco da própria gravação não move a tela', () async {
       final bloc = await blocPronto();
       bloc.add(const QuantidadeAjustada(ChaveItem.bovina, 1));
       await _assentar();
       final depois = bloc.state;
 
+      final emitidos = <ListaState>[];
+      final assinatura = bloc.stream.listen(emitidos.add);
+      addTearDown(assinatura.cancel);
+
       festas.emitir(_festaId, festas.salvas.last.$2);
       await _assentar();
 
+      expect(emitidos, isEmpty, reason: 'o eco não produz emissão nenhuma');
       expect(bloc.state, depois);
+      expect(
+        identical(bloc.state.resultado, depois.resultado),
+        isTrue,
+        reason: 'o recálculo do eco não substitui o resultado que a tela lê',
+      );
       expect(_itemDe(bloc.state, ChaveItem.bovina).editado, isTrue);
     });
 
