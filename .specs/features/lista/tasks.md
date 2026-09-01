@@ -742,18 +742,18 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual em 390×820)
 
 **Done when**:
-- [ ] Header `SUA LISTA` e o segmented com `🧮 PLANEJAR` / `🛒 COMPRAR`, **PLANEJAR ativo por default**
-- [ ] A dica tracejada de cada modo, literal
-- [ ] **Aceite de UC-05 na tela**, estado padrão de RN-30: rótulo `MÉDIA TOTAL`, valor **`R$ 271`**, linha **`≈ R$ 45 por adulto`** e CTA `FAZER PEDIDO 🛒` — o valor comparado com `MoneyFormatter.reais(resultado.totalComEssenciais)` (primeiro teste comportamental de `design.md` §13, que mata formatador escrito à mão)
-- [ ] A linha `faixa real: de R$ 245 a R$ 343` no rodapé de PLANEJAR, comparada com `faixaRealDaLista`
-- [ ] Rodapé de COMPRAR: `{N} de {M} no carrinho`, o total e `PEDIR O QUE FALTA 🛵`; marcar um item atualiza o contador **imediatamente** e o **total não muda**
-- [ ] `RESTAURAR` existe **só** quando há override e **some no mesmo frame** em que o último é desfeito — **sem diálogo e sem toast** (A-10); os dois lados testados
-- [ ] Alternar PLANEJAR ⇄ COMPRAR **preserva** checks, overrides e item expandido (aceite de UC-15)
-- [ ] Lista vazia: card vazio, `R$ 0`, `≈ R$ 0 por adulto`, **faixa real ausente** da árvore, CTA **inerte** (a sheet não abre), e COMPRAR lê `0 de 0 no carrinho` com nenhum grupo
-- [ ] Nada falta (tudo marcado): CTA inerte, a sheet **não** abre, **nenhum toast** (A-07) — defesa exercitada
-- [ ] **Nenhum `BoraToast` na árvore**, em nenhuma ação da tela (A-23)
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 16 testes novos
+- [x] Header `SUA LISTA` e o segmented com `🧮 PLANEJAR` / `🛒 COMPRAR`, **PLANEJAR ativo por default**
+- [x] A dica tracejada de cada modo, literal
+- [x] **Aceite de UC-05 na tela**, estado padrão de RN-30: rótulo `MÉDIA TOTAL`, valor **`R$ 271`**, linha **`≈ R$ 45 por adulto`** e CTA `FAZER PEDIDO 🛒` — o valor comparado com `MoneyFormatter.reais(resultado.totalComEssenciais)` (primeiro teste comportamental de `design.md` §13, que mata formatador escrito à mão)
+- [x] A linha `faixa real: de R$ 245 a R$ 343` no rodapé de PLANEJAR, comparada com `faixaRealDaLista`
+- [x] Rodapé de COMPRAR: `{N} de {M} no carrinho`, o total e `PEDIR O QUE FALTA 🛵`; marcar um item atualiza o contador **imediatamente** e o **total não muda**
+- [x] `RESTAURAR` existe **só** quando há override e **some no mesmo frame** em que o último é desfeito — **sem diálogo e sem toast** (A-10); os dois lados testados
+- [x] Alternar PLANEJAR ⇄ COMPRAR **preserva** checks, overrides e item expandido (aceite de UC-15)
+- [x] Lista vazia: card vazio, `R$ 0`, `≈ R$ 0 por adulto`, **faixa real ausente** da árvore, CTA **inerte** (a sheet não abre), e COMPRAR lê `0 de 0 no carrinho` com nenhum grupo
+- [x] Nada falta (tudo marcado): CTA inerte, a sheet **não** abre, **nenhum toast** (A-07) — defesa exercitada
+- [x] **Nenhum `BoraToast` na árvore**, em nenhuma ação da tela (A-23)
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 16 testes novos
 
 **Tests**: widget
 **Gate**: full
