@@ -255,16 +255,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `FaixaReal { double minimo; double maximo }` **sem campo `media`** — devolver um terceiro número aqui reabriria a D-1 (`design.md` §6.4)
-- [ ] O doc declara: soma **exata**; quem arredonda é RN-13, uma única vez (AD-009)
-- [ ] Item coberto contribui com mín/máx da tabela; item não coberto contribui com o próprio `valor` nas **duas** pontas — nenhuma faixa é fabricada
-- [ ] **Copos & pratos fica fora** das duas pontas (via `itensCobraveis`)
-- [ ] Aplicada às **oito linhas** da tabela de RN-11 a função **degenera em `totalDeMercado`**: R$ 234 / R$ 356 — afirmado contra `totalDeMercado(tabelaDePrecosDeMercado)`, não contra literal copiado
-- [ ] No estado padrão de RN-30 devolve **244,60 / 342,60**, que `MoneyFormatter` exibe como **R$ 245 / R$ 343** — o teste afirma o valor exato da função **e** o formatado
-- [ ] Lista vazia devolve `(0, 0)`
-- [ ] Override de preço **não move** a faixa (A-04): mesma lista, com e sem override, mesma `FaixaReal`
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 8 testes novos
+- [x] `FaixaReal { double minimo; double maximo }` **sem campo `media`** — devolver um terceiro número aqui reabriria a D-1 (`design.md` §6.4)
+- [x] O doc declara: soma **exata**; quem arredonda é RN-13, uma única vez (AD-009)
+- [x] Item coberto contribui com mín/máx da tabela; item não coberto contribui com o próprio `valor` nas **duas** pontas — nenhuma faixa é fabricada
+- [x] **Copos & pratos fica fora** das duas pontas (via `itensCobraveis`)
+- [x] Aplicada às **oito linhas** da tabela de RN-11 a função **degenera em `totalDeMercado`**: R$ 234 / R$ 356 — afirmado contra `totalDeMercado(tabelaDePrecosDeMercado)`, não contra literal copiado. **Nota do Execute**: a 8ª linha é a 🌭 Linguiça toscana, que entra com `chave: null` (R-6) e por isso não vira `ItemDeLista`; o teste dá a ela uma `ChaveItem` livre, o que deixa as oito cobertas **sem mover um só número** da tabela
+- [x] No estado padrão de RN-30 devolve **244,60 / 342,60**, que `MoneyFormatter` exibe como **R$ 245 / R$ 343** — o teste afirma o valor exato da função **e** o formatado
+- [x] Lista vazia devolve `(0, 0)`
+- [x] Override de preço **não move** a faixa (A-04): mesma lista, com e sem override, mesma `FaixaReal`. **Escopo apurado no Execute**: vale para item **coberto** por RN-11, que é o caso de A-04 ("a faixa não persegue o override"); item **não coberto** contribui com o próprio `ItemDeLista.valor`, que já é o ajustado — os dois casos têm teste
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: build

@@ -1,4 +1,7 @@
+import '../dominio/chave_item.dart';
+import '../dominio/item_de_lista.dart';
 import '../dominio/preco_de_mercado.dart';
+import 'totais.dart';
 
 /// Onde o marcador da barra de faixa fica, já resolvido em `[0,1]` — RN-11 ·
 /// CALC-25.
@@ -62,4 +65,62 @@ TotalDeMercado totalDeMercado(Iterable<PrecoDeMercado> precos) {
   }
 
   return TotalDeMercado(media: media, minimo: minimo, maximo: maximo);
+}
+
+/// A "faixa real: de R$ X a R$ Y" do rodapé do modo PLANEJAR — RN-11 · A-03 ·
+/// LIST-09.
+///
+/// **Sem campo `media`, de propósito.** O "MÉDIA TOTAL" do rodapé é
+/// `ResultadoDoCalculo.totalComEssenciais` (R$ 271, A-01), não uma média desta
+/// função — devolver um terceiro número aqui convidaria alguém a pintá-lo no
+/// rodapé e reabriria a divergência D-1.
+class FaixaReal {
+  const FaixaReal({required this.minimo, required this.maximo});
+
+  /// A ponta barata: o cenário mais em conta da lista inteira.
+  final double minimo;
+
+  /// A ponta cara.
+  final double maximo;
+}
+
+/// Soma a faixa de preço sobre os itens de **uma lista** — que não é a tabela
+/// de RN-11 — RN-11 · A-03 · LIST-09.
+///
+/// Duas contribuições, e só duas:
+///
+/// - item **coberto** por [tabela] (mesma [ItemDeLista.chave]) entra com o
+///   `mínimo` e o `máximo` da linha de RN-11;
+/// - item que a tabela **não** cobre entra com o próprio [ItemDeLista.valor]
+///   nas duas pontas — não se fabrica faixa para item sem linha.
+///
+/// 🍽️ Copos & pratos fica fora das duas pontas, pelo mesmo `itensCobraveis`
+/// que o tira do total e do pedido (AD-010).
+///
+/// Soma **exata**, sem arredondar em passo nenhum: quem arredonda é RN-13, uma
+/// única vez, na formatação (AD-009). No estado padrão de RN-30 devolve
+/// 244,60 e 342,60, que `MoneyFormatter` exibe como **R$ 245** e **R$ 343**.
+///
+/// Aplicada a uma lista em que **todo** item é coberto, degenera em
+/// [totalDeMercado] — é a mesma soma, por outra porta.
+FaixaReal faixaRealDaLista(
+  Iterable<ItemDeLista> itens,
+  Iterable<PrecoDeMercado> tabela,
+) {
+  final porChave = <ChaveItem, PrecoDeMercado>{
+    for (final preco in tabela)
+      if (preco.chave != null) preco.chave as ChaveItem: preco,
+  };
+
+  var minimo = 0.0;
+  var maximo = 0.0;
+
+  for (final item in itensCobraveis(itens)) {
+    final preco = porChave[item.chave];
+
+    minimo += preco?.minimo ?? item.valor;
+    maximo += preco?.maximo ?? item.valor;
+  }
+
+  return FaixaReal(minimo: minimo, maximo: maximo);
 }
