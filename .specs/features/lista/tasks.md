@@ -283,13 +283,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O doc declara por que fica aqui e **não** em `ComposicaoDaFesta`: despesa não entra em `CalculadoraDaFesta.calcular`, e pô-la na composição mudaria a igualdade que decide se um recálculo é necessário (`design.md` §6.3)
-- [ ] Default `const []` — nenhum call site de `montar` quebra e **nenhum teste de `montar` é editado**
-- [ ] `copyWith` preserva a lista não informada
-- [ ] Igualdade profunda: mesma lista ⇒ `==`; acrescentar uma despesa separa; **ordem** diferente separa
-- [ ] Duas `FestaEmEdicao` sem despesa continuam iguais — a suíte de `montar` roda intacta
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 5 testes novos
+- [x] O doc declara por que fica aqui e **não** em `ComposicaoDaFesta`: despesa não entra em `CalculadoraDaFesta.calcular`, e pô-la na composição mudaria a igualdade que decide se um recálculo é necessário (`design.md` §6.3)
+- [x] Default `const []` — nenhum call site de `montar` quebra e **nenhum teste de `montar` é editado**
+- [x] `copyWith` preserva a lista não informada
+- [x] Igualdade profunda: mesma lista ⇒ `==`; acrescentar uma despesa separa; **ordem** diferente separa
+- [x] Duas `FestaEmEdicao` sem despesa continuam iguais — a suíte de `montar` roda intacta
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 5 testes novos
 
 **Tests**: unit
 **Gate**: build

@@ -74,6 +74,17 @@ ComposicaoDaFesta _composicaoPadrao({int duracaoHoras = 4}) =>
       },
     );
 
+const Despesa _gelo = Despesa(
+  quemPagou: 'RAFA',
+  descricao: 'Gelo',
+  valor: 30,
+);
+const Despesa _pedido = Despesa(
+  quemPagou: 'BIA',
+  descricao: 'Pedido no Zé',
+  valor: 84,
+);
+
 void main() {
   group('AD-029 — FestaEmEdicao é a festa como montar precisa dela', () {
     test('carrega a identidade e a composição, sem inventar id', () {
@@ -232,6 +243,93 @@ void main() {
         isEmpty,
         reason: 'o barrel exporta a camada, e nada além dela',
       );
+    });
+  });
+
+  group('LIST-27 — as despesas lançadas na festa em edição (AD-030)', () {
+    test('o default é vazio: festa montada sem o campo não tem despesa', () {
+      final emEdicao =
+          FestaEmEdicao(festa: _festa(), composicao: _composicaoPadrao());
+
+      expect(emEdicao.despesas, isEmpty);
+    });
+
+    test('duas festas sem despesa continuam iguais — a suíte de montar não se '
+        'move', () {
+      final a = FestaEmEdicao(festa: _festa(), composicao: _composicaoPadrao());
+      final b = FestaEmEdicao(festa: _festa(), composicao: _composicaoPadrao());
+
+      expect(a, b);
+      expect(a.hashCode, b.hashCode);
+    });
+
+    test('mesma lista de despesas, em instâncias distintas, são iguais', () {
+      final a = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        despesas: [_gelo, _pedido],
+      );
+      final b = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        despesas: [_gelo, _pedido],
+      );
+
+      expect(
+        identical(a.despesas, b.despesas),
+        isFalse,
+        reason: 'o teste só prova algo com listas em instâncias distintas',
+      );
+      expect(a, b);
+      expect(a.hashCode, b.hashCode);
+    });
+
+    test('acrescentar uma despesa separa as festas', () {
+      final semNova = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        despesas: const [_gelo],
+      );
+      final comNova = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        despesas: const [_gelo, _pedido],
+      );
+
+      expect(comNova, isNot(semNova));
+    });
+
+    test('a ordem das despesas importa — é a ordem que a tela Custos exibe',
+        () {
+      final a = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        despesas: const [_gelo, _pedido],
+      );
+      final b = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        despesas: const [_pedido, _gelo],
+      );
+
+      expect(a, isNot(b));
+    });
+
+    test('copyWith preserva a lista não informada e substitui a informada',
+        () {
+      final original = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        despesas: const [_gelo],
+      );
+
+      expect(original.copyWith(festa: _festa(nome: 'OUTRO')).despesas, [_gelo]);
+      expect(original.copyWith().despesas, [_gelo]);
+      expect(
+        original.copyWith(despesas: const [_gelo, _pedido]).despesas,
+        [_gelo, _pedido],
+      );
+      expect(original.copyWith(despesas: const []).despesas, isEmpty);
     });
   });
 }
