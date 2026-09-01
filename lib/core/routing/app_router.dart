@@ -11,6 +11,7 @@ import '../../features/custos/presentation/pages/custos_page.dart';
 import '../../features/entrar/presentation/pages/entrar_page.dart';
 import '../../features/galera/presentation/pages/galera_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/lista/domain/pedido_repository.dart';
 import '../../features/lista/presentation/pages/lista_page.dart';
 import '../../features/montar/presentation/pages/montar_page.dart';
 import '../design_system/catalog/catalog_page.dart';
@@ -57,6 +58,7 @@ GoRouter buildAppRouter({
   required AutenticacaoRepository autenticacao,
   required FestaRepository festas,
   required FestaEmEdicaoRepository festasEmEdicao,
+  required PedidoRepository pedidos,
   required AppLogger logger,
   String initialLocation = Routes.roles,
 }) {
@@ -139,7 +141,13 @@ GoRouter buildAppRouter({
                     routes: [
                       GoRoute(
                         path: 'lista',
-                        builder: (context, state) => const ListaPage(),
+                        builder: (context, state) => ListaPage(
+                          festaId:
+                              state.pathParameters[Routes.paramFestaId]!,
+                          festas: festasEmEdicao,
+                          pedidos: pedidos,
+                          logger: logger,
+                        ),
                       ),
                     ],
                   ),

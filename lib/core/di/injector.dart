@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/home/data/festa_repository_em_memoria.dart';
 import '../../features/home/domain/festa_repository.dart';
+import '../../features/lista/data/pedido_falso.dart';
+import '../../features/lista/domain/pedido_repository.dart';
 import '../autenticacao/autenticacao.dart';
 import '../autenticacao/dados/firebase_autenticacao_repository.dart';
 import '../festas/festas.dart';
@@ -33,6 +35,7 @@ Future<void> configureDependencies({
   GoRouter Function()? routerFactory,
   AutenticacaoRepository Function()? autenticacaoFactory,
   FestaRepository Function()? festasFactory,
+  PedidoRepository Function()? pedidosFactory,
 }) async {
   if (_configured) return;
   _configured = true;
@@ -73,6 +76,14 @@ Future<void> configureDependencies({
     () => getIt<FestaRepository>() as FestaEmEdicaoRepository,
   );
 
+  // A porta de pedido da AD-024. A **única** implementação do M1 é falsa, e a
+  // ressalva de exposição pública mora no doc de `PedidoFalso`: com ela no
+  // lugar, a tela Lista afirma "PEDIDO A CAMINHO!" sem pedido a caminho.
+  // Trocar por um adaptador real é trocar esta linha.
+  getIt.registerLazySingleton<PedidoRepository>(
+    () => pedidosFactory != null ? pedidosFactory() : const PedidoFalso(),
+  );
+
   // Deixou de ser tear-off: o roteador agora exige a porta de sessão (AD-017),
   // e resolvê-la aqui dentro mantém a construção preguiçosa.
   getIt.registerLazySingleton<GoRouter>(
@@ -81,6 +92,7 @@ Future<void> configureDependencies({
               autenticacao: getIt<AutenticacaoRepository>(),
               festas: getIt<FestaRepository>(),
               festasEmEdicao: getIt<FestaEmEdicaoRepository>(),
+              pedidos: getIt<PedidoRepository>(),
               logger: getIt<AppLogger>(),
             ),
   );

@@ -800,17 +800,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `ListaPage({festaId, festas, pedidos, logger})` + `static const pageKey`
-- [ ] **Um `BlocProvider` só**, acima da escolha `ListaCompacta` / `ListaExpandida` — é o que faz LIST-30 ser verdade **por construção**, não por evento de restauração
-- [ ] **Cruzar ~900px com a tela montada** preserva modo ativo, checks, overrides **e** item expandido (W-R3 / W-R1) — o teste redimensiona e afirma os quatro
-- [ ] Navegar para outra rota **dentro da festa** e voltar preserva overrides e checks (aceite de UC-06 e UC-15) — a prova de LIST-15 e LIST-20 no nível da rota
-- [ ] O teste de rota afirma o destino por `rotaAtual()`, **não** pelo widget montado (AD-014)
-- [ ] `/roles/:festaId` continua caindo em `/roles/:festaId/lista` como default
-- [ ] `/roles/**` sem sessão continua redirecionando (guarda de AD-017) — o comportamento herdado não regride
-- [ ] `PedidoRepository` resolve para `PedidoFalso` no injector, e a substituição por duplo em teste é possível sem tocar a página
-- [ ] Nenhum arquivo de `lib/features/{entrar,home,montar,galera,convite,convidado,custos}/**` é tocado
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] `ListaPage({festaId, festas, pedidos, logger})` + `static const pageKey`
+- [x] **Um `BlocProvider` só**, acima da escolha `ListaCompacta` / `ListaExpandida` — é o que faz LIST-30 ser verdade **por construção**, não por evento de restauração
+- [x] **Cruzar ~900px com a tela montada** preserva modo ativo, checks, overrides **e** item expandido (W-R3 / W-R1) — o teste redimensiona e afirma os quatro
+- [x] Navegar para outra rota **dentro da festa** e voltar preserva overrides e checks (aceite de UC-06 e UC-15) — a prova de LIST-15 e LIST-20 no nível da rota
+- [x] O teste de rota afirma o destino por `rotaAtual()`, **não** pelo widget montado (AD-014)
+- [x] `/roles/:festaId` continua caindo em `/roles/:festaId/lista` como default
+- [x] `/roles/**` sem sessão continua redirecionando (guarda de AD-017) — o comportamento herdado não regride
+- [x] `PedidoRepository` resolve para `PedidoFalso` no injector, e a substituição por duplo em teste é possível sem tocar a página
+- [x] Nenhum arquivo de `lib/features/{entrar,home,montar,galera,convite,convidado,custos}/**` é tocado
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 10 testes novos
 
 **Tests**: widget (rota)
 **Gate**: full
