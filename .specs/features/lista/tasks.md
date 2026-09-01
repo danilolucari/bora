@@ -772,16 +772,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual em 1180×800)
 
 **Done when**:
-- [ ] Grid `1fr / 370px` (A-16 / D-3): card de itens à esquerda, rail à direita
-- [ ] O rail é **sticky** e tem, **nesta ordem**: segmented → bloco de total do modo ativo → `faixa real` (PLANEJAR) *ou* `{N} de {M} no carrinho` (COMPRAR) → `≈ R$ {x} por adulto` → CTA. A ordem é afirmada por teste, não presumida
-- [ ] O rodapé fixo mobile **não existe** em expandido (W-R2) — a **ausência** de `BoraFooterBar` é afirmada
-- [ ] O pedido abre como **modal central** (`BoraSurface` em `showDialog`), não como bottom sheet
-- [ ] O card de itens rola no documento e a página **nunca** rola horizontalmente (W-R4)
-- [ ] Os mesmos números de T23 renderizam aqui: `R$ 271`, `≈ R$ 45 por adulto`, `faixa real: de R$ 245 a R$ 343` (W-R1)
-- [ ] Lista vazia em expandido: card vazio, `R$ 0`, faixa ausente, CTA inerte
-- [ ] `RESTAURAR` no rail segue a mesma regra de existência de T23
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Grid `1fr / 370px` (A-16 / D-3): card de itens à esquerda, rail à direita
+- [x] O rail é **sticky** e tem, **nesta ordem**: segmented → bloco de total do modo ativo → `faixa real` (PLANEJAR) *ou* `{N} de {M} no carrinho` (COMPRAR) → `≈ R$ {x} por adulto` → CTA. A ordem é afirmada por teste, não presumida
+- [x] O rodapé fixo mobile **não existe** em expandido (W-R2) — a **ausência** de `BoraFooterBar` é afirmada
+- [x] O pedido abre como **modal central** (`BoraSurface` em `showDialog`), não como bottom sheet
+- [x] O card de itens rola no documento e a página **nunca** rola horizontalmente (W-R4)
+- [x] Os mesmos números de T23 renderizam aqui: `R$ 271`, `≈ R$ 45 por adulto`, `faixa real: de R$ 245 a R$ 343` (W-R1)
+- [x] Lista vazia em expandido: card vazio, `R$ 0`, faixa ausente, CTA inerte
+- [x] `RESTAURAR` no rail segue a mesma regra de existência de T23
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
