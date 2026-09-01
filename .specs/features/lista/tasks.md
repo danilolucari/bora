@@ -829,15 +829,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Depois de remover comentários e literais de string, **nenhum** arquivo de `lib/features/lista/**` contém: (2) `.round(` `.floor(` `.ceil(` `.truncate(` `.roundToDouble(` `.toStringAsFixed(` · (3) os operadores `*` `/` `%` · (4) `.fold(` `.reduce(` `.sum` · (5) import de arquivo **interno** de `core/calculo/` ou `core/festas/` — só os barrels `calculo.dart` e `festas.dart`
-- [ ] Regra (1): o literal `R$` **sem** stripping de strings. A exceção de `lista_textos.dart` decidida em T12 é **declarada e nomeada** no arquivo do guard, com o motivo — nenhuma exceção silenciosa
-- [ ] **Cada uma das cinco regras tem teste próprio contra um trecho sintético infrator** que a faz falhar — o guard prova que morde
-- [ ] A mensagem de falha **nomeia o arquivo infrator**
-- [ ] Teste comportamental 1: composição de total fracionário (o 210,60 do padrão) → o valor exibido é comparado com **`MoneyFormatter.reais(resultado.totalComEssenciais)`**, o token, nunca o literal (L-008)
-- [ ] Teste comportamental 2: a fração passada a `BoraPriceRangeBar` é comparada com **`posicaoDoMarcador(preco)`**, não com `0.379`
-- [ ] Teste que afirma **zero `BoraToast`** na árvore da tela, em todos os caminhos (A-23)
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Depois de remover comentários e literais de string, **nenhum** arquivo de `lib/features/lista/**` contém: (2) `.round(` `.floor(` `.ceil(` `.truncate(` `.roundToDouble(` `.toStringAsFixed(` · (3) os operadores `*` `/` `%` · (4) `.fold(` `.reduce(` `.sum` · (5) import de arquivo **interno** de `core/calculo/` ou `core/festas/` — só os barrels `calculo.dart` e `festas.dart`
+- [x] Regra (1): o literal `R$` **sem** stripping de strings. A exceção de `lista_textos.dart` decidida em T12 é **declarada e nomeada** no arquivo do guard, com o motivo — nenhuma exceção silenciosa
+- [x] **Cada uma das cinco regras tem teste próprio contra um trecho sintético infrator** que a faz falhar — o guard prova que morde
+- [x] A mensagem de falha **nomeia o arquivo infrator**
+- [x] Teste comportamental 1: composição de total fracionário (o 210,60 do padrão) → o valor exibido é comparado com **`MoneyFormatter.reais(resultado.totalComEssenciais)`**, o token, nunca o literal (L-008)
+- [x] Teste comportamental 2: a fração passada a `BoraPriceRangeBar` é comparada com **`posicaoDoMarcador(preco)`**, não com `0.379`
+- [x] Teste que afirma **zero `BoraToast`** na árvore da tela, em todos os caminhos (A-23)
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: unit (varredura) + widget (os dois comportamentais)
 **Gate**: build
