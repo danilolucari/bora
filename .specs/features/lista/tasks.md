@@ -715,15 +715,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] As quatro linhas literais: 🛵 · `PEDIDO A CAMINHO!` · `Chega em {ETA} na {endereço}.` · `R$ {total} · rachado no acerto da festa` · CTA `VOLTAR À LISTA`
-- [ ] O **endereço inteiro** — `Laje do Rafa — Vila Madalena`, não `Laje do Rafa` (D-6): o mesmo string que a sheet mostrou
-- [ ] ETA, endereço e total vêm do `Pedido` que a **porta devolveu** (LIST-28 AC2) — teste com um duplo que devolve ETA diferente afirma que a tela mostra o da porta, não uma constante do widget
-- [ ] O total formatado por `MoneyFormatter.reais(pedido.total)`
-- [ ] **Sem selo de "simulado"** e sem qualquer marca de que o pedido não é real (LIST-28 AC4 — consequência declarada da AD-024)
-- [ ] `VOLTAR À LISTA` fecha o overlay e **não** o repete; o modo de origem, os checks e os overrides ficam intactos
-- [ ] O overlay **só** existe depois de um pedido confirmado — não há caminho que o monte sem `Pedido`
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] As quatro linhas literais: 🛵 · `PEDIDO A CAMINHO!` · `Chega em {ETA} na {endereço}.` · `R$ {total} · rachado no acerto da festa` · CTA `VOLTAR À LISTA`
+- [x] O **endereço inteiro** — `Laje do Rafa — Vila Madalena`, não `Laje do Rafa` (D-6): o mesmo string que a sheet mostrou
+- [x] ETA, endereço e total vêm do `Pedido` que a **porta devolveu** (LIST-28 AC2) — teste com um duplo que devolve ETA diferente afirma que a tela mostra o da porta, não uma constante do widget
+- [x] O total formatado por `MoneyFormatter.reais(pedido.total)`
+- [x] **Sem selo de "simulado"** e sem qualquer marca de que o pedido não é real (LIST-28 AC4 — consequência declarada da AD-024)
+- [x] `VOLTAR À LISTA` fecha o overlay e **não** o repete; o modo de origem, os checks e os overrides ficam intactos
+- [x] O overlay **só** existe depois de um pedido confirmado — não há caminho que o monte sem `Pedido`
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
