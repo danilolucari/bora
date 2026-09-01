@@ -633,17 +633,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Nasce com `itens` e `enderecoDaFesta` como parâmetros de construção e **`ParceiroDeEntrega.ifood` pré-selecionado** (A-14)
-- [ ] `Total = Subtotal + Frete` vindo de `totalDoPedido` — o bloc **não** soma. Estado padrão de RN-30, lista inteira: iFood **271 / 12 / 283**; Rappi total **280**; Zé frete **0**
-- [ ] `Copos & pratos` fica **fora** do subtotal (A-19), via `itensCobraveis`
-- [ ] Aberto pelo modo COMPRAR leva **apenas os não marcados** (`subtotalDoQueFalta`), e o subtotal reflete só eles
-- [ ] `EnderecoTrocado` vale **só para este pedido**; endereço **vazio** volta a `enderecoDaFesta` no próprio handler, nunca fica vazio (A-08) — defesa exercitada por teste
-- [ ] O Zé é **inerte** enquanto houver item fora do corredor BEBIDAS, e **selecionável** quando o pedido só tem bebidas — os dois lados testados (A-09)
-- [ ] **Idempotência**: `PedidoEnviado` é ignorado quando `enviando || confirmado != null`; dois disparos rápidos ⇒ **um** `enviar` no duplo, **um** `Pedido` confirmado (LIST-33) — teste que falha se a guarda sair
-- [ ] Falha da porta: **sem** `confirmado`, `falhou: true`, `logger.logError(name: 'lista')`, e o CTA volta a ativo. *SPEC_PRECISION_GAP declarado: T-04 não desenha erro de pedido e RN-29 não dá toast — a evidência é a ausência de overlay e de despesa mais o log*
-- [ ] O `Pedido` confirmado é o **que a porta devolveu**, não um montado pelo bloc (LIST-28 AC2)
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 14 testes novos
+- [x] Nasce com `itens` e `enderecoDaFesta` como parâmetros de construção e **`ParceiroDeEntrega.ifood` pré-selecionado** (A-14)
+- [x] `Total = Subtotal + Frete` vindo de `totalDoPedido` — o bloc **não** soma. Estado padrão de RN-30, lista inteira: iFood **271 / 12 / 283**; Rappi total **280**; Zé frete **0**
+- [x] `Copos & pratos` fica **fora** do subtotal (A-19), via `itensCobraveis`
+- [x] Aberto pelo modo COMPRAR leva **apenas os não marcados** (`subtotalDoQueFalta`), e o subtotal reflete só eles
+- [x] `EnderecoTrocado` vale **só para este pedido**; endereço **vazio** volta a `enderecoDaFesta` no próprio handler, nunca fica vazio (A-08) — defesa exercitada por teste
+- [x] O Zé é **inerte** enquanto houver item fora do corredor BEBIDAS, e **selecionável** quando o pedido só tem bebidas — os dois lados testados (A-09)
+- [x] **Idempotência**: `PedidoEnviado` é ignorado quando `enviando || confirmado != null`; dois disparos rápidos ⇒ **um** `enviar` no duplo, **um** `Pedido` confirmado (LIST-33) — teste que falha se a guarda sair
+- [x] Falha da porta: **sem** `confirmado`, `falhou: true`, `logger.logError(name: 'lista')`, e o CTA volta a ativo. *SPEC_PRECISION_GAP declarado: T-04 não desenha erro de pedido e RN-29 não dá toast — a evidência é a ausência de overlay e de despesa mais o log*
+- [x] O `Pedido` confirmado é o **que a porta devolveu**, não um montado pelo bloc (LIST-28 AC2)
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 14 testes novos
 
 **Tests**: unit
 **Gate**: quick
