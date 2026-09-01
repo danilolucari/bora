@@ -324,3 +324,121 @@ Todas as 21 mutações foram aplicadas e revertidas uma a uma, com `git checkout
 **O que falta**: a costura entre a `ListaPage` e o `PedidoBloc`. Os dois argumentos que a página **calcula** — de onde vem o endereço e se o pedido encolhe no modo COMPRAR — são exatamente os dois que nenhum teste observa, porque todo teste de sheet os fornece por conta própria.
 
 **Next steps**: aplicar os Fixes 1 e 2 (bloqueantes para o PASS), depois 3, 4 e 5; re-verificar.
+
+---
+
+## Re-verificação — iteração 2
+
+**Date**: 2026-09-01
+**Diff dos fixes**: `3fe503c..879be36` (4 commits: `ffe23c0` GAP-1, `ffd7070` GAP-2, `62b81b8` GAP-3, `879be36` GAP-4). Diff completo da feature: `fc744b5..HEAD`.
+**Verifier**: sub-agente independente, iteração 2. Escopo **focado**: os 4 mutantes sobreviventes re-plantados por mim, mais a auditoria do diff dos fixes. Os 58/61 AC e os 17/21 mutantes mortos da iteração 1 continuam valendo — nada no diff dos fixes os invalida (`lib/` intocada).
+
+**Veredito**: ❌ **FAIL** — 3 dos 4 gaps fechados com sensor real; **GAP-4 continua aberto**: a alegação de mutante equivalente **não procede**.
+
+### Superfície do diff
+
+`git diff 3fe503c..HEAD -- lib/` → **vazio**. A alegação do fix worker de não ter tocado `lib/` **procede**: os 4 commits mexem em 3 arquivos de teste e só neles (`+145 / −4` linhas), a saber `lista_carrinho_test.dart`, `lista_overrides_test.dart` e `lista_page_test.dart`. Nenhum arquivo de produção mudou entre a iteração 1 e a 2, o que quer dizer que **todo** resultado da iteração 1 sobre o comportamento continua de pé por construção.
+
+### Os 4 mutantes re-plantados — por mim, na minha mão
+
+Cada mutação aplicada no arquivo real, suíte rodada, `git checkout -- <arquivo>` e `git status --porcelain` conferido vazio a cada volta.
+
+| # | Mutação re-plantada | Morta? | Quantos testes morreram | Quem matou |
+|---|---|---|---|---|
+| M18 (GAP-1) | `lista_page.dart:148` — `apenasOQueFalta: false` fixo | ✅ **Morta** | **1** | `lista_page_test.dart` — LIST-25 "a sheet aberta em COMPRAR pede só o que falta, e o subtotal reflete só ele" |
+| M19 (GAP-2) | `lista_page.dart:147` — `enderecoDaFesta: 'Endereco Mutante'` | ✅ **Morta** | **1** | `lista_page_test.dart` — LIST-21 "a linha 📍 e o pedido carregam o local da festa aberta" |
+| **M19′ (GAP-2, mutante esperto)** | `lista_page.dart:147` — `enderecoDaFesta: 'Laje do Rafa — Vila Madalena'` (a constante **é** o literal de RN-30) | ✅ **Morta** | **1** | o mesmo teste LIST-21 |
+| M16 (GAP-3) | `lista_bloc.dart:376` — `_itemAjustavel` percorre `resultado.todosOsItens` | ✅ **Morta** | **2** | `lista_overrides_test.dart` — RN-10, "ajustar carvao/coposEPratos não grava override nem toca a porta" (laço por chave) |
+| M2 (GAP-4) | `lista_bloc.dart:96` — removida a 1ª guarda de `_aoReceberFesta` (`evento.festa == _ultimaGravada`) | ❌ **Sobreviveu** | 0 | ninguém — **suíte inteira: 1930 passaram, 0 falharam** |
+
+**3/4 mortos · 1 sobrevivente.**
+
+### A afirmação do fixer sobre o mutante esperto do GAP-2 — verificada, e **procede**
+
+O fixer alegou que a receita do "Fix 2" da iteração 1 — afirmar `find.text('Laje do Rafa — Vila Madalena')`, o endereço **da fixture** RN-30 — deixaria passar uma constante plantada com esse mesmo literal, e que por isso ele escolheu um endereço distinto (`'Quintal do Tonho — Freguesia do Ó'`, injetado pelo parâmetro novo `local:` de `_festaRn30`/`_abrir`).
+
+Verificado **empiricamente**, não por leitura: com M19′ plantada, troquei no teste `const local = 'Quintal do Tonho — Freguesia do Ó';` por `const local = _endereco;` (ou seja, a receita da iteração 1) e rodei `lista_page_test.dart`:
+
+- receita da iteração 1 + M19′ → **`+11: All tests passed!`** — o mutante **sobrevive**;
+- teste como o fixer escreveu + M19′ → **morre**.
+
+A afirmação está correta, e a escolha dele é uma melhoria real sobre a receita que a iteração 1 havia prescrito: com o endereço da fixture, "veio da festa" e "está escrito na página" são indistinguíveis. O teste e o arquivo foram restaurados (`git checkout -- lib/ test/`, status vazio).
+
+### O julgamento do GAP-4 — a alegação de equivalência **não procede**
+
+**O que foi verificado e confere:**
+
+1. **A citação existe.** `pubspec.lock` fixa `bloc` em **9.2.1**, e `~/AppData/Local/Pub/Cache/hosted/pub.dev/bloc-9.2.1/lib/src/bloc_base.dart` tem, **exatamente na linha 102**, `if (state == _state && _emitted) return;`. A citação do fixer é literal e correta.
+2. **`ListaState.==` de fato exclui `resultado` e `faixaReal`** (`lista_state.dart`), e inclui `carregando`, `festa`, `modo`, `chaveExpandida`, `falhouAoSalvar`. `_estadoCom` copia `modo`, `chaveExpandida` e `falhouAoSalvar` do estado corrente e fixa `carregando: false` — logo os **únicos** campos do `==` que um eco pode mover são `carregando` e `festa`.
+3. **`carregando` é inalcançável**: `_ultimaGravada` só fica não-nulo dentro de `_gravar`, chamado por `_aplicarMudanca`, que emite `_estadoCom` antes — quando a guarda pode disparar, `carregando` já é `false`.
+4. **A suíte inteira segue verde com a guarda removida** — 1930 passaram, 0 falharam. Confere com o que o fixer disse.
+
+**O que derruba a alegação:** a equivalência depende de uma premissa **não universal** — `state.festa == _ultimaGravada` no instante em que a guarda dispara. Ela vale no eco puro, e **não** vale quando uma mudança externa entrou entre a nossa gravação e a emissão seguinte. Nesse caso `_estadoCom(evento.festa)` produz um `ListaState` diferente **por `festa`**, que é campo **incluído** no `==` — e a emissão sai.
+
+Provado com uma sonda descartável (`zz_probe_verifier_test.dart`, criada, rodada e apagada; nada commitado):
+
+| Sonda | Sequência | Original | Com a guarda removida |
+|---|---|---|---|
+| **A — eco puro** | ajuste local (`state.festa == _ultimaGravada == A`) → porta re-emite `A` | zero emissões, `identical(state, depois)` | **idêntico** — `emit` descarta pela igualdade. Inerte ✅ |
+| **B — escrita externa que coincide com a nossa** | ajuste local (`A`) → **escrita externa `X`** (`state.festa == X`, `_ultimaGravada` continua `A`) → escrita externa que devolve `A` | zero emissões, tela fica em `X` | **`emitidos` recebe 1 `ListaState`; `state.festa` vira `A`** — **DISCRIMINA** ❌ |
+
+A sonda B **não viola o contrato da porta**: `FestaEmEdicaoRepositoryFake.emitir` grava `_festas[id] = festa` e só então emite, ou seja, cada emissão é o valor **corrente** da porta, entregue em ordem, sem gravação em voo (`_gravacoesEmVoo == 0`). É uma sequência ordinária de duas escritas externas — o caminho real é `galera` mexer na composição (RN-21, com a Lista viva no `indexedStack`) e depois desfazer, deixando a festa num valor que por acaso é igual ao que a Lista gravou por último.
+
+O efeito, quando isso acontece: a guarda **descarta uma mudança externa legítima** e a tela fica exibindo `X` enquanto a porta já guarda `A`. Não é economia de recálculo — é estado de tela obsoleto. Note ainda que o doc da própria guarda declara como consequência aceita só a mudança externa que chega **no meio de uma gravação** — essa é a **2ª** guarda, coberta por M1. A mudança externa **sem gravação em voo** não está declarada em lugar nenhum.
+
+**Conclusão**: a 1ª guarda **não é** mutante equivalente. É comportamento observável, discriminável por um teste que a sonda B mostra ser escrevível em ~15 linhas, e nenhum teste o exerce. GAP-4 **continua aberto** — diferente do precedente `replace` vs `go` da spec 05, em que as duas formas produziam de fato o mesmo desfecho observável.
+
+**Sobre a renomeação do teste (saída (b) escolhida pelo fixer)**: ela **fortaleceu**, como alegado — nada foi afrouxado. O nome saiu de "o eco da própria gravação é descartado" para "o eco da própria gravação não move a tela", e as asserções são um **superconjunto** estrito das antigas: `expect(bloc.state, depois)` e `editado isTrue` continuam, e entram `expect(emitidos, isEmpty, reason: …)` sobre um `bloc.stream.listen` e `expect(identical(bloc.state.resultado, depois.resultado), isTrue, reason: …)`. O nome novo é **honesto** — o antigo prometia discriminar a guarda e não discriminava. Mas honestidade de nome documenta o furo; não o fecha. E como a premissa em que ela se apoia é falsa, o que o comentário de 18 linhas acima do teste afirma ("Não é furo de teste, é mutante equivalente") **está incorreto** e precisa ser corrigido junto com o fix.
+
+### Os fixes afrouxaram alguma coisa? **Não**
+
+| Verificação | Resultado |
+|---|---|
+| `git diff 3fe503c..HEAD -- lib/` vazio | ✅ nenhum código de produção tocado |
+| Teste existente enfraquecido, ou com asserção/`reason` removido | ✅ nenhum. As linhas removidas no diff são a assinatura do `test(` renomeado e as linhas em volta; **nenhuma asserção saiu** |
+| Renomeação do GAP-4 fortaleceu | ✅ superconjunto estrito das asserções antigas (ver acima) |
+| `skip:` / `solo:` em `test/features/lista/**` | ✅ zero ocorrências |
+| Teste apagado | ✅ nenhum — contagem 1926 → **1930** (+4: GAP-1 +1, GAP-2 +1, GAP-3 +2 pelo laço; GAP-4 renomeia, não soma) |
+| Pré-condição do teste do GAP-1 é real e correta | ✅ `expect(soOQueFalta, lessThan(subtotalDeItens(cobraveis)))` — o item marcado é o primeiro `CheckboxDaLista` do modo COMPRAR (AÇOUGUE/bovina), cobrável e de valor não-nulo, então a desigualdade é verdadeira **e** necessária: com um item de valor 0 os dois subtotais coincidiriam e o teste não discriminaria modo nenhum. A prova de que ela não é decorativa é M18 morrer |
+| Os 2 spec-precision gaps continuam abertos de propósito | ✅ **intocados**. Varredura por `mesmo modo`, `ajuste desfeito`, `desfaz o ajuste` em `test/features/lista/**`: **zero ocorrências**. Nem P1-3 AC4 2ª cláusula nem P1-5 AC9 foram "resolvidos" por leitura inventada — o fixer respeitou que a decisão é do usuário |
+
+### Gate (rodado por mim, com a árvore restaurada)
+
+- `flutter test` → **1930 passaram, 0 falharam, 0 pulados** (exit 0)
+- `flutter analyze` → **`No issues found!`** (exit 0)
+- `git status --porcelain` → **vazio**
+
+### Integridade da árvore
+
+Cinco mutações de produção (M18, M19, M19′, M16, M2), uma mutação de teste (a receita da iteração 1, para auditar a alegação do GAP-2) e uma sonda descartável (`zz_probe_verifier_test.dart`). Todas aplicadas e revertidas uma a uma com `git checkout -- <arquivo>` / `rm`, com `git status --porcelain` conferido **vazio a cada volta**. Nada foi consertado por esta verificação. Nenhum arquivo do repositório ficou modificado, exceto este `validation.md`.
+
+### Traceability — atualização da iteração 2
+
+| Requisito | Status iteração 1 | Novo status |
+|---|---|---|
+| **LIST-21** (endereço da sheet) | ❌ Needs Fix | ✅ **Verified** — M19 e M19′ mortos |
+| **LIST-25** (só o que falta) | ❌ Needs Fix | ✅ **Verified** — M18 morto |
+| RN-10 / override nos essenciais (sensor do Fix 3) | sem sensor | ✅ **Verified** — M16 morto |
+| **LIST-34** (supressão de eco) | ⚠️ sem sensor na 1ª guarda | ❌ **Needs Fix** — a guarda não é equivalente (sonda B) |
+
+### Gap remanescente — o único
+
+**GAP-4 (Minor) — a 1ª guarda de `_aoReceberFesta` continua sem sensor, e não é equivalente**
+
+- **Raiz**: `lib/features/lista/presentation/bloc/lista_bloc.dart:96` — `if (evento.festa != null && evento.festa == _ultimaGravada) return;`. Removê-la deixa as 1930 verdes.
+- **Por que não é equivalente**: quando `state.festa != _ultimaGravada` — uma escrita externa entrou depois da nossa gravação —, uma emissão seguinte igual a `_ultimaGravada` produz um `ListaState` diferente **por `festa`**, campo incluído no `==`, e a emissão sai. A guarda a suprime, e a tela fica obsoleta.
+- **Fix**: promover a sonda B a teste de `lista_carrinho_test.dart` (grupo LIST-34), com o nome dizendo o que ela trava. Duas saídas legítimas, e a escolha é de produto:
+  1. **manter a guarda**, e o teste afirma o comportamento atual (a tela fica em `X`, a escrita externa coincidente é descartada) — aí a consequência precisa ser **declarada** no doc de `_aoReceberFesta`, ao lado da que já está escrita para a 2ª guarda;
+  2. **trocar a guarda** por `evento.festa == state.festa`, que é o que a economia de recálculo de fato quer dizer — passa a ser inerte de verdade, e o teste trava a não-regressão.
+- **Corrigir junto**: o comentário novo em `lista_carrinho_test.dart` afirma "Não é furo de teste, é mutante equivalente". A sonda B mostra que não é; o comentário precisa ser reescrito.
+- **Done when**: remover a linha 96 de `lista_bloc.dart` faz a suíte falhar.
+
+### Summary da iteração 2
+
+**Overall**: ⚠️ Issues — 3 dos 4 gaps genuinamente fechados, com mutante morrendo na minha mão em cada um; 1 aberto.
+
+**O que melhorou de verdade**: os dois gaps bloqueantes da iteração 1 (M18/M19, a costura `ListaPage → PedidoBloc`) estão fechados, e o do endereço está fechado **melhor** do que a receita prescrita na iteração 1 — o fixer viu que a fixture RN-30 tornava o sensor cego e injetou um endereço distinto, o que verifiquei ser exatamente a diferença entre matar e não matar M19′. O sensor do GAP-3 mira a **composição gravada**, que é onde o efeito é observável, e não a tela, onde ele é invisível.
+
+**O que falta**: um único gap Minor. O fixer foi honesto ao renomear em vez de fingir cobertura, e as asserções que ele acrescentou são estritamente mais fortes — mas o raciocínio de equivalência parou no eco puro e não considerou a escrita externa coincidente, que discrimina.
+
+**Next steps**: fechar o GAP-4 por uma das duas saídas acima (iteração 3 de 3) e re-verificar só esse mutante.
