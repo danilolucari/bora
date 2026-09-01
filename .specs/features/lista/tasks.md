@@ -308,14 +308,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O doc de `pedido.dart` abre com o **SPEC_DEVIATION** declarado: `Pedido` e os parceiros ficam na feature e não em `core/calculo/dominio/` apesar da AD-008, porque a entidade tem **um** consumidor e `total_do_pedido.dart` já atribui parceiros, ETAs e fretes à spec `lista` (`design.md` §6.6)
-- [ ] Os três parceiros com os literais exatos de RN-27: `iFood Mercado` / `40–60 min` / frete 12 · `Rappi Turbo` / `15–30 min` / frete 9 · `Zé Delivery` / `30–45 min` / frete 0, este com `soBebidas: true`
-- [ ] A **ordem de declaração** é a de RN-27 (iFood, Rappi, Zé) e um teste a afirma — é ela que determina a ordem dos cartões e a pré-seleção da A-14
-- [ ] Os fretes são **números**, nunca strings com `R$` — a formatação é de `MoneyFormatter` (o guard de T26 morde `R$`, não números)
-- [ ] `Pedido` tem `parceiro`, `endereco`, `itens`, `subtotal`, `frete`, `total`, com `==`/`hashCode` por valor
-- [ ] `Pedido` **não** calcula: `total` é campo, alimentado por `totalDoPedido` fora daqui
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 6 testes novos
+- [x] O doc de `pedido.dart` abre com o **SPEC_DEVIATION** declarado: `Pedido` e os parceiros ficam na feature e não em `core/calculo/dominio/` apesar da AD-008, porque a entidade tem **um** consumidor e `total_do_pedido.dart` já atribui parceiros, ETAs e fretes à spec `lista` (`design.md` §6.6)
+- [x] Os três parceiros com os literais exatos de RN-27: `iFood Mercado` / `40–60 min` / frete 12 · `Rappi Turbo` / `15–30 min` / frete 9 · `Zé Delivery` / `30–45 min` / frete 0, este com `soBebidas: true`
+- [x] A **ordem de declaração** é a de RN-27 (iFood, Rappi, Zé) e um teste a afirma — é ela que determina a ordem dos cartões e a pré-seleção da A-14
+- [x] Os fretes são **números**, nunca strings com `R$` — a formatação é de `MoneyFormatter` (o guard de T26 morde `R$`, não números)
+- [x] `Pedido` tem `parceiro`, `endereco`, `itens`, `subtotal`, `frete`, `total`, com `==`/`hashCode` por valor
+- [x] `Pedido` **não** calcula: `total` é campo, alimentado por `totalDoPedido` fora daqui
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 6 testes novos
 
 **Tests**: unit
 **Gate**: quick
