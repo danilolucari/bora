@@ -662,13 +662,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Nome, ETA e frete renderizam com os literais de RN-27; o frete formatado por `MoneyFormatter`, e o do Zé lido como **grátis** conforme a copy de `design.md` §9
-- [ ] O qualificador literal **(só bebidas)** aparece no cartão do Zé, **sempre** — mesmo inerte (A-09: a explicação **é** o qualificador)
-- [ ] Selecionado × não selecionado são visualmente distintos, e o press afunda `translate(2px,2px)` com a sombra de 4px→2px
-- [ ] Inerte: `onPressed: null`, o toque **não** dispara callback e **nenhuma copy de erro nova** aparece — defesa exercitada
-- [ ] Nenhum literal de cor; tudo dos tokens
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 7 testes novos
+- [x] Nome, ETA e frete renderizam com os literais de RN-27; o frete formatado por `MoneyFormatter`, e o do Zé lido como **grátis** conforme a copy de `design.md` §9
+- [x] O qualificador literal **(só bebidas)** aparece no cartão do Zé, **sempre** — mesmo inerte (A-09: a explicação **é** o qualificador)
+- [x] Selecionado × não selecionado são visualmente distintos, e o press afunda `translate(2px,2px)` com a sombra de 4px→2px
+- [x] Inerte: `onPressed: null`, o toque **não** dispara callback e **nenhuma copy de erro nova** aparece — defesa exercitada
+- [x] Nenhum literal de cor; tudo dos tokens
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 7 testes novos
 
 **Tests**: widget
 **Gate**: full

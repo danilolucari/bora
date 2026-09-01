@@ -195,6 +195,18 @@ void main() {
     test('o CTA da sheet é "CONFIRMAR PEDIDO →"', () {
       expect(ListaTextos.confirmarPedido, 'CONFIRMAR PEDIDO →');
     });
+
+    test('a sublinha do cartão-radio é "chega em {eta}"', () {
+      expect(ListaTextos.chegaEmEta('40–60 min'), 'chega em 40–60 min');
+    });
+
+    test('o qualificador do Zé é o literal de RN-27', () {
+      expect(ListaTextos.soBebidas, '(só bebidas)');
+    });
+
+    test('o frete zero do Zé é lido como "grátis"', () {
+      expect(ListaTextos.freteGratis, 'grátis');
+    });
   });
 
   group('LIST-26 — o overlay do pedido', () {

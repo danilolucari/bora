@@ -145,6 +145,26 @@ abstract final class ListaTextos {
   /// T-04: a ação vermelha sublinhada ao lado do endereço.
   static const String trocar = 'TROCAR';
 
+  /// T-04: a sublinha de cada cartão-radio — "chega em {eta}".
+  ///
+  /// [eta] é o prazo literal de RN-27 (`ParceiroDeEntrega.eta`), não um
+  /// intervalo montado aqui.
+  static String chegaEmEta(String eta) => 'chega em $eta';
+
+  /// RN-27: o qualificador do Zé Delivery, "só-bebidas".
+  ///
+  /// Aparece **sempre** no cartão dele, inclusive inerte: a explicação de por
+  /// que o cartão não pode ser escolhido **é** este qualificador, e não uma
+  /// copy de erro nova (A-09).
+  static const String soBebidas = '(só bebidas)';
+
+  /// RN-27: o frete do Zé Delivery, lido como palavra.
+  ///
+  /// "frete grátis" é como RN-27 escreve, e é o que o cartão mostra no lugar
+  /// do valor. O dado continua sendo o número 0 — quem decide a palavra é a
+  /// tela, não a camada.
+  static const String freteGratis = 'grátis';
+
   /// T-04: as três linhas do resumo, em sentence case.
   static const String subtotal = 'Subtotal';
   static const String frete = 'Frete';
