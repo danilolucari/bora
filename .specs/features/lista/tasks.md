@@ -856,14 +856,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] O doc do arquivo abre com o **SPEC_PRECISION_GAP** declarado: nenhum arquivo de `04` nem de `06` desenha esta barra; o visual sai **só** de tokens do arquivo 02 (A-17)
-- [ ] As quatro abas literais `Lista · Galera · WhatsApp · Custos`, com a aba da rota corrente **ativa**
-- [ ] Acionar uma aba navega para a rota correspondente **preservando** o estado das outras — teste que ajusta um override na Lista, vai para Galera, volta e afirma o override intacto
-- [ ] `/roles/:festaId/lista` aberta **diretamente** renderiza a tela por inteiro, com ou sem a barra (A-17)
-- [ ] `/roles/:festaId/montar` **não** exibe a barra (não é aba permanente)
-- [ ] `border-radius: 0`, sombra dura, sem gradiente, nenhum literal de cor — os invariantes do arquivo 02
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] O doc do arquivo abre com o **SPEC_PRECISION_GAP** declarado: nenhum arquivo de `04` nem de `06` desenha esta barra; o visual sai **só** de tokens do arquivo 02 (A-17)
+- [x] As quatro abas literais `Lista · Galera · WhatsApp · Custos`, com a aba da rota corrente **ativa**
+- [x] Acionar uma aba navega para a rota correspondente **preservando** o estado das outras — teste que ajusta um override na Lista, vai para Galera, volta e afirma o override intacto
+- [x] `/roles/:festaId/lista` aberta **diretamente** renderiza a tela por inteiro, com ou sem a barra (A-17)
+- [x] `/roles/:festaId/montar` **não** exibe a barra (não é aba permanente)
+- [x] `border-radius: 0`, sombra dura, sem gradiente, nenhum literal de cor — os invariantes do arquivo 02
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: widget (rota)
 **Gate**: build
@@ -1076,14 +1076,16 @@ Vêm do `design.md` §14 e **não podem ser silenciados** durante a implementaç
 
 ## Success Criteria da feature (da `spec.md`, conferidos ao fim)
 
-- [ ] `flutter analyze` zero issues · suíte verde · baseline do merge de `montar` preservada, **+ ~230 testes novos**
-- [ ] **Aceite de UC-05 na tela**: os quatro essenciais de RN-10 presentes sem ação do usuário, com badge `AUTO ∝`, rodapé lendo `R$ 271` e `≈ R$ 45 por adulto`
-- [ ] **Aceite de UC-14 na tela**: marcador em `(média−mín)/(máx−mín)` — 37,9% na Picanha, extremos R$ 54 e R$ 83 — e a regra da faixa aplicada à tabela devolvendo R$ 286 / R$ 234–356
-- [ ] **Aceite de UC-06 na tela**: passos e mínimos de RN-12, ponto vermelho, total ao vivo, RESTAURAR que zera e some, override sobrevivendo à navegação dentro da festa
-- [ ] **Aceite de UC-15 na tela**: cinco corredores na ordem de RN-27, check verde a 45% de opacidade, contador correto, check sobrevivendo ao alternar PLANEJAR ⇄ COMPRAR
-- [ ] **Aceite de UC-16 na tela**: Total = Subtotal + Frete nos três parceiros, Zé com frete grátis, overlay com ETA e "rachado no acerto da festa", `Despesa` criada com o total (R$ 283)
-- [ ] Guard de LIST-07 verde, com as cinco regras provadas contra trecho infrator e a única exceção nomeada
-- [ ] W-04 funcional: grid `1fr / 370px`, rail sticky com segmented no topo, modal central, zero scroll horizontal, sem rodapé fixo
-- [ ] Festa sem ninguém: card vazio, R$ 0, CTA inerte, sem copy inventada
-- [ ] Nenhum toast novo, nenhuma copy fora das specs 03, 04 e 06
-- [ ] AD-030 registrada no `STATE.md`, depois da AD-029
+- [x] `flutter analyze` zero issues · suíte verde · baseline do merge de `montar` preservada, **+ ~230 testes novos**
+- [x] **Aceite de UC-05 na tela**: os quatro essenciais de RN-10 presentes sem ação do usuário, com badge `AUTO ∝`, rodapé lendo `R$ 271` e `≈ R$ 45 por adulto`
+- [x] **Aceite de UC-14 na tela**: marcador em `(média−mín)/(máx−mín)` — 37,9% na Picanha, extremos R$ 54 e R$ 83 — e a regra da faixa aplicada à tabela devolvendo R$ 286 / R$ 234–356
+- [x] **Aceite de UC-06 na tela**: passos e mínimos de RN-12, ponto vermelho, total ao vivo, RESTAURAR que zera e some, override sobrevivendo à navegação dentro da festa
+- [x] **Aceite de UC-15 na tela**: cinco corredores na ordem de RN-27, check verde a 45% de opacidade, contador correto, check sobrevivendo ao alternar PLANEJAR ⇄ COMPRAR
+- [x] **Aceite de UC-16 na tela**: Total = Subtotal + Frete nos três parceiros, Zé com frete grátis, overlay com ETA e "rachado no acerto da festa", `Despesa` criada com o total (R$ 283)
+- [x] Guard de LIST-07 verde, com as cinco regras provadas contra trecho infrator e a única exceção nomeada
+- [x] W-04 funcional: grid `1fr / 370px`, rail sticky com segmented no topo, modal central, zero scroll horizontal, sem rodapé fixo
+- [x] Festa sem ninguém: card vazio, R$ 0, CTA inerte, sem copy inventada
+- [x] Nenhum toast novo, nenhuma copy fora das specs 03, 04 e 06
+- [x] AD-030 registrada no `STATE.md`, depois da AD-029
+
+**Conferidos ao fim do Batch 5 (T27)**: `flutter analyze` com zero issues e **1926 testes verdes**, contra os **1528** com que `montar` fechou (`STATE.md` §Handoff) — **+398**, acima dos ~230 previstos. Os 35 requisitos ficam em `Implementing` na tabela de rastreabilidade da `spec.md`: quem os move para `Verified` é o Verifier, que roda depois desta batch (autor ≠ verificador).

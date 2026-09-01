@@ -316,41 +316,41 @@ O ROADMAP marcou Discuss para esta spec, e as **duas zonas cinzentas do usuário
 
 | ID | História | Origem na spec-fonte | Fase | Status |
 |---|---|---|---|---|
-| LIST-01 | P1-1 AC1 | T-04 (header + segmented) | Design | Pending |
-| LIST-02 | P1-1 AC2 · P1-4 AC1 | T-04 (dicas dos dois modos) | Design | Pending |
-| LIST-03 | P1-1 AC3 | T-04 · UC-05 · A-12 | Design | Pending |
-| LIST-04 | P1-1 AC4, AC5 | **RN-10 · UC-05 (aceite)** · AD-010 | Design | Pending |
-| LIST-05 | P1-1 AC6 | UC-05 | Design | Pending |
-| LIST-06 | P1-1 AC7 | **T-04 (rodapé) · RN-10 · RN-14 · UC-04 (aceite)** · A-01, A-02 | Design | Pending |
-| LIST-07 | P1-1 AC8, AC9 | RN-13 · `CLAUDE.md` (fórmula não vaza) | Design | Pending |
-| LIST-08 | P1-2 AC1, AC2, AC3, AC7 | **RN-11 · UC-14 (aceite)** · AD-023 | Design | Pending |
-| LIST-09 | P1-2 AC4, AC5, AC6 | **RN-11 (total R$ 286 · faixa R$ 234–356)** · A-03, A-04 | Design | Pending |
-| LIST-10 | P1-3 AC1 | UC-06 (aceite: abrir um fecha o anterior) | Design | Pending |
-| LIST-11 | P1-3 AC2, AC3 | **RN-12 (passos e mínimos)** | Design | Pending |
-| LIST-12 | P1-3 AC4 | RN-12 (ponto vermelho 8px) | Design | Pending |
-| LIST-13 | P1-3 AC5 | UC-04 · UC-06 | Design | Pending |
-| LIST-14 | P1-3 AC6, AC7 | RN-12 · UC-06 A1 · A-10 | Design | Pending |
-| LIST-15 | P1-3 AC8 | **UC-06 (aceite: sobrevive à navegação)** · A-05 | Design | Pending |
-| LIST-16 | P1-4 AC2 | **RN-27 (ordem dos corredores)** · UC-15 | Design | Pending |
-| LIST-17 | P1-4 AC3 | RN-27 · E-a (atribuição declarada) | Design | Pending |
-| LIST-18 | P1-4 AC4 | T-04 (checkbox 26×26, verde `#0B6B3A`, 45%) · A-13 | Design | Pending |
-| LIST-19 | P1-4 AC5, AC6 | T-04 (rodapé COMPRAR) · RN-27 | Design | Pending |
-| LIST-20 | P1-4 AC7 | **UC-15 (aceite: check persiste)** · A-06 | Design | Pending |
-| LIST-21 | P1-5 AC1, AC2, AC7 | T-04 (sheet) · UC-16 passo 2 e A1 · A-08, A-18 | Design | Pending |
-| LIST-22 | P1-5 AC3 | **RN-27 (parceiros, ETA, frete)** · A-14 | Design | Pending |
-| LIST-23 | P1-5 AC4 | **UC-16 (aceite: total = subtotal + frete; Zé grátis)** · A-19 | Design | Pending |
-| LIST-24 | P1-5 AC5 | RN-27 ("Zé Delivery só-bebidas") · A-09 | Design | Pending |
-| LIST-25 | P1-5 AC6 | **UC-16 A2** · A-07 | Design | Pending |
-| LIST-26 | P1-5 AC8, AC9 | T-04 (overlay PEDIDO A CAMINHO) | Design | Pending |
-| LIST-27 | P1-5 AC10, AC11 | **RN-20** · AD-024 · AD-027 · A-20, A-21 | Design | Pending |
-| LIST-28 | P2-1 AC1, AC2, AC4 | **AD-024** (porta + adaptador falso + copy literal) | Design | Pending |
-| LIST-29 | P2-2 AC1..AC5 | W-04 ("Sua lista (turbinada)") · W-R2, W-R4 · A-16 | Design | Pending |
-| LIST-30 | P2-2 AC6, AC7 | **W-R1, W-R3** | Design | Pending |
-| LIST-31 | P2-3 AC1..AC5 | UC-03 E1 (chegando na Lista) · A-11 | Design | Pending |
-| LIST-32 | P2-1 AC3 · dimensões: failure, observability, external-dependency | AD-005 · AD-016 | Design | Pending |
-| LIST-33 | dimensão: idempotência | UC-16 (um pedido por confirmação) | Design | Pending |
-| LIST-34 | dimensão: concurrency / ordering | UC-04 ("latência imperceptível") | Design | Pending |
-| LIST-35 | P3-1 AC1..AC3 | **arquivo 01 §5** (abas permanentes) · A-17 · A-18 de `galera` | Design | Pending |
+| LIST-01 | P1-1 AC1 | T-04 (header + segmented) | Execute | Implementing |
+| LIST-02 | P1-1 AC2 · P1-4 AC1 | T-04 (dicas dos dois modos) | Execute | Implementing |
+| LIST-03 | P1-1 AC3 | T-04 · UC-05 · A-12 | Execute | Implementing |
+| LIST-04 | P1-1 AC4, AC5 | **RN-10 · UC-05 (aceite)** · AD-010 | Execute | Implementing |
+| LIST-05 | P1-1 AC6 | UC-05 | Execute | Implementing |
+| LIST-06 | P1-1 AC7 | **T-04 (rodapé) · RN-10 · RN-14 · UC-04 (aceite)** · A-01, A-02 | Execute | Implementing |
+| LIST-07 | P1-1 AC8, AC9 | RN-13 · `CLAUDE.md` (fórmula não vaza) | Execute | Implementing |
+| LIST-08 | P1-2 AC1, AC2, AC3, AC7 | **RN-11 · UC-14 (aceite)** · AD-023 | Execute | Implementing |
+| LIST-09 | P1-2 AC4, AC5, AC6 | **RN-11 (total R$ 286 · faixa R$ 234–356)** · A-03, A-04 | Execute | Implementing |
+| LIST-10 | P1-3 AC1 | UC-06 (aceite: abrir um fecha o anterior) | Execute | Implementing |
+| LIST-11 | P1-3 AC2, AC3 | **RN-12 (passos e mínimos)** | Execute | Implementing |
+| LIST-12 | P1-3 AC4 | RN-12 (ponto vermelho 8px) | Execute | Implementing |
+| LIST-13 | P1-3 AC5 | UC-04 · UC-06 | Execute | Implementing |
+| LIST-14 | P1-3 AC6, AC7 | RN-12 · UC-06 A1 · A-10 | Execute | Implementing |
+| LIST-15 | P1-3 AC8 | **UC-06 (aceite: sobrevive à navegação)** · A-05 | Execute | Implementing |
+| LIST-16 | P1-4 AC2 | **RN-27 (ordem dos corredores)** · UC-15 | Execute | Implementing |
+| LIST-17 | P1-4 AC3 | RN-27 · E-a (atribuição declarada) | Execute | Implementing |
+| LIST-18 | P1-4 AC4 | T-04 (checkbox 26×26, verde `#0B6B3A`, 45%) · A-13 | Execute | Implementing |
+| LIST-19 | P1-4 AC5, AC6 | T-04 (rodapé COMPRAR) · RN-27 | Execute | Implementing |
+| LIST-20 | P1-4 AC7 | **UC-15 (aceite: check persiste)** · A-06 | Execute | Implementing |
+| LIST-21 | P1-5 AC1, AC2, AC7 | T-04 (sheet) · UC-16 passo 2 e A1 · A-08, A-18 | Execute | Implementing |
+| LIST-22 | P1-5 AC3 | **RN-27 (parceiros, ETA, frete)** · A-14 | Execute | Implementing |
+| LIST-23 | P1-5 AC4 | **UC-16 (aceite: total = subtotal + frete; Zé grátis)** · A-19 | Execute | Implementing |
+| LIST-24 | P1-5 AC5 | RN-27 ("Zé Delivery só-bebidas") · A-09 | Execute | Implementing |
+| LIST-25 | P1-5 AC6 | **UC-16 A2** · A-07 | Execute | Implementing |
+| LIST-26 | P1-5 AC8, AC9 | T-04 (overlay PEDIDO A CAMINHO) | Execute | Implementing |
+| LIST-27 | P1-5 AC10, AC11 | **RN-20** · AD-024 · AD-027 · A-20, A-21 | Execute | Implementing |
+| LIST-28 | P2-1 AC1, AC2, AC4 | **AD-024** (porta + adaptador falso + copy literal) | Execute | Implementing |
+| LIST-29 | P2-2 AC1..AC5 | W-04 ("Sua lista (turbinada)") · W-R2, W-R4 · A-16 | Execute | Implementing |
+| LIST-30 | P2-2 AC6, AC7 | **W-R1, W-R3** | Execute | Implementing |
+| LIST-31 | P2-3 AC1..AC5 | UC-03 E1 (chegando na Lista) · A-11 | Execute | Implementing |
+| LIST-32 | P2-1 AC3 · dimensões: failure, observability, external-dependency | AD-005 · AD-016 | Execute | Implementing |
+| LIST-33 | dimensão: idempotência | UC-16 (um pedido por confirmação) | Execute | Implementing |
+| LIST-34 | dimensão: concurrency / ordering | UC-04 ("latência imperceptível") | Execute | Implementing |
+| LIST-35 | P3-1 AC1..AC3 | **arquivo 01 §5** (abas permanentes) · A-17 · A-18 de `galera` | Execute | Implementing |
 
 **ID format:** `LIST-[NN]`, sem buraco, de 01 a 35.
 **Status values:** Pending → In Design → In Tasks → Implementing → Verified
