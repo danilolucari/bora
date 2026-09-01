@@ -28,12 +28,12 @@ const Size _janelaExpandida = Size(1180, 800);
 const String _festaId = 'rafa18';
 const String _endereco = 'Laje do Rafa — Vila Madalena';
 
-FestaEmEdicao _festaRn30() => FestaEmEdicao(
+FestaEmEdicao _festaRn30({String local = _endereco}) => FestaEmEdicao(
       festa: Festa(
         nome: 'CHURRAS DO RAFA',
         data: 'SÁB · 18 JUL',
         hora: '14H',
-        local: _endereco,
+        local: local,
         duracaoHoras: 4,
       ),
       composicao: composicaoRn30(),
@@ -46,8 +46,10 @@ Future<FestaEmEdicaoRepositoryFake> _abrir(
   Size janela = _janelaCompacta,
   bool comSessao = true,
   PedidoFalsoDeTeste? pedidos,
+  String local = _endereco,
 }) async {
-  final porta = FestaEmEdicaoRepositoryFake(festas: {_festaId: _festaRn30()});
+  final porta =
+      FestaEmEdicaoRepositoryFake(festas: {_festaId: _festaRn30(local: local)});
   addTearDown(porta.dispose);
 
   addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -339,6 +341,33 @@ void main() {
         isNot(contains(marcada)),
         reason: 'o item já no carrinho não vai no pedido',
       );
+    });
+  });
+
+  group('LIST-21 — o endereço do pedido vem desta festa', () {
+    testWidgets('a linha 📍 e o pedido carregam o local da festa aberta',
+        (tester) async {
+      // Um local que **não** é o literal de RN-30 nem o default de nenhuma
+      // fixture: é o que separa "veio da festa" de "está escrito na página".
+      // Com o endereço da fixture, uma constante plantada em `lista_page.dart`
+      // passaria despercebida.
+      const local = 'Quintal do Tonho — Freguesia do Ó';
+      final duplo = PedidoFalsoDeTeste();
+      await _abrir(tester, pedidos: duplo, local: local);
+
+      await tester.tap(find.byKey(RodapeDaLista.ctaKey));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(local),
+        findsOneWidget,
+        reason: 'P1-5 AC2: a sheet mostra o endereço da festa',
+      );
+
+      await tester.tap(find.byKey(ConteudoDoPedido.confirmarKey));
+      await tester.pumpAndSettle();
+
+      expect(duplo.enviados.single.endereco, local);
     });
   });
 }
