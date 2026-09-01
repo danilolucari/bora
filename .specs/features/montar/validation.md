@@ -8,7 +8,7 @@ re-derivada do `spec.md`; nenhuma alegação de `tasks.md`, de mensagem de commi
 "self-check de adequação" de worker aceita como prova
 **SDK**: Flutter 3.47.1 · Dart 3.13.1 (`C:/SDKs/flutter/bin/flutter`), Windows 11
 
-**Veredito**: ⚠️ **PASS COM RESSALVAS**
+**Veredito**: ⚠️ **PASS COM RESSALVAS** → ✅ **PASS** na re-verificação de 2026-09-01 (ver §Re-verificação)
 
 O portão está verde — **1519 testes passando**, `flutter analyze` sem nenhum issue — e os
 24 requisitos têm evidência ancorada com `file:line` e expressão de asserção. O número
@@ -358,11 +358,64 @@ para não se perder. O arquivo foi removido; árvore limpa.
 
 ---
 
+---
+
+## Re-verificação — 2026-09-01
+
+**Motivo**: a 1ª passada fechou em PASS com ressalvas e os 4 gaps foram corrigidos em
+`08a4622`, `f863d48`, `afc662f` e `52a9736`. O Verifier de re-verificação chegou a ser
+despachado em 2026-08-31 e morreu de 429 na pausa por cota — nunca escreveu nada. Esta
+seção é a passada que faltava.
+
+**Verificador**: sessão independente do autor (nenhum destes commits é meu).
+**Método**: `evidence-or-zero` — nenhuma mensagem de commit aceita como prova. Cada gap
+foi fechado **re-plantando o mutante original** e exigindo que o teste novo morresse.
+**SDK**: Flutter 3.47.1 · Dart 3.13.1, Windows 11. Árvore em `8a933b4`, limpa.
+
+### Gate
+
+| Comando | Resultado |
+|---|---|
+| `flutter analyze` | ✅ `No issues found! (ran in 1.5s)` — `exit=0` |
+| `flutter test` | ✅ `All tests passed!` — **1528 passed, 0 failed, 0 skipped** — `exit=0` |
+| Baseline `main` (conferida hoje, não herdada) | 1137 verdes, analyze limpo → **delta +391** |
+| Árvore ao fim | ✅ limpa (todos os mutantes revertidos, `git status` vazio) |
+
+### Os 4 gaps, re-conferidos por mutação
+
+| Gap | Mutante re-plantado | O que aconteceu | Result |
+|---|---|---|---|
+| **GAP-1a** (Alta) | cifrão **escapado** na fonte (`R`,`\`,`$`) em `rail_do_custo.dart` — a forma que o autor da 1ª passada provou que passava batido | guard falha nomeando `rail_do_custo.dart: escreve R$ na tela (R\$)` | ✅ **fechado** |
+| **GAP-1b** (Alta) | `.toInt()` no mesmo arquivo | guard falha nomeando `rail_do_custo.dart: arredonda ou formata número (.toInt()` | ✅ **fechado** |
+| **GAP-2** (Média) | `pessoas: const []` e `overrides: const {}` em `_composicaoCom` (`montar_bloc.dart`) | **4 testes morrem**: os três efeitos de RN-21 (kit veggie, sem porco, cerveja por quem bebe) *depois do primeiro toque* + o override de RN-12 | ✅ **fechado** |
+| **GAP-3** (Média) | `nome: festa.nome` → literal `'CHURRAS NOVO'` em `montar_expandido.dart` | morre `MONT-09 … MONT-15 AC3: a identidade é a da festa montada, não o default do rascunho` | ✅ **fechado** |
+| **GAP-4** (Baixa) | `const Text('CALCULAR')` em `FormularioDeMontagem` (compartilhado por W-R1) | morrem os **dois** testes de ausência, um por plataforma | ✅ **fechado** |
+
+A regra 1 do guard passou a varrer as **duas** formas do cifrão via `test/support/cifrao_na_fonte.dart`,
+e a regra 2 tem agora a família inteira de conversão (`.round(`, `.floor(`, `.ceil(`,
+`.truncate(`, os quatro `…ToDouble(`, `.toInt(`, `.toStringAsFixed(`, `.toStringAsPrecision(`).
+A mensagem de falha nomeia **arquivo, regra e o token casado** — item (c) do fix de GAP-1.
+
+**Os 4 fixes são test-only**: `git show --stat` nos quatro commits não toca uma linha de
+`lib/`. Coerente com o diagnóstico da 1ª passada — o código estava certo, o furo era de sensor.
+
+### Gaps que continuam abertos
+
+Só o **GAP-5 (informativo)**: os *spec-precision gaps*, onde a spec não fixa valor preciso.
+Nenhum deles é bug nem sensor furado. Segue valendo a ressalva registrada em P2-1 AC5 — não
+há round-trip literal montar → Home → montar; a preservação é afirmada no store e na troca
+de rota.
+
+**Veredito da re-verificação: ✅ PASS.** A feature está apta a merge na `main`.
+
+---
+
 ## Summary
 
 | Métrica | Valor |
 |---|---|
-| Veredito | ⚠️ **PASS COM RESSALVAS** |
+| Veredito (1ª passada) | ⚠️ **PASS COM RESSALVAS** |
+| **Veredito final (re-verificação 2026-09-01)** | ✅ **PASS** |
 | Critérios sem evidência | **0** de 24 |
 | Requisitos ✅ Verified | 21 de 24 (3 com ressalva de sensor) |
 | Mutações executadas | **21** |
@@ -375,7 +428,7 @@ para não se perder. O arquivo foi removido; árvore limpa.
 | Testes pré-existentes alterados | 4 — auditados, **nenhuma asserção enfraquecida** |
 | Desvios declarados | 11 auditados — **11 procedem** (2 com ressalva de processo/cobertura) |
 | Árvore ao fim | ✅ limpa |
-| Gaps abertos | 5 (1 alta, 2 médias, 1 baixa, 1 informativa) |
+| Gaps abertos após a re-verificação | **1** — só o GAP-5 (informativo). GAP-1..GAP-4 fechados e reconferidos por re-plantio |
 
 **Por que não é PASS limpo**: a spec põe o guard de MONT-08 como a defesa central
 ("o risco desta tela não é a conta: é a fórmula vazar para o widget") e o declara nos
