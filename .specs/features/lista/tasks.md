@@ -472,18 +472,18 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] Emoji, nome, quantidade (`rotuloDeQuantidade`) e valor (`MoneyFormatter.reais(item.valor)`) renderizam — o valor comparado com o **formatador**, nunca com o literal (L-008)
-- [ ] Item **coberto** por RN-11 exibe `{quantidade} · média de {N} mercados` com o `N` da coluna Fontes: **4** na Picanha bovina, **3** no Pão de alho, **2** no Gelo
-- [ ] Item coberto exibe a `BoraPriceRangeBar` com extremos formatados — **R$ 54** e **R$ 83** na Picanha — e a fração comparada com **`posicaoDoMarcador(preco)`**, não com `0.379` (o segundo teste comportamental de `design.md` §13)
-- [ ] Item **não coberto** (frango, água, suco, destilados, sal grosso, copos & pratos) exibe a quantidade **sem** "média de N mercados" e **sem** barra — nenhuma faixa fabricada
-- [ ] A micro-label `MÉDIA` renderiza **apenas** nas linhas com leitura de mercado (D-2)
-- [ ] `máximo == mínimo` renderiza sem dividir por zero, marcador em 0 — a defesa é exercitada
-- [ ] Item com override **acima do máximo** da faixa: a barra continua com a faixa da tabela e o marcador **dentro do trilho** (L-020 — expressão de teto exercitada acima do teto)
-- [ ] Item `editado` exibe o **ponto vermelho de 8px** ao lado do nome; item não editado **não** o exibe
-- [ ] Tocar a linha dispara o callback de expansão; a linha aberta mostra o caret ▴
-- [ ] Nenhum literal de cor: tudo dos tokens do arquivo 02
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Emoji, nome, quantidade (`rotuloDeQuantidade`) e valor (`MoneyFormatter.reais(item.valor)`) renderizam — o valor comparado com o **formatador**, nunca com o literal (L-008)
+- [x] Item **coberto** por RN-11 exibe `{quantidade} · média de {N} mercados` com o `N` da coluna Fontes: **4** na Picanha bovina, **3** no Pão de alho, **2** no Gelo
+- [x] Item coberto exibe a `BoraPriceRangeBar` com extremos formatados — **R$ 54** e **R$ 83** na Picanha — e a fração comparada com **`posicaoDoMarcador(preco)`**, não com `0.379` (o segundo teste comportamental de `design.md` §13)
+- [x] Item **não coberto** (frango, água, suco, destilados, sal grosso, copos & pratos) exibe a quantidade **sem** "média de N mercados" e **sem** barra — nenhuma faixa fabricada
+- [x] A micro-label `MÉDIA` renderiza **apenas** nas linhas com leitura de mercado (D-2)
+- [x] `máximo == mínimo` renderiza sem dividir por zero, marcador em 0 — a defesa é exercitada
+- [x] Item com override **acima do máximo** da faixa: a barra continua com a faixa da tabela e o marcador **dentro do trilho** (L-020 — expressão de teto exercitada acima do teto)
+- [x] Item `editado` exibe o **ponto vermelho de 8px** ao lado do nome; item não editado **não** o exibe
+- [x] Tocar a linha dispara o callback de expansão; a linha aberta mostra o caret ▴
+- [x] Nenhum literal de cor: tudo dos tokens do arquivo 02
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
