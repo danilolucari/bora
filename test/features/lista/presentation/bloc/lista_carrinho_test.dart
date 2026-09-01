@@ -276,23 +276,28 @@ void main() {
   });
 
   group('LIST-34 — a supressão de eco e a concorrência', () {
-    // O nome antigo — "o eco da própria gravação é descartado" — prometia
-    // discriminar a **primeira** guarda de `_aoReceberFesta`
-    // (`evento.festa == _ultimaGravada`), e não discrimina: removê-la deixa a
-    // suíte verde. Não é furo de teste, é mutante equivalente. O eco recalcula
-    // uma `FestaEmEdicao` igual à corrente, e `ListaState.==` exclui
-    // `resultado`/`faixaReal` de propósito (`lista_state.dart`), então o estado
-    // reconstruído é **igual** ao que está de pé e o `emit` do próprio bloc o
-    // descarta (`bloc 9.2.1`, `bloc_base.dart:102` — `if (state == _state &&
-    // _emitted) return;`): `_state` não é trocado, nem a emissão sai no stream.
-    // A guarda é economia de recálculo, não comportamento observável — como o
-    // doc dela já diz ("só custaria um recálculo idêntico").
+    // A **primeira** guarda de `_aoReceberFesta` compara a emissão com
+    // `state.festa`. Ela nasceu comparando com `_ultimaGravada`, e essa forma
+    // era um **defeito**, não um mutante equivalente: com a tela já em X — uma
+    // escrita externa que entrou depois da nossa gravação — a emissão seguinte
+    // trazendo de volta o valor A que gravamos por último era tratada como eco
+    // e descartada, e a tela ficava exibindo X enquanto a porta já guardava A.
+    // É esse desfecho que o teste "escrita externa que devolve o valor que
+    // gravamos chega à tela" trava, logo abaixo.
+    //
+    // Comparando com `state.festa`, o **eco puro** continua não movendo nada —
+    // e continuaria mesmo sem a guarda, porque `ListaState.==` exclui
+    // `resultado`/`faixaReal` de propósito (`lista_state.dart`) e o `emit` do
+    // próprio bloc descarta estado igual (`bloc 9.2.1`, `bloc_base.dart:102` —
+    // `if (state == _state && _emitted) return;`). Nesta forma a guarda é
+    // economia de recálculo, como o doc dela diz, e não comportamento
+    // observável.
     //
     // O que este teste afirma, então, é o desfecho de LIST-34 que **é**
     // observável: o eco não move a tela — nem o estado, nem o objeto de
-    // resultado, nem uma emissão sequer. A guarda que de fato discrimina é a
-    // segunda, e quem a mata é "eco atrasado no meio de uma gravação não
-    // regride o estado", logo abaixo.
+    // resultado, nem uma emissão sequer. A guarda que discrimina regressão de
+    // estado é a segunda, e quem a mata é "eco atrasado no meio de uma
+    // gravação não regride o estado", mais abaixo.
     test('o eco da própria gravação não move a tela', () async {
       final bloc = await blocPronto();
       bloc.add(const QuantidadeAjustada(ChaveItem.bovina, 1));
@@ -312,6 +317,48 @@ void main() {
         identical(bloc.state.resultado, depois.resultado),
         isTrue,
         reason: 'o recálculo do eco não substitui o resultado que a tela lê',
+      );
+      expect(_itemDe(bloc.state, ChaveItem.bovina).editado, isTrue);
+    });
+
+    // A escrita externa que **coincide** com a nossa última gravação. O
+    // caminho real é `galera` mexer na composição (RN-21) com a Lista viva no
+    // `indexedStack` e depois desfazer, deixando a festa num valor igual ao
+    // que a Lista gravou por último. Não há gravação em voo: é o valor
+    // corrente da porta, e a tela tem de segui-lo.
+    test('escrita externa que devolve o valor que gravamos chega à tela',
+        () async {
+      final bloc = await blocPronto();
+
+      // A — o ajuste local, gravado por nós.
+      bloc.add(const QuantidadeAjustada(ChaveItem.bovina, 1));
+      await _assentar();
+      final a = festas.salvas.last.$2;
+      expect(bloc.state.festa, a);
+
+      // X — a escrita externa que entra depois da nossa gravação.
+      final x = a.copyWith(
+        composicao: a.composicao.copyWith(
+          contagem: ContagemDePessoas(homens: 4, mulheres: 3, criancas: 1),
+        ),
+      );
+      festas.emitir(_festaId, x);
+      await _assentar();
+      expect(bloc.state.resultado!.contagem.adultos, 7);
+
+      // A de volta — a mesma escrita externa desfeita.
+      festas.emitir(_festaId, a);
+      await _assentar();
+
+      expect(
+        bloc.state.festa,
+        a,
+        reason: 'a tela segue a porta, não a nossa última gravação',
+      );
+      expect(
+        bloc.state.resultado!.contagem.adultos,
+        6,
+        reason: 'a tela não pode ficar exibindo o valor intermediário',
       );
       expect(_itemDe(bloc.state, ChaveItem.bovina).editado, isTrue);
     });

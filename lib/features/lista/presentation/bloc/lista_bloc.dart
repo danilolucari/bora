@@ -67,9 +67,6 @@ class ListaBloc extends Bloc<ListaEvent, ListaState> {
 
   late final StreamSubscription<FestaEmEdicao?> _inscricao;
 
-  /// A última `FestaEmEdicao` que este bloc mandou gravar — §8.2.
-  FestaEmEdicao? _ultimaGravada;
-
   /// Quantas gravações estão em voo agora.
   int _gravacoesEmVoo = 0;
 
@@ -79,8 +76,14 @@ class ListaBloc extends Bloc<ListaEvent, ListaState> {
   /// lista: cada evento transforma a festa, emite síncrono e só então grava.
   /// Duas emissões são descartadas:
   ///
-  /// - a que **é igual à última gravada** — o próprio eco da nossa escrita,
-  ///   que só custaria um recálculo idêntico;
+  /// - a que **é igual à festa que já está na tela** — recalcular reproduziria
+  ///   o mesmo estado, e o `emit` do bloc a descartaria pela igualdade de
+  ///   qualquer jeito; a guarda só poupa o recálculo. A comparação é com
+  ///   `state.festa` e **não** com a última festa que gravamos: comparar com a
+  ///   última gravada descartaria uma escrita **externa legítima** — a que
+  ///   devolve a festa ao valor que gravamos por último, depois de outra
+  ///   escrita externa ter passado —, e a tela ficaria exibindo o valor
+  ///   intermediário enquanto a porta já guarda o novo;
   /// - **qualquer uma que chegue com gravação em voo** — a porta ainda não
   ///   viu o que acabamos de escrever, então o que ela emite é mais velho que
   ///   o que está na tela. Sem esta guarda, um eco atrasado sobrescreveria um
@@ -93,7 +96,7 @@ class ListaBloc extends Bloc<ListaEvent, ListaState> {
   /// e no M1 a impl é em memória e local (AD-016).
   void _aoReceberFesta(FestaRecebida evento, Emitter<ListaState> emit) {
     if (_gravacoesEmVoo > 0) return;
-    if (evento.festa != null && evento.festa == _ultimaGravada) return;
+    if (evento.festa != null && evento.festa == state.festa) return;
 
     emit(_estadoCom(evento.festa));
   }
@@ -245,10 +248,9 @@ class ListaBloc extends Bloc<ListaEvent, ListaState> {
 
   /// Uma gravação do estado corrente — LIST-15, LIST-20, LIST-32, LIST-34.
   ///
-  /// O contador e a última gravada são atualizados **antes** do `await`, e por
-  /// isso já valem para o eco que chegar em seguida.
+  /// O contador sobe **antes** do `await`, e por isso já vale para o eco que
+  /// chegar em seguida.
   Future<void> _gravar(FestaEmEdicao festa) async {
-    _ultimaGravada = festa;
     _gravacoesEmVoo++;
 
     try {
