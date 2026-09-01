@@ -1,12 +1,48 @@
+import 'package:bora/core/calculo/calculo.dart';
 import 'package:bora/core/di/injector.dart';
+import 'package:bora/core/festas/festas.dart';
 import 'package:bora/core/observability/app_logger.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
+import 'package:bora/features/home/domain/festa_repository.dart';
+
 import '../../support/fake_autenticacao_repository.dart';
 import '../../support/recording_app_logger.dart';
+
+/// O store de produção, contando quantas vezes foi descartado.
+///
+/// Duas portas sobre o mesmo objeto com dois `dispose` registrados fechariam
+/// o controller **duas vezes**; este contador é o que torna isso afirmável.
+class _StoreQueContaDispose extends FestaRepositoryEmMemoria {
+  int descartes = 0;
+
+  @override
+  Future<void> dispose() {
+    descartes++;
+
+    return super.dispose();
+  }
+}
+
+/// Um rascunho qualquer, só para exercitar a porta de escrita.
+FestaEmEdicao _rascunho() => FestaEmEdicao(
+      festa: Festa(
+        nome: 'CHURRAS NOVO',
+        data: 'SÁB · 18 JUL',
+        hora: '',
+        local: '',
+        duracaoHoras: 4,
+      ),
+      composicao: ComposicaoDaFesta(
+        contagem: ContagemDePessoas(homens: 2),
+        duracaoHoras: 4,
+        itensSelecionados: const {ChaveItem.bovina},
+      ),
+    );
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -44,6 +80,61 @@ void main() {
       );
 
       expect(getIt<GoRouter>(), same(getIt<GoRouter>()));
+    });
+  });
+
+  group('AD-029 — as duas portas de festa, um store só', () {
+    test('FestaRepository e FestaEmEdicaoRepository resolvem para a mesma '
+        'instância', () async {
+      await configureDependencies(
+        logger: RecordingAppLogger(),
+        autenticacaoFactory: FakeAutenticacaoRepository.new,
+      );
+
+      expect(
+        getIt<FestaEmEdicaoRepository>(),
+        same(getIt<FestaRepository>()),
+        reason: 'duas instâncias seriam duas fontes para a mesma festa: o '
+            'rolê criado em montar não apareceria na Home',
+      );
+    });
+
+    test('a festa criada pela porta de edição aparece em observarFestas()',
+        () async {
+      await configureDependencies(
+        logger: RecordingAppLogger(),
+        autenticacaoFactory: FakeAutenticacaoRepository.new,
+      );
+
+      final id = await getIt<FestaEmEdicaoRepository>().criarFesta(
+        _rascunho(),
+      );
+      final festas = await getIt<FestaRepository>().observarFestas().first;
+
+      expect(festas.map((resumo) => resumo.id), contains(id));
+    });
+
+    test('o store é descartado uma vez só — a segunda porta não registra '
+        'dispose próprio', () async {
+      final store = _StoreQueContaDispose();
+      await configureDependencies(
+        logger: RecordingAppLogger(),
+        autenticacaoFactory: FakeAutenticacaoRepository.new,
+        festasFactory: () => store,
+      );
+
+      // Materializa as duas portas: só o que foi resolvido é descartado.
+      getIt<FestaRepository>();
+      getIt<FestaEmEdicaoRepository>();
+
+      await resetDependencies();
+
+      expect(
+        store.descartes,
+        1,
+        reason: 'com `dispose` também na porta de edição, o mesmo controller '
+            'seria fechado duas vezes',
+      );
     });
   });
 

@@ -96,7 +96,7 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > em paralelo → `convite` e `convidado` → `custos`. Detalhe no `## Handoff` do `STATE.md`.
 
 
-> ## ✅ Design das onze specs concluído — 2026-08-28
+> ## ✅ Design das onze specs concluído — 2026-08-28 (histórico)
 >
 > **As onze specs do ROADMAP têm agora `spec.md` + `design.md`.** As quatro que faltavam —
 > **07 `galera`, 08 `convite`, 09 `convidado` e 10 `custos`** — foram desenhadas em sessões
@@ -132,6 +132,32 @@ Dentro de M0, `design-system` e `calculo` são independentes — podem andar em 
 > **Três specs já têm `tasks.md`** (05, 06 e 07) e **nenhuma** entrou em Execute — o gargalo
 > não é planejamento, é o merge de `montar`.
 
+> ## 🟢 M1 · `montar` mergeada na `main` — 2026-09-01
+>
+> **A spec 05 `montar` está entregue.** 44 commits mergeados com `--no-ff`; o Verifier
+> independente fechou em **PASS** depois da **re-verificação** de 2026-09-01, que fechou os
+> 4 gaps da 1ª passada re-plantando cada mutante em vez de acreditar na mensagem de commit.
+>
+> Baseline nova da `main`: **1528 testes verdes** (era 1137 — **+391**), `flutter analyze`
+> sem issue. T-03 e W-03 funcionando, com `FormularioDeMontagem` **estruturalmente**
+> compartilhado (W-R1 não é cópia) e **nenhum componente novo de design system** — o
+> catálogo da spec 01 bastou para a feature inteira. O número canônico de UC-03,
+> **R$ 211 / ≈ R$ 30 por cabeça**, é alcançado por 7 eventos reais de stepper e provado em
+> três camadas (bloc, T-03, W-03); `porCabeca` e `porAdulto` seguem separados, com asserção
+> de que divergem.
+>
+> **O gargalo de três sessões acabou.** `lib/core/festas/` existe, `FestaRepositoryEmMemoria`
+> fala pela segunda porta, `rotuloDeQuantidade` e `ResumoDeFesta.composicao` estão no disco:
+> quatro das sete linhas da tabela de bloqueio fecharam e **`lista` e `galera` estão as duas
+> desbloqueadas**, podendo andar em paralelo.
+>
+> **AD-029 registrada** — o log ativo do `STATE.md` avança para ela; a reserva segue de
+> AD-030 a AD-036.
+>
+> **Falta do M1:** só a spec **06 `lista`** (27 tasks, `tasks.md` pronto). A conferência
+> visual com a skill `run` continua pendente — agora para seis telas: T-01, W-01, T-02,
+> W-02 e as recém-chegadas T-03 e W-03.
+
 ---
 
 ## 2. Tabela mestre das specs
@@ -148,6 +174,7 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 | 04 | `home` | `features/home/` | T-02, W-02 · UC-02, UC-24 · RN-28 (consumo) | **Grande** ✱✱ | ✅ feito | ✅ feito | ✅ feito | 00, 01, 03 |
 | — | **`home` mergeada** | — | 16 tasks · Verifier PASS 19/19 · 1137 testes · `34eb1dc` | — | — | — | — | — |
 | 05 | `montar` | `features/montar/` | T-03, W-03 · UC-03, UC-04 · RN-01..10, RN-21 (consumo) | Grande | ✅ feito | ✅ feito | ✅ feito | 01, 02, 04 |
+| — | **`montar` mergeada** | — | 24 tasks · Verifier **PASS** (re-verificado 2026-09-01) · 1528 testes · `--no-ff` | — | — | — | — | — |
 | 06 | `lista` | `features/lista/` | T-04, W-03/W-04 · UC-05, UC-06, UC-14, UC-15, UC-16 · RN-10, RN-11, RN-12, RN-27 | Grande | ✅ feito | ✅ feito | ✅ feito | 01, 02, 05 |
 | 07 | `galera` | `features/galera/` | T-05, W-04 · UC-11, UC-12, UC-13 · RN-21, RN-22, RN-23 | Grande | — | ✅ feito | ✅ feito | 01, 02, 04 |
 | 08 | `convite` | `features/convite/` | T-06, T-07, W-04 · UC-07, UC-17, UC-18 · RN-25, RN-26, RN-26b | **Complexo** | ✅ feito | ✅ feito | sim | 06, 07 |

@@ -30,7 +30,8 @@
 ///   nunca se unificam** (A-03).
 /// - **`regras/`** — uma função por RN-xx, do [fatorDuracao] de RN-02 ao
 ///   [calcularRacha] de RN-16, orquestradas por [CalculadoraDaFesta.calcular].
-/// - **`formatacao/`** — [MoneyFormatter] (RN-13) e [rotuloDeDuracao].
+/// - **`formatacao/`** — [MoneyFormatter] (RN-13), [rotuloDeDuracao] e
+///   [rotuloDeQuantidade].
 ///
 /// **Nenhuma outra camada recalcula nada.** O resultado sai pronto daqui,
 /// inclusive as strings de dinheiro (RN-13) e a posição do marcador da barra
@@ -59,6 +60,7 @@ export 'dominio/status_de_presenca.dart';
 export 'dominio/tabela_de_precos_de_mercado.dart';
 export 'formatacao/money_formatter.dart';
 export 'formatacao/rotulo_de_duracao.dart';
+export 'formatacao/rotulo_de_quantidade.dart';
 export 'regras/calculadora_da_festa.dart';
 export 'regras/contribuicoes.dart';
 export 'regras/cota.dart';

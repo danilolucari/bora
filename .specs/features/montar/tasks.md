@@ -129,9 +129,9 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `AD-029` existe com os seis campos, `Status: active`, `Date: 2026-08-27`
-- [ ] Nenhuma AD existente é editada (nada vira `superseded`)
-- [ ] Nenhum arquivo de código é tocado
+- [x] `AD-029` existe com os seis campos, `Status: active`, `Date: 2026-08-27`
+- [x] Nenhuma AD existente é editada (nada vira `superseded`)
+- [x] Nenhum arquivo de código é tocado
 
 **Tests**: none (camada "Documentação / spec")
 **Gate**: none
@@ -150,12 +150,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `FestaEmEdicao` importa **só** de `core/calculo` — nenhum import de `features/**`, de Flutter ou de Firebase
-- [ ] `==` é por valor profundo: duas instâncias com a mesma festa e a mesma composição são iguais; trocar **qualquer** um dos dois campos as separa
-- [ ] `copyWith` preserva o campo não informado
-- [ ] O barrel exporta os dois arquivos de `dominio/` e nada mais
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 6 testes novos, suíte total ≥ 1143
+- [x] `FestaEmEdicao` importa **só** de `core/calculo` — nenhum import de `features/**`, de Flutter ou de Firebase
+- [x] `==` é por valor profundo: duas instâncias com a mesma festa e a mesma composição são iguais; trocar **qualquer** um dos dois campos as separa
+- [x] `copyWith` preserva o campo não informado
+- [x] O barrel exporta os dois arquivos de `dominio/` e nada mais
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 6 testes novos, suíte total ≥ 1143
 
 **Tests**: unit
 **Gate**: quick
@@ -174,12 +174,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] A porta declara os três métodos com a assinatura do `design.md` §6.2 e **não** declara `dispose` (o ciclo de vida é da porta de leitura)
-- [ ] `ResumoDeFesta.composicao` tem default (composição vazia, 4h) e entra em `==` e `hashCode`
-- [ ] Dois `ResumoDeFesta` sem composição continuam iguais — a suíte da spec 04 roda **intacta**, sem edição de teste nenhum
-- [ ] Dois `ResumoDeFesta` que só diferem na composição **não** são iguais
-- [ ] `flutter analyze` limpo (o campo novo não quebra nenhum call site)
-- [ ] ≥ 4 testes novos; **nenhum** teste existente editado ou removido
+- [x] A porta declara os três métodos com a assinatura do `design.md` §6.2 e **não** declara `dispose` (o ciclo de vida é da porta de leitura)
+- [x] `ResumoDeFesta.composicao` tem default (composição vazia, 4h) e entra em `==` e `hashCode`
+- [x] Dois `ResumoDeFesta` sem composição continuam iguais — a suíte da spec 04 roda **intacta**, sem edição de teste nenhum
+- [x] Dois `ResumoDeFesta` que só diferem na composição **não** são iguais
+- [x] `flutter analyze` limpo (o campo novo não quebra nenhum call site)
+- [x] ≥ 4 testes novos; **nenhum** teste existente editado ou removido
 
 **Tests**: unit
 **Gate**: build (toca `core/**` e `features/home/domain/**`)
@@ -198,14 +198,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `observarFesta(id)` entrega o estado corrente **antes** de acompanhar mudanças, e emite de novo a cada `salvarFesta`
-- [ ] `observarFesta(id)` de festa inexistente emite `null` — não lança e não fica em silêncio
-- [ ] `criarFesta` devolve um id **novo e único** a cada chamada e a festa criada aparece em `observarFestas()` — a propriedade que faz o rolê de `/roles/novo` chegar na Home
-- [ ] `salvarFesta` de id inexistente é no-op observável (não cria festa fantasma) — comportamento declarado no doc
-- [ ] `salvarFesta` preserva `confirmados`, `pendentes` e `iniciais` do resumo: montar grava identidade e composição, **não** contadores (AD-022)
-- [ ] `observarFestas()` continua com o comportamento e a cobertura de antes — nenhum teste da spec 04 editado
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] `observarFesta(id)` entrega o estado corrente **antes** de acompanhar mudanças, e emite de novo a cada `salvarFesta`
+- [x] `observarFesta(id)` de festa inexistente emite `null` — não lança e não fica em silêncio
+- [x] `criarFesta` devolve um id **novo e único** a cada chamada e a festa criada aparece em `observarFestas()` — a propriedade que faz o rolê de `/roles/novo` chegar na Home
+- [x] `salvarFesta` de id inexistente é no-op observável (não cria festa fantasma) — comportamento declarado no doc
+- [x] `salvarFesta` preserva `confirmados`, `pendentes` e `iniciais` do resumo: montar grava identidade e composição, **não** contadores (AD-022)
+- [x] `observarFestas()` continua com o comportamento e a cobertura de antes — nenhum teste da spec 04 editado
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 10 testes novos
 
 **Tests**: unit
 **Gate**: build
@@ -224,13 +224,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O doc do arquivo abre com o **SPEC_DEVIATION** declarado: nenhuma RN define este rótulo, e ele nasce aqui porque a `spec.md` de `montar` proíbe formatação de número em `lib/features/montar/**`
-- [ ] Quantidade inteira sai **sem** casa decimal (`2 garrafas`, não `2,0 garrafas`)
-- [ ] Quantidade fracionária sai com **uma** casa decimal e vírgula do pt-BR (`1,2 kg`)
-- [ ] Plural correto por unidade nas sete de `UnidadeDeItem`, com o singular em 1 (`1 lata` / `2 latas`)
-- [ ] Zero tem rótulo definido e não quebra
-- [ ] O arquivo continua Dart puro — `calculo_isolation_test.dart` segue verde
-- [ ] Gate `build` passa; ≥ 12 testes novos (todas as sete unidades × inteiro/fracionário/singular)
+- [x] O doc do arquivo abre com o **SPEC_DEVIATION** declarado: nenhuma RN define este rótulo, e ele nasce aqui porque a `spec.md` de `montar` proíbe formatação de número em `lib/features/montar/**`
+- [x] Quantidade inteira sai **sem** casa decimal (`2 garrafas`, não `2,0 garrafas`)
+- [x] Quantidade fracionária sai com **uma** casa decimal e vírgula do pt-BR (`1,2 kg`)
+- [x] Plural correto por unidade nas sete de `UnidadeDeItem`, com o singular em 1 (`1 lata` / `2 latas`)
+- [x] Zero tem rótulo definido e não quebra
+- [x] O arquivo continua Dart puro — `calculo_isolation_test.dart` segue verde
+- [x] Gate `build` passa; ≥ 12 testes novos (todas as sete unidades × inteiro/fracionário/singular)
 
 **Tests**: unit
 **Gate**: build
@@ -249,13 +249,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Dart puro: nenhum import de Flutter (varredura própria ou asserção de import no teste)
-- [ ] `chipsPorSecao` tem exatamente 3 + 5 + 3 = **11** chips, na ordem literal de T-03/W-03
-- [ ] `PROS FORTES` existe (AD-018) com vodka, cachaça e whisky
-- [ ] `secaoDe(legumesParaGrelha)` = `naGrelha` **sem** que ele apareça em `chipsPorSecao` (A-08)
-- [ ] `secaoDe` dos quatro essenciais de RN-10 devolve `null` (A-06: não aparecem na lista viva)
-- [ ] Teste exaustivo: **todo** valor de `ChaveItem` tem resultado declarado — um item novo no enum quebra a suíte em vez de sumir da tela
-- [ ] Gate `quick` passa; ≥ 8 testes novos
+- [x] Dart puro: nenhum import de Flutter (varredura própria ou asserção de import no teste)
+- [x] `chipsPorSecao` tem exatamente 3 + 5 + 3 = **11** chips, na ordem literal de T-03/W-03
+- [x] `PROS FORTES` existe (AD-018) com vodka, cachaça e whisky
+- [x] `secaoDe(legumesParaGrelha)` = `naGrelha` **sem** que ele apareça em `chipsPorSecao` (A-08)
+- [x] `secaoDe` dos quatro essenciais de RN-10 devolve `null` (A-06: não aparecem na lista viva)
+- [x] Teste exaustivo: **todo** valor de `ChaveItem` tem resultado declarado — um item novo no enum quebra a suíte em vez de sumir da tela
+- [x] Gate `quick` passa; ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -274,14 +274,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `hoje` entra **por parâmetro** — nenhuma chamada a `DateTime.now()` dentro da função (é o que torna o default testável sem esperar sábado)
-- [ ] Sábado devolve o **próximo** sábado, não hoje — o caso que decide a regra
-- [ ] Domingo devolve o sábado dali a 6 dias
-- [ ] Virada de mês e virada de ano produzem o rótulo certo
-- [ ] O rótulo casa com o formato de `Festa.data` de T-02 (`SÁB · 18 JUL`), com o mês abreviado em CAIXA ALTA e em pt-BR
-- [ ] Os 12 meses têm abreviação declarada e testada
-- [ ] Dart puro, sem Flutter
-- [ ] Gate `quick` passa; ≥ 10 testes novos
+- [x] `hoje` entra **por parâmetro** — nenhuma chamada a `DateTime.now()` dentro da função (é o que torna o default testável sem esperar sábado)
+- [x] Sábado devolve o **próximo** sábado, não hoje — o caso que decide a regra
+- [x] Domingo devolve o sábado dali a 6 dias
+- [x] Virada de mês e virada de ano produzem o rótulo certo
+- [x] O rótulo casa com o formato de `Festa.data` de T-02 (`SÁB · 18 JUL`), com o mês abreviado em CAIXA ALTA e em pt-BR
+- [x] Os 12 meses têm abreviação declarada e testada
+- [x] Dart puro, sem Flutter
+- [x] Gate `quick` passa; ≥ 10 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -300,13 +300,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Nome = `CHURRAS NOVO`; data = próximo sábado; `hora` e `local` **vazios**, com o SPEC_PRECISION_GAP declarado no doc
-- [ ] Contagem = 0/0/0 e duração = 4
-- [ ] `itensSelecionados` = os sete itens padrão de RN-30 (bovina, frango, pão de alho, refrigerante, água, cerveja, cachaça)
-- [ ] **Teste de amarração**: `itensSelecionados` é igual a `itensPadraoRn30Tipados` da fixture — a declaração em `lib/` e a fixture não podem divergir
-- [ ] `lib/` continua sem importar `test/fixtures/` (a varredura existente segue verde)
-- [ ] `Festa.duracaoHoras` e `ComposicaoDaFesta.duracaoHoras` nascem iguais
-- [ ] Gate `quick` passa; ≥ 6 testes novos
+- [x] Nome = `CHURRAS NOVO`; data = próximo sábado; `hora` e `local` **vazios**, com o SPEC_PRECISION_GAP declarado no doc
+- [x] Contagem = 0/0/0 e duração = 4
+- [x] `itensSelecionados` = os sete itens padrão de RN-30 (bovina, frango, pão de alho, refrigerante, água, cerveja, cachaça)
+- [x] **Teste de amarração**: `itensSelecionados` é igual a `itensPadraoRn30Tipados` da fixture — a declaração em `lib/` e a fixture não podem divergir
+- [x] `lib/` continua sem importar `test/fixtures/` (a varredura existente segue verde)
+- [x] `Festa.duracaoHoras` e `ComposicaoDaFesta.duracaoHoras` nascem iguais
+- [x] Gate `quick` passa; ≥ 6 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -325,15 +325,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `MontarState` carrega `festaId?`, `festa`, `composicao`, `resultado` e `falhouAoSalvar`, com `==` por valor
-- [ ] **Não existe** caminho de emissão que não passe por `_emitirComCalculo` — teste percorre todos os eventos e afirma que `resultado` mudou junto com `composicao`
-- [ ] **MONT-05, o aceite de UC-03**: com a composição de RN-30 (3H+3M+1C, 4h, os sete itens padrão), `resultado.totalDosItens` arredonda para `R$ 211` por `MoneyFormatter.reais` e `resultado.porCabeca` para `R$ 30` — afirmado contra o **token**, não contra o literal *(L-008)*
-- [ ] Stepper não desce de 0: `ContagemAlterada(homens, -1)` em 0 mantém 0 e **não** lança (MONT-14)
-- [ ] Zerar os três dá `totalDosItens == 0`, `porCabeca == 0` e `itens` vazia mesmo com chips marcados (UC-03 E1)
-- [ ] Alternar o mesmo chip duas vezes volta ao estado inicial — determinístico (MONT-20)
-- [ ] Duração 2h / 6h / 10h muda `resultado.fator` conforme RN-02 vindo da camada
-- [ ] Composição com pessoas nomeadas veggie / sem porco / que não bebem produz os efeitos de RN-21 em `resultado.itens` (MONT-24, lado consumo)
-- [ ] Gate `quick` passa; ≥ 20 testes novos
+- [x] `MontarState` carrega `festaId?`, `festa`, `composicao`, `resultado` e `falhouAoSalvar`, com `==` por valor
+- [x] **Não existe** caminho de emissão que não passe por `_emitirComCalculo` — teste percorre todos os eventos e afirma que `resultado` mudou junto com `composicao`
+- [x] **MONT-05, o aceite de UC-03**: com a composição de RN-30 (3H+3M+1C, 4h, os sete itens padrão), `resultado.totalDosItens` arredonda para `R$ 211` por `MoneyFormatter.reais` e `resultado.porCabeca` para `R$ 30` — afirmado contra o **token**, não contra o literal *(L-008)*
+- [x] Stepper não desce de 0: `ContagemAlterada(homens, -1)` em 0 mantém 0 e **não** lança (MONT-14)
+- [x] Zerar os três dá `totalDosItens == 0`, `porCabeca == 0` e `itens` vazia mesmo com chips marcados (UC-03 E1)
+- [x] Alternar o mesmo chip duas vezes volta ao estado inicial — determinístico (MONT-20)
+- [x] Duração 2h / 6h / 10h muda `resultado.fator` conforme RN-02 vindo da camada
+- [x] Composição com pessoas nomeadas veggie / sem porco / que não bebem produz os efeitos de RN-21 em `resultado.itens` (MONT-24, lado consumo)
+- [x] Gate `quick` passa; ≥ 20 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -352,16 +352,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Construído **sem** `festaId`: emite o rascunho e **não** grava nada — abrir `/roles/novo` não cria festa
-- [ ] Primeira mudança no rascunho: chama `criarFesta` **uma vez**, com a mudança já dentro, e o estado passa a ter `festaId`
-- [ ] Segunda mudança no mesmo rascunho **não** chama `criarFesta` de novo — chama `salvarFesta`
-- [ ] Construído **com** `festaId`: carrega a composição salva, não um rascunho novo (MONT-16)
-- [ ] `festaId` inexistente: emite rascunho em vez de quebrar; nenhuma exceção sobe
-- [ ] Nome apagado por completo volta ao default `CHURRAS NOVO` (P1-5 AC6) — e o teste falha se a defesa sair
-- [ ] Data editada é normalizada para CAIXA ALTA
-- [ ] Mudar a duração mantém `Festa.duracaoHoras` e `ComposicaoDaFesta.duracaoHoras` **iguais** no que é gravado
-- [ ] Emissão do repositório com a tela aberta atualiza o estado (é o contrato que sobrevive ao Firestore do M2)
-- [ ] Gate `quick` passa; ≥ 16 testes novos
+- [x] Construído **sem** `festaId`: emite o rascunho e **não** grava nada — abrir `/roles/novo` não cria festa
+- [x] Primeira mudança no rascunho: chama `criarFesta` **uma vez**, com a mudança já dentro, e o estado passa a ter `festaId`
+- [x] Segunda mudança no mesmo rascunho **não** chama `criarFesta` de novo — chama `salvarFesta`
+- [x] Construído **com** `festaId`: carrega a composição salva, não um rascunho novo (MONT-16)
+- [x] `festaId` inexistente: emite rascunho em vez de quebrar; nenhuma exceção sobe
+- [x] Nome apagado por completo volta ao default `CHURRAS NOVO` (P1-5 AC6) — e o teste falha se a defesa sair
+- [x] Data editada é normalizada para CAIXA ALTA
+- [x] Mudar a duração mantém `Festa.duracaoHoras` e `ComposicaoDaFesta.duracaoHoras` **iguais** no que é gravado
+- [x] Emissão do repositório com a tela aberta atualiza o estado (é o contrato que sobrevive ao Firestore do M2)
+- [x] Gate `quick` passa; ≥ 16 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -380,14 +380,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] N mudanças em rajada produzem **no máximo 2 gravações em voo**, e a **última** gravação carrega o estado mais novo — teste com repositório lento que registra a ordem e o payload de cada escrita (MONT-21)
-- [ ] Nenhuma gravação com valor antigo chega depois de uma com valor novo — o teste falha se a coalescência sair
-- [ ] Falha ao gravar: `logger.logError` recebe o erro **e** o stack, com `name: 'montar'`; `composicao` e `festa` do estado **não** são revertidas; `falhouAoSalvar` fica `true`
-- [ ] Depois de uma falha a interação continua: a mudança seguinte recalcula e tenta gravar de novo, e `falhouAoSalvar` volta a `false` no sucesso
-- [ ] Falha do stream de `observarFesta` segue o mesmo caminho e **mantém** o último estado bom
-- [ ] `SalvarPedido` grava e sinaliza sucesso no estado, sem navegar (quem mostra o toast é a página)
-- [ ] `close()` cancela a inscrição — nenhuma inscrição vazada entre testes
-- [ ] Gate `quick` passa; ≥ 14 testes novos
+- [x] N mudanças em rajada produzem **no máximo 2 gravações em voo**, e a **última** gravação carrega o estado mais novo — teste com repositório lento que registra a ordem e o payload de cada escrita (MONT-21)
+- [x] Nenhuma gravação com valor antigo chega depois de uma com valor novo — o teste falha se a coalescência sair
+- [x] Falha ao gravar: `logger.logError` recebe o erro **e** o stack, com `name: 'montar'`; `composicao` e `festa` do estado **não** são revertidas; `falhouAoSalvar` fica `true`
+- [x] Depois de uma falha a interação continua: a mudança seguinte recalcula e tenta gravar de novo, e `falhouAoSalvar` volta a `false` no sucesso
+- [x] Falha do stream de `observarFesta` segue o mesmo caminho e **mantém** o último estado bom
+- [x] `SalvarPedido` grava e sinaliza sucesso no estado, sem navegar (quem mostra o toast é a página)
+- [x] `close()` cancela a inscrição — nenhuma inscrição vazada entre testes
+- [x] Gate `quick` passa; ≥ 14 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -406,13 +406,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Os literais da tabela do `design.md` §9 estão todos declarados, sem paráfrase
-- [ ] Os quatro pares por plataforma existem separados: `CONFIRMADOS + EXTRAS SEM APP` / `QUEM CONFIRMOU` e `QUANTO TEMPO DE FESTA?` / `ATÉ QUE HORAS?`
-- [ ] A frase do dinheiro difere por plataforma (`≈ R$ {x} / cabeça` × `dividido dá R$ {x} por cabeça`) e **as duas** recebem o valor já formatado
-- [ ] O rótulo do card-herói monta `SAI POR · {N} PESSOAS · {duração}` com a duração vinda de `rotuloDeDuracao`
-- [ ] Toast: o arquivo **referencia** `BoraToastTexts.roleSalvo`; nenhum literal `ROLÊ SALVO` é redigitado, e o teste compara com o token *(L-008)*
-- [ ] Nenhum `R$` literal (RN-13 é da camada)
-- [ ] Gate `quick` passa; ≥ 10 testes novos
+- [x] Os literais da tabela do `design.md` §9 estão todos declarados, sem paráfrase
+- [x] Os quatro pares por plataforma existem separados: `CONFIRMADOS + EXTRAS SEM APP` / `QUEM CONFIRMOU` e `QUANTO TEMPO DE FESTA?` / `ATÉ QUE HORAS?`
+- [x] A frase do dinheiro difere por plataforma (`≈ R$ {x} / cabeça` × `dividido dá R$ {x} por cabeça`) e **as duas** recebem o valor já formatado
+- [x] O rótulo do card-herói monta `SAI POR · {N} PESSOAS · {duração}` com a duração vinda de `rotuloDeDuracao`
+- [x] Toast: o arquivo **referencia** `BoraToastTexts.roleSalvo`; nenhum literal `ROLÊ SALVO` é redigitado, e o teste compara com o token *(L-008)*
+- [x] Nenhum `R$` literal (RN-13 é da camada)
+- [x] Gate `quick` passa; ≥ 10 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -431,12 +431,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual, se o caminho de captura estiver disponível)
 
 **Done when**:
-- [ ] As três linhas na ordem de T-03, com os emojis e os rótulos literais
-- [ ] `+` e `−` emitem a intenção com o tipo de cabeça certo — teste que troca dois steppers e afirma que **não** cruzaram
-- [ ] Em 0, o `−` daquela linha vem com `onDecrementar: null` e **não emite** ao ser tocado; as outras linhas seguem ativas
-- [ ] O valor exibido é o recebido — o widget não guarda contagem própria
-- [ ] Zero conta e zero `R$` no arquivo
-- [ ] Gate `full` passa; ≥ 8 testes novos
+- [x] As três linhas na ordem de T-03, com os emojis e os rótulos literais
+- [x] `+` e `−` emitem a intenção com o tipo de cabeça certo — teste que troca dois steppers e afirma que **não** cruzaram
+- [x] Em 0, o `−` daquela linha vem com `onDecrementar: null` e **não emite** ao ser tocado; as outras linhas seguem ativas
+- [x] O valor exibido é o recebido — o widget não guarda contagem própria
+- [x] Zero conta e zero `R$` no arquivo
+- [x] Gate `full` passa; ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -455,13 +455,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Nome e emoji de cada chip vêm de `catalogoDeItens` — **nenhum** redigitado no widget
-- [ ] Tocar um chip emite a `ChaveItem` dele; o chip selecionado renderiza o par `ink`/`cream` de §5 e o não selecionado o par branco/`ink` — afirmado contra o contrato do componente, **não** contra um literal de cor (**SPEC_DEVIATION** do `design.md` §11: a `spec.md` dizia "vermelho")
-- [ ] O segmented tem exatamente uma opção ativa; tocar outra emite o índice tocado e o widget **não** muda sozinho
-- [ ] `Dia` mapeia para 10 horas (RN-02) e o mapeamento é afirmado
-- [ ] Os chips quebram linha (`Wrap`) sem estourar a largura em 390px — nenhum overflow em viewport compacta
-- [ ] Zero conta e zero `R$` nos dois arquivos
-- [ ] Gate `full` passa; ≥ 12 testes novos
+- [x] Nome e emoji de cada chip vêm de `catalogoDeItens` — **nenhum** redigitado no widget
+- [x] Tocar um chip emite a `ChaveItem` dele; o chip selecionado renderiza o par `ink`/`cream` de §5 e o não selecionado o par branco/`ink` — afirmado contra o contrato do componente, **não** contra um literal de cor (**SPEC_DEVIATION** do `design.md` §11: a `spec.md` dizia "vermelho")
+- [x] O segmented tem exatamente uma opção ativa; tocar outra emite o índice tocado e o widget **não** muda sozinho
+- [x] `Dia` mapeia para 10 horas (RN-02) e o mapeamento é afirmado
+- [x] Os chips quebram linha (`Wrap`) sem estourar a largura em 390px — nenhum overflow em viewport compacta
+- [x] Zero conta e zero `R$` nos dois arquivos
+- [x] Gate `full` passa; ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -480,11 +480,11 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Ordem literal: contagem → NA GRELHA → NA GELADEIRA → PROS FORTES → duração
-- [ ] Montado com os rótulos mobile, exibe `CONFIRMADOS + EXTRAS SEM APP` e `QUANTO TEMPO DE FESTA?`; com os rótulos web, exibe `QUEM CONFIRMOU` e `ATÉ QUE HORAS?` — **e o resto da árvore é o mesmo** (é a prova de W-R1)
-- [ ] Os 11 chips estão presentes nas duas configurações, incluindo PROS FORTES no mobile (AD-018)
-- [ ] Todo callback chega a quem montou, sem transformação
-- [ ] Gate `full` passa; ≥ 8 testes novos
+- [x] Ordem literal: contagem → NA GRELHA → NA GELADEIRA → PROS FORTES → duração
+- [x] Montado com os rótulos mobile, exibe `CONFIRMADOS + EXTRAS SEM APP` e `QUANTO TEMPO DE FESTA?`; com os rótulos web, exibe `QUEM CONFIRMOU` e `ATÉ QUE HORAS?` — **e o resto da árvore é o mesmo** (é a prova de W-R1)
+- [x] Os 11 chips estão presentes nas duas configurações, incluindo PROS FORTES no mobile (AD-018)
+- [x] Todo callback chega a quem montou, sem transformação
+- [x] Gate `full` passa; ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -503,12 +503,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Fora de edição mostra nome e data como texto; ao ser acionado, vira campo **na própria tela**, sem navegação e sem tela nova (A-03)
-- [ ] Confirmar emite o novo valor; o widget **não** guarda o valor como verdade — ele reflete o que recebe
-- [ ] Nome apagado por completo emite vazio, e é o bloc que devolve o default (a divisão de responsabilidade é afirmada nos dois lados)
-- [ ] Data editada é emitida em CAIXA ALTA
-- [ ] Sair do campo sem confirmar não perde o que foi digitado nem grava lixo — comportamento declarado e testado
-- [ ] Gate `full` passa; ≥ 8 testes novos
+- [x] Fora de edição mostra nome e data como texto; ao ser acionado, vira campo **na própria tela**, sem navegação e sem tela nova (A-03)
+- [x] Confirmar emite o novo valor; o widget **não** guarda o valor como verdade — ele reflete o que recebe
+- [x] Nome apagado por completo emite vazio, e é o bloc que devolve o default (a divisão de responsabilidade é afirmada nos dois lados)
+- [x] Data editada é emitida em CAIXA ALTA
+- [x] Sair do campo sem confirmar não perde o que foi digitado nem grava lixo — comportamento declarado e testado
+- [x] Gate `full` passa; ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -527,12 +527,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Exibe `SAI POR`, o total e a sublinha, com os dois valores vindos de `MoneyFormatter.reais` — comparados no teste com o **token**, nunca com um literal *(L-008)*
-- [ ] Com a composição de RN-30, a árvore renderizada contém `R$ 211` e `≈ R$ 30 / cabeça` — **o aceite de UC-03 na tela**
-- [ ] O divisor é **pessoas** (criança inclusive) e o rótulo é `/ cabeça`; um teste com composição em que "por cabeça" e "por adulto" **divergem** prova que a tela mostra o primeiro (RN-14, A-05)
-- [ ] Total com centavos exibe o inteiro de RN-13
-- [ ] O CTA emite uma vez por toque
-- [ ] Gate `full` passa; ≥ 10 testes novos
+- [x] Exibe `SAI POR`, o total e a sublinha, com os dois valores vindos de `MoneyFormatter.reais` — comparados no teste com o **token**, nunca com um literal *(L-008)*
+- [x] Com a composição de RN-30, a árvore renderizada contém `R$ 211` e `≈ R$ 30 / cabeça` — **o aceite de UC-03 na tela**
+- [x] O divisor é **pessoas** (criança inclusive) e o rótulo é `/ cabeça`; um teste com composição em que "por cabeça" e "por adulto" **divergem** prova que a tela mostra o primeiro (RN-14, A-05)
+- [x] Total com centavos exibe o inteiro de RN-13
+- [x] O CTA emite uma vez por toque
+- [x] Gate `full` passa; ≥ 10 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -551,12 +551,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run`
 
 **Done when**:
-- [ ] Em 390×820 renderiza, na ordem de T-03: voltar, título, identidade, as cinco seções, rodapé fixo
-- [ ] O rodapé fica **fixo** — o formulário rola por baixo dele, e o teste prova rolando
-- [ ] Zerar os três steppers deixa o rodapé em `R$ 0` e o `−` inerte nas três linhas (UC-03 E1 na tela)
-- [ ] Nenhum overflow em 390×820, com todos os chips e as quatro seções (AD-018 alonga a rolagem)
-- [ ] O voltar emite a intenção de voltar (quem navega é a página)
-- [ ] Gate `full` passa; ≥ 10 testes novos
+- [x] Em 390×820 renderiza, na ordem de T-03: voltar, título, identidade, as cinco seções, rodapé fixo
+- [x] O rodapé fica **fixo** — o formulário rola por baixo dele, e o teste prova rolando
+- [x] Zerar os três steppers deixa o rodapé em `R$ 0` e o `−` inerte nas três linhas (UC-03 E1 na tela)
+- [x] Nenhum overflow em 390×820, com todos os chips e as quatro seções (AD-018 alonga a rolagem)
+- [x] O voltar emite a intenção de voltar (quem navega é a página)
+- [x] Gate `full` passa; ≥ 10 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -575,15 +575,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Agrupa por `SecaoDaMontagem` na ordem NA GRELHA → NA GELADEIRA → PROS FORTES, e dentro de cada uma na ordem de `ordemCanonicaDaLista` (A-07)
-- [ ] Subtotal por categoria vem de `totalExato` — o arquivo **não** contém `fold`, `reduce`, `*`, `/` nem `R$`
-- [ ] **Sem** botão `QUEM LEVA?` e **sem** a dica 💡 (A-02, AD-018)
-- [ ] **Sem** essenciais: com a composição de RN-30, carvão, gelo, sal grosso e copos & pratos **não** aparecem, e a soma dos subtotais bate com o total do card-herói (A-05, A-06)
-- [ ] Categoria sem item selecionado **não** renderiza seção vazia
-- [ ] Lista vazia (0 pessoas) não renderiza card nenhum e não quebra
-- [ ] Com pessoas veggie, `Legumes p/ grelha` aparece em NA GRELHA sem ter chip (A-08, MONT-24)
-- [ ] Excedendo 330px, rola **dentro do próprio contêiner** — o teste prova rolando a lista sem rolar a página
-- [ ] Gate `full` passa; ≥ 14 testes novos
+- [x] Agrupa por `SecaoDaMontagem` na ordem NA GRELHA → NA GELADEIRA → PROS FORTES, e dentro de cada uma na ordem de `ordemCanonicaDaLista` (A-07)
+- [x] Subtotal por categoria vem de `totalExato` — o arquivo **não** contém `fold`, `reduce`, `*`, `/` nem `R$`
+- [x] **Sem** botão `QUEM LEVA?` e **sem** a dica 💡 (A-02, AD-018)
+- [x] **Sem** essenciais: com a composição de RN-30, carvão, gelo, sal grosso e copos & pratos **não** aparecem, e a soma dos subtotais bate com o total do card-herói (A-05, A-06)
+- [x] Categoria sem item selecionado **não** renderiza seção vazia
+- [x] Lista vazia (0 pessoas) não renderiza card nenhum e não quebra
+- [x] Com pessoas veggie, `Legumes p/ grelha` aparece em NA GRELHA sem ter chip (A-08, MONT-24)
+- [x] Excedendo 330px, rola **dentro do próprio contêiner** — o teste prova rolando a lista sem rolar a página
+- [x] Gate `full` passa; ≥ 14 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -602,13 +602,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] A ordem dos blocos é afirmada por posição na árvore, não por presença
-- [ ] O card-herói exibe `SAI POR · {N} PESSOAS · {duração}`, o total e `dividido dá R$ {x} por cabeça` — todos os valores por `MoneyFormatter` / `rotuloDeDuracao`
-- [ ] Duração 10h exibe `Dia todo`, não `10 horas` (A-15)
-- [ ] `SALVAR ROLÊ` é ação secundária e emite sem navegar; `MANDAR NO GRUPO 📲` emite a saída
-- [ ] O rail tem 370px e **não rola com a página** — sticky por construção
-- [ ] Zero conta e zero `R$` literal no arquivo
-- [ ] Gate `full` passa; ≥ 10 testes novos
+- [x] A ordem dos blocos é afirmada por posição na árvore, não por presença
+- [x] O card-herói exibe `SAI POR · {N} PESSOAS · {duração}`, o total e `dividido dá R$ {x} por cabeça` — todos os valores por `MoneyFormatter` / `rotuloDeDuracao`
+- [x] Duração 10h exibe `Dia todo`, não `10 horas` (A-15)
+- [x] `SALVAR ROLÊ` é ação secundária e emite sem navegar; `MANDAR NO GRUPO 📲` emite a saída
+- [x] O rail tem 370px e **não rola com a página** — sticky por construção
+- [x] Zero conta e zero `R$` literal no arquivo
+- [x] Gate `full` passa; ≥ 10 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -627,12 +627,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run`
 
 **Done when**:
-- [ ] Em 1180×800 renderiza `A CONTA DO ROLÊ` à esquerda e `{NOME} · {DATA}` à direita da linha de título
-- [ ] Usa os rótulos de W-03 (`QUEM CONFIRMOU`, `ATÉ QUE HORAS?`), não os do mobile
-- [ ] **Não existe** `BoraFooterBar` na árvore (W-R2, MONT-13) — asserção de ausência
-- [ ] **Zero scroll horizontal** em 1180×800 e em 900×800 (W-R4) — afirmado pela extensão do scrollable, não por inspeção visual
-- [ ] Mudar um chip atualiza card-herói **e** lista viva na mesma interação (MONT-12), provado com um único `pump`
-- [ ] Gate `full` passa; ≥ 10 testes novos
+- [x] Em 1180×800 renderiza `A CONTA DO ROLÊ` à esquerda e `{NOME} · {DATA}` à direita da linha de título
+- [x] Usa os rótulos de W-03 (`QUEM CONFIRMOU`, `ATÉ QUE HORAS?`), não os do mobile
+- [x] **Não existe** `BoraFooterBar` na árvore (W-R2, MONT-13) — asserção de ausência
+- [x] **Zero scroll horizontal** em 1180×800 e em 900×800 (W-R4) — afirmado pela extensão do scrollable, não por inspeção visual
+- [x] Mudar um chip atualiza card-herói **e** lista viva na mesma interação (MONT-12), provado com um único `pump`
+- [x] Gate `full` passa; ≥ 10 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -651,13 +651,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `MontarPage({String? festaId, required FestaEmEdicaoRepository festas, required AppLogger logger})` com `static const Key pageKey = Key('montar')`
-- [ ] O bloc vive **acima** do `ResponsiveBuilder`: cruzar 900px com a tela montada preserva a composição inteira (W-R3 + W-R1) — o teste redimensiona e afirma o estado
-- [ ] `FECHAR LISTA →` chama `Routes.lista(festaId)`; `MANDAR NO GRUPO 📲` chama `Routes.whatsapp(festaId)`; o voltar chama `Routes.roles` (MONT-22)
-- [ ] Toque duplo no CTA navega **uma vez** (MONT-20)
-- [ ] `SALVAR ROLÊ` concluído mostra o toast comparado com `BoraToastTexts.roleSalvo` — 1 por vez, some sozinho (RN-29)
-- [ ] Ganhar `festaId` dispara `context.replace` para `/roles/{festaId}/montar` — **não** `go`, para o rascunho não ficar no histórico
-- [ ] Gate `full` passa; ≥ 12 testes novos
+- [x] `MontarPage({String? festaId, required FestaEmEdicaoRepository festas, required AppLogger logger})` com `static const Key pageKey = Key('montar')`
+- [x] O bloc vive **acima** do `ResponsiveBuilder`: cruzar 900px com a tela montada preserva a composição inteira (W-R3 + W-R1) — o teste redimensiona e afirma o estado
+- [x] `FECHAR LISTA →` chama `Routes.lista(festaId)`; `MANDAR NO GRUPO 📲` chama `Routes.whatsapp(festaId)`; o voltar chama `Routes.roles` (MONT-22)
+- [x] Toque duplo no CTA navega **uma vez** (MONT-20)
+- [x] `SALVAR ROLÊ` concluído mostra o toast comparado com `BoraToastTexts.roleSalvo` — 1 por vez, some sozinho (RN-29)
+- [x] Ganhar `festaId` dispara `context.replace` para `/roles/{festaId}/montar` — **não** `go`, para o rascunho não ficar no histórico
+- [x] Gate `full` passa; ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -676,15 +676,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `/roles/novo` monta `MontarPage(festaId: null, …)` e `/roles/:festaId/montar` monta com o id **da URL** — o `const MontarPage()` some das duas rotas
-- [ ] O comentário do desvio (**E-4**) fica no roteador, no formato `SPEC_DEVIATION` que o arquivo já usa
-- [ ] `FestaRepository` e `FestaEmEdicaoRepository` resolvem para a **mesma instância** — teste que cria festa pela porta de edição e a vê em `observarFestas()`
-- [ ] O `dispose` continua registrado **uma vez só** — nenhum controller fechado duas vezes
-- [ ] `abrirApp` aceita a porta de edição com **default**; nenhum teste existente muda
-- [ ] Testes de rota afirmam `rotaAtual()`, não o widget montado — as duas rotas montam a mesma tela
-- [ ] `/roles/novo` sem sessão continua indo para `/entrar` (AD-017 herdada)
-- [ ] Da Home, `🔥 CHURRASCO` chega em `/roles/novo` montável; a primeira mudança leva a rota a `/roles/{id}/montar` **e a composição segue igual** (MONT-17 + MONT-18 ponta a ponta)
-- [ ] Gate `build` passa; ≥ 12 testes novos; suíte inteira verde
+- [x] `/roles/novo` monta `MontarPage(festaId: null, …)` e `/roles/:festaId/montar` monta com o id **da URL** — o `const MontarPage()` some das duas rotas
+- [x] O comentário do desvio (**E-4**) fica no roteador, no formato `SPEC_DEVIATION` que o arquivo já usa
+- [x] `FestaRepository` e `FestaEmEdicaoRepository` resolvem para a **mesma instância** — teste que cria festa pela porta de edição e a vê em `observarFestas()`
+- [x] O `dispose` continua registrado **uma vez só** — nenhum controller fechado duas vezes
+- [x] `abrirApp` aceita a porta de edição com **default**; nenhum teste existente muda
+- [x] Testes de rota afirmam `rotaAtual()`, não o widget montado — as duas rotas montam a mesma tela
+- [x] `/roles/novo` sem sessão continua indo para `/entrar` (AD-017 herdada)
+- [x] Da Home, `🔥 CHURRASCO` chega em `/roles/novo` montável; a primeira mudança leva a rota a `/roles/{id}/montar` **e a composição segue igual** (MONT-17 + MONT-18 ponta a ponta)
+- [x] Gate `build` passa; ≥ 12 testes novos; suíte inteira verde
 **Tests**: widget (rota)
 **Gate**: build
 **Commit**: `feat(montar): liga as rotas de montar à porta de edição`
@@ -702,13 +702,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] A varredura remove comentários (`//`, `///`, `/* */`) e literais de string antes de procurar operador — `import '../../x.dart'` não é falso positivo
-- [ ] As cinco regras do `design.md` §13 estão implementadas e **cada uma** tem teste próprio provando que ela pega o caso que devia pegar (a varredura é exercitada contra um trecho sintético infrator, não só contra o código limpo)
-- [ ] A mensagem de falha nomeia o **arquivo e a regra** violada
-- [ ] **Teste comportamental**: uma composição com total fracionário renderiza o valor igual a `MoneyFormatter.reais(resultado.totalDosItens)` — um formatador próprio que arredondasse diferente morre aqui, mesmo passando na varredura
-- [ ] `lib/features/montar/**` passa nas cinco regras **sem exceção declarada**
-- [ ] Gate `build` passa; suíte inteira verde; `flutter analyze` zero issues
-- [ ] ≥ 8 testes novos
+- [x] A varredura remove comentários (`//`, `///`, `/* */`) e literais de string antes de procurar operador — `import '../../x.dart'` não é falso positivo
+- [x] As cinco regras do `design.md` §13 estão implementadas e **cada uma** tem teste próprio provando que ela pega o caso que devia pegar (a varredura é exercitada contra um trecho sintético infrator, não só contra o código limpo)
+- [x] A mensagem de falha nomeia o **arquivo e a regra** violada
+- [x] **Teste comportamental**: uma composição com total fracionário renderiza o valor igual a `MoneyFormatter.reais(resultado.totalDosItens)` — um formatador próprio que arredondasse diferente morre aqui, mesmo passando na varredura
+- [x] `lib/features/montar/**` passa nas cinco regras **sem exceção declarada**
+- [x] Gate `build` passa; suíte inteira verde; `flutter analyze` zero issues
+- [x] ≥ 8 testes novos
 
 **Tests**: unit (varredura) + widget (comportamental)
 **Gate**: build
@@ -881,10 +881,10 @@ Não há MCP configurado neste projeto — todas as tasks usam as ferramentas na
 
 ## Success Criteria da feature (da `spec.md`, conferidos ao fim)
 
-- [ ] `flutter analyze` zero issues · suíte verde · **≥ 1137 + ~230 testes novos**, baseline preservada
-- [ ] Aceite de UC-03 **na tela**, nas duas plataformas: `R$ 211` e `≈ R$ 30 / cabeça` renderizados
-- [ ] Aceite de UC-04: nenhum botão "calcular"; qualquer toque atualiza total e per capita
-- [ ] Guard de MONT-08 verde, sem exceção declarada
-- [ ] W-03 funcional: rail sticky, lista viva rolando dentro de si, zero scroll horizontal, sem rodapé fixo
-- [ ] Zerar a festa dá `R$ 0` e lista vazia; steppers não descem de 0
-- [ ] AD-029 registrada no `STATE.md`
+- [x] `flutter analyze` zero issues · suíte verde · **≥ 1137 + ~230 testes novos**, baseline preservada
+- [x] Aceite de UC-03 **na tela**, nas duas plataformas: `R$ 211` e `≈ R$ 30 / cabeça` renderizados
+- [x] Aceite de UC-04: nenhum botão "calcular"; qualquer toque atualiza total e per capita
+- [x] Guard de MONT-08 verde, sem exceção declarada
+- [x] W-03 funcional: rail sticky, lista viva rolando dentro de si, zero scroll horizontal, sem rodapé fixo
+- [x] Zerar a festa dá `R$ 0` e lista vazia; steppers não descem de 0
+- [x] AD-029 registrada no `STATE.md`

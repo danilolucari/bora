@@ -170,6 +170,24 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: validation.md iter3 P1 — app_shell_test.dart:180-193; probe mediu faixa de 44px com filho realista, asserção ficou verde sob P1 e sob N5 (widget-tests)
 - last seen: 2026-08-26T20:13:39Z
 
+### L-027 — Guard de varredura que procura um literal de string tem de procurá-lo como a linguagem obriga a escrevê-lo na fonte (em Dart, o cifrão só existe escapado ou em raw string) — e o teste da regra tem de passar a fonte crua, não a string já desescapada.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `test/**/architecture` · harmful: 0
+- features: montar
+- evidence: M5 — formula_nao_vaza_test.dart:140 (test/**/architecture)
+- last seen: 2026-08-31T19:30:00Z
+
+### L-028 — Quando um copyWith é escrito à mão porque a entidade não tem um, cada campo apenas repassado precisa de um teste que dispare um evento e reafirme o campo depois — senão a preservação sobrevive por acidente.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `presentation/bloc` · harmful: 0
+- features: montar
+- evidence: M7/M18 — montar_bloc.dart:373-386 (presentation/bloc)
+- last seen: 2026-08-31T19:30:00Z
+
+### L-029 — Teste de tela montado só com os valores default não discrimina o campo do literal: use dado diferente do default e afirme também a ausência do default.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `test/**/widgets` · harmful: 0
+- features: montar
+- evidence: M8 — montar_expandido.dart:150 (test/**/widgets)
+- last seen: 2026-08-31T19:30:00Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

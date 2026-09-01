@@ -1,8 +1,8 @@
 import 'package:bora/core/design_system/design_system.dart';
 import 'package:bora/core/responsive/layout_mode.dart';
 import 'package:bora/core/routing/app_shell.dart';
-import 'package:bora/core/routing/placeholder_page.dart';
 import 'package:bora/core/routing/routes.dart';
+import 'package:bora/features/montar/presentation/pages/montar_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -60,7 +60,7 @@ void main() {
             '`/roles/:festaId/montar` renderizam a mesma MontarPage, então a '
             'chave da tela deixaria passar o destino errado',
       );
-      expect(find.byKey(PlaceholderPage.keyFor('montar')), findsOneWidget);
+      expect(find.byKey(MontarPage.pageKey), findsOneWidget);
     });
 
     testWidgets('em compacto não há ação nem barra (A-07)', (tester) async {
