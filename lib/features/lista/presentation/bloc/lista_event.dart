@@ -1,5 +1,6 @@
 import '../../../../core/calculo/calculo.dart';
 import '../../../../core/festas/festas.dart';
+import '../../domain/pedido.dart';
 import 'lista_state.dart';
 
 /// Os eventos da tela Lista.
@@ -58,6 +59,28 @@ class PrecoAjustado extends ListaEvent {
 /// Desfaz **todos** os ajustes de uma vez, sem diálogo e sem toast (UC-06 A1).
 class OverridesRestaurados extends ListaEvent {
   const OverridesRestaurados();
+}
+
+/// Uma linha do modo COMPRAR foi tocada — LIST-20, LIST-33.
+///
+/// **Alterna**, não liga: `Set.add`/`remove` torna o toque repetido
+/// determinístico por construção, sem estado paralelo para desincronizar.
+class ItemAlternadoNoCarrinho extends ListaEvent {
+  const ItemAlternadoNoCarrinho(this.chave);
+
+  final ChaveItem chave;
+}
+
+/// O pedido saiu e voltou confirmado da porta — LIST-27.
+///
+/// Quem envia é o `PedidoBloc`, que vive com a sheet; o `ListaBloc` só recebe
+/// o pedido **já confirmado** e o transforma na `Despesa` de RN-20. Na falha
+/// da porta este evento **nunca chega**, e por isso não há como haver despesa
+/// órfã (LIST-32).
+class PedidoConfirmado extends ListaEvent {
+  const PedidoConfirmado(this.pedido);
+
+  final Pedido pedido;
 }
 
 /// A porta emitiu a festa observada — interno, LIST-31.

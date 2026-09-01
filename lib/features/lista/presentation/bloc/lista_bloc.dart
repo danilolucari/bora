@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/calculo/calculo.dart';
 import '../../../../core/festas/festas.dart';
 import '../../../../core/observability/app_logger.dart';
+import '../../domain/pedido.dart';
 import 'lista_event.dart';
 import 'lista_state.dart';
 
@@ -50,6 +51,8 @@ class ListaBloc extends Bloc<ListaEvent, ListaState> {
     on<QuantidadeAjustada>(_aoAjustarQuantidade);
     on<PrecoAjustado>(_aoAjustarPreco);
     on<OverridesRestaurados>(_aoRestaurarOverrides);
+    on<ItemAlternadoNoCarrinho>(_aoAlternarNoCarrinho);
+    on<PedidoConfirmado>(_aoConfirmarPedido);
 
     _inscricao = _festas.observarFesta(festaId).listen(
           (festa) => add(FestaRecebida(festa)),
@@ -64,8 +67,34 @@ class ListaBloc extends Bloc<ListaEvent, ListaState> {
 
   late final StreamSubscription<FestaEmEdicao?> _inscricao;
 
-  /// A porta entregou a festa observada — LIST-31.
+  /// A última `FestaEmEdicao` que este bloc mandou gravar — §8.2.
+  FestaEmEdicao? _ultimaGravada;
+
+  /// Quantas gravações estão em voo agora.
+  int _gravacoesEmVoo = 0;
+
+  /// A porta entregou a festa observada — LIST-31, LIST-34.
+  ///
+  /// **Supressão de eco** (§8.2). O bloc é a autoridade sobre o estado da
+  /// lista: cada evento transforma a festa, emite síncrono e só então grava.
+  /// Duas emissões são descartadas:
+  ///
+  /// - a que **é igual à última gravada** — o próprio eco da nossa escrita,
+  ///   que só custaria um recálculo idêntico;
+  /// - **qualquer uma que chegue com gravação em voo** — a porta ainda não
+  ///   viu o que acabamos de escrever, então o que ela emite é mais velho que
+  ///   o que está na tela. Sem esta guarda, um eco atrasado sobrescreveria um
+  ///   toque de stepper mais novo, que é exatamente o defeito que LIST-34
+  ///   proíbe.
+  ///
+  /// A consequência declarada: uma mudança **externa** (outra aba mexendo na
+  /// composição) que chegue no meio de uma gravação é perdida, porque a
+  /// gravação seguinte a sobrescreve. É o preço de "o bloc é a autoridade",
+  /// e no M1 a impl é em memória e local (AD-016).
   void _aoReceberFesta(FestaRecebida evento, Emitter<ListaState> emit) {
+    if (_gravacoesEmVoo > 0) return;
+    if (evento.festa != null && evento.festa == _ultimaGravada) return;
+
     emit(_estadoCom(evento.festa));
   }
 
@@ -214,13 +243,69 @@ class ListaBloc extends Bloc<ListaEvent, ListaState> {
     unawaited(_gravar(festa));
   }
 
-  /// Uma gravação do estado corrente — LIST-15, LIST-32.
+  /// Uma gravação do estado corrente — LIST-15, LIST-20, LIST-32, LIST-34.
+  ///
+  /// O contador e a última gravada são atualizados **antes** do `await`, e por
+  /// isso já valem para o eco que chegar em seguida.
   Future<void> _gravar(FestaEmEdicao festa) async {
+    _ultimaGravada = festa;
+    _gravacoesEmVoo++;
+
     try {
       await _festas.salvarFesta(_festaId, festa);
     } catch (erro, stack) {
       add(GravacaoFalhou(erro, stack));
+    } finally {
+      _gravacoesEmVoo--;
     }
+  }
+
+  /// Uma linha do modo COMPRAR foi marcada ou desmarcada — LIST-20, LIST-33.
+  ///
+  /// `remove` devolve `false` quando não havia o que tirar: alternar fica
+  /// determinístico sem consultar o estado antes de decidir. O conjunto mora
+  /// na composição (AD-030), então **marcar não muda o total** — a
+  /// calculadora só o reaplica em `ItemDeLista.noCarrinho`.
+  void _aoAlternarNoCarrinho(
+    ItemAlternadoNoCarrinho evento,
+    Emitter<ListaState> emit,
+  ) {
+    final festa = state.festa;
+    if (festa == null) return;
+
+    final noCarrinho = {...festa.composicao.noCarrinho};
+    if (!noCarrinho.remove(evento.chave)) noCarrinho.add(evento.chave);
+
+    _aplicarMudanca(
+      emit,
+      festa.copyWith(
+        composicao: festa.composicao.copyWith(noCarrinho: noCarrinho),
+      ),
+    );
+  }
+
+  /// O pedido confirmado vira a `Despesa` de RN-20 — LIST-27.
+  ///
+  /// Acrescenta **uma** despesa e grava. Checks e overrides ficam intactos
+  /// (A-21): eles moram na composição, e aqui só a lista de despesas muda.
+  ///
+  /// **Idempotente** (LIST-33): confirmar o mesmo pedido duas vezes produz a
+  /// mesma `Despesa`, e a segunda é descartada por já estar lançada. A
+  /// consequência declarada é que dois pedidos **idênticos** de propósito
+  /// viram um só — nenhuma spec desenha esse caso, e perder um lançamento
+  /// duplicado é menos grave que cobrar a galera duas vezes pelo mesmo
+  /// delivery.
+  void _aoConfirmarPedido(PedidoConfirmado evento, Emitter<ListaState> emit) {
+    final festa = state.festa;
+    if (festa == null) return;
+
+    final despesa = _despesaDoPedido(evento.pedido, festa);
+    if (festa.despesas.contains(despesa)) return;
+
+    _aplicarMudanca(
+      emit,
+      festa.copyWith(despesas: [...festa.despesas, despesa]),
+    );
   }
 
   @override
@@ -253,6 +338,34 @@ class ListaBloc extends Bloc<ListaEvent, ListaState> {
       falhouAoSalvar: state.falhouAoSalvar,
     );
   }
+}
+
+/// O nome de quem paga quando ninguém está nomeado na festa — RN-16, RN-30.
+///
+/// É o rótulo que o arquivo 03 usa para o dono do app em toda linha de acerto
+/// ("LÉO → VOCÊ · R$ 80"), e é o que sobra quando a festa ainda não tem
+/// pessoas nomeadas — o caso do M1, em que `galera` ainda não escreve.
+const String _usuarioSemNome = 'VOCÊ';
+
+/// A `Despesa` que um pedido confirmado lança na festa — RN-20 · LIST-27.
+///
+/// [Despesa.quemPagou] é o **nome** da pessoa (A-24): quem estiver marcado
+/// como `voce` na composição, ou [_usuarioSemNome] enquanto não houver pessoa
+/// nomeada. O valor é o **total** do pedido — subtotal + frete, já somado por
+/// `totalDoPedido` fora daqui —, porque é o total que "racha no acerto da
+/// festa".
+Despesa _despesaDoPedido(Pedido pedido, FestaEmEdicao festa) => Despesa(
+      quemPagou: _nomeDoUsuario(festa.composicao.pessoas),
+      descricao: 'Pedido no ${pedido.parceiro.nome}',
+      valor: pedido.total,
+    );
+
+/// O nome da pessoa marcada como `voce`, ou [_usuarioSemNome].
+String _nomeDoUsuario(List<Pessoa> pessoas) {
+  for (final pessoa in pessoas) {
+    if (pessoa.voce) return pessoa.nome;
+  }
+  return _usuarioSemNome;
 }
 
 /// O item de [chave] entre os ajustáveis, ou `null` se ele não está na lista.

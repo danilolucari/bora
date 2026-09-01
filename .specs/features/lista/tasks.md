@@ -418,17 +418,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `ItemAlternadoNoCarrinho(chave)` faz `add`/`remove` num `Set`: marcar duas vezes volta ao estado inicial, **deterministicamente** (LIST-33)
-- [ ] Marcar **não muda o total** — teste afirma `totalComEssenciais` idêntico antes e depois
-- [ ] O conjunto é gravado por `salvarFesta`, e reconstruir o bloc sobre a mesma porta devolve os checks — a prova de LIST-20
-- [ ] `PedidoConfirmado(pedido)` acrescenta **uma** `Despesa` com `quemPagou` = o nome do usuário na festa (**"VOCÊ"** na fixture RN-30), descrição **"Pedido no {parceiro}"** e valor = o **total (subtotal + frete)** — e grava
-- [ ] `PedidoConfirmado` **não altera** checks nem overrides (A-21) — teste afirma os dois conjuntos idênticos antes e depois
-- [ ] Dois `PedidoConfirmado` do **mesmo** pedido criam **uma** despesa (LIST-33)
-- [ ] **Supressão de eco**: emissão do stream **igual** à última `FestaEmEdicao` gravada é descartada; emissão **diferente** é adotada. Teste que dispara um ajuste e injeta o eco no meio, afirmando que o estado **não** regride (LIST-34) — falha se a supressão sair
-- [ ] Toques rápidos em sequência convergem no estado final correto, sem recálculo obsoleto sobrescrevendo um mais novo
-- [ ] `salvarFesta` que **falha**: `falhouAoSalvar: true`, `logger.logError(name: 'lista')`, o estado da tela **não** é revertido e a interação segue (LIST-32). *SPEC_PRECISION_GAP declarado em `design.md` §10: nenhuma spec desenha a Lista falhando ao gravar nem dá copy — a evidência é a preservação do estado mais o log*
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 14 testes novos
+- [x] `ItemAlternadoNoCarrinho(chave)` faz `add`/`remove` num `Set`: marcar duas vezes volta ao estado inicial, **deterministicamente** (LIST-33)
+- [x] Marcar **não muda o total** — teste afirma `totalComEssenciais` idêntico antes e depois
+- [x] O conjunto é gravado por `salvarFesta`, e reconstruir o bloc sobre a mesma porta devolve os checks — a prova de LIST-20
+- [x] `PedidoConfirmado(pedido)` acrescenta **uma** `Despesa` com `quemPagou` = o nome do usuário na festa (**"VOCÊ"** na fixture RN-30), descrição **"Pedido no {parceiro}"** e valor = o **total (subtotal + frete)** — e grava
+- [x] `PedidoConfirmado` **não altera** checks nem overrides (A-21) — teste afirma os dois conjuntos idênticos antes e depois
+- [x] Dois `PedidoConfirmado` do **mesmo** pedido criam **uma** despesa (LIST-33)
+- [x] **Supressão de eco**: emissão do stream **igual** à última `FestaEmEdicao` gravada é descartada; emissão **diferente** é adotada. Teste que dispara um ajuste e injeta o eco no meio, afirmando que o estado **não** regride (LIST-34) — falha se a supressão sair
+- [x] Toques rápidos em sequência convergem no estado final correto, sem recálculo obsoleto sobrescrevendo um mais novo
+- [x] `salvarFesta` que **falha**: `falhouAoSalvar: true`, `logger.logError(name: 'lista')`, o estado da tela **não** é revertido e a interação segue (LIST-32). *SPEC_PRECISION_GAP declarado em `design.md` §10: nenhuma spec desenha a Lista falhando ao gravar nem dá copy — a evidência é a preservação do estado mais o log*
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 14 testes novos
 
 **Tests**: unit
 **Gate**: quick
