@@ -187,6 +187,50 @@ void main() {
     }
   });
 
+  // P1-3 AC4 traz duas cláusulas, e a segunda — "deixa de exibi-lo quando o
+  // ajuste é desfeito" — admite duas leituras: "desfeito" pode ser o RESTAURAR
+  // ou pode ser voltar o stepper ao valor automático. A ambiguidade foi
+  // resolvida pelo usuário em 2026-09-01 na primeira leitura: **editado
+  // significa "tem override gravado"**, que é o que `ItemDeLista.editado` de
+  // `core/calculo` já significa e o que as outras specs herdam. Só o RESTAURAR
+  // apaga a marca. Estes testes fixam essa leitura para ela não mudar por
+  // acidente — sem eles, trocar a semântica de `editado` passaria calada.
+  group('LIST-12 — o ponto vermelho é "tem override" (P1-3 AC4)', () {
+    test('subir e voltar ao valor automático mantém o override e a marca',
+        () async {
+      final bloc = await blocPronto();
+      final automatica = _itemDe(bloc.state, ChaveItem.bovina).quantidade;
+
+      bloc.add(const QuantidadeAjustada(ChaveItem.bovina, 1));
+      bloc.add(const QuantidadeAjustada(ChaveItem.bovina, -1));
+      await _assentar();
+
+      final item = _itemDe(bloc.state, ChaveItem.bovina);
+      // A quantidade voltou ao automático...
+      expect(item.quantidade, closeTo(automatica, 1e-9));
+      // ...e mesmo assim a marca fica, porque o override existe.
+      expect(item.editado, isTrue);
+      expect(bloc.state.resultado!.temOverrides, isTrue);
+      expect(bloc.state.festa!.composicao.overrides, contains(ChaveItem.bovina));
+    });
+
+    test('só o RESTAURAR apaga a marca do ajuste desfeito', () async {
+      final bloc = await blocPronto();
+
+      bloc.add(const QuantidadeAjustada(ChaveItem.bovina, 1));
+      bloc.add(const QuantidadeAjustada(ChaveItem.bovina, -1));
+      await _assentar();
+      expect(_itemDe(bloc.state, ChaveItem.bovina).editado, isTrue);
+
+      bloc.add(const OverridesRestaurados());
+      await _assentar();
+
+      expect(_itemDe(bloc.state, ChaveItem.bovina).editado, isFalse);
+      expect(bloc.state.resultado!.temOverrides, isFalse);
+      expect(bloc.state.festa!.composicao.overrides, isEmpty);
+    });
+  });
+
   group('LIST-13 — o recálculo ao vivo (UC-04)', () {
     test('um ajuste move linha, total, por adulto e faixa na mesma emissão',
         () async {

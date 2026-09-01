@@ -175,6 +175,7 @@ O ROADMAP marcou Discuss para esta spec, e as **duas zonas cinzentas do usuário
 2. WHEN o stepper de quantidade é acionado THEN o passo SHALL ser o do catálogo — **0,5 kg** nas carnes, **2 latas** na cerveja e **1** nos demais (RN-12) — e o mínimo SHALL ser **um passo**, com o decremento inerte no piso.
 3. WHEN o stepper de preço é acionado THEN o passo SHALL ser **R$ 1** e o mínimo **R$ 1** (RN-12).
 4. WHEN um item recebe qualquer ajuste THEN SHALL exibir o **ponto vermelho de 8px** ao lado do nome (RN-12), e SHALL deixar de exibi-lo quando o ajuste é desfeito.
+   > **Ambiguidade resolvida em 2026-09-01, por decisão do usuário.** "Desfeito" significa **RESTAURAR**, não "voltar o stepper ao valor automático": `editado` é **"tem override gravado"**, a semântica que `ItemDeLista.editado` de `core/calculo` já carrega e que as outras specs herdam. Logo `+1` seguido de `−1` **mantém** o ponto vermelho. Leitura fixada por `test/features/lista/presentation/bloc/lista_overrides_test.dart`, grupo `LIST-12`.
 5. WHEN um ajuste é feito THEN o valor da linha, o subtotal da categoria, o total, o "por adulto" e a "faixa real" SHALL recalcular **imediatamente**, sem botão "calcular" (UC-04).
 6. WHEN existe pelo menos um override THEN o rodapé SHALL exibir o botão "RESTAURAR"; WHEN não existe nenhum THEN o botão SHALL **não** existir na árvore (A-10).
 7. WHEN "RESTAURAR" é acionado THEN **todos** os overrides SHALL ser desfeitos de uma vez, sem diálogo de confirmação e sem toast, os pontos vermelhos SHALL sumir e o botão SHALL desaparecer (UC-06 A1).
@@ -327,7 +328,7 @@ O ROADMAP marcou Discuss para esta spec, e as **duas zonas cinzentas do usuário
 | LIST-09 | P1-2 AC4, AC5, AC6 | **RN-11 (total R$ 286 · faixa R$ 234–356)** · A-03, A-04 | Execute | Implementing |
 | LIST-10 | P1-3 AC1 | UC-06 (aceite: abrir um fecha o anterior) | Execute | Implementing |
 | LIST-11 | P1-3 AC2, AC3 | **RN-12 (passos e mínimos)** | Execute | Implementing |
-| LIST-12 | P1-3 AC4 | RN-12 (ponto vermelho 8px) | Execute | Implementing |
+| LIST-12 | P1-3 AC4 | RN-12 (ponto vermelho 8px) · leitura fixada em 2026-09-01 | Execute | Implementing |
 | LIST-13 | P1-3 AC5 | UC-04 · UC-06 | Execute | Implementing |
 | LIST-14 | P1-3 AC6, AC7 | RN-12 · UC-06 A1 · A-10 | Execute | Implementing |
 | LIST-15 | P1-3 AC8 | **UC-06 (aceite: sobrevive à navegação)** · A-05 | Execute | Implementing |
