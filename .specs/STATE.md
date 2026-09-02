@@ -246,12 +246,21 @@
 - **Status**: active
 
 
+### AD-031
+- **Decision**: O modelo de acesso do BORA tem duas metades e elas moram em lugares diferentes. O **dado** — `enum NivelDoLink` e `ConviteDaFesta { codigo, nivel }`, campo de `FestaEmEdicao` — mora em `lib/core/festas/dominio/`. A **regra** — `enum Capacidade` (as oito de RN-22), `capacidadesDe(PapelNaFesta)`, `pode(papel, capacidade)` e `papelDoNivel(NivelDoLink)` — mora em `lib/features/galera/domain/permissoes.dart`, em Dart puro, sem import de Flutter. **Nenhuma feature reimplementa a tabela**: `convite`, `convidado` e `custos` consultam estas funções, e as security rules do Firestore da spec 09 são a tradução desta mesma tabela para o servidor. O papel do anfitrião não é atribuível nem removível por nenhum caminho de código.
+- **Reason**: RN-22 é herdada por três specs (roadmap §5). Se não nascer consultável, nasce copiada — e três cópias divergem uma a uma sem que nenhum teste perceba. A separação dado/regra repete o que `core/calculo/dominio/papel_na_festa.dart` já declara por escrito para o mesmo par de conceitos ("só o enum: a tabela é domínio de `galera`"), e mantém `core/festas/` sem importar feature nenhuma. O nível sobe para `core/` porque tem dois consumidores fora da `galera` (o `codigo` na spec 08, o `nivel` na spec 09) — a mesma condição que motivou a AD-019 e a AD-029.
+- **Trade-off**: as specs 08/09/10 passam a importar de `features/galera/domain/`, acoplamento feature↔feature que a AD-019 evitou em outro contexto. É sancionado pela GAL-19 AC7, que nomeia a pasta, e fica como candidato à promoção para `core/` no M2 — junto com a promoção de `FestaRepository` que a AD-029 já prevê.
+- **Scope**: specs 07 `galera`, 08 `convite`, 09 `convidado` e 10 `custos`; e toda decisão futura de "quem pode o quê".
+- **Date**: 2026-09-02
+- **Status**: active
+
+
 ### Reserva de numeração — AD-029..AD-036 (propostas, **não** ativas)
 
-Os designs das seis specs restantes propuseram oito decisões. A **AD-029** e a **AD-030** já
-foram gravadas acima, na primeira task do Execute de `montar` e de `lista`; as seis restantes
-continuam **propostas** — o log ativo para na **AD-030**. Cada uma é gravada como AD completa na **primeira
-task do Execute** da sua spec, na ordem da coluna "Depende de" do ROADMAP §2. Quem executar
+Os designs das seis specs restantes propuseram oito decisões. A **AD-029**, a **AD-030** e a
+**AD-031** já foram gravadas acima, na primeira task do Execute de `montar`, de `lista` e de
+`galera`; as cinco restantes continuam **propostas** — o log ativo para na **AD-031**. Cada uma
+é gravada como AD completa na **primeira task do Execute** da sua spec, na ordem da coluna "Depende de" do ROADMAP §2. Quem executar
 fora dessa ordem **renumera a sua**, nunca a anterior. Esta tabela existe para que sessões
 paralelas não reivindiquem o mesmo número — foi o que já aconteceu uma vez (`19f77a7`,
 AD-023 → AD-029).
@@ -260,7 +269,7 @@ AD-023 → AD-029).
 |---|---|---|---|
 | ~~**AD-029**~~ | 05 `montar` | ✅ **registrada acima** — porta de edição da festa em `lib/core/festas/` (`FestaEmEdicao`, `FestaEmEdicaoRepository`), falando só em tipos de `core/calculo` | `montar/design.md` §Tech Decisions |
 | ~~**AD-030**~~ | 06 `lista` | ✅ **registrada acima** — o estado de lista da festa (overrides, carrinho, despesas) mora nas entidades de `core/`, nunca na feature | `lista/design.md` §12 |
-| **AD-031** | 07 `galera` | O **dado** do acesso (`codigo`, `NivelDoLink`) em `core/festas/`; a **regra** RN-22 × RN-23 em `features/galera/domain/permissoes.dart`, consultável e nunca reimplementada | `galera/design.md` §12 |
+| ~~**AD-031**~~ | 07 `galera` | ✅ **registrada acima** — o **dado** do acesso (`codigo`, `NivelDoLink`) em `core/festas/`; a **regra** RN-22 × RN-23 em `features/galera/domain/permissoes.dart`, consultável e nunca reimplementada | `galera/design.md` §12 |
 | **AD-032** | 08 `convite` | `share_plus` como canal único de saída de texto, atrás da porta `CompartilhadorDeTexto`, com o mapeamento de `ShareResultStatus` num lugar só | `convite/design.md` §12 |
 | **AD-033** | 09 `convidado` | Forma do dado no Firestore e fronteira de escrita: **um documento por festa**, `convites/{codigo}` como índice, RSVP escrito **só** pela Cloud Function. Traz `cloud_functions` ao `pubspec.yaml` | `convidado/design.md` §13 |
 | **AD-034** | 09 `convidado` | Identidade do portador do link: uid da auth anônima persistido no dispositivo, e **usuário anônimo do Firebase nunca vira `UsuarioLogado`** | `convidado/design.md` §13 |
