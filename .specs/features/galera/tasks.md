@@ -457,15 +457,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O bloc assina o stream **sem** evento de "carregar" — RN-28 chega sem a tela pedir
-- [ ] Estado inicial é `carregando`; emissão do repositório leva a `comFesta` com a galera dentro
-- [ ] Erro no stream ⇒ `situacao == falhou`, `logger.logError(name: 'galera')` registrado, e **o que já havia chegado continua no estado** (`copyWith`, como no `HomeBloc`)
-- [ ] `observarFesta` emitindo `null` (festa inexistente) ⇒ mesmo estado `falhou`, sem copy nova (`design.md` §14)
-- [ ] Igualdade de estado afirmada nos dois sentidos — dois estados iguais são `==`, trocar **qualquer** um dos quatro campos separa (sem isso, T14 e T22 reconstroem a tela a cada emissão)
-- [ ] `close()` cancela a assinatura — teste que prova que emissão depois do `close` não vira `add` em bloc fechado
-- [ ] O bloc **não navega** (AD-020) e não importa `go_router`
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] O bloc assina o stream **sem** evento de "carregar" — RN-28 chega sem a tela pedir
+- [x] Estado inicial é `carregando`; emissão do repositório leva a `comFesta` com a galera dentro
+- [x] Erro no stream ⇒ `situacao == falhou`, `logger.logError(name: 'galera')` registrado, e **o que já havia chegado continua no estado** (`copyWith`, como no `HomeBloc`)
+- [x] `observarFesta` emitindo `null` (festa inexistente) ⇒ mesmo estado `falhou`, sem copy nova (`design.md` §14)
+- [x] Igualdade de estado afirmada nos dois sentidos — dois estados iguais são `==`, trocar **qualquer** um dos quatro campos separa (sem isso, T14 e T22 reconstroem a tela a cada emissão)
+- [x] `close()` cancela a assinatura — teste que prova que emissão depois do `close` não vira `add` em bloc fechado
+- [x] O bloc **não navega** (AD-020) e não importa `go_router`
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 10 testes novos
 
 **Tests**: unit
 **Gate**: quick
