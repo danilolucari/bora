@@ -286,8 +286,11 @@ CVD-31 AC7 manda. Entram no corpo da AD-033.
 > **SNAPSHOT — 2026-09-02, 14:10 BRT.** Spec 07 `galera` em execução na branch
 > **`feature/galera`** (não mergeada, sem push). **17 das 27 tasks** feitas, mais uma
 > fix task fora do plano. Árvore limpa. Gate conferido com exit code: **2193 verdes**,
-> `flutter analyze` zero issues. Parado por cota em `ATENCAO` (78%), não por bloqueio
-> técnico.
+> `flutter analyze` zero issues. **Pausado pelo protocolo de cota**: a janela de 5h
+> estava em **91%** (limite de pausa 85%) — o `78%` que a sessão vinha lendo era cache
+> defasado do `/usage` anterior. Nada ficou pela metade. **Retomada headless agendada
+> para 2026-09-02 16:39:59 BRT** (reset das 16:30 + 10 min), tarefa `bora-retomar`,
+> log em `.claude/logs/retomada-*.log`.
 
 ### Onde o projeto está
 
