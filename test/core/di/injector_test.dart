@@ -9,6 +9,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
 import 'package:bora/features/home/domain/festa_repository.dart';
+import 'package:bora/features/lista/data/pedido_falso.dart';
+import 'package:bora/features/lista/domain/pedido_repository.dart';
 
 import '../../support/fake_autenticacao_repository.dart';
 import '../../support/recording_app_logger.dart';
@@ -43,6 +45,13 @@ FestaEmEdicao _rascunho() => FestaEmEdicao(
         itensSelecionados: const {ChaveItem.bovina},
       ),
     );
+
+/// Um duplo qualquer da porta de pedido — só para provar que a costura de
+/// [configureDependencies] a substitui.
+class _PedidoQueNaoEnvia implements PedidoRepository {
+  @override
+  Future<Never> enviar(Object pedido) async => throw UnimplementedError();
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -80,6 +89,31 @@ void main() {
       );
 
       expect(getIt<GoRouter>(), same(getIt<GoRouter>()));
+    });
+  });
+
+  group('AD-024 — a porta de pedido resolve para o adaptador falso do M1', () {
+    test('PedidoRepository é o PedidoFalso, e é sempre a mesma instância',
+        () async {
+      await configureDependencies(
+        logger: RecordingAppLogger(),
+        autenticacaoFactory: FakeAutenticacaoRepository.new,
+      );
+
+      expect(getIt<PedidoRepository>(), isA<PedidoFalso>());
+      expect(getIt<PedidoRepository>(), same(getIt<PedidoRepository>()));
+    });
+
+    test('a porta pode ser trocada por um duplo sem tocar a tela', () async {
+      final duplo = _PedidoQueNaoEnvia();
+
+      await configureDependencies(
+        logger: RecordingAppLogger(),
+        autenticacaoFactory: FakeAutenticacaoRepository.new,
+        pedidosFactory: () => duplo,
+      );
+
+      expect(getIt<PedidoRepository>(), same(duplo));
     });
   });
 

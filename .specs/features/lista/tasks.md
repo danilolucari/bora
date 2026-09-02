@@ -155,10 +155,10 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `AD-030` existe com os seis campos, `Status: active`
-- [ ] A **AD-029 de `montar` já está registrada** antes desta — a numeração de `design.md` §12 exige a ordem; se `montar` ainda não a gravou, renumera-se **aqui**, nunca lá
-- [ ] Nenhuma AD existente é editada (nada vira `superseded`)
-- [ ] Nenhum arquivo de código é tocado
+- [x] `AD-030` existe com os seis campos, `Status: active`
+- [x] A **AD-029 de `montar` já está registrada** antes desta — a numeração de `design.md` §12 exige a ordem; se `montar` ainda não a gravou, renumera-se **aqui**, nunca lá
+- [x] Nenhuma AD existente é editada (nada vira `superseded`)
+- [x] Nenhum arquivo de código é tocado
 
 **Tests**: none (camada "Documentação / spec")
 **Gate**: none
@@ -177,14 +177,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O campo é `required` — item novo sem corredor é **erro de compilação**, não item que some do agrupamento em runtime (é a razão da escolha A de §2.2)
-- [ ] Os 16 itens têm corredor, exatamente como a tabela do `design.md` §6.1: `acougue` = bovina, suina, frango · `hortifruti` = legumesParaGrelha · `padaria` = paoDeAlho · `bebidas` = refrigerante, suco, agua, cerveja, vodka, cachaca, whisky · `mercearia` = carvao, gelo, salGrosso, coposEPratos
-- [ ] **Teste de coerência**: para todo `PrecoDeMercado` com `chave != null`, `catalogoDeItens[chave]!.corredor == preco.corredor`; a falha **nomeia o item divergente**
-- [ ] O teste de coerência cobre as **8** chaves comuns e falha se qualquer uma for reclassificada só de um lado
-- [ ] Um teste afirma que **todo** `ChaveItem` tem entrada no catálogo com corredor — a cobertura dos 16 não depende de contagem à mão
-- [ ] O doc de `corredor.dart` deixa de declarar que o corredor dos itens fora de RN-11 "é decisão de `lista`" e passa a apontar para o catálogo
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 6 testes novos
+- [x] O campo é `required` — item novo sem corredor é **erro de compilação**, não item que some do agrupamento em runtime (é a razão da escolha A de §2.2)
+- [x] Os 16 itens têm corredor, exatamente como a tabela do `design.md` §6.1: `acougue` = bovina, suina, frango · `hortifruti` = legumesParaGrelha · `padaria` = paoDeAlho · `bebidas` = refrigerante, suco, agua, cerveja, vodka, cachaca, whisky · `mercearia` = carvao, gelo, salGrosso, coposEPratos
+- [x] **Teste de coerência**: para todo `PrecoDeMercado` com `chave != null`, `catalogoDeItens[chave]!.corredor == preco.corredor`; a falha **nomeia o item divergente**
+- [x] O teste de coerência cobre as chaves comuns e falha se qualquer uma for reclassificada só de um lado — **correção de contagem no Execute**: a tabela de RN-11 tem 8 linhas, mas só **7** têm `chave` (a 🌭 Linguiça toscana entra com `chave: null`, R-6), então são 7 as chaves comuns; o teste afirma as duas contagens
+- [x] Um teste afirma que **todo** `ChaveItem` tem entrada no catálogo com corredor — a cobertura dos 16 não depende de contagem à mão
+- [x] O doc de `corredor.dart` deixa de declarar que o corredor dos itens fora de RN-11 "é decisão de `lista`" e passa a apontar para o catálogo
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 6 testes novos
 
 **Tests**: unit
 **Gate**: build
@@ -203,15 +203,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `noCarrinho` tem default `const {}` — **nenhum** call site existente quebra e nenhum teste existente é editado
-- [ ] `copyWith` preserva o campo não informado e substitui o informado, inclusive por `{}` vazio
-- [ ] **Igualdade profunda**: duas composições com o mesmo conjunto são `==`; trocar **um** elemento as separa; `hashCode` acompanha. Sem isso a supressão de eco de T11 não funciona (`design.md` §6.2 / §8.2)
-- [ ] `calcular` marca `ItemDeLista.noCarrinho = true` **exatamente** para os itens cuja chave está no conjunto, e `false` para os demais — o campo deixa de nascer sempre `false`
-- [ ] `subtotalDoQueFalta` deixa de ser código morto: teste que monta uma composição com 2 itens marcados e afirma que o subtotal do que falta **exclui** os dois e difere de `subtotalDeItens`
-- [ ] Chave **órfã** no conjunto (item que a seleção não produz) não cria item nem quebra: o edge case "item marcado some da lista" resolve sem código de limpeza
-- [ ] `calcular` com 0 pessoas continua devolvendo listas vazias, com ou sem conjunto preenchido
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 8 testes novos
+- [x] `noCarrinho` tem default `const {}` — **nenhum** call site existente quebra e nenhum teste existente é editado
+- [x] `copyWith` preserva o campo não informado e substitui o informado, inclusive por `{}` vazio
+- [x] **Igualdade profunda**: duas composições com o mesmo conjunto são `==`; trocar **um** elemento as separa; `hashCode` acompanha. Sem isso a supressão de eco de T11 não funciona (`design.md` §6.2 / §8.2)
+- [x] `calcular` marca `ItemDeLista.noCarrinho = true` **exatamente** para os itens cuja chave está no conjunto, e `false` para os demais — o campo deixa de nascer sempre `false`
+- [x] `subtotalDoQueFalta` deixa de ser código morto: teste que monta uma composição com 2 itens marcados e afirma que o subtotal do que falta **exclui** os dois e difere de `subtotalDeItens`
+- [x] Chave **órfã** no conjunto (item que a seleção não produz) não cria item nem quebra: o edge case "item marcado some da lista" resolve sem código de limpeza
+- [x] `calcular` com 0 pessoas continua devolvendo listas vazias, com ou sem conjunto preenchido
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: build
@@ -230,13 +230,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O doc declara o porquê: 🍽️ Copos & pratos **aparece** na lista e **não soma** (AD-010), e fica fora do total, do pedido (A-19) e da faixa real
-- [ ] `itensCobraveis` remove exatamente os itens com `entraNoTotal == false` e preserva a **ordem** dos demais
-- [ ] Lista vazia devolve vazio; lista sem nenhum item excluído devolve todos, na mesma ordem
-- [ ] Teste que afirma a exclusão de Copos & pratos **nas três superfícies** — total, faixa e subtotal do pedido — usando o predicado, não uma reimplementação
-- [ ] `totalExato(itensCobraveis(...))` não muda o resultado dos casos literais já verdes (RN-10: R$ 271 no padrão) — nenhum número da baseline se move
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 5 testes novos
+- [x] O doc declara o porquê: 🍽️ Copos & pratos **aparece** na lista e **não soma** (AD-010), e fica fora do total, do pedido (A-19) e da faixa real
+- [x] `itensCobraveis` remove exatamente os itens com `entraNoTotal == false` e preserva a **ordem** dos demais
+- [x] Lista vazia devolve vazio; lista sem nenhum item excluído devolve todos, na mesma ordem
+- [x] Teste que afirma a exclusão de Copos & pratos usando o predicado, não uma reimplementação: **total** e **subtotal do pedido** aqui (`totais_test.dart`); a terceira superfície, a **faixa**, é afirmada na T5, que é onde `faixaRealDaLista` nasce
+- [x] `totalExato(itensCobraveis(...))` não muda o resultado dos casos literais já verdes (RN-10: R$ 271 no padrão) — nenhum número da baseline se move
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 5 testes novos
 
 **Tests**: unit
 **Gate**: build
@@ -255,16 +255,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `FaixaReal { double minimo; double maximo }` **sem campo `media`** — devolver um terceiro número aqui reabriria a D-1 (`design.md` §6.4)
-- [ ] O doc declara: soma **exata**; quem arredonda é RN-13, uma única vez (AD-009)
-- [ ] Item coberto contribui com mín/máx da tabela; item não coberto contribui com o próprio `valor` nas **duas** pontas — nenhuma faixa é fabricada
-- [ ] **Copos & pratos fica fora** das duas pontas (via `itensCobraveis`)
-- [ ] Aplicada às **oito linhas** da tabela de RN-11 a função **degenera em `totalDeMercado`**: R$ 234 / R$ 356 — afirmado contra `totalDeMercado(tabelaDePrecosDeMercado)`, não contra literal copiado
-- [ ] No estado padrão de RN-30 devolve **244,60 / 342,60**, que `MoneyFormatter` exibe como **R$ 245 / R$ 343** — o teste afirma o valor exato da função **e** o formatado
-- [ ] Lista vazia devolve `(0, 0)`
-- [ ] Override de preço **não move** a faixa (A-04): mesma lista, com e sem override, mesma `FaixaReal`
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 8 testes novos
+- [x] `FaixaReal { double minimo; double maximo }` **sem campo `media`** — devolver um terceiro número aqui reabriria a D-1 (`design.md` §6.4)
+- [x] O doc declara: soma **exata**; quem arredonda é RN-13, uma única vez (AD-009)
+- [x] Item coberto contribui com mín/máx da tabela; item não coberto contribui com o próprio `valor` nas **duas** pontas — nenhuma faixa é fabricada
+- [x] **Copos & pratos fica fora** das duas pontas (via `itensCobraveis`)
+- [x] Aplicada às **oito linhas** da tabela de RN-11 a função **degenera em `totalDeMercado`**: R$ 234 / R$ 356 — afirmado contra `totalDeMercado(tabelaDePrecosDeMercado)`, não contra literal copiado. **Nota do Execute**: a 8ª linha é a 🌭 Linguiça toscana, que entra com `chave: null` (R-6) e por isso não vira `ItemDeLista`; o teste dá a ela uma `ChaveItem` livre, o que deixa as oito cobertas **sem mover um só número** da tabela
+- [x] No estado padrão de RN-30 devolve **244,60 / 342,60**, que `MoneyFormatter` exibe como **R$ 245 / R$ 343** — o teste afirma o valor exato da função **e** o formatado
+- [x] Lista vazia devolve `(0, 0)`
+- [x] Override de preço **não move** a faixa (A-04): mesma lista, com e sem override, mesma `FaixaReal`. **Escopo apurado no Execute**: vale para item **coberto** por RN-11, que é o caso de A-04 ("a faixa não persegue o override"); item **não coberto** contribui com o próprio `ItemDeLista.valor`, que já é o ajustado — os dois casos têm teste
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: build
@@ -283,13 +283,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O doc declara por que fica aqui e **não** em `ComposicaoDaFesta`: despesa não entra em `CalculadoraDaFesta.calcular`, e pô-la na composição mudaria a igualdade que decide se um recálculo é necessário (`design.md` §6.3)
-- [ ] Default `const []` — nenhum call site de `montar` quebra e **nenhum teste de `montar` é editado**
-- [ ] `copyWith` preserva a lista não informada
-- [ ] Igualdade profunda: mesma lista ⇒ `==`; acrescentar uma despesa separa; **ordem** diferente separa
-- [ ] Duas `FestaEmEdicao` sem despesa continuam iguais — a suíte de `montar` roda intacta
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 5 testes novos
+- [x] O doc declara por que fica aqui e **não** em `ComposicaoDaFesta`: despesa não entra em `CalculadoraDaFesta.calcular`, e pô-la na composição mudaria a igualdade que decide se um recálculo é necessário (`design.md` §6.3)
+- [x] Default `const []` — nenhum call site de `montar` quebra e **nenhum teste de `montar` é editado**
+- [x] `copyWith` preserva a lista não informada
+- [x] Igualdade profunda: mesma lista ⇒ `==`; acrescentar uma despesa separa; **ordem** diferente separa
+- [x] Duas `FestaEmEdicao` sem despesa continuam iguais — a suíte de `montar` roda intacta
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 5 testes novos
 
 **Tests**: unit
 **Gate**: build
@@ -308,14 +308,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O doc de `pedido.dart` abre com o **SPEC_DEVIATION** declarado: `Pedido` e os parceiros ficam na feature e não em `core/calculo/dominio/` apesar da AD-008, porque a entidade tem **um** consumidor e `total_do_pedido.dart` já atribui parceiros, ETAs e fretes à spec `lista` (`design.md` §6.6)
-- [ ] Os três parceiros com os literais exatos de RN-27: `iFood Mercado` / `40–60 min` / frete 12 · `Rappi Turbo` / `15–30 min` / frete 9 · `Zé Delivery` / `30–45 min` / frete 0, este com `soBebidas: true`
-- [ ] A **ordem de declaração** é a de RN-27 (iFood, Rappi, Zé) e um teste a afirma — é ela que determina a ordem dos cartões e a pré-seleção da A-14
-- [ ] Os fretes são **números**, nunca strings com `R$` — a formatação é de `MoneyFormatter` (o guard de T26 morde `R$`, não números)
-- [ ] `Pedido` tem `parceiro`, `endereco`, `itens`, `subtotal`, `frete`, `total`, com `==`/`hashCode` por valor
-- [ ] `Pedido` **não** calcula: `total` é campo, alimentado por `totalDoPedido` fora daqui
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 6 testes novos
+- [x] O doc de `pedido.dart` abre com o **SPEC_DEVIATION** declarado: `Pedido` e os parceiros ficam na feature e não em `core/calculo/dominio/` apesar da AD-008, porque a entidade tem **um** consumidor e `total_do_pedido.dart` já atribui parceiros, ETAs e fretes à spec `lista` (`design.md` §6.6)
+- [x] Os três parceiros com os literais exatos de RN-27: `iFood Mercado` / `40–60 min` / frete 12 · `Rappi Turbo` / `15–30 min` / frete 9 · `Zé Delivery` / `30–45 min` / frete 0, este com `soBebidas: true`
+- [x] A **ordem de declaração** é a de RN-27 (iFood, Rappi, Zé) e um teste a afirma — é ela que determina a ordem dos cartões e a pré-seleção da A-14
+- [x] Os fretes são **números**, nunca strings com `R$` — a formatação é de `MoneyFormatter` (o guard de T26 morde `R$`, não números)
+- [x] `Pedido` tem `parceiro`, `endereco`, `itens`, `subtotal`, `frete`, `total`, com `==`/`hashCode` por valor
+- [x] `Pedido` **não** calcula: `total` é campo, alimentado por `totalDoPedido` fora daqui
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 6 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -334,14 +334,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `Future<Pedido> enviar(Pedido pedido)` é o **único** método da porta
-- [ ] O doc da porta declara: a única implementação do MVP é falsa (AD-024); quando houver contrato, troca-se o adaptador e **nem a tela nem os testes de aceite mudam**
-- [ ] O doc de `PedidoFalso` **repete a ressalva de exposição pública da AD-024** no ponto onde alguém a leria (`design.md` §11): a tela afirma "PEDIDO A CAMINHO!" sem pedido
-- [ ] `PedidoFalso.enviar` devolve o pedido confirmado **sem rede** — nenhum import de `http`, de Firebase ou de `dart:io` no arquivo, afirmado por teste
-- [ ] O pedido devolvido é **quem alimenta o overlay** (LIST-28 AC2) — o contrato está escrito no doc, e T22 o afirma na árvore
-- [ ] `PedidoFalsoDeTeste` (duplo escrito à mão, sem `mocktail`) existe em `test/` com um modo de **falha**, e um teste afirma que a falha propaga como exceção — a defesa que T19 e T21 exercitam
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 5 testes novos
+- [x] `Future<Pedido> enviar(Pedido pedido)` é o **único** método da porta
+- [x] O doc da porta declara: a única implementação do MVP é falsa (AD-024); quando houver contrato, troca-se o adaptador e **nem a tela nem os testes de aceite mudam**
+- [x] O doc de `PedidoFalso` **repete a ressalva de exposição pública da AD-024** no ponto onde alguém a leria (`design.md` §11): a tela afirma "PEDIDO A CAMINHO!" sem pedido
+- [x] `PedidoFalso.enviar` devolve o pedido confirmado **sem rede** — nenhum import de `http`, de Firebase ou de `dart:io` no arquivo, afirmado por teste
+- [x] O pedido devolvido é **quem alimenta o overlay** (LIST-28 AC2) — o contrato está escrito no doc, e T22 o afirma na árvore
+- [x] `PedidoFalsoDeTeste` (duplo escrito à mão, sem `mocktail`) existe em `test/` com um modo de **falha**, e um teste afirma que a falha propaga como exceção — a defesa que T19 e T21 exercitam
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 5 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -360,17 +360,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `ListaState { carregando, festa, resultado, modo, chaveExpandida, faixaReal, falhouAoSalvar }` com `==` por valor
-- [ ] Antes da primeira emissão o estado é `carregando` — e um teste afirma que a tela nunca vê `resultado` nulo com `carregando: false`
-- [ ] `ModoAlternado` troca o modo e **não grava** na porta — teste afirma zero chamadas a `salvarFesta`
-- [ ] `ItemExpandido(chave)` guarda **um** campo, não um `Set`: abrir um item **fecha o anterior** por construção (LIST-10); `ItemExpandido(null)` fecha
-- [ ] **Item expandido sobrevive ao recálculo**: com um item aberto, um ajuste de outro item não fecha o aberto (edge case da `spec.md`)
-- [ ] `observarFesta` emitindo `null` produz o estado vazio — card vazio, total 0, `faixaReal` ausente — pelo **mesmo caminho** de 0 pessoas, e **não** redireciona para `/erro` (a rota é válida)
-- [ ] Composição com 0 pessoas: `resultado.itens` e `.essenciais` vazios, `totalComEssenciais == 0`, `porAdulto == 0` — nenhum essencial aparece, porque a guarda de `calcular` vem antes deles
-- [ ] Stream que **falha** loga por `logger.logError(name: 'lista')` (afirmado por duplo, AD-005) e **mantém o último estado bom** — o teste falha se o tratamento sair
-- [ ] Voltar a ter pessoas recalcula normalmente, com os essenciais de volta
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] `ListaState { carregando, festa, resultado, modo, chaveExpandida, faixaReal, falhouAoSalvar }` com `==` por valor
+- [x] Antes da primeira emissão o estado é `carregando` — e um teste afirma que a tela nunca vê `resultado` nulo com `carregando: false`
+- [x] `ModoAlternado` troca o modo e **não grava** na porta — teste afirma zero chamadas a `salvarFesta`
+- [x] `ItemExpandido(chave)` guarda **um** campo, não um `Set`: abrir um item **fecha o anterior** por construção (LIST-10); `ItemExpandido(null)` fecha
+- [x] **Item expandido sobrevive ao recálculo**: com um item aberto, um ajuste de outro item não fecha o aberto (edge case da `spec.md`)
+- [x] `observarFesta` emitindo `null` produz o estado vazio — card vazio, total 0, `faixaReal` ausente — pelo **mesmo caminho** de 0 pessoas, e **não** redireciona para `/erro` (a rota é válida)
+- [x] Composição com 0 pessoas: `resultado.itens` e `.essenciais` vazios, `totalComEssenciais == 0`, `porAdulto == 0` — nenhum essencial aparece, porque a guarda de `calcular` vem antes deles
+- [x] Stream que **falha** loga por `logger.logError(name: 'lista')` (afirmado por duplo, AD-005) e **mantém o último estado bom** — o teste falha se o tratamento sair
+- [x] Voltar a ter pessoas recalcula normalmente, com os essenciais de volta
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -389,17 +389,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `QuantidadeAjustada(chave, passos)` e `PrecoAjustado(chave, passos)` produzem uma `ComposicaoDaFesta` nova → `calcular` → `faixaRealDaLista` → emite → `salvarFesta`. **Não existe segundo caminho de cálculo**
-- [ ] Os passos vêm do catálogo: **0,5 kg** nas carnes, **2 latas** na cerveja, **1** nos demais — afirmados contra `comPassoDeQuantidade`, nunca contra número copiado
-- [ ] O passo de preço é **R$ 1** e o mínimo **R$ 1**
-- [ ] **O piso é exercitado**: decrementar no mínimo **não** muda o estado — o teste falha se a guarda sair (item nº 1 da lista de verificação do Verifier)
-- [ ] Um ajuste move `valor` da linha, o subtotal, `totalComEssenciais`, `porAdulto` **e** `faixaReal` na **mesma** emissão — sem botão "calcular" (UC-04)
-- [ ] `resultado.temOverrides` vira `true` no primeiro ajuste e `false` quando o último é desfeito — é ele que T23/T24 leem para exibir o RESTAURAR
-- [ ] `OverridesRestaurados` zera **todos** de uma vez via `semOverrides()`, e o estado seguinte tem `temOverrides == false`
-- [ ] O override é gravado por `salvarFesta` a **cada** passo — afirmado contra a porta duplo, e é o que faz LIST-15 (sobrevive à navegação) ser verdade
-- [ ] Reconstruir o bloc sobre a mesma porta devolve os overrides aplicados — a prova de LIST-15 no nível do bloc
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] `QuantidadeAjustada(chave, passos)` e `PrecoAjustado(chave, passos)` produzem uma `ComposicaoDaFesta` nova → `calcular` → `faixaRealDaLista` → emite → `salvarFesta`. **Não existe segundo caminho de cálculo**
+- [x] Os passos vêm do catálogo: **0,5 kg** nas carnes, **2 latas** na cerveja, **1** nos demais — afirmados contra `comPassoDeQuantidade`, nunca contra número copiado
+- [x] O passo de preço é **R$ 1** e o mínimo **R$ 1**
+- [x] **O piso é exercitado**: decrementar no mínimo **não** muda o estado — o teste falha se a guarda sair (item nº 1 da lista de verificação do Verifier)
+- [x] Um ajuste move `valor` da linha, o subtotal, `totalComEssenciais`, `porAdulto` **e** `faixaReal` na **mesma** emissão — sem botão "calcular" (UC-04)
+- [x] `resultado.temOverrides` vira `true` no primeiro ajuste e `false` quando o último é desfeito — é ele que T23/T24 leem para exibir o RESTAURAR
+- [x] `OverridesRestaurados` zera **todos** de uma vez via `semOverrides()`, e o estado seguinte tem `temOverrides == false`
+- [x] O override é gravado por `salvarFesta` a **cada** passo — afirmado contra a porta duplo, e é o que faz LIST-15 (sobrevive à navegação) ser verdade
+- [x] Reconstruir o bloc sobre a mesma porta devolve os overrides aplicados — a prova de LIST-15 no nível do bloc
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -418,17 +418,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `ItemAlternadoNoCarrinho(chave)` faz `add`/`remove` num `Set`: marcar duas vezes volta ao estado inicial, **deterministicamente** (LIST-33)
-- [ ] Marcar **não muda o total** — teste afirma `totalComEssenciais` idêntico antes e depois
-- [ ] O conjunto é gravado por `salvarFesta`, e reconstruir o bloc sobre a mesma porta devolve os checks — a prova de LIST-20
-- [ ] `PedidoConfirmado(pedido)` acrescenta **uma** `Despesa` com `quemPagou` = o nome do usuário na festa (**"VOCÊ"** na fixture RN-30), descrição **"Pedido no {parceiro}"** e valor = o **total (subtotal + frete)** — e grava
-- [ ] `PedidoConfirmado` **não altera** checks nem overrides (A-21) — teste afirma os dois conjuntos idênticos antes e depois
-- [ ] Dois `PedidoConfirmado` do **mesmo** pedido criam **uma** despesa (LIST-33)
-- [ ] **Supressão de eco**: emissão do stream **igual** à última `FestaEmEdicao` gravada é descartada; emissão **diferente** é adotada. Teste que dispara um ajuste e injeta o eco no meio, afirmando que o estado **não** regride (LIST-34) — falha se a supressão sair
-- [ ] Toques rápidos em sequência convergem no estado final correto, sem recálculo obsoleto sobrescrevendo um mais novo
-- [ ] `salvarFesta` que **falha**: `falhouAoSalvar: true`, `logger.logError(name: 'lista')`, o estado da tela **não** é revertido e a interação segue (LIST-32). *SPEC_PRECISION_GAP declarado em `design.md` §10: nenhuma spec desenha a Lista falhando ao gravar nem dá copy — a evidência é a preservação do estado mais o log*
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 14 testes novos
+- [x] `ItemAlternadoNoCarrinho(chave)` faz `add`/`remove` num `Set`: marcar duas vezes volta ao estado inicial, **deterministicamente** (LIST-33)
+- [x] Marcar **não muda o total** — teste afirma `totalComEssenciais` idêntico antes e depois
+- [x] O conjunto é gravado por `salvarFesta`, e reconstruir o bloc sobre a mesma porta devolve os checks — a prova de LIST-20
+- [x] `PedidoConfirmado(pedido)` acrescenta **uma** `Despesa` com `quemPagou` = o nome do usuário na festa (**"VOCÊ"** na fixture RN-30), descrição **"Pedido no {parceiro}"** e valor = o **total (subtotal + frete)** — e grava
+- [x] `PedidoConfirmado` **não altera** checks nem overrides (A-21) — teste afirma os dois conjuntos idênticos antes e depois
+- [x] Dois `PedidoConfirmado` do **mesmo** pedido criam **uma** despesa (LIST-33)
+- [x] **Supressão de eco**: emissão do stream **igual** à última `FestaEmEdicao` gravada é descartada; emissão **diferente** é adotada. Teste que dispara um ajuste e injeta o eco no meio, afirmando que o estado **não** regride (LIST-34) — falha se a supressão sair
+- [x] Toques rápidos em sequência convergem no estado final correto, sem recálculo obsoleto sobrescrevendo um mais novo
+- [x] `salvarFesta` que **falha**: `falhouAoSalvar: true`, `logger.logError(name: 'lista')`, o estado da tela **não** é revertido e a interação segue (LIST-32). *SPEC_PRECISION_GAP declarado em `design.md` §10: nenhuma spec desenha a Lista falhando ao gravar nem dá copy — a evidência é a preservação do estado mais o log*
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 14 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -447,13 +447,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Todos os literais de `design.md` §9 presentes, **palavra por palavra**: header `SUA LISTA`; segmented `🧮 PLANEJAR` / `🛒 COMPRAR`; as duas dicas tracejadas; `ESSENCIAIS · ENTRAM SOZINHOS`; `AUTO ∝ {fonte}` com as quatro fontes de RN-10; `{quantidade} · média de {N} mercados`; `MÉDIA TOTAL`; `faixa real: de R$ {mín} a R$ {máx}`; `≈ R$ {x} por adulto`; `{N} de {M} no carrinho`; `FAZER PEDIDO 🛒`; `PEDIR O QUE FALTA 🛵`; `RESTAURAR`; os cinco corredores; `{N} itens`; `FAZER PEDIDO`, `ENTREGA POR`, `TROCAR`, `Subtotal`, `Frete`, `Total`, `CONFIRMAR PEDIDO →`; `PEDIDO A CAMINHO!`, `Chega em {ETA} na {endereço}.`, `R$ {total} · rachado no acerto da festa`, `VOLTAR À LISTA`; as quatro abas `Lista · Galera · WhatsApp · Custos`
-- [ ] Os templates com `R$` **são** parâmetro de formatação, não formatação: o arquivo **não** monta valor — recebe a string já formatada por `MoneyFormatter`. O guard de T26 tem exceção **declarada e nomeada** só para este arquivo, ou os templates são escritos sem o literal `R$` — a decisão é da task, e o `design.md` §13 exige que seja explícita
-- [ ] **Zero toast** (A-23): um teste afirma que o arquivo não referencia `BoraToastTexts` nem declara texto de toast
-- [ ] O teste compara com o **token/constante**, nunca com o literal duplicado no teste (L-008)
-- [ ] Caixa alta onde a spec pede caixa alta; sentence case no corpo das dicas e do overlay
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] Todos os literais de `design.md` §9 presentes, **palavra por palavra**: header `SUA LISTA`; segmented `🧮 PLANEJAR` / `🛒 COMPRAR`; as duas dicas tracejadas; `ESSENCIAIS · ENTRAM SOZINHOS`; `AUTO ∝ {fonte}` com as quatro fontes de RN-10; `{quantidade} · média de {N} mercados`; `MÉDIA TOTAL`; `faixa real: de R$ {mín} a R$ {máx}`; `≈ R$ {x} por adulto`; `{N} de {M} no carrinho`; `FAZER PEDIDO 🛒`; `PEDIR O QUE FALTA 🛵`; `RESTAURAR`; os cinco corredores; `{N} itens`; `FAZER PEDIDO`, `ENTREGA POR`, `TROCAR`, `Subtotal`, `Frete`, `Total`, `CONFIRMAR PEDIDO →`; `PEDIDO A CAMINHO!`, `Chega em {ETA} na {endereço}.`, `R$ {total} · rachado no acerto da festa`, `VOLTAR À LISTA`; as quatro abas `Lista · Galera · WhatsApp · Custos`
+- [x] Os templates com `R$` **são** parâmetro de formatação, não formatação: o arquivo **não** monta valor — recebe a string já formatada por `MoneyFormatter`. O guard de T26 tem exceção **declarada e nomeada** só para este arquivo, ou os templates são escritos sem o literal `R$` — a decisão é da task, e o `design.md` §13 exige que seja explícita
+- [x] **Zero toast** (A-23): um teste afirma que o arquivo não referencia `BoraToastTexts` nem declara texto de toast
+- [x] O teste compara com o **token/constante**, nunca com o literal duplicado no teste (L-008)
+- [x] Caixa alta onde a spec pede caixa alta; sentence case no corpo das dicas e do overlay
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 10 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -472,18 +472,18 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] Emoji, nome, quantidade (`rotuloDeQuantidade`) e valor (`MoneyFormatter.reais(item.valor)`) renderizam — o valor comparado com o **formatador**, nunca com o literal (L-008)
-- [ ] Item **coberto** por RN-11 exibe `{quantidade} · média de {N} mercados` com o `N` da coluna Fontes: **4** na Picanha bovina, **3** no Pão de alho, **2** no Gelo
-- [ ] Item coberto exibe a `BoraPriceRangeBar` com extremos formatados — **R$ 54** e **R$ 83** na Picanha — e a fração comparada com **`posicaoDoMarcador(preco)`**, não com `0.379` (o segundo teste comportamental de `design.md` §13)
-- [ ] Item **não coberto** (frango, água, suco, destilados, sal grosso, copos & pratos) exibe a quantidade **sem** "média de N mercados" e **sem** barra — nenhuma faixa fabricada
-- [ ] A micro-label `MÉDIA` renderiza **apenas** nas linhas com leitura de mercado (D-2)
-- [ ] `máximo == mínimo` renderiza sem dividir por zero, marcador em 0 — a defesa é exercitada
-- [ ] Item com override **acima do máximo** da faixa: a barra continua com a faixa da tabela e o marcador **dentro do trilho** (L-020 — expressão de teto exercitada acima do teto)
-- [ ] Item `editado` exibe o **ponto vermelho de 8px** ao lado do nome; item não editado **não** o exibe
-- [ ] Tocar a linha dispara o callback de expansão; a linha aberta mostra o caret ▴
-- [ ] Nenhum literal de cor: tudo dos tokens do arquivo 02
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Emoji, nome, quantidade (`rotuloDeQuantidade`) e valor (`MoneyFormatter.reais(item.valor)`) renderizam — o valor comparado com o **formatador**, nunca com o literal (L-008)
+- [x] Item **coberto** por RN-11 exibe `{quantidade} · média de {N} mercados` com o `N` da coluna Fontes: **4** na Picanha bovina, **3** no Pão de alho, **2** no Gelo
+- [x] Item coberto exibe a `BoraPriceRangeBar` com extremos formatados — **R$ 54** e **R$ 83** na Picanha — e a fração comparada com **`posicaoDoMarcador(preco)`**, não com `0.379` (o segundo teste comportamental de `design.md` §13)
+- [x] Item **não coberto** (frango, água, suco, destilados, sal grosso, copos & pratos) exibe a quantidade **sem** "média de N mercados" e **sem** barra — nenhuma faixa fabricada
+- [x] A micro-label `MÉDIA` renderiza **apenas** nas linhas com leitura de mercado (D-2)
+- [x] `máximo == mínimo` renderiza sem dividir por zero, marcador em 0 — a defesa é exercitada
+- [x] Item com override **acima do máximo** da faixa: a barra continua com a faixa da tabela e o marcador **dentro do trilho** (L-020 — expressão de teto exercitada acima do teto)
+- [x] Item `editado` exibe o **ponto vermelho de 8px** ao lado do nome; item não editado **não** o exibe
+- [x] Tocar a linha dispara o callback de expansão; a linha aberta mostra o caret ▴
+- [x] Nenhum literal de cor: tudo dos tokens do arquivo 02
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -502,14 +502,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Os dois steppers renderizam com os rótulos literais `QUANTIDADE` e `PREÇO`
-- [ ] Incrementar e decrementar disparam os callbacks com o sinal correto (`+1` / `-1` passo) — o widget **não** calcula o novo valor
-- [ ] No piso de quantidade (um passo) o decremento é **inerte**: `onDecrementar` é `null` e o toque não dispara callback — teste que falha se a guarda sair
-- [ ] No piso de preço (R$ 1) idem
-- [ ] O valor exibido no stepper de preço vem de `MoneyFormatter`; o de quantidade, de `rotuloDeQuantidade`
-- [ ] Nenhuma aritmética no arquivo — o guard de T26 cobre, mas o teste desta task afirma o comportamento
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] Os dois steppers renderizam com os rótulos literais `QUANTIDADE` e `PREÇO`
+- [x] Incrementar e decrementar disparam os callbacks com o sinal correto (`+1` / `-1` passo) — o widget **não** calcula o novo valor
+- [x] No piso de quantidade (um passo) o decremento é **inerte**: `onDecrementar` é `null` e o toque não dispara callback — teste que falha se a guarda sair
+- [x] No piso de preço (R$ 1) idem
+- [x] O valor exibido no stepper de preço vem de `MoneyFormatter`; o de quantidade, de `rotuloDeQuantidade`
+- [x] Nenhuma aritmética no arquivo — o guard de T26 cobre, mas o teste desta task afirma o comportamento
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -528,16 +528,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] Os itens renderizam na `ordemCanonicaDaLista`, **sem** nenhum item que a composição não produza
-- [ ] A categoria literal `ESSENCIAIS · ENTRAM SOZINHOS` contém **os quatro** de RN-10 — 🔥 Carvão, 🧊 Gelo, 🧂 Sal grosso, 🍽️ Copos & pratos — **sem ação nenhuma do usuário**
-- [ ] Cada essencial tem a badge amarela `AUTO ∝ {fonte}` nas fontes literais: `kg de carne`, `volume de bebida gelada`, `kg de carne`, `nº de pessoas`
-- [ ] 🍽️ Copos & pratos **aparece** e **não soma**: o subtotal dos essenciais lê **R$ 60** no estado padrão (AD-010), comparado com `MoneyFormatter.reais(totalDosEssenciais(...))`
-- [ ] Cada categoria exibe o seu subtotal, vindo de `totalExato` / `totalDosEssenciais` — o widget não soma
-- [ ] Lista vazia (0 pessoas) renderiza o card **vazio**, sem item e **sem copy inventada** (A-11) — nem os essenciais aparecem
-- [ ] Abrir um item **fecha o anterior** na árvore renderizada (aceite de UC-06, o lado de UI de LIST-10)
-- [ ] Kit veggie entrando por RN-21 aparece na ordem correta e com a leitura de mercado — o edge case da `spec.md`
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Os itens renderizam na `ordemCanonicaDaLista`, **sem** nenhum item que a composição não produza
+- [x] A categoria literal `ESSENCIAIS · ENTRAM SOZINHOS` contém **os quatro** de RN-10 — 🔥 Carvão, 🧊 Gelo, 🧂 Sal grosso, 🍽️ Copos & pratos — **sem ação nenhuma do usuário**
+- [x] Cada essencial tem a badge amarela `AUTO ∝ {fonte}` nas fontes literais: `kg de carne`, `volume de bebida gelada`, `kg de carne`, `nº de pessoas`
+- [x] 🍽️ Copos & pratos **aparece** e **não soma**: o subtotal dos essenciais lê **R$ 60** no estado padrão (AD-010), comparado com `MoneyFormatter.reais(totalDosEssenciais(...))`
+- [x] Cada categoria exibe o seu subtotal, vindo de `totalExato` / `totalDosEssenciais` — o widget não soma
+- [x] Lista vazia (0 pessoas) renderiza o card **vazio**, sem item e **sem copy inventada** (A-11) — nem os essenciais aparecem
+- [x] Abrir um item **fecha o anterior** na árvore renderizada (aceite de UC-06, o lado de UI de LIST-10)
+- [x] Kit veggie entrando por RN-21 aparece na ordem correta e com a leitura de mercado — o edge case da `spec.md`
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -556,13 +556,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `SizedBox(26, 26)`, borda 2px `BoraColors.ink`, `borderRadius: 0`
-- [ ] Desmarcado: fundo branco, sem ✓. Marcado: fundo verde `#0B6B3A`, ✓ branco
-- [ ] **Nenhum literal de cor no arquivo** — vem dos tokens, senão a varredura de cor da spec 01 morde
-- [ ] O teste compara com o **token**, nunca com o hexadecimal escrito no teste (L-008)
-- [ ] **Nenhum componente novo em `core/design_system/`** — teste de fronteira afirma que o arquivo mora na feature
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 5 testes novos
+- [x] `SizedBox(26, 26)`, borda 2px `BoraColors.ink`, `borderRadius: 0`
+- [x] Desmarcado: fundo branco, sem ✓. Marcado: fundo verde `#0B6B3A`, ✓ branco
+- [x] **Nenhum literal de cor no arquivo** — vem dos tokens, senão a varredura de cor da spec 01 morde
+- [x] O teste compara com o **token**, nunca com o hexadecimal escrito no teste (L-008)
+- [x] **Nenhum componente novo em `core/design_system/`** — teste de fronteira afirma que o arquivo mora na feature
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 5 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -581,13 +581,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] Tocar a linha **inteira** alterna o check (não só o quadradinho)
-- [ ] Marcada: ✓ branco sobre verde e a linha a **45%** de opacidade — a fração comparada com o token, não com `0.45` escrito no teste
-- [ ] Desmarcada: volta ao estado normal, opacidade cheia
-- [ ] O valor exibido não muda ao marcar — marcar é estado de compra, não de preço
-- [ ] Nenhuma barra de faixa e nenhum painel de override no modo COMPRAR
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 7 testes novos
+- [x] Tocar a linha **inteira** alterna o check (não só o quadradinho)
+- [x] Marcada: ✓ branco sobre verde e a linha a **45%** de opacidade — a fração comparada com o token, não com `0.45` escrito no teste
+- [x] Desmarcada: volta ao estado normal, opacidade cheia
+- [x] O valor exibido não muda ao marcar — marcar é estado de compra, não de preço
+- [x] Nenhuma barra de faixa e nenhum painel de override no modo COMPRAR
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 7 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -606,15 +606,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] A ordem dos cinco corredores é a de RN-27 e **não depende do `index` do enum** — a ordem é da feature, declarada como lista literal, e um teste a afirma
-- [ ] A ordem é **estável**: marcar itens **não** reordena nada
-- [ ] Cada grupo exibe o rótulo em caixa alta e a contagem `{N} itens`
-- [ ] Corredor **sem item não renderiza** — teste com uma composição só de bebidas afirma que os outros quatro rótulos estão ausentes da árvore
-- [ ] Os itens fora de RN-11 caem no corredor do catálogo (T2): carnes em AÇOUGUE, suco/água/destilados em BEBIDAS, sal grosso e copos & pratos em MERCEARIA
-- [ ] O kit veggie de RN-21 cai em HORTIFRÚTI
-- [ ] Lista vazia renderiza **nenhum** grupo
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] A ordem dos cinco corredores é a de RN-27 e **não depende do `index` do enum** — a ordem é da feature, declarada como lista literal, e um teste a afirma
+- [x] A ordem é **estável**: marcar itens **não** reordena nada
+- [x] Cada grupo exibe o rótulo em caixa alta e a contagem `{N} itens`
+- [x] Corredor **sem item não renderiza** — teste com uma composição só de bebidas afirma que os outros quatro rótulos estão ausentes da árvore
+- [x] Os itens fora de RN-11 caem no corredor do catálogo (T2): carnes em AÇOUGUE, suco/água/destilados em BEBIDAS, sal grosso e copos & pratos em MERCEARIA
+- [x] O kit veggie de RN-21 cai em HORTIFRÚTI
+- [x] Lista vazia renderiza **nenhum** grupo
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 10 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -633,17 +633,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Nasce com `itens` e `enderecoDaFesta` como parâmetros de construção e **`ParceiroDeEntrega.ifood` pré-selecionado** (A-14)
-- [ ] `Total = Subtotal + Frete` vindo de `totalDoPedido` — o bloc **não** soma. Estado padrão de RN-30, lista inteira: iFood **271 / 12 / 283**; Rappi total **280**; Zé frete **0**
-- [ ] `Copos & pratos` fica **fora** do subtotal (A-19), via `itensCobraveis`
-- [ ] Aberto pelo modo COMPRAR leva **apenas os não marcados** (`subtotalDoQueFalta`), e o subtotal reflete só eles
-- [ ] `EnderecoTrocado` vale **só para este pedido**; endereço **vazio** volta a `enderecoDaFesta` no próprio handler, nunca fica vazio (A-08) — defesa exercitada por teste
-- [ ] O Zé é **inerte** enquanto houver item fora do corredor BEBIDAS, e **selecionável** quando o pedido só tem bebidas — os dois lados testados (A-09)
-- [ ] **Idempotência**: `PedidoEnviado` é ignorado quando `enviando || confirmado != null`; dois disparos rápidos ⇒ **um** `enviar` no duplo, **um** `Pedido` confirmado (LIST-33) — teste que falha se a guarda sair
-- [ ] Falha da porta: **sem** `confirmado`, `falhou: true`, `logger.logError(name: 'lista')`, e o CTA volta a ativo. *SPEC_PRECISION_GAP declarado: T-04 não desenha erro de pedido e RN-29 não dá toast — a evidência é a ausência de overlay e de despesa mais o log*
-- [ ] O `Pedido` confirmado é o **que a porta devolveu**, não um montado pelo bloc (LIST-28 AC2)
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 14 testes novos
+- [x] Nasce com `itens` e `enderecoDaFesta` como parâmetros de construção e **`ParceiroDeEntrega.ifood` pré-selecionado** (A-14)
+- [x] `Total = Subtotal + Frete` vindo de `totalDoPedido` — o bloc **não** soma. Estado padrão de RN-30, lista inteira: iFood **271 / 12 / 283**; Rappi total **280**; Zé frete **0**
+- [x] `Copos & pratos` fica **fora** do subtotal (A-19), via `itensCobraveis`
+- [x] Aberto pelo modo COMPRAR leva **apenas os não marcados** (`subtotalDoQueFalta`), e o subtotal reflete só eles
+- [x] `EnderecoTrocado` vale **só para este pedido**; endereço **vazio** volta a `enderecoDaFesta` no próprio handler, nunca fica vazio (A-08) — defesa exercitada por teste
+- [x] O Zé é **inerte** enquanto houver item fora do corredor BEBIDAS, e **selecionável** quando o pedido só tem bebidas — os dois lados testados (A-09)
+- [x] **Idempotência**: `PedidoEnviado` é ignorado quando `enviando || confirmado != null`; dois disparos rápidos ⇒ **um** `enviar` no duplo, **um** `Pedido` confirmado (LIST-33) — teste que falha se a guarda sair
+- [x] Falha da porta: **sem** `confirmado`, `falhou: true`, `logger.logError(name: 'lista')`, e o CTA volta a ativo. *SPEC_PRECISION_GAP declarado: T-04 não desenha erro de pedido e RN-29 não dá toast — a evidência é a ausência de overlay e de despesa mais o log*
+- [x] O `Pedido` confirmado é o **que a porta devolveu**, não um montado pelo bloc (LIST-28 AC2)
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 14 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -662,13 +662,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Nome, ETA e frete renderizam com os literais de RN-27; o frete formatado por `MoneyFormatter`, e o do Zé lido como **grátis** conforme a copy de `design.md` §9
-- [ ] O qualificador literal **(só bebidas)** aparece no cartão do Zé, **sempre** — mesmo inerte (A-09: a explicação **é** o qualificador)
-- [ ] Selecionado × não selecionado são visualmente distintos, e o press afunda `translate(2px,2px)` com a sombra de 4px→2px
-- [ ] Inerte: `onPressed: null`, o toque **não** dispara callback e **nenhuma copy de erro nova** aparece — defesa exercitada
-- [ ] Nenhum literal de cor; tudo dos tokens
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 7 testes novos
+- [x] Nome, ETA e frete renderizam com os literais de RN-27; o frete formatado por `MoneyFormatter`, e o do Zé lido como **grátis** conforme a copy de `design.md` §9
+- [x] O qualificador literal **(só bebidas)** aparece no cartão do Zé, **sempre** — mesmo inerte (A-09: a explicação **é** o qualificador)
+- [x] Selecionado × não selecionado são visualmente distintos, e o press afunda `translate(2px,2px)` com a sombra de 4px→2px
+- [x] Inerte: `onPressed: null`, o toque **não** dispara callback e **nenhuma copy de erro nova** aparece — defesa exercitada
+- [x] Nenhum literal de cor; tudo dos tokens
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 7 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -687,16 +687,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual nas duas larguras)
 
 **Done when**:
-- [ ] Título **`FAZER PEDIDO`** (A-18), igual nos dois modos de entrada, com o botão ✕
-- [ ] Linha 📍 com o endereço da festa — **"Laje do Rafa — Vila Madalena"** na fixture — e o `TROCAR` vermelho sublinhado ao lado
-- [ ] `TROCAR` abre a edição; o endereço novo vale só para este pedido e **não** altera a festa — teste afirma zero escrita na porta de festa
-- [ ] Os **três** cartões na ordem de RN-27, com **iFood Mercado** pré-selecionado ao abrir
-- [ ] O resumo exibe Subtotal, Frete e Total formatados por `MoneyFormatter`; trocar de parceiro atualiza os três
-- [ ] ✕ **ou toque fora** fecha **sem pedir**: nenhuma `Despesa`, nenhuma alteração na lista (UC-16 A1) — teste afirma os dois caminhos
-- [ ] **Um conteúdo, dois invólucros**: o mesmo widget de conteúdo é montado nos dois, e um teste afirma que compacto e expandido renderizam os **mesmos** literais e os **mesmos** números
-- [ ] Aberta pelo COMPRAR mostra só os não marcados, com o subtotal refletindo só eles
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Título **`FAZER PEDIDO`** (A-18), igual nos dois modos de entrada, com o botão ✕
+- [x] Linha 📍 com o endereço da festa — **"Laje do Rafa — Vila Madalena"** na fixture — e o `TROCAR` vermelho sublinhado ao lado
+- [x] `TROCAR` abre a edição; o endereço novo vale só para este pedido e **não** altera a festa — teste afirma zero escrita na porta de festa
+- [x] Os **três** cartões na ordem de RN-27, com **iFood Mercado** pré-selecionado ao abrir
+- [x] O resumo exibe Subtotal, Frete e Total formatados por `MoneyFormatter`; trocar de parceiro atualiza os três
+- [x] ✕ **ou toque fora** fecha **sem pedir**: nenhuma `Despesa`, nenhuma alteração na lista (UC-16 A1) — teste afirma os dois caminhos
+- [x] **Um conteúdo, dois invólucros**: o mesmo widget de conteúdo é montado nos dois, e um teste afirma que compacto e expandido renderizam os **mesmos** literais e os **mesmos** números
+- [x] Aberta pelo COMPRAR mostra só os não marcados, com o subtotal refletindo só eles
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -715,15 +715,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] As quatro linhas literais: 🛵 · `PEDIDO A CAMINHO!` · `Chega em {ETA} na {endereço}.` · `R$ {total} · rachado no acerto da festa` · CTA `VOLTAR À LISTA`
-- [ ] O **endereço inteiro** — `Laje do Rafa — Vila Madalena`, não `Laje do Rafa` (D-6): o mesmo string que a sheet mostrou
-- [ ] ETA, endereço e total vêm do `Pedido` que a **porta devolveu** (LIST-28 AC2) — teste com um duplo que devolve ETA diferente afirma que a tela mostra o da porta, não uma constante do widget
-- [ ] O total formatado por `MoneyFormatter.reais(pedido.total)`
-- [ ] **Sem selo de "simulado"** e sem qualquer marca de que o pedido não é real (LIST-28 AC4 — consequência declarada da AD-024)
-- [ ] `VOLTAR À LISTA` fecha o overlay e **não** o repete; o modo de origem, os checks e os overrides ficam intactos
-- [ ] O overlay **só** existe depois de um pedido confirmado — não há caminho que o monte sem `Pedido`
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] As quatro linhas literais: 🛵 · `PEDIDO A CAMINHO!` · `Chega em {ETA} na {endereço}.` · `R$ {total} · rachado no acerto da festa` · CTA `VOLTAR À LISTA`
+- [x] O **endereço inteiro** — `Laje do Rafa — Vila Madalena`, não `Laje do Rafa` (D-6): o mesmo string que a sheet mostrou
+- [x] ETA, endereço e total vêm do `Pedido` que a **porta devolveu** (LIST-28 AC2) — teste com um duplo que devolve ETA diferente afirma que a tela mostra o da porta, não uma constante do widget
+- [x] O total formatado por `MoneyFormatter.reais(pedido.total)`
+- [x] **Sem selo de "simulado"** e sem qualquer marca de que o pedido não é real (LIST-28 AC4 — consequência declarada da AD-024)
+- [x] `VOLTAR À LISTA` fecha o overlay e **não** o repete; o modo de origem, os checks e os overrides ficam intactos
+- [x] O overlay **só** existe depois de um pedido confirmado — não há caminho que o monte sem `Pedido`
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -742,18 +742,18 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual em 390×820)
 
 **Done when**:
-- [ ] Header `SUA LISTA` e o segmented com `🧮 PLANEJAR` / `🛒 COMPRAR`, **PLANEJAR ativo por default**
-- [ ] A dica tracejada de cada modo, literal
-- [ ] **Aceite de UC-05 na tela**, estado padrão de RN-30: rótulo `MÉDIA TOTAL`, valor **`R$ 271`**, linha **`≈ R$ 45 por adulto`** e CTA `FAZER PEDIDO 🛒` — o valor comparado com `MoneyFormatter.reais(resultado.totalComEssenciais)` (primeiro teste comportamental de `design.md` §13, que mata formatador escrito à mão)
-- [ ] A linha `faixa real: de R$ 245 a R$ 343` no rodapé de PLANEJAR, comparada com `faixaRealDaLista`
-- [ ] Rodapé de COMPRAR: `{N} de {M} no carrinho`, o total e `PEDIR O QUE FALTA 🛵`; marcar um item atualiza o contador **imediatamente** e o **total não muda**
-- [ ] `RESTAURAR` existe **só** quando há override e **some no mesmo frame** em que o último é desfeito — **sem diálogo e sem toast** (A-10); os dois lados testados
-- [ ] Alternar PLANEJAR ⇄ COMPRAR **preserva** checks, overrides e item expandido (aceite de UC-15)
-- [ ] Lista vazia: card vazio, `R$ 0`, `≈ R$ 0 por adulto`, **faixa real ausente** da árvore, CTA **inerte** (a sheet não abre), e COMPRAR lê `0 de 0 no carrinho` com nenhum grupo
-- [ ] Nada falta (tudo marcado): CTA inerte, a sheet **não** abre, **nenhum toast** (A-07) — defesa exercitada
-- [ ] **Nenhum `BoraToast` na árvore**, em nenhuma ação da tela (A-23)
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 16 testes novos
+- [x] Header `SUA LISTA` e o segmented com `🧮 PLANEJAR` / `🛒 COMPRAR`, **PLANEJAR ativo por default**
+- [x] A dica tracejada de cada modo, literal
+- [x] **Aceite de UC-05 na tela**, estado padrão de RN-30: rótulo `MÉDIA TOTAL`, valor **`R$ 271`**, linha **`≈ R$ 45 por adulto`** e CTA `FAZER PEDIDO 🛒` — o valor comparado com `MoneyFormatter.reais(resultado.totalComEssenciais)` (primeiro teste comportamental de `design.md` §13, que mata formatador escrito à mão)
+- [x] A linha `faixa real: de R$ 245 a R$ 343` no rodapé de PLANEJAR, comparada com `faixaRealDaLista`
+- [x] Rodapé de COMPRAR: `{N} de {M} no carrinho`, o total e `PEDIR O QUE FALTA 🛵`; marcar um item atualiza o contador **imediatamente** e o **total não muda**
+- [x] `RESTAURAR` existe **só** quando há override e **some no mesmo frame** em que o último é desfeito — **sem diálogo e sem toast** (A-10); os dois lados testados
+- [x] Alternar PLANEJAR ⇄ COMPRAR **preserva** checks, overrides e item expandido (aceite de UC-15)
+- [x] Lista vazia: card vazio, `R$ 0`, `≈ R$ 0 por adulto`, **faixa real ausente** da árvore, CTA **inerte** (a sheet não abre), e COMPRAR lê `0 de 0 no carrinho` com nenhum grupo
+- [x] Nada falta (tudo marcado): CTA inerte, a sheet **não** abre, **nenhum toast** (A-07) — defesa exercitada
+- [x] **Nenhum `BoraToast` na árvore**, em nenhuma ação da tela (A-23)
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 16 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -772,16 +772,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual em 1180×800)
 
 **Done when**:
-- [ ] Grid `1fr / 370px` (A-16 / D-3): card de itens à esquerda, rail à direita
-- [ ] O rail é **sticky** e tem, **nesta ordem**: segmented → bloco de total do modo ativo → `faixa real` (PLANEJAR) *ou* `{N} de {M} no carrinho` (COMPRAR) → `≈ R$ {x} por adulto` → CTA. A ordem é afirmada por teste, não presumida
-- [ ] O rodapé fixo mobile **não existe** em expandido (W-R2) — a **ausência** de `BoraFooterBar` é afirmada
-- [ ] O pedido abre como **modal central** (`BoraSurface` em `showDialog`), não como bottom sheet
-- [ ] O card de itens rola no documento e a página **nunca** rola horizontalmente (W-R4)
-- [ ] Os mesmos números de T23 renderizam aqui: `R$ 271`, `≈ R$ 45 por adulto`, `faixa real: de R$ 245 a R$ 343` (W-R1)
-- [ ] Lista vazia em expandido: card vazio, `R$ 0`, faixa ausente, CTA inerte
-- [ ] `RESTAURAR` no rail segue a mesma regra de existência de T23
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Grid `1fr / 370px` (A-16 / D-3): card de itens à esquerda, rail à direita
+- [x] O rail é **sticky** e tem, **nesta ordem**: segmented → bloco de total do modo ativo → `faixa real` (PLANEJAR) *ou* `{N} de {M} no carrinho` (COMPRAR) → `≈ R$ {x} por adulto` → CTA. A ordem é afirmada por teste, não presumida
+- [x] O rodapé fixo mobile **não existe** em expandido (W-R2) — a **ausência** de `BoraFooterBar` é afirmada
+- [x] O pedido abre como **modal central** (`BoraSurface` em `showDialog`), não como bottom sheet
+- [x] O card de itens rola no documento e a página **nunca** rola horizontalmente (W-R4)
+- [x] Os mesmos números de T23 renderizam aqui: `R$ 271`, `≈ R$ 45 por adulto`, `faixa real: de R$ 245 a R$ 343` (W-R1)
+- [x] Lista vazia em expandido: card vazio, `R$ 0`, faixa ausente, CTA inerte
+- [x] `RESTAURAR` no rail segue a mesma regra de existência de T23
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -800,17 +800,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `ListaPage({festaId, festas, pedidos, logger})` + `static const pageKey`
-- [ ] **Um `BlocProvider` só**, acima da escolha `ListaCompacta` / `ListaExpandida` — é o que faz LIST-30 ser verdade **por construção**, não por evento de restauração
-- [ ] **Cruzar ~900px com a tela montada** preserva modo ativo, checks, overrides **e** item expandido (W-R3 / W-R1) — o teste redimensiona e afirma os quatro
-- [ ] Navegar para outra rota **dentro da festa** e voltar preserva overrides e checks (aceite de UC-06 e UC-15) — a prova de LIST-15 e LIST-20 no nível da rota
-- [ ] O teste de rota afirma o destino por `rotaAtual()`, **não** pelo widget montado (AD-014)
-- [ ] `/roles/:festaId` continua caindo em `/roles/:festaId/lista` como default
-- [ ] `/roles/**` sem sessão continua redirecionando (guarda de AD-017) — o comportamento herdado não regride
-- [ ] `PedidoRepository` resolve para `PedidoFalso` no injector, e a substituição por duplo em teste é possível sem tocar a página
-- [ ] Nenhum arquivo de `lib/features/{entrar,home,montar,galera,convite,convidado,custos}/**` é tocado
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] `ListaPage({festaId, festas, pedidos, logger})` + `static const pageKey`
+- [x] **Um `BlocProvider` só**, acima da escolha `ListaCompacta` / `ListaExpandida` — é o que faz LIST-30 ser verdade **por construção**, não por evento de restauração
+- [x] **Cruzar ~900px com a tela montada** preserva modo ativo, checks, overrides **e** item expandido (W-R3 / W-R1) — o teste redimensiona e afirma os quatro
+- [x] Navegar para outra rota **dentro da festa** e voltar preserva overrides e checks (aceite de UC-06 e UC-15) — a prova de LIST-15 e LIST-20 no nível da rota
+- [x] O teste de rota afirma o destino por `rotaAtual()`, **não** pelo widget montado (AD-014)
+- [x] `/roles/:festaId` continua caindo em `/roles/:festaId/lista` como default
+- [x] `/roles/**` sem sessão continua redirecionando (guarda de AD-017) — o comportamento herdado não regride
+- [x] `PedidoRepository` resolve para `PedidoFalso` no injector, e a substituição por duplo em teste é possível sem tocar a página
+- [x] Nenhum arquivo de `lib/features/{entrar,home,montar,galera,convite,convidado,custos}/**` é tocado
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 10 testes novos
 
 **Tests**: widget (rota)
 **Gate**: full
@@ -829,15 +829,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Depois de remover comentários e literais de string, **nenhum** arquivo de `lib/features/lista/**` contém: (2) `.round(` `.floor(` `.ceil(` `.truncate(` `.roundToDouble(` `.toStringAsFixed(` · (3) os operadores `*` `/` `%` · (4) `.fold(` `.reduce(` `.sum` · (5) import de arquivo **interno** de `core/calculo/` ou `core/festas/` — só os barrels `calculo.dart` e `festas.dart`
-- [ ] Regra (1): o literal `R$` **sem** stripping de strings. A exceção de `lista_textos.dart` decidida em T12 é **declarada e nomeada** no arquivo do guard, com o motivo — nenhuma exceção silenciosa
-- [ ] **Cada uma das cinco regras tem teste próprio contra um trecho sintético infrator** que a faz falhar — o guard prova que morde
-- [ ] A mensagem de falha **nomeia o arquivo infrator**
-- [ ] Teste comportamental 1: composição de total fracionário (o 210,60 do padrão) → o valor exibido é comparado com **`MoneyFormatter.reais(resultado.totalComEssenciais)`**, o token, nunca o literal (L-008)
-- [ ] Teste comportamental 2: a fração passada a `BoraPriceRangeBar` é comparada com **`posicaoDoMarcador(preco)`**, não com `0.379`
-- [ ] Teste que afirma **zero `BoraToast`** na árvore da tela, em todos os caminhos (A-23)
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Depois de remover comentários e literais de string, **nenhum** arquivo de `lib/features/lista/**` contém: (2) `.round(` `.floor(` `.ceil(` `.truncate(` `.roundToDouble(` `.toStringAsFixed(` · (3) os operadores `*` `/` `%` · (4) `.fold(` `.reduce(` `.sum` · (5) import de arquivo **interno** de `core/calculo/` ou `core/festas/` — só os barrels `calculo.dart` e `festas.dart`
+- [x] Regra (1): o literal `R$` **sem** stripping de strings. A exceção de `lista_textos.dart` decidida em T12 é **declarada e nomeada** no arquivo do guard, com o motivo — nenhuma exceção silenciosa
+- [x] **Cada uma das cinco regras tem teste próprio contra um trecho sintético infrator** que a faz falhar — o guard prova que morde
+- [x] A mensagem de falha **nomeia o arquivo infrator**
+- [x] Teste comportamental 1: composição de total fracionário (o 210,60 do padrão) → o valor exibido é comparado com **`MoneyFormatter.reais(resultado.totalComEssenciais)`**, o token, nunca o literal (L-008)
+- [x] Teste comportamental 2: a fração passada a `BoraPriceRangeBar` é comparada com **`posicaoDoMarcador(preco)`**, não com `0.379`
+- [x] Teste que afirma **zero `BoraToast`** na árvore da tela, em todos os caminhos (A-23)
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: unit (varredura) + widget (os dois comportamentais)
 **Gate**: build
@@ -856,14 +856,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: `run` (conferência visual)
 
 **Done when**:
-- [ ] O doc do arquivo abre com o **SPEC_PRECISION_GAP** declarado: nenhum arquivo de `04` nem de `06` desenha esta barra; o visual sai **só** de tokens do arquivo 02 (A-17)
-- [ ] As quatro abas literais `Lista · Galera · WhatsApp · Custos`, com a aba da rota corrente **ativa**
-- [ ] Acionar uma aba navega para a rota correspondente **preservando** o estado das outras — teste que ajusta um override na Lista, vai para Galera, volta e afirma o override intacto
-- [ ] `/roles/:festaId/lista` aberta **diretamente** renderiza a tela por inteiro, com ou sem a barra (A-17)
-- [ ] `/roles/:festaId/montar` **não** exibe a barra (não é aba permanente)
-- [ ] `border-radius: 0`, sombra dura, sem gradiente, nenhum literal de cor — os invariantes do arquivo 02
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] O doc do arquivo abre com o **SPEC_PRECISION_GAP** declarado: nenhum arquivo de `04` nem de `06` desenha esta barra; o visual sai **só** de tokens do arquivo 02 (A-17)
+- [x] As quatro abas literais `Lista · Galera · WhatsApp · Custos`, com a aba da rota corrente **ativa**
+- [x] Acionar uma aba navega para a rota correspondente **preservando** o estado das outras — teste que ajusta um override na Lista, vai para Galera, volta e afirma o override intacto
+- [x] `/roles/:festaId/lista` aberta **diretamente** renderiza a tela por inteiro, com ou sem a barra (A-17)
+- [x] `/roles/:festaId/montar` **não** exibe a barra (não é aba permanente)
+- [x] `border-radius: 0`, sombra dura, sem gradiente, nenhum literal de cor — os invariantes do arquivo 02
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: widget (rota)
 **Gate**: build
@@ -1076,14 +1076,16 @@ Vêm do `design.md` §14 e **não podem ser silenciados** durante a implementaç
 
 ## Success Criteria da feature (da `spec.md`, conferidos ao fim)
 
-- [ ] `flutter analyze` zero issues · suíte verde · baseline do merge de `montar` preservada, **+ ~230 testes novos**
-- [ ] **Aceite de UC-05 na tela**: os quatro essenciais de RN-10 presentes sem ação do usuário, com badge `AUTO ∝`, rodapé lendo `R$ 271` e `≈ R$ 45 por adulto`
-- [ ] **Aceite de UC-14 na tela**: marcador em `(média−mín)/(máx−mín)` — 37,9% na Picanha, extremos R$ 54 e R$ 83 — e a regra da faixa aplicada à tabela devolvendo R$ 286 / R$ 234–356
-- [ ] **Aceite de UC-06 na tela**: passos e mínimos de RN-12, ponto vermelho, total ao vivo, RESTAURAR que zera e some, override sobrevivendo à navegação dentro da festa
-- [ ] **Aceite de UC-15 na tela**: cinco corredores na ordem de RN-27, check verde a 45% de opacidade, contador correto, check sobrevivendo ao alternar PLANEJAR ⇄ COMPRAR
-- [ ] **Aceite de UC-16 na tela**: Total = Subtotal + Frete nos três parceiros, Zé com frete grátis, overlay com ETA e "rachado no acerto da festa", `Despesa` criada com o total (R$ 283)
-- [ ] Guard de LIST-07 verde, com as cinco regras provadas contra trecho infrator e a única exceção nomeada
-- [ ] W-04 funcional: grid `1fr / 370px`, rail sticky com segmented no topo, modal central, zero scroll horizontal, sem rodapé fixo
-- [ ] Festa sem ninguém: card vazio, R$ 0, CTA inerte, sem copy inventada
-- [ ] Nenhum toast novo, nenhuma copy fora das specs 03, 04 e 06
-- [ ] AD-030 registrada no `STATE.md`, depois da AD-029
+- [x] `flutter analyze` zero issues · suíte verde · baseline do merge de `montar` preservada, **+ ~230 testes novos**
+- [x] **Aceite de UC-05 na tela**: os quatro essenciais de RN-10 presentes sem ação do usuário, com badge `AUTO ∝`, rodapé lendo `R$ 271` e `≈ R$ 45 por adulto`
+- [x] **Aceite de UC-14 na tela**: marcador em `(média−mín)/(máx−mín)` — 37,9% na Picanha, extremos R$ 54 e R$ 83 — e a regra da faixa aplicada à tabela devolvendo R$ 286 / R$ 234–356
+- [x] **Aceite de UC-06 na tela**: passos e mínimos de RN-12, ponto vermelho, total ao vivo, RESTAURAR que zera e some, override sobrevivendo à navegação dentro da festa
+- [x] **Aceite de UC-15 na tela**: cinco corredores na ordem de RN-27, check verde a 45% de opacidade, contador correto, check sobrevivendo ao alternar PLANEJAR ⇄ COMPRAR
+- [x] **Aceite de UC-16 na tela**: Total = Subtotal + Frete nos três parceiros, Zé com frete grátis, overlay com ETA e "rachado no acerto da festa", `Despesa` criada com o total (R$ 283)
+- [x] Guard de LIST-07 verde, com as cinco regras provadas contra trecho infrator e a única exceção nomeada
+- [x] W-04 funcional: grid `1fr / 370px`, rail sticky com segmented no topo, modal central, zero scroll horizontal, sem rodapé fixo
+- [x] Festa sem ninguém: card vazio, R$ 0, CTA inerte, sem copy inventada
+- [x] Nenhum toast novo, nenhuma copy fora das specs 03, 04 e 06
+- [x] AD-030 registrada no `STATE.md`, depois da AD-029
+
+**Conferidos ao fim do Batch 5 (T27)**: `flutter analyze` com zero issues e **1926 testes verdes**, contra os **1528** com que `montar` fechou (`STATE.md` §Handoff) — **+398**, acima dos ~230 previstos. Os 35 requisitos ficam em `Implementing` na tabela de rastreabilidade da `spec.md`: quem os move para `Verified` é o Verifier, que roda depois desta batch (autor ≠ verificador).

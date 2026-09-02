@@ -1,4 +1,5 @@
 import 'chave_item.dart';
+import 'corredor.dart';
 
 /// Os dados-base de um item **para a calculadora** (CALC-07..CALC-14, CALC-17).
 ///
@@ -15,6 +16,7 @@ class DefinicaoDeItem {
     required this.unidade,
     required this.precoBase,
     required this.passoDeQuantidade,
+    required this.corredor,
     this.essencial = false,
     this.fonteDaProporcao,
     this.quantidadeDefault,
@@ -36,6 +38,18 @@ class DefinicaoDeItem {
   /// Passo do stepper de quantidade (RN-12): carnes 0,5 · cerveja 2 · demais 1.
   /// O mínimo de quantidade é **um passo**.
   final double passoDeQuantidade;
+
+  /// O corredor de mercado do item — RN-27, o agrupamento do modo COMPRAR da
+  /// tela Lista.
+  ///
+  /// Dado de catálogo, irmão de [unidade] e [essencial]. **Obrigatório de
+  /// propósito**: item novo sem corredor é erro de compilação, não item que
+  /// some do agrupamento em runtime.
+  ///
+  /// Os oito itens que `tabelaDePrecosDeMercado` também cobre repetem o
+  /// corredor declarado lá — duas declarações do mesmo fato, mantidas em dia
+  /// por um teste de coerência que nomeia o item divergente.
+  final Corredor corredor;
 
   /// `true` nos quatro itens de RN-10, que entram na lista sozinhos.
   final bool essencial;
@@ -80,6 +94,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.kg,
     precoBase: 45,
     passoDeQuantidade: 0.5,
+    corredor: Corredor.acougue,
   ),
   ChaveItem.suina: DefinicaoDeItem(
     chave: ChaveItem.suina,
@@ -88,6 +103,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.kg,
     precoBase: 28,
     passoDeQuantidade: 0.5,
+    corredor: Corredor.acougue,
   ),
   ChaveItem.frango: DefinicaoDeItem(
     chave: ChaveItem.frango,
@@ -96,6 +112,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.kg,
     precoBase: 18,
     passoDeQuantidade: 0.5,
+    corredor: Corredor.acougue,
   ),
   ChaveItem.paoDeAlho: DefinicaoDeItem(
     chave: ChaveItem.paoDeAlho,
@@ -104,6 +121,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.unidade,
     precoBase: 6,
     passoDeQuantidade: 1,
+    corredor: Corredor.padaria,
   ),
   ChaveItem.refrigerante: DefinicaoDeItem(
     chave: ChaveItem.refrigerante,
@@ -112,6 +130,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.garrafa,
     precoBase: 9,
     passoDeQuantidade: 1,
+    corredor: Corredor.bebidas,
   ),
   ChaveItem.suco: DefinicaoDeItem(
     chave: ChaveItem.suco,
@@ -120,6 +139,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.litro,
     precoBase: 8,
     passoDeQuantidade: 1,
+    corredor: Corredor.bebidas,
   ),
   ChaveItem.agua: DefinicaoDeItem(
     chave: ChaveItem.agua,
@@ -128,6 +148,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.garrafa,
     precoBase: 3,
     passoDeQuantidade: 1,
+    corredor: Corredor.bebidas,
   ),
   ChaveItem.cerveja: DefinicaoDeItem(
     chave: ChaveItem.cerveja,
@@ -136,6 +157,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.lata,
     precoBase: 4,
     passoDeQuantidade: 2,
+    corredor: Corredor.bebidas,
   ),
   ChaveItem.vodka: DefinicaoDeItem(
     chave: ChaveItem.vodka,
@@ -144,6 +166,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.garrafa,
     precoBase: 40,
     passoDeQuantidade: 1,
+    corredor: Corredor.bebidas,
   ),
   ChaveItem.cachaca: DefinicaoDeItem(
     chave: ChaveItem.cachaca,
@@ -152,6 +175,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.garrafa,
     precoBase: 15,
     passoDeQuantidade: 1,
+    corredor: Corredor.bebidas,
   ),
   ChaveItem.whisky: DefinicaoDeItem(
     chave: ChaveItem.whisky,
@@ -160,6 +184,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.garrafa,
     precoBase: 90,
     passoDeQuantidade: 1,
+    corredor: Corredor.bebidas,
   ),
   ChaveItem.legumesParaGrelha: DefinicaoDeItem(
     chave: ChaveItem.legumesParaGrelha,
@@ -168,6 +193,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.kit,
     precoBase: 28,
     passoDeQuantidade: 1,
+    corredor: Corredor.hortifruti,
     quantidadeDefault: 1,
   ),
   ChaveItem.carvao: DefinicaoDeItem(
@@ -177,6 +203,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.saco,
     precoBase: 22,
     passoDeQuantidade: 1,
+    corredor: Corredor.mercearia,
     essencial: true,
     fonteDaProporcao: 'kg de carne',
     quantidadeDefault: 1,
@@ -188,6 +215,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.saco,
     precoBase: 10,
     passoDeQuantidade: 1,
+    corredor: Corredor.mercearia,
     essencial: true,
     fonteDaProporcao: 'volume de bebida gelada',
     quantidadeDefault: 3,
@@ -199,6 +227,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.kg,
     precoBase: 8,
     passoDeQuantidade: 1,
+    corredor: Corredor.mercearia,
     essencial: true,
     fonteDaProporcao: 'kg de carne',
     quantidadeDefault: 1,
@@ -210,6 +239,7 @@ const Map<ChaveItem, DefinicaoDeItem> catalogoDeItens = {
     unidade: UnidadeDeItem.kit,
     precoBase: 15,
     passoDeQuantidade: 1,
+    corredor: Corredor.mercearia,
     essencial: true,
     fonteDaProporcao: 'nº de pessoas',
     quantidadeDefault: 1,

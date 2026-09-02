@@ -4,6 +4,7 @@ import 'package:bora/core/calculo/dominio/contagem_de_pessoas.dart';
 import 'package:bora/core/calculo/dominio/item_de_lista.dart';
 import 'package:bora/core/calculo/formatacao/money_formatter.dart';
 import 'package:bora/core/calculo/regras/calculadora_da_festa.dart';
+import 'package:bora/core/calculo/regras/total_do_pedido.dart';
 import 'package:bora/core/calculo/regras/totais.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,7 +19,114 @@ ItemDeLista _frango() => const ItemDeLista(
       precoBase: 18,
     );
 
+/// Um item qualquer com a chave pedida, valendo `valor` reais.
+ItemDeLista _item(ChaveItem chave, {double valor = 10}) => ItemDeLista(
+      chave: chave,
+      nome: chave.name,
+      emoji: '🧪',
+      unidade: UnidadeDeItem.unidade,
+      quantidadeAutomatica: 1,
+      precoBase: valor,
+    );
+
 void main() {
+  group('LIST-04 — itensCobraveis, o predicado da AD-010', () {
+    test('remove exatamente os itens com entraNoTotal false', () {
+      final itens = [
+        _item(ChaveItem.carvao),
+        _item(ChaveItem.coposEPratos),
+        _item(ChaveItem.gelo),
+      ];
+
+      expect(
+        itensCobraveis(itens).map((item) => item.chave),
+        [ChaveItem.carvao, ChaveItem.gelo],
+        reason: '🍽️ Copos & pratos aparece na lista e não soma (AD-010)',
+      );
+    });
+
+    test('preserva a ordem dos itens que sobram', () {
+      final itens = [
+        _item(ChaveItem.gelo),
+        _item(ChaveItem.coposEPratos),
+        _item(ChaveItem.bovina),
+        _item(ChaveItem.carvao),
+      ];
+
+      expect(
+        itensCobraveis(itens).map((item) => item.chave).toList(),
+        [ChaveItem.gelo, ChaveItem.bovina, ChaveItem.carvao],
+      );
+    });
+
+    test('lista vazia devolve vazio', () {
+      expect(itensCobraveis(const []), isEmpty);
+    });
+
+    test('lista sem nenhum item excluído devolve todos, na mesma ordem', () {
+      final itens = [
+        _item(ChaveItem.bovina),
+        _item(ChaveItem.cerveja),
+        _item(ChaveItem.salGrosso),
+      ];
+
+      expect(itensCobraveis(itens).toList(), itens);
+    });
+
+    test('Copos & pratos fica fora do total e do subtotal do pedido — as duas '
+        'superfícies passam pelo mesmo predicado', () {
+      final itens = [
+        _item(ChaveItem.carvao, valor: 22),
+        _item(ChaveItem.coposEPratos, valor: 15),
+      ];
+      final cobraveis = itensCobraveis(itens).toList();
+
+      expect(totalExato(cobraveis), 22);
+      expect(subtotalDeItens(cobraveis), 22);
+      expect(
+        totalExato(itens),
+        37,
+        reason: 'sem o predicado os 15 do kit entrariam nas duas superfícies',
+      );
+      expect(
+        totalDoPedido(subtotal: subtotalDeItens(cobraveis), frete: 0).total,
+        22,
+      );
+    });
+
+    test('o total do estado padrão não se move ao passar pelo predicado — '
+        'R\$ 271 de RN-10 (A-01/A-02)', () {
+      final resultado = CalculadoraDaFesta.calcular(
+        ComposicaoDaFesta(
+          contagem: ContagemDePessoas(homens: 3, mulheres: 3, criancas: 1),
+          duracaoHoras: 4,
+          itensSelecionados: const {
+            ChaveItem.bovina,
+            ChaveItem.frango,
+            ChaveItem.paoDeAlho,
+            ChaveItem.refrigerante,
+            ChaveItem.agua,
+            ChaveItem.cerveja,
+            ChaveItem.cachaca,
+          },
+        ),
+      );
+
+      expect(
+        totalExato(itensCobraveis(resultado.todosOsItens)),
+        closeTo(resultado.totalComEssenciais, 1e-9),
+      );
+      expect(
+        totalExato(itensCobraveis(resultado.todosOsItens)),
+        closeTo(270.6, 0.001),
+      );
+      expect(
+        MoneyFormatter.reais(totalExato(itensCobraveis(resultado.todosOsItens))),
+        'R\$ 271',
+      );
+    });
+  });
+
   group('CALC-16 — soma exata, sem arredondar parcela', () {
     test('lista vazia soma 0', () {
       expect(totalExato(const []), closeTo(0, 0.001));

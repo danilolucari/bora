@@ -2,6 +2,7 @@ import 'package:bora/core/routing/app_shell.dart';
 import 'package:bora/core/routing/festa_tabs_shell.dart';
 import 'package:bora/core/routing/placeholder_page.dart';
 import 'package:bora/features/home/presentation/pages/home_page.dart';
+import 'package:bora/features/lista/presentation/pages/lista_page.dart';
 import 'package:bora/features/montar/presentation/pages/montar_page.dart';
 import 'package:bora/core/routing/routes.dart';
 import 'package:flutter/widgets.dart';
@@ -18,13 +19,14 @@ Future<void> _abrir(WidgetTester tester, String location) =>
 
 /// A chave que identifica a tela [id].
 ///
-/// E-4: a Home deixou de ser placeholder na spec 04 e `montar` na spec 05;
-/// as duas passaram a ter chave própria, como `/entrar` já tinha desde a spec
-/// 03. A asserção continua sendo "a tela X está montada" — muda só por qual
-/// chave se pergunta.
+/// E-4: a Home deixou de ser placeholder na spec 04, `montar` na spec 05 e a
+/// Lista na spec 06; as três passaram a ter chave própria, como `/entrar` já
+/// tinha desde a spec 03. A asserção continua sendo "a tela X está montada" —
+/// muda só por qual chave se pergunta.
 Key _chaveDe(String id) => switch (id) {
       HomePage.id => HomePage.pageKey,
       MontarPage.id => MontarPage.pageKey,
+      ListaPage.id => ListaPage.pageKey,
       _ => PlaceholderPage.keyFor(id),
     };
 

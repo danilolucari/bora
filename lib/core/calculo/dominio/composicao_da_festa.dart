@@ -23,6 +23,7 @@ class ComposicaoDaFesta {
     this.pessoas = const [],
     this.itensSelecionados = const {},
     this.overrides = const {},
+    this.noCarrinho = const {},
   });
 
   /// As cabeças da festa (RN-01).
@@ -42,6 +43,39 @@ class ComposicaoDaFesta {
   /// Ajustes manuais por item (RN-12), quando existem.
   final Map<ChaveItem, OverrideDeItem> overrides;
 
+  /// As chaves marcadas como "já tá no carrinho" no modo COMPRAR da tela
+  /// Lista — RN-27 · AD-030.
+  ///
+  /// Mora aqui, e não em [ItemDeLista], porque o item é **reconstruído a cada
+  /// recálculo**: guardar o check nele o perderia no primeiro toque de
+  /// stepper. Irmão de [overrides] — mesmo escopo de vida, mesma reaplicação
+  /// por `CalculadoraDaFesta.calcular`.
+  ///
+  /// Chave **órfã** (marcada e depois removida da seleção) não cria item nem
+  /// quebra nada: o conjunto é lido por `contains`, nunca percorrido para
+  /// montar a lista. É o que faz o edge case "item marcado some da lista"
+  /// resolver sem código de limpeza.
+  final Set<ChaveItem> noCarrinho;
+
+  /// Copia trocando campos. O campo não informado é **preservado**; informar
+  /// uma coleção vazia a substitui de verdade.
+  ComposicaoDaFesta copyWith({
+    ContagemDePessoas? contagem,
+    int? duracaoHoras,
+    List<Pessoa>? pessoas,
+    Set<ChaveItem>? itensSelecionados,
+    Map<ChaveItem, OverrideDeItem>? overrides,
+    Set<ChaveItem>? noCarrinho,
+  }) =>
+      ComposicaoDaFesta(
+        contagem: contagem ?? this.contagem,
+        duracaoHoras: duracaoHoras ?? this.duracaoHoras,
+        pessoas: pessoas ?? this.pessoas,
+        itensSelecionados: itensSelecionados ?? this.itensSelecionados,
+        overrides: overrides ?? this.overrides,
+        noCarrinho: noCarrinho ?? this.noCarrinho,
+      );
+
   /// Valor, não identidade (CALC-05) — e por valor **profundo**: como esta é a
   /// entrada única de `CalculadoraDaFesta.calcular`, é comparando duas
   /// composições que um consumidor decide se precisa recalcular. Com o `==` de
@@ -59,7 +93,8 @@ class ComposicaoDaFesta {
           duracaoHoras == other.duracaoHoras &&
           listaIgual(pessoas, other.pessoas) &&
           conjuntoIgual(itensSelecionados, other.itensSelecionados) &&
-          mapaIgual(overrides, other.overrides);
+          mapaIgual(overrides, other.overrides) &&
+          conjuntoIgual(noCarrinho, other.noCarrinho);
 
   @override
   int get hashCode => Object.hash(
@@ -68,5 +103,6 @@ class ComposicaoDaFesta {
         Object.hashAll(pessoas),
         Object.hashAllUnordered(itensSelecionados),
         hashDeMapa(overrides),
+        Object.hashAllUnordered(noCarrinho),
       );
 }

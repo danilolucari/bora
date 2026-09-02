@@ -57,6 +57,12 @@ const Map<String, Set<String>> _excecoesDeForma = {
   'bora_avatar.dart': {'BoxShape.circle'},
   // §3: o dot do rádio da enquete, círculo.
   'bora_poll_option.dart': {'BoxShape.circle'},
+  // §3: o ponto vermelho de 8px do item editado (RN-12), círculo — dot, pela
+  // mesma exceção do avatar e do rádio.
+  'linha_de_item.dart': {'BoxShape.circle'},
+  // §3: o dot do cartão-radio de parceiro (T-04, "dot vermelho"), círculo —
+  // a mesma exceção do rádio da enquete.
+  'cartao_de_parceiro.dart': {'BoxShape.circle'},
 };
 
 /// [conteudo] sem as formas que §3 autoriza em [caminho].

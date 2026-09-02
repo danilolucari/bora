@@ -1,4 +1,21 @@
+import '../dominio/catalogo_de_itens.dart';
 import '../dominio/item_de_lista.dart';
+
+/// Os itens que entram em dinheiro — AD-010 · RN-10 · LIST-04.
+///
+/// Filtra por `DefinicaoDeItem.entraNoTotal`, o **dado declarado** que separa
+/// aparecer na lista de somar no total: 🍽️ Copos & pratos aparece na lista e
+/// não soma. Por isso ele fica fora do **total** da festa, fora do **pedido**
+/// de delivery (A-19) e fora da **faixa real** de preço.
+///
+/// É o único predicado de "entra em dinheiro" do projeto — a regra já existia
+/// dentro de `totalDosEssenciais`; o que faltava era expô-la para que as
+/// outras superfícies não a reimplementassem.
+///
+/// Preserva a **ordem** dos itens que sobram: a lista é comportamento
+/// observável (CALC-15).
+Iterable<ItemDeLista> itensCobraveis(Iterable<ItemDeLista> itens) =>
+    itens.where((item) => catalogoDeItens[item.chave]!.entraNoTotal);
 
 /// A soma **exata** dos valores de [itens] — CALC-16.
 ///

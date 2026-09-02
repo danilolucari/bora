@@ -1,8 +1,57 @@
 import 'package:bora/core/calculo/dominio/catalogo_de_itens.dart';
 import 'package:bora/core/calculo/dominio/chave_item.dart';
+import 'package:bora/core/calculo/dominio/corredor.dart';
+import 'package:bora/core/calculo/dominio/preco_de_mercado.dart';
+import 'package:bora/core/calculo/dominio/tabela_de_precos_de_mercado.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 DefinicaoDeItem _def(ChaveItem chave) => catalogoDeItens[chave]!;
+
+/// As chaves do catálogo que caem em [corredor].
+Set<ChaveItem> _doCorredor(
+  Corredor corredor, [
+  Map<ChaveItem, DefinicaoDeItem> catalogo = catalogoDeItens,
+]) =>
+    {
+      for (final entrada in catalogo.entries)
+        if (entrada.value.corredor == corredor) entrada.key,
+    };
+
+/// As divergências entre as **duas** declarações do corredor do mesmo item: o
+/// catálogo da calculadora e a tabela de RN-11.
+///
+/// Uma linha por chave comum em que elas discordam, e a linha **nomeia o item
+/// divergente** — é o que faz a falha ser diagnosticável sem abrir os dois
+/// arquivos.
+List<String> _divergenciasDeCorredor(
+  Map<ChaveItem, DefinicaoDeItem> catalogo,
+  Iterable<PrecoDeMercado> tabela,
+) =>
+    [
+      for (final preco in tabela)
+        if (preco.chave != null &&
+            catalogo[preco.chave]!.corredor != preco.corredor)
+          '${preco.chave!.name}: catálogo diz '
+              '${catalogo[preco.chave]!.corredor.name}, tabela de RN-11 diz '
+              '${preco.corredor.name}',
+    ];
+
+/// A mesma definição, com outro corredor — o infrator sintético dos testes de
+/// coerência.
+DefinicaoDeItem _comCorredor(DefinicaoDeItem definicao, Corredor corredor) =>
+    DefinicaoDeItem(
+      chave: definicao.chave,
+      nome: definicao.nome,
+      emoji: definicao.emoji,
+      unidade: definicao.unidade,
+      precoBase: definicao.precoBase,
+      passoDeQuantidade: definicao.passoDeQuantidade,
+      corredor: corredor,
+      essencial: definicao.essencial,
+      fonteDaProporcao: definicao.fonteDaProporcao,
+      quantidadeDefault: definicao.quantidadeDefault,
+      entraNoTotal: definicao.entraNoTotal,
+    );
 
 void main() {
   group('CALC-07..CALC-14 — o catálogo cobre os 16 itens', () {
@@ -168,6 +217,129 @@ void main() {
             'carvão 22 + gelo 30 + sal 8 = 60, e 210,60 + 60 fecha em R\$ 271 '
             'com ≈R\$ 45/adulto',
       );
+    });
+  });
+
+  group('LIST-17 — o corredor de mercado de todo o catálogo (RN-27)', () {
+    test('a atribuição dos 16 itens é a de LIST-17, corredor a corredor', () {
+      expect(
+        _doCorredor(Corredor.acougue),
+        {ChaveItem.bovina, ChaveItem.suina, ChaveItem.frango},
+      );
+      expect(_doCorredor(Corredor.hortifruti), {ChaveItem.legumesParaGrelha});
+      expect(_doCorredor(Corredor.padaria), {ChaveItem.paoDeAlho});
+      expect(_doCorredor(Corredor.bebidas), {
+        ChaveItem.refrigerante,
+        ChaveItem.suco,
+        ChaveItem.agua,
+        ChaveItem.cerveja,
+        ChaveItem.vodka,
+        ChaveItem.cachaca,
+        ChaveItem.whisky,
+      });
+      expect(_doCorredor(Corredor.mercearia), {
+        ChaveItem.carvao,
+        ChaveItem.gelo,
+        ChaveItem.salGrosso,
+        ChaveItem.coposEPratos,
+      });
+    });
+
+    test('todo ChaveItem tem definição no catálogo, e os cinco corredores '
+        'particionam o enum inteiro — sem contagem à mão', () {
+      for (final chave in ChaveItem.values) {
+        expect(catalogoDeItens[chave], isNotNull, reason: '$chave sem definição');
+      }
+
+      final particao = <ChaveItem>{
+        for (final corredor in Corredor.values) ..._doCorredor(corredor),
+      };
+
+      expect(particao, ChaveItem.values.toSet());
+    });
+
+    test('os itens que RN-11 não cobre também têm corredor — é o buraco que '
+        'E-a fecha (D-7)', () {
+      final foraDeRn11 = ChaveItem.values.toSet()
+        ..removeAll(
+          tabelaDePrecosDeMercado
+              .where((preco) => preco.chave != null)
+              .map((preco) => preco.chave!),
+        );
+
+      expect(foraDeRn11, isNotEmpty);
+      expect(foraDeRn11, contains(ChaveItem.agua));
+      expect(foraDeRn11, contains(ChaveItem.suco));
+      expect(foraDeRn11, contains(ChaveItem.salGrosso));
+      expect(foraDeRn11, contains(ChaveItem.coposEPratos));
+      expect(foraDeRn11, contains(ChaveItem.frango));
+      expect(foraDeRn11, contains(ChaveItem.suina));
+
+      expect(_def(ChaveItem.agua).corredor, Corredor.bebidas);
+      expect(_def(ChaveItem.suco).corredor, Corredor.bebidas);
+      expect(_def(ChaveItem.salGrosso).corredor, Corredor.mercearia);
+      expect(_def(ChaveItem.coposEPratos).corredor, Corredor.mercearia);
+      expect(_def(ChaveItem.frango).corredor, Corredor.acougue);
+      expect(_def(ChaveItem.suina).corredor, Corredor.acougue);
+      expect(_def(ChaveItem.vodka).corredor, Corredor.bebidas);
+      expect(_def(ChaveItem.cachaca).corredor, Corredor.bebidas);
+      expect(_def(ChaveItem.whisky).corredor, Corredor.bebidas);
+    });
+  });
+
+  group('LIST-17 — as duas declarações do corredor não divergem', () {
+    test('a tabela de RN-11 e o catálogo concordam nas chaves comuns', () {
+      expect(
+        _divergenciasDeCorredor(catalogoDeItens, tabelaDePrecosDeMercado),
+        isEmpty,
+      );
+    });
+
+    test('das 8 linhas de RN-11, 7 têm chave — e são essas 7 que a coerência '
+        'confere', () {
+      final comuns =
+          tabelaDePrecosDeMercado.where((preco) => preco.chave != null);
+
+      expect(tabelaDePrecosDeMercado, hasLength(8));
+      expect(
+        comuns.map((preco) => preco.chave!).toSet(),
+        {
+          ChaveItem.bovina,
+          ChaveItem.legumesParaGrelha,
+          ChaveItem.paoDeAlho,
+          ChaveItem.cerveja,
+          ChaveItem.refrigerante,
+          ChaveItem.carvao,
+          ChaveItem.gelo,
+        },
+        reason: 'a 8ª linha é a 🌭 Linguiça toscana, sem chave em T-03 (R-6): '
+            'ela não tem contraparte no catálogo para divergir',
+      );
+    });
+
+    test('reclassificar qualquer uma das chaves comuns só de um lado é pego, '
+        'e a falha nomeia o item divergente', () {
+      final comuns =
+          tabelaDePrecosDeMercado.where((preco) => preco.chave != null).toList();
+
+      expect(comuns, hasLength(7));
+
+      for (final preco in comuns) {
+        final chave = preco.chave!;
+        final original = catalogoDeItens[chave]!;
+        final outro = Corredor.values
+            .firstWhere((corredor) => corredor != original.corredor);
+
+        final divergencias = _divergenciasDeCorredor(
+          {...catalogoDeItens, chave: _comCorredor(original, outro)},
+          tabelaDePrecosDeMercado,
+        );
+
+        expect(divergencias, hasLength(1), reason: '$chave reclassificada');
+        expect(divergencias.single, contains(chave.name));
+        expect(divergencias.single, contains(outro.name));
+        expect(divergencias.single, contains(preco.corredor.name));
+      }
     });
   });
 

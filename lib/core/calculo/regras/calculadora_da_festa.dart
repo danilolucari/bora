@@ -149,11 +149,27 @@ abstract final class CalculadoraDaFesta {
       if (quantidade == 0) continue;
 
       itens.add(
-        _itemDe(catalogoDeItens[chave]!, quantidade, composicao.overrides[chave]),
+        _itemDe(
+          catalogoDeItens[chave]!,
+          quantidade,
+          composicao.overrides[chave],
+          noCarrinho: composicao.noCarrinho.contains(chave),
+        ),
       );
     }
 
-    final essenciais = essenciaisAutomaticos();
+    // SPEC_DEVIATION: lista/design.md §6.2 previa `_itemDe` como a única
+    // mudança neste arquivo; os essenciais também precisam do check.
+    // Reason: os quatro de RN-10 aparecem no checklist do modo COMPRAR
+    // (carvão, gelo e sal em MERCEARIA), e sem isto marcar o carvão seria
+    // silenciosamente perdido — o Done-when da task pede o check em
+    // **exatamente** as chaves do conjunto.
+    final essenciais = [
+      for (final essencial in essenciaisAutomaticos())
+        essencial.copyWith(
+          noCarrinho: composicao.noCarrinho.contains(essencial.chave),
+        ),
+    ];
     final somaDosItens = totalExato(itens);
     final somaDosEssenciais = totalDosEssenciais(essenciais);
 
@@ -246,12 +262,15 @@ double _quantidadeDe(
     };
 
 /// Transforma a definição de catálogo no item calculado, com o ajuste manual
-/// de RN-12 **cobrindo** o valor automático — que continua guardado.
+/// de RN-12 **cobrindo** o valor automático — que continua guardado — e o
+/// check do modo COMPRAR reaplicado a partir de `ComposicaoDaFesta.noCarrinho`
+/// (RN-27 · AD-030).
 ItemDeLista _itemDe(
   DefinicaoDeItem definicao,
   double quantidade,
-  OverrideDeItem? override,
-) =>
+  OverrideDeItem? override, {
+  required bool noCarrinho,
+}) =>
     ItemDeLista(
       chave: definicao.chave,
       nome: definicao.nome,
@@ -263,4 +282,5 @@ ItemDeLista _itemDe(
       precoOverride: override?.preco,
       essencial: definicao.essencial,
       fonteDaProporcao: definicao.fonteDaProporcao,
+      noCarrinho: noCarrinho,
     );

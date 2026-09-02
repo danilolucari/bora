@@ -5,6 +5,8 @@ import 'package:bora/core/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
 import 'package:bora/features/home/domain/festa_repository.dart';
+import 'package:bora/features/lista/data/pedido_falso.dart';
+import 'package:bora/features/lista/domain/pedido_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'fake_autenticacao_repository.dart';
@@ -25,6 +27,17 @@ GoRouter? _ultimoRouter;
 String rotaAtual() => _ultimoRouter!.routerDelegate.currentConfiguration.uri
     .toString();
 
+/// Navega o app montado para [location].
+///
+/// Existe porque as quatro abas permanentes ainda não têm barra para tocar
+/// (LIST-35 é a última task da spec 06): sem ela, "sai da tela e volta" não
+/// teria como ser exercido pela rota. Vai pelo **roteador**, que é o mesmo
+/// caminho que a barra usará.
+Future<void> irPara(WidgetTester tester, String location) async {
+  _ultimoRouter!.go(location);
+  await tester.pumpAndSettle();
+}
+
 /// Monta o app inteiro em [location], com a sessão que o teste pedir.
 ///
 /// Existe porque a guarda de AD-017 tornou a sessão parte da montagem: desde
@@ -40,6 +53,7 @@ Future<FakeAutenticacaoRepository> abrirApp(
   UsuarioLogado? sessao,
   FestaRepository? festas,
   FestaEmEdicaoRepository? festasEmEdicao,
+  PedidoRepository? pedidos,
 }) async {
   final autenticacao = FakeAutenticacaoRepository(sessaoInicial: sessao);
   addTearDown(autenticacao.dispose);
@@ -58,10 +72,14 @@ Future<FakeAutenticacaoRepository> abrirApp(
   // `default` em vez de parâmetro obrigatório, nenhum teste existente muda.
   final emEdicao = festasEmEdicao ?? _portaDeEdicao(repositorio);
 
+  // A porta de pedido entrou pela mesma razão das duas anteriores (E-4): o
+  // roteador a exige para montar a Lista. O default é o adaptador falso do
+  // M1 — trocá-lo por um duplo é um parâmetro, **sem tocar a página**.
   final router = buildAppRouter(
     autenticacao: autenticacao,
     festas: repositorio,
     festasEmEdicao: emEdicao,
+    pedidos: pedidos ?? const PedidoFalso(),
     logger: RecordingAppLogger(),
     initialLocation: location,
   );
