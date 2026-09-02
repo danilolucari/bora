@@ -13,6 +13,15 @@ library;
 /// `confirmadosNaHome: 4` e `pendentesNaHome: 2` convivem com as cinco pessoas
 /// nomeadas em [pessoasRn30] **de propósito**: são os números literais de
 /// RN-30. A fixture não reconcilia — quem reconcilia é a spec 04.
+///
+/// `codigo` é o `rafa18` literal de RN-23 e RN-26b (`bora.app/c/rafa18`): a
+/// festa do exemplo é a do Rafa, e a ligação é leitura, não invenção. Quem
+/// **gera** código é o servidor da spec 09 (A-03).
+///
+/// `nivelDoLink` guarda a **chave de serialização** do nível, não o enum: esta
+/// fixture é dado bruto e não conhece domínio. A festa do exemplo está no
+/// nível com que toda festa nova nasce (A-12); quem afirma isso o afirma
+/// contra a constante, nunca contra este literal.
 const Map<String, Object?> festaRn30 = {
   'nome': 'CHURRAS DO RAFA 🔥',
   'data': 'SÁB · 18 JUL',
@@ -21,6 +30,8 @@ const Map<String, Object?> festaRn30 = {
   'duracaoHoras': 4,
   'confirmadosNaHome': 4,
   'pendentesNaHome': 2,
+  'codigo': 'rafa18',
+  'nivelDoLink': 'editarlista',
 };
 
 /// As cinco pessoas nomeadas de RN-30 — quatro confirmadas mais Duda.

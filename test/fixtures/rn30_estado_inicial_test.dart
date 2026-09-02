@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bora/core/festas/festas.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../architecture/calculo_isolation_test.dart' show importsProibidosEm;
@@ -127,6 +128,21 @@ void main() {
               'primitivos',
         );
       }
+    });
+  });
+
+  group('GAL-01 — a festa de RN-30 tem o link do convite', () {
+    test('o código é o rafa18 literal de RN-23 e RN-26b', () {
+      expect(festaRn30['codigo'], 'rafa18');
+    });
+
+    test('a festa está no nível com que toda festa nova nasce', () {
+      expect(
+        festaRn30['nivelDoLink'],
+        NivelDoLink.padraoDeFestaNova.chave,
+        reason: 'afirmar contra a constante, e não contra o literal, é o que '
+            'faz o teste discordar se o padrão de produto mudar (L-008)',
+      );
     });
   });
 }

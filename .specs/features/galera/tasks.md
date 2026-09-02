@@ -301,12 +301,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O bruto ganha `codigo: 'rafa18'` — literal de RN-23/RN-26b — e o nível inicial da festa do Rafa
-- [ ] A leitura tipada **deriva** os dois do bruto; nenhum literal de RN-30 é redigitado no arquivo tipado
-- [ ] O nível da fixture é `NivelDoLink.padraoDeFestaNova` (`editarLista`) e há teste que o afirma **contra a constante**, não contra o literal *(L-008)*
-- [ ] As asserções existentes da fixture (inclusive "todo valor é primitivo" e a ausência de `dieta`/`bebe` na Duda) continuam **intocadas** e verdes — a prova de mutação que a fundação já pagou não é reescrita
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 4 testes novos, 0 editados
+- [x] O bruto ganha `codigo: 'rafa18'` — literal de RN-23/RN-26b — e o nível inicial da festa do Rafa
+- [x] A leitura tipada **deriva** os dois do bruto; nenhum literal de RN-30 é redigitado no arquivo tipado
+- [x] O nível da fixture é `NivelDoLink.padraoDeFestaNova` (`editarLista`) e há teste que o afirma **contra a constante**, não contra o literal *(L-008)*
+- [x] As asserções existentes da fixture (inclusive "todo valor é primitivo" e a ausência de `dieta`/`bebe` na Duda) continuam **intocadas** e verdes — a prova de mutação que a fundação já pagou não é reescrita
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 4 testes novos (6), 0 editados — o diff da task é 74 inserções e 0 remoções
 
 **Tests**: unit
 **Gate**: quick
