@@ -510,14 +510,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Cada um dos quatro eventos chama **o método correspondente** da porta, com a chave e o valor certos — quatro testes, um por evento
-- [ ] O bloc **não** muta o estado por conta própria depois de escrever: a mudança só aparece quando o stream emite (teste que escreve e afirma o estado **inalterado** até a emissão)
-- [ ] Escolher a opção **já ativa** não chama a porta — a idempotência de GAL-28 tem guarda **nos dois lados**, bloc e adaptador
-- [ ] Escrita com `situacao != comFesta` (ainda carregando, ou falhou) não chama a porta
-- [ ] Falha da porta ⇒ `logger.logError` e o estado não muda; nenhuma copy de erro é inventada (`design.md` §10)
-- [ ] **Nenhuma aritmética** nova no bloc — só `efeitosDasPreferencias` e `resumoDasPreferencias` de `core/calculo`, chamados sem recomposição
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Cada um dos quatro eventos chama **o método correspondente** da porta, com a chave e o valor certos — quatro testes, um por evento
+- [x] O bloc **não** muta o estado por conta própria depois de escrever: a mudança só aparece quando o stream emite (teste que escreve e afirma o estado **inalterado** até a emissão)
+- [x] Escolher a opção **já ativa** não chama a porta — a idempotência de GAL-28 tem guarda **nos dois lados**, bloc e adaptador
+- [x] Escrita com `situacao != comFesta` (ainda carregando, ou falhou) não chama a porta
+- [x] Falha da porta ⇒ `logger.logError` e o estado não muda; nenhuma copy de erro é inventada (`design.md` §10)
+- [x] **Nenhuma aritmética** nova no bloc — só `efeitosDasPreferencias` e `resumoDasPreferencias` de `core/calculo`, chamados sem recomposição
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: unit
 **Gate**: quick

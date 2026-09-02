@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/calculo/calculo.dart';
 import '../../../../core/observability/app_logger.dart';
 import '../../domain/chave_de_pessoa.dart';
 import '../../domain/galera_da_festa.dart';
@@ -37,6 +38,10 @@ class GaleraBloc extends Bloc<GaleraEvent, GaleraState> {
     on<GaleraRecebida>(_aoReceberGalera);
     on<ObservacaoFalhou>(_aoFalhar);
     on<LinhaAlternada>(_aoAlternarLinha);
+    on<DietaEscolhida>(_aoEscolherDieta);
+    on<BebidaAlternada>(_aoAlternarBebida);
+    on<PapelEscolhido>(_aoEscolherPapel);
+    on<NivelEscolhido>(_aoEscolherNivel);
 
     _inscricao = _galera.observarGalera(_festaId).listen(
           (galera) => add(GaleraRecebida(galera)),
@@ -121,6 +126,108 @@ class GaleraBloc extends Bloc<GaleraEvent, GaleraState> {
     _logger.logError(evento.erro, evento.stackTrace, name: _nome);
 
     emit(state.copyWith(situacao: SituacaoDaGalera.falhou));
+  }
+
+  /// Uma dieta foi escolhida — GAL-11.
+  ///
+  /// **Não emite estado.** Delega à porta e espera o stream: a fonte da
+  /// verdade é o registro da festa, e antecipar a mudança aqui criaria uma
+  /// segunda verdade que divergiria da primeira gravação que falhasse.
+  Future<void> _aoEscolherDieta(
+    DietaEscolhida evento,
+    Emitter<GaleraState> emit,
+  ) async {
+    final pessoa = _pessoaDe(evento.chave);
+    if (pessoa == null) return;
+    if (pessoa.dieta == evento.dieta) return;
+
+    await _escrever(
+      () => _galera.alterarDieta(_festaId, evento.chave, evento.dieta),
+    );
+  }
+
+  /// O toggle de bebida foi acionado — GAL-12.
+  Future<void> _aoAlternarBebida(
+    BebidaAlternada evento,
+    Emitter<GaleraState> emit,
+  ) async {
+    final pessoa = _pessoaDe(evento.chave);
+    if (pessoa == null) return;
+    if (pessoa.bebe == evento.bebe) return;
+
+    await _escrever(
+      () => _galera.alterarBebida(_festaId, evento.chave, evento.bebe),
+    );
+  }
+
+  /// Um papel foi escolhido — GAL-17.
+  ///
+  /// A recusa do alvo anfitrião (GAL-18) **não** mora aqui: mora no domínio e
+  /// no adaptador, onde vale para todo caminho de código e não só para o
+  /// toque na tela.
+  Future<void> _aoEscolherPapel(
+    PapelEscolhido evento,
+    Emitter<GaleraState> emit,
+  ) async {
+    final pessoa = _pessoaDe(evento.chave);
+    if (pessoa == null) return;
+    if (pessoa.papel == evento.papel) return;
+
+    await _escrever(
+      () => _galera.alterarPapel(_festaId, evento.chave, evento.papel),
+    );
+  }
+
+  /// O nível do link mudou — GAL-04.
+  ///
+  /// Escreve **só** o nível: nenhuma pessoa é argumento, e por isso não há
+  /// caminho, nesta feature, que reescreva o papel de quem já entrou.
+  Future<void> _aoEscolherNivel(
+    NivelEscolhido evento,
+    Emitter<GaleraState> emit,
+  ) async {
+    final galera = _galeraCarregada;
+    if (galera == null) return;
+    if (galera.convite.nivel == evento.nivel) return;
+
+    await _escrever(
+      () => _galera.definirNivelDoLink(_festaId, evento.nivel),
+    );
+  }
+
+  /// A leitura corrente, ou `null` se a tela ainda não carregou ou falhou.
+  ///
+  /// É a guarda de "não escrever no escuro": em `carregando` não há com o que
+  /// comparar o valor pedido, e em `falhou` o que está no estado pode estar
+  /// velho — gravar a partir dele sobrescreveria o registro com dado
+  /// desatualizado.
+  GaleraDaFesta? get _galeraCarregada =>
+      state.situacao == SituacaoDaGalera.comFesta ? state.galera : null;
+
+  /// A pessoa que [chave] endereça na leitura corrente, ou `null`.
+  ///
+  /// Duas razões distintas para o `null`, e cada uma tem o seu teste: a tela
+  /// não carregou, ou a pessoa **sumiu** do registro entre a abertura do
+  /// painel e o toque. Nas duas, não se escreve.
+  Pessoa? _pessoaDe(ChaveDePessoa chave) {
+    final galera = _galeraCarregada;
+    if (galera == null) return null;
+
+    final indice = ChaveDePessoa.indiceEm(galera.pessoas, chave);
+    return indice == null ? null : galera.pessoas[indice];
+  }
+
+  /// A escrita, com a falha **registrada e contida** — `design.md` §10.
+  ///
+  /// O estado não muda porque a fonte da verdade é o stream: não há o que
+  /// desfazer, a UI simplesmente não reflete a mudança, e nenhuma copy de
+  /// erro é inventada — a spec-fonte não desenha nenhuma.
+  Future<void> _escrever(Future<void> Function() escrita) async {
+    try {
+      await escrita();
+    } catch (erro, stack) {
+      _logger.logError(erro, stack, name: _nome);
+    }
   }
 
   @override
