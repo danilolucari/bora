@@ -432,13 +432,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] A porta é Dart puro, em `domain/`, sem import de Flutter
-- [ ] O adaptador é `const`-construível (chega à página por default, `design.md` §7.3)
-- [ ] Teste do adaptador intercepta o canal de plataforma e afirma que `Clipboard.setData` recebeu **exatamente** o texto passado
-- [ ] Falha do canal ⇒ a `Future` **completa com erro** (quem trata é o bloc, T16) — teste que prova, porque engolir o erro aqui apagaria GAL-05
-- [ ] Um duplo de teste (`AreaDeTransferenciaFalsa`) registra o que foi copiado e sabe falhar sob demanda — é o que T16 e T24 usam
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 6 testes novos
+- [x] A porta é Dart puro, em `domain/`, sem import de Flutter
+- [x] O adaptador é `const`-construível (chega à página por default, `design.md` §7.3)
+- [x] Teste do adaptador intercepta o canal de plataforma e afirma que `Clipboard.setData` recebeu **exatamente** o texto passado
+- [x] Falha do canal ⇒ a `Future` **completa com erro** (quem trata é o bloc, T16) — teste que prova, porque engolir o erro aqui apagaria GAL-05
+- [x] Um duplo de teste (`AreaDeTransferenciaFalsa`) registra o que foi copiado e sabe falhar sob demanda — é o que T16 e T24 usam
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 6 testes novos
 
 **Tests**: unit
 **Gate**: full
