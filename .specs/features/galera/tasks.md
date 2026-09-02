@@ -730,18 +730,18 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Header exibe `A GALERA` e o sub derivado; com a fixture, `5 pessoas · 4 confirmadas` (GAL-06)
-- [ ] Uma linha por pessoa nomeada, **na ordem do repositório** — a ordem é afirmada, não só a contagem (A-15)
-- [ ] **Um** painel aberto por vez: abrir a segunda linha fecha a primeira (`findsNothing` no conteúdo da primeira)
-- [ ] **GAL-09 AC9**: a tela **não** exibe contagem de pendentes nem representação do pendente sem nome — asserção de ausência sobre o texto "pendente" e sobre qualquer sexta linha
-- [ ] **GAL-24 AC1**: festa só com o anfitrião ⇒ uma linha, sub `1 pessoa · 1 confirmada`, faixa com o que sobrar
-- [ ] **GAL-24 AC2**: festa sem pessoa nomeada ⇒ sub `nenhuma pessoa ainda`, seção PESSOAS sem linhas e **sem copy inventada**, faixa ausente, card do link e CTA presentes e funcionais
-- [ ] **GAL-25**: com o repositório em falha, a tela mostra o estado de falha (`GaleraTextos.falha`) — **nunca** tela branca — e o card do link continua presente
-- [ ] O CTA do rodapé emite **o mesmo evento** de cópia que "COPIAR 🔗" (GAL-03 AC7)
-- [ ] A seção rola no documento, sem altura fixa e sem scroll horizontal a 390px
-- [ ] Nenhum literal de cor, fonte ou sombra
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 16 testes novos
+- [x] Header exibe `A GALERA` e o sub derivado; com a fixture, `5 pessoas · 4 confirmadas` (GAL-06)
+- [x] Uma linha por pessoa nomeada, **na ordem do repositório** — a ordem é afirmada, não só a contagem (A-15)
+- [x] **Um** painel aberto por vez: abrir a segunda linha fecha a primeira (`findsNothing` no conteúdo da primeira)
+- [x] **GAL-09 AC9**: a tela **não** exibe contagem de pendentes nem representação do pendente sem nome — asserção de ausência sobre o texto "pendente" e sobre qualquer sexta linha
+- [x] **GAL-24 AC1**: festa só com o anfitrião ⇒ uma linha, sub `1 pessoa · 1 confirmada`, faixa com o que sobrar
+- [x] **GAL-24 AC2**: festa sem pessoa nomeada ⇒ sub `nenhuma pessoa ainda`, seção PESSOAS sem linhas e **sem copy inventada**, faixa ausente, card do link e CTA presentes e funcionais
+- [x] **GAL-25**: com o repositório em falha, a tela mostra o estado de falha (`GaleraTextos.falha`) — **nunca** tela branca — e o card do link continua presente
+- [x] O CTA do rodapé emite **o mesmo evento** de cópia que "COPIAR 🔗" (GAL-03 AC7)
+- [x] A seção rola no documento, sem altura fixa e sem scroll horizontal a 390px
+- [x] Nenhum literal de cor, fonte ou sombra
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 16 testes novos
 
 **Tests**: widget
 **Gate**: full
