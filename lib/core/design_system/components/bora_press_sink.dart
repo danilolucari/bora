@@ -31,7 +31,12 @@ class BoraPressSink extends StatefulWidget {
   });
 
   /// O acento da sombra dura — §4: "4px 4px 0 `<acento>`".
-  final BoraAccent acento;
+  ///
+  /// `null` **desliga** a sombra. Serve a quem afunda sobre fundo
+  /// transparente: `BoxShadow` não é recortado para fora da borda como o
+  /// `box-shadow` do CSS, então uma sombra sem blur atrás de um fundo
+  /// transparente aparece através dele e tapa o conteúdo.
+  final BoraAccent? acento;
 
   /// A distância da sombra em repouso.
   final double deslocamento;
