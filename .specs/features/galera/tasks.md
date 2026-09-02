@@ -484,14 +484,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `LinhaAlternada(A)` com nada aberto ⇒ `aberta == A`; em seguida `LinhaAlternada(B)` ⇒ `aberta == B` e A fechada — **um** aberto por vez
-- [ ] `LinhaAlternada(A)` com A já aberta ⇒ `aberta == null`
-- [ ] **GAL-26**: emissão nova do stream **com uma pessoa acrescentada antes** da aberta na lista ⇒ `aberta` continua sendo **a mesma pessoa** — o par que discrimina chave de índice
-- [ ] Emissão nova em que a pessoa aberta **sumiu** ⇒ `aberta == null`, sem exceção
-- [ ] Emissão nova ⇒ a linha aberta **não** é fechada e nenhum campo de edição em curso é derrubado (o estado não guarda rascunho: a asserção é que `aberta` sobrevive e a lista nova está no estado)
-- [ ] Duas homônimas: abrir a segunda Ana mantém aberta **a segunda**, não a primeira
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] `LinhaAlternada(A)` com nada aberto ⇒ `aberta == A`; em seguida `LinhaAlternada(B)` ⇒ `aberta == B` e A fechada — **um** aberto por vez
+- [x] `LinhaAlternada(A)` com A já aberta ⇒ `aberta == null`
+- [x] **GAL-26**: emissão nova do stream **com uma pessoa acrescentada antes** da aberta na lista ⇒ `aberta` continua sendo **a mesma pessoa** — o par que discrimina chave de índice
+- [x] Emissão nova em que a pessoa aberta **sumiu** ⇒ `aberta == null`, sem exceção
+- [x] Emissão nova ⇒ a linha aberta **não** é fechada e nenhum campo de edição em curso é derrubado (o estado não guarda rascunho: a asserção é que `aberta` sobrevive e a lista nova está no estado)
+- [x] Duas homônimas: abrir a segunda Ana mantém aberta **a segunda**, não a primeira
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: quick

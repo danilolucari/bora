@@ -1,3 +1,4 @@
+import '../../domain/chave_de_pessoa.dart';
 import '../../domain/galera_da_festa.dart';
 
 /// Os eventos da tela A GALERA.
@@ -18,6 +19,17 @@ class GaleraRecebida extends GaleraEvent {
   const GaleraRecebida(this.galera);
 
   final GaleraDaFesta? galera;
+}
+
+/// Um card-linha da seção PESSOAS foi tocado — GAL-10 AC1.
+///
+/// **Alterna**: a linha que já estava aberta fecha, como em
+/// `BoraExpandableGroup`. Não existe evento de "fechar" separado — dois
+/// eventos para a mesma intenção divergiriam no primeiro ajuste.
+class LinhaAlternada extends GaleraEvent {
+  const LinhaAlternada(this.chave);
+
+  final ChaveDePessoa chave;
 }
 
 /// O stream do repositório falhou — GAL-25.
