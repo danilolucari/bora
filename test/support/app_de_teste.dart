@@ -3,6 +3,8 @@ import 'package:bora/core/autenticacao/autenticacao.dart';
 import 'package:bora/core/festas/festas.dart';
 import 'package:bora/core/routing/app_router.dart';
 import 'package:go_router/go_router.dart';
+import 'package:bora/features/galera/data/galera_repositorio_sobre_festas.dart';
+import 'package:bora/features/galera/domain/galera_repository.dart';
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
 import 'package:bora/features/home/domain/festa_repository.dart';
 import 'package:bora/features/lista/data/pedido_falso.dart';
@@ -53,6 +55,7 @@ Future<FakeAutenticacaoRepository> abrirApp(
   UsuarioLogado? sessao,
   FestaRepository? festas,
   FestaEmEdicaoRepository? festasEmEdicao,
+  GaleraRepository? galera,
   PedidoRepository? pedidos,
 }) async {
   final autenticacao = FakeAutenticacaoRepository(sessaoInicial: sessao);
@@ -75,12 +78,20 @@ Future<FakeAutenticacaoRepository> abrirApp(
   // A porta de pedido entrou pela mesma razão das duas anteriores (E-4): o
   // roteador a exige para montar a Lista. O default é o adaptador falso do
   // M1 — trocá-lo por um duplo é um parâmetro, **sem tocar a página**.
+  // A porta da Galera entrou pela mesma razão das anteriores (E-2): o roteador
+  // a exige para montar T-05. O default é a **vista sobre a mesma porta de
+  // edição** — é o que faz a preferência mudada na Galera aparecer na Lista
+  // sem que o teste combine nada. Trocá-la por um duplo é um parâmetro, sem
+  // tocar a página; com `default`, nenhum teste existente muda.
+  final logger = RecordingAppLogger();
+
   final router = buildAppRouter(
     autenticacao: autenticacao,
     festas: repositorio,
     festasEmEdicao: emEdicao,
+    galera: galera ?? GaleraRepositorioSobreFestas(emEdicao, logger),
     pedidos: pedidos ?? const PedidoFalso(),
-    logger: RecordingAppLogger(),
+    logger: logger,
     initialLocation: location,
   );
   _ultimoRouter = router;

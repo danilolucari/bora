@@ -816,15 +816,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O `builder` de `galera` deixa de montar `const GaleraPage()` e passa `festaId`, a porta e o logger
-- [ ] Abrir `/roles/:festaId/galera` **direto** renderiza a tela — sem depender do `FestaTabsShell` revestido, que é da spec 06 (A-18)
-- [ ] **AD-014**: o teste de rota afirma o **destino** por `rotaAtual()`, não pelo widget montado; e afirma `GaleraPage.pageKey` presente
-- [ ] `festaId` diferente chega diferente à página — teste com dois ids que prova que o parâmetro não é ignorado (foi exatamente o mutante que sobreviveu na fundação, L-001)
-- [ ] A rota continua atrás da guarda de sessão (AD-017): sem sessão, redireciona — teste que prova
-- [ ] `abrirApp` ganha o parâmetro **opcional com default**; **nenhum** teste existente é editado
-- [ ] O injector registra a porta como lazy singleton sobre a porta de edição, sem `dispose` próprio (o dono do ciclo de vida é a porta de leitura da Home, `design.md` §7.1)
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 8 testes novos, 0 editados
+- [x] O `builder` de `galera` deixa de montar `const GaleraPage()` e passa `festaId`, a porta e o logger
+- [x] Abrir `/roles/:festaId/galera` **direto** renderiza a tela — sem depender do `FestaTabsShell` revestido, que é da spec 06 (A-18)
+- [x] **AD-014**: o teste de rota afirma o **destino** por `rotaAtual()`, não pelo widget montado; e afirma `GaleraPage.pageKey` presente
+- [x] `festaId` diferente chega diferente à página — teste com dois ids que prova que o parâmetro não é ignorado (foi exatamente o mutante que sobreviveu na fundação, L-001)
+- [x] A rota continua atrás da guarda de sessão (AD-017): sem sessão, redireciona — teste que prova
+- [x] `abrirApp` ganha o parâmetro **opcional com default**; **nenhum** teste existente é editado
+- [x] O injector registra a porta como lazy singleton sobre a porta de edição, sem `dispose` próprio (o dono do ciclo de vida é a porta de leitura da Home, `design.md` §7.1)
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 8 testes novos, 0 editados
 
 **Tests**: widget (rota)
 **Gate**: build

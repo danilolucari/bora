@@ -9,6 +9,8 @@ import '../../features/convidado/presentation/pages/convidado_page.dart';
 import '../../features/convite/presentation/pages/convite_page.dart';
 import '../../features/custos/presentation/pages/custos_page.dart';
 import '../../features/entrar/presentation/pages/entrar_page.dart';
+import '../../features/galera/domain/galera_repository.dart';
+import '../../features/galera/presentation/pages/galera_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/lista/domain/pedido_repository.dart';
 import '../../features/lista/presentation/pages/lista_page.dart';
@@ -19,7 +21,6 @@ import 'festa_tabs_shell.dart';
 import 'go_router_refresh_stream.dart';
 import 'guarda_de_sessao.dart';
 import 'invite_code_format.dart';
-import 'placeholder_page.dart';
 import 'route_error_page.dart';
 import 'routes.dart';
 
@@ -58,6 +59,7 @@ GoRouter buildAppRouter({
   required AutenticacaoRepository autenticacao,
   required FestaRepository festas,
   required FestaEmEdicaoRepository festasEmEdicao,
+  required GaleraRepository galera,
   required PedidoRepository pedidos,
   required AppLogger logger,
   String initialLocation = Routes.roles,
@@ -155,14 +157,11 @@ GoRouter buildAppRouter({
                     routes: [
                       GoRoute(
                         path: 'galera',
-                        // A `GaleraPage` já é a tela de T-05 e exige o
-                        // `festaId`, a porta da galera e o logger — e a porta
-                        // ainda não chega aqui. Até a fiação entrar, a rota
-                        // segue no placeholder da fundação, com a mesma chave
-                        // que ela sempre teve.
-                        builder: (context, state) => const PlaceholderPage(
-                          id: 'galera',
-                          titulo: 'GALERA',
+                        builder: (context, state) => GaleraPage(
+                          festaId:
+                              state.pathParameters[Routes.paramFestaId]!,
+                          galera: galera,
+                          logger: logger,
                         ),
                       ),
                     ],
