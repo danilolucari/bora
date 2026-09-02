@@ -408,12 +408,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Um `FestaRepositoryEmMemoria` semeado pela fixture alimenta ao mesmo tempo a porta da Home e a da Galera, e o teste **não** cria segundo store
-- [ ] `alterarDieta` pela porta da Galera ⇒ a emissão seguinte de `observarFestas` (Home) carrega a composição nova — o par que discrimina de "dois registros paralelos"
-- [ ] A mesma escrita ⇒ `CalculadoraDaFesta.calcular` sobre o registro devolve a lista ajustada
-- [ ] Um teste **negativo declarado**: montar a Galera sobre um store próprio faz a asserção anterior falhar — a prova de que o teste morde (comentado no arquivo como o motivo de o desenho ser o B do §2.1, não executado como teste que falha)
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 6 testes novos
+- [x] Um `FestaRepositoryEmMemoria` semeado pela fixture alimenta ao mesmo tempo a porta da Home e a da Galera, e o teste **não** cria segundo store
+- [x] `alterarDieta` pela porta da Galera ⇒ a emissão seguinte de `observarFestas` (Home) carrega a composição nova — o par que discrimina de "dois registros paralelos"
+- [x] A mesma escrita ⇒ `CalculadoraDaFesta.calcular` sobre o registro devolve a lista ajustada
+- [x] Um teste **negativo declarado**: montar a Galera sobre um store próprio faz a asserção anterior falhar — a prova de que o teste morde (comentado no arquivo como o motivo de o desenho ser o B do §2.1, não executado como teste que falha)
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 6 testes novos
 
 **Tests**: unit
 **Gate**: quick
