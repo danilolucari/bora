@@ -562,17 +562,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] **Todo** literal da tabela do `design.md` §9 afirmado, um teste por constante, contra o texto literal de T-05/RN-21/RN-23
-- [ ] As **três notas de RN-23** literais, caractere a caractere, uma por nível (GAL-02)
-- [ ] `urlDoConvite('rafa18') == 'bora.app/c/rafa18'`; a mesma função é a única fonte da URL exibida **e** da copiada (Edge Case do escape) — teste com código que exige escape afirma que as duas são a **mesma string**
-- [ ] `subtitulo`: singular e plural corretos nos dois termos; com a fixture dá **exatamente** `5 pessoas · 4 confirmadas`; com 1 e 1 dá `1 pessoa · 1 confirmada`; com 0 dá `nenhuma pessoa ainda` (A-08, A-10)
-- [ ] `sublinhaDe`: `{dieta} · bebe 🍺` e `{dieta} · não bebe 🚫`; dieta ausente ⇒ omite o termo; bebida ausente ⇒ omite o termo; **os dois ausentes ⇒ devolve `null`/vazio** (o caso da Duda, A-14)
-- [ ] Os rótulos de dieta são os de RN-21 com emoji (A-13): `🍖 Come de tudo`, `🥗 Veggie`, `🚫 Sem porco`
-- [ ] `linkCopiado` e os rótulos de papel vêm das constantes do design system — teste compara com **o token**, nunca com literal duplicado *(L-008)*
-- [ ] `faixa(resumo)` concatena `'💡 '` e **nada mais**; com resumo vazio devolve vazio
-- [ ] `falha` está documentado no arquivo como **SPEC_PRECISION_GAP** (`design.md` §14)
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 24 testes novos
+- [x] **Todo** literal da tabela do `design.md` §9 afirmado, um teste por constante, contra o texto literal de T-05/RN-21/RN-23
+- [x] As **três notas de RN-23** literais, caractere a caractere, uma por nível (GAL-02)
+- [x] `urlDoConvite('rafa18') == 'bora.app/c/rafa18'`; a mesma função é a única fonte da URL exibida **e** da copiada (Edge Case do escape) — teste com código que exige escape afirma que as duas são a **mesma string**
+- [x] `subtitulo`: singular e plural corretos nos dois termos; com a fixture dá **exatamente** `5 pessoas · 4 confirmadas`; com 1 e 1 dá `1 pessoa · 1 confirmada`; com 0 dá `nenhuma pessoa ainda` (A-08, A-10)
+- [x] `sublinhaDe`: `{dieta} · bebe 🍺` e `{dieta} · não bebe 🚫`; dieta ausente ⇒ omite o termo; bebida ausente ⇒ omite o termo; **os dois ausentes ⇒ devolve `null`/vazio** (o caso da Duda, A-14)
+- [x] Os rótulos de dieta são os de RN-21 com emoji (A-13): `🍖 Come de tudo`, `🥗 Veggie`, `🚫 Sem porco`
+- [x] `linkCopiado` e os rótulos de papel vêm das constantes do design system — teste compara com **o token**, nunca com literal duplicado *(L-008)*
+- [x] `faixa(resumo)` concatena `'💡 '` e **nada mais**; com resumo vazio devolve vazio
+- [x] `falha` está documentado no arquivo como **SPEC_PRECISION_GAP** (`design.md` §14)
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 24 testes novos
 
 **Tests**: unit
 **Gate**: quick
