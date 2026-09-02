@@ -274,105 +274,101 @@ CVD-31 AC7 manda. Entram no corpo da AD-033.
 
 ## Handoff
 
-> **SNAPSHOT — 2026-09-01**, com a spec 06 `lista` **construída, verificada e
-> corrigida**, em `feature/lista` — **35 commits** sobre `fc744b5`, árvore limpa,
-> **não mergeada**. Gate conferido com exit code: **1933 verdes**, `flutter analyze`
-> zero issues.
+> **SNAPSHOT — 2026-09-02.** O **M1 está fechado**: a spec 06 `lista` foi construída,
+> verificada em 3 iterações e **mergeada na `main`** (`e826261`). Árvore limpa.
+> Gate na `main`, conferido com exit code: **1935 verdes**, `flutter analyze` zero issues.
 
 ### Onde o projeto está
 
-`lista` fecha o **M1**: as 4 specs do marco estão entregues. Falta o merge e a
-re-verificação final (iteração 3).
+| Spec | Execute | Verifier | Na `main`? |
+|---|---|---|---|
+| 00–05 (`fundacao`..`montar`) | ✅ | ✅ PASS | ✅ |
+| 06 `lista` | ✅ 27/27 | ✅ **PASS** (3 iterações) | ✅ `e826261` |
+| 07 `galera` | ⬜ **desbloqueada** — `tasks.md` pronto, 27 tasks, AD-031 na T1 | ⬜ | — |
+| 08 `convite` · 09 `convidado` · 10 `custos` | ⬜ Tasks pendentes | ⬜ | — |
 
-| Spec | Execute | Verifier |
-|---|---|---|
-| 00–05 (`fundacao`..`montar`) | ✅ | ✅ PASS (todas na `main`) |
-| 06 `lista` | ✅ **27/27** | ⚠️ **iteração 2 FAIL, gaps fechados, falta a 3ª passada** |
-| 07 `galera` | ⬜ desbloqueada, `tasks.md` pronto (27 tasks) | ⬜ |
-| 08–10 | ⬜ Tasks pendentes | ⬜ |
+Baseline: 1528 → **1935** (+407 nesta sessão).
 
-### O que `lista` entrega
+### O que fechou nesta sessão
 
-T-04 (mobile) e W-04 (web): modo PLANEJAR com leitura de mercado e régua de
-override, modo COMPRAR com checklist por corredor, e o pedido por delivery
-inteiro atrás da porta da AD-024 (adaptador falso, copy literal). **AD-030
-registrada.** Baseline 1528 → **1933** (+405).
+**`lista`** — T-04 e W-04: modo PLANEJAR com leitura de mercado e régua de override,
+modo COMPRAR por corredor, e o pedido por delivery inteiro atrás da porta da AD-024
+(adaptador falso). **AD-030 registrada.** Verificado rodando: R$ 271, faixa real
+R$ 245–343, ≈R$ 45 por adulto e SUBTOTAL R$ 211 aparecem corretos nas duas viewports.
+
+**Conserto do `BoraSecondaryButton`** (`691186d`) — o botão renderizava como bloco
+preto com o rótulo **invisível**, em 4 chamadas de produção. `BoxShadow` do Flutter
+não é recortado para fora da borda como o `box-shadow` do CSS; com fundo transparente
+a sombra aparecia através do botão. §5 põe a sombra no hover, não no repouso.
+**Achado rodando o app**, não pela suíte.
+
+### O Verifier: FAIL → FAIL → PASS, e o que valeu
+
+`.specs/features/lista/validation.md` tem as 3 iterações. O achado de maior valor foi
+um **defeito real de produto**: a 1ª guarda de supressão de eco comparava com
+`_ultimaGravada` e **descartava escrita externa legítima**, deixando a tela obsoleta —
+inofensivo no M1 (AD-016, sem escritor externo), viraria bug no M2 com `galera` e
+`convidado`. Um fixer alegou "mutante equivalente"; a iteração 2 **derrubou a alegação
+com uma sonda**. Corrigido por decisão do usuário (`ebdb0ca`): a comparação passa a ser
+com `state.festa`.
+
+Na iteração 3 as **duas guardas passaram a ter sensor separado** — nenhuma morre de
+carona na outra, que era o furo das iterações 1 e 2.
+
+### Decisões do usuário registradas (2026-09-01/02)
+
+1. Guarda de eco compara com `state.festa`, não com a última gravada.
+2. **P1-3 AC4**: "editado" = **"tem override gravado"**. `+1` seguido de `−1` mantém o
+   ponto vermelho; só o RESTAURAR limpa. Registrado no corpo do AC em `spec.md`.
+3. `BoraSecondaryButton`: sombra só sobre fundo opaco; o teste da sombra dura passa a
+   observá-la na variante `fundoBranco`, com as três asserções intactas.
 
 ### ⚠️ O que falta, em ordem
 
-1. **Verifier iteração 3** — a iteração 2 (`761a82a`) fechou FAIL com o GAP-4
-   reaberto. Os dois itens finais foram feitos e **verificados por mutação nesta
-   sessão** (ver abaixo), mas **nenhum Verifier independente confirmou o
-   conjunto**. É o próximo passo, e é o que falta para o veredito virar PASS.
-2. **Merge de `feature/lista` na `main`** com `--no-ff`, depois do PASS.
-3. **Conferência visual com a skill `run`** — pendente desde 2026-08-26 e agora
-   acumulada: T-01, W-01, T-02, W-02, T-03, W-03, **T-04, W-04**. Nenhuma dessas
-   telas foi vista rodando; tudo que existe é asserção sobre a árvore de widgets.
+1. **Conferência visual das telas ainda não vistas** — T-01, W-01, T-02, W-02, T-03 e
+   W-03. T-04 e W-04 **já foram vistas**. Foi olhando que apareceu o botão invisível,
+   que ~1900 testes e dois Verifiers não podiam pegar. **Faça isso antes de `galera`.**
+   Receita: `firebase emulators:start --only auth` (o Firestore **não** é preciso no M1
+   e é o único que exige JVM) + `flutter run -d web-server --web-port 8088`, e dirigir
+   com Playwright por coordenadas — Flutter web pinta em canvas, não há DOM.
+2. **Execute de `galera`** — 27 tasks, 5 batches sequenciais, AD-031 na T1 (conferir a
+   numeração na hora: o log ativo vai até **AD-030**).
+3. **Tasks das specs 08..10**, sem dependência de código.
 
-### O Verifier: duas iterações, e o que elas provaram
+### Spec-precision gap aberto de propósito
 
-`.specs/features/lista/validation.md` — iteração 1 (`3fe503c`) e iteração 2 (`761a82a`).
-Iteração 1: **58/61 AC**, 21 mutações, 4 sobreviventes. Iteração 2: 3 dos 4
-mutantes mortos.
+**P1-5 AC9** ("volta no mesmo modo") — sem asserção e sem leitura fixada. Decisão do
+usuário, não do agente.
 
-**O achado de maior valor foi um defeito real, não um furo de teste.** A 1ª guarda
-de supressão de eco comparava com `_ultimaGravada` e por isso **descartava uma
-escrita externa legítima**, deixando a tela obsoleta. O fixer tinha alegado
-"mutante equivalente"; o Verifier da iteração 2 **derrubou a alegação com uma
-sonda** (ajuste local A → escrita externa X → escrita externa que devolve A).
-Inofensivo no M1 (AD-016: não há escritor externo), viraria bug no M2 com
-`galera`/`convidado`.
+### Dívidas anotadas (nenhuma bloqueia)
 
-**Decisão do usuário (2026-09-01)**: trocar a comparação para `state.festa`.
-Feito em `ebdb0ca`; `_ultimaGravada` saiu do código.
-
-**Decisão do usuário (2026-09-01)**: P1-3 AC4 fica na leitura **"editado = tem
-override gravado"** — `+1` seguido de `−1` **mantém** o ponto vermelho, só o
-RESTAURAR limpa. Nada mudou de comportamento; entraram os testes que fixam a
-leitura, mais o registro datado no corpo do AC e na matriz (`3762e7e`).
-
-### Os dois itens finais foram verificados por mutação NESTA sessão
-
-O worker que os implementaria morreu de 429 depois de commitar o primeiro; o
-segundo foi feito inline. **As duas provas foram rodadas à mão, em árvore
-commitada, e restauradas com `git status` conferido vazio:**
-
-| Item | Mutante re-plantado | Resultado |
-|---|---|---|
-| GAP-4 (`ebdb0ca`) | guarda volta a comparar com a última gravada | ✅ morre o teste novo "escrita externa que devolve o valor que gravamos chega à tela"; "eco atrasado" (2ª guarda) segue de pé |
-| P1-3 AC4 (`3762e7e`) | leitura rival de `editado` (override igual ao automático não conta) | ✅ morrem **exatamente** os 2 testes novos de LIST-12, e nenhum outro |
-
-### Spec-precision gap ainda aberto, de propósito
-
-**P1-5 AC9** ("volta no mesmo modo") — sem asserção, sem leitura fixada.
-Decisão do usuário, não do agente.
-
-### Dívidas anotadas e não pagas (nenhuma bloqueia)
-
-1. **O scanner do guard está duplicado** (~130 linhas) entre
-   `test/features/montar/architecture/formula_nao_vaza_test.dart` e
-   `test/features/lista/architecture/lista_sem_formula_test.dart`. Extrair para
-   `test/support/varredura_de_fonte.dart` exige editar o guard de `montar`.
-2. **`buildAppRouter` já pede 4 portas obrigatórias** e ganha uma por feature —
-   vale um agregado antes de `galera` acrescentar a quinta.
-3. **`setSurfaceSize` não altera o `MediaQuery.size`** nos testes, só a superfície
-   de render. Tela que decida layout por `MediaQuery` passa invisível pelo teste
-   de viewport. Hoje o projeto usa `ResponsiveBuilder` em tudo, então nada está
-   quebrado — é armadilha esperando a próxima tela.
+1. **Scanner do guard duplicado** (~130 linhas) entre `formula_nao_vaza_test.dart` de
+   `montar` e `lista_sem_formula_test.dart`. Extrair para `test/support/`.
+2. **`buildAppRouter` já pede 5 portas obrigatórias** e ganha uma por feature — vale um
+   agregado antes de `galera` acrescentar a sexta.
+3. **`setSurfaceSize` não altera o `MediaQuery.size`** nos testes, só a superfície de
+   render. Tela que decida layout por `MediaQuery` passa invisível pelo teste de
+   viewport. Hoje o projeto usa `ResponsiveBuilder` em tudo.
 4. **`ComposicaoDaFesta.copyWith` agora existe**; `montar_bloc.dart:367` e
    `rascunho_inicial.dart:56` ainda reconstroem campo a campo.
-5. **`test/architecture/calculo_isolation_test.dart:61`** (spec `fundacao`)
-   escreve arquivo real dentro de `lib/` e falha de forma intermitente sob
-   concorrência. Herdada do handoff anterior, ainda não consertada.
-6. **`ListaTextos.itensNoCorredor(1)`** devolve `"1 itens"` — a spec-fonte
-   escreve `{N} itens` e não dá singular. `SPEC_PRECISION_GAP` declarado.
+5. **`test/architecture/calculo_isolation_test.dart:61`** escreve arquivo real dentro de
+   `lib/` e falha de forma intermitente sob concorrência. Aberta desde o M0.
+6. **`ListaTextos.itensNoCorredor(1)`** devolve `"1 itens"` — a spec-fonte escreve
+   `{N} itens` e não dá singular.
+
+### Lições registradas
+
+`L-030..L-035` (`36817b4`): o helper que promete rota e não abre; o valor afirmado que
+coincide com o default; duas guardas que morrem de carona; equivalência provada pela
+suíte verde em vez do caminho que discrimina; `find.text` acha texto ilegível; e o
+`BoxShadow` que não recorta como o CSS.
 
 ### Nota de processo
 
 Um worker perdeu uma task inteira rodando `git checkout --` sobre trabalho **não
-commitado** durante checagem de mutação. A partir do Batch 3 a regra passou a ser
-explícita no briefing — mutar só em cópia no scratchpad ou **depois** do commit —
-e não houve reincidência. Vale manter nos briefings seguintes.
+commitado** durante checagem de mutação. A partir do Batch 3 a regra virou explícita no
+briefing — mutar só em cópia no scratchpad ou **depois** do commit — e não houve
+reincidência. Mantenha nos briefings seguintes.
 
 ## Histórico — sessão do M0
 
