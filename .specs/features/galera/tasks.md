@@ -843,16 +843,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Guard 1 — depois de remover comentários e literais de string, nenhum arquivo de `lib/features/galera/**` contém as constantes de RN-03/RN-05 (`0.4`, `0.3`, `0.15`, `0.5` e as demais), `adultosQueBebem` reescrito, `max(0, adultos -`, nem `math.`
-- [ ] Guard 2 — nenhum arquivo contém a frase `A lista já se ajusta às preferências` como **template com interpolação**; a frase inteira vem de `resumoDasPreferencias` (GAL-13 AC5)
-- [ ] Guard 3 — nenhum literal de cor (`0xFF...`, `Color(`), fonte ou sombra fora dos tokens
-- [ ] Guard 4 — nenhum arquivo de `lib/features/galera/domain/**` importa `package:flutter/` (GAL-19 AC7, a condição para a spec 09 traduzir a tabela em security rules)
-- [ ] **Cada uma das quatro regras tem teste contra trecho sintético infrator** — varredura verde contra código limpo não prova que morde *(a lição que o sensor da spec 04 e o L-007 já cobraram)*
-- [ ] A allowlist, se existir, libera **a forma exata**, nunca o arquivo inteiro *(L-007)*
-- [ ] A comparação de caminho normaliza o separador — guard que compara path com barra normal fica verde no POSIX e vermelho no Windows *(L-006)*
-- [ ] A falha nomeia o arquivo infrator na mensagem
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Guard 1 — depois de remover comentários e literais de string, nenhum arquivo de `lib/features/galera/**` contém as constantes de RN-03/RN-05 (`0.4`, `0.3`, `0.15`, `0.5` e as demais), `adultosQueBebem` reescrito, `max(0, adultos -`, nem `math.`
+- [x] Guard 2 — nenhum arquivo contém a frase `A lista já se ajusta às preferências` como **template com interpolação**; a frase inteira vem de `resumoDasPreferencias` (GAL-13 AC5)
+- [x] Guard 3 — nenhum literal de cor (`0xFF...`, `Color(`), fonte ou sombra fora dos tokens
+- [x] Guard 4 — nenhum arquivo de `lib/features/galera/domain/**` importa `package:flutter/` (GAL-19 AC7, a condição para a spec 09 traduzir a tabela em security rules)
+- [x] **Cada uma das quatro regras tem teste contra trecho sintético infrator** — varredura verde contra código limpo não prova que morde *(a lição que o sensor da spec 04 e o L-007 já cobraram)*
+- [x] A allowlist, se existir, libera **a forma exata**, nunca o arquivo inteiro *(L-007)*
+- [x] A comparação de caminho normaliza o separador — guard que compara path com barra normal fica verde no POSIX e vermelho no Windows *(L-006)*
+- [x] A falha nomeia o arquivo infrator na mensagem
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: unit (varredura)
 **Gate**: build
