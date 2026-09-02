@@ -325,14 +325,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `confirmados` conta **exatamente** as pessoas nomeadas com status confirmado; com a fixture RN-30 dá **4**
-- [ ] O par que discrimina: uma composição com uma pessoa `recusou` e outra `pendente` conta **só** as confirmadas — recusou aparece em `pessoas` e **não** em `confirmados` (Edge Case)
-- [ ] `pessoas` devolve a lista da composição **na ordem dela**, sem reordenar (A-15)
-- [ ] A porta declara `observarGalera(festaId) → Stream<GaleraDaFesta?>` e **exatamente** quatro escritas: `alterarDieta`, `alterarBebida`, `alterarPapel`, `definirNivelDoLink`
-- [ ] **Nenhum** método da porta toca `status` de pessoa nem contador algum — é a forma que torna GAL-09 AC9 afirmável, e o doc da porta diz isso
-- [ ] Nenhum import de Flutter em `domain/`
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] `confirmados` conta **exatamente** as pessoas nomeadas com status confirmado; com a fixture RN-30 dá **4**
+- [x] O par que discrimina: uma composição com uma pessoa `recusou` e outra `pendente` conta **só** as confirmadas — recusou aparece em `pessoas` e **não** em `confirmados` (Edge Case)
+- [x] `pessoas` devolve a lista da composição **na ordem dela**, sem reordenar (A-15)
+- [x] A porta declara `observarGalera(festaId) → Stream<GaleraDaFesta?>` e **exatamente** quatro escritas: `alterarDieta`, `alterarBebida`, `alterarPapel`, `definirNivelDoLink`
+- [x] **Nenhum** método da porta toca `status` de pessoa nem contador algum — é a forma que torna GAL-09 AC9 afirmável, e o doc da porta diz isso
+- [x] Nenhum import de Flutter em `domain/`
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: quick
