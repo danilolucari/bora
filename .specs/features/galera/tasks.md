@@ -248,15 +248,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] As oito capacidades existem com os nomes do `design.md` §6.3
-- [ ] **As 32 células de RN-22 são afirmadas uma a uma, com valores escritos à mão** — 4 papéis × 8 capacidades, `pode(...)` esperado `true`/`false` em cada. **Nunca** um laço sobre o mapa, que compararia a tabela consigo mesma e passaria com ela inteira errada
-- [ ] ANFITRIÃO tem as oito; CO-ANFITRIÃO tem seis e **não** tem `gerenciarPapeis` nem `configurarNivelDoLink` (A-19); CONVIDADO tem quatro; SÓ VÊ tem duas
-- [ ] `capacidadesDe` devolve conjunto **imutável** — tentar mutá-lo lança, e há teste que prova
-- [ ] `papelDoNivel`: `soVer → soVe`, `editarLista → convidado`, `coAnfitriao → coAnfitriao` — os três com teste próprio (GAL-20 AC5)
-- [ ] `papelDoUsuario` devolve o papel de quem está marcado `voce`; **sem ninguém marcado devolve `anfitriao`** — premissa P-1 do `design.md` §14, declarada no doc da função
-- [ ] **Zero import de Flutter** no arquivo (GAL-19 AC7) — afirmado aqui por inspeção e por varredura em T27
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 38 testes novos (32 células + as seis funções/ramos restantes)
+- [x] As oito capacidades existem com os nomes do `design.md` §6.3
+- [x] **As 32 células de RN-22 são afirmadas uma a uma, com valores escritos à mão** — 4 papéis × 8 capacidades, `pode(...)` esperado `true`/`false` em cada. **Nunca** um laço sobre o mapa, que compararia a tabela consigo mesma e passaria com ela inteira errada
+- [x] ANFITRIÃO tem as oito; CO-ANFITRIÃO tem seis e **não** tem `gerenciarPapeis` nem `configurarNivelDoLink` (A-19); CONVIDADO tem quatro; SÓ VÊ tem duas
+- [x] `capacidadesDe` devolve conjunto **imutável** — tentar mutá-lo lança, e há teste que prova
+- [x] `papelDoNivel`: `soVer → soVe`, `editarLista → convidado`, `coAnfitriao → coAnfitriao` — os três com teste próprio (GAL-20 AC5)
+- [x] `papelDoUsuario` devolve o papel de quem está marcado `voce`; **sem ninguém marcado devolve `anfitriao`** — premissa P-1 do `design.md` §14, declarada no doc da função
+- [x] **Zero import de Flutter** no arquivo (GAL-19 AC7) — afirmado aqui por inspeção e por varredura em T27
+- [x] Gate `quick` passa; exit code conferido (suíte inteira também: 2014 verdes)
+- [x] ≥ 38 testes novos — **46**: as 32 células + 6 de tamanho/imutabilidade/exclusivas + 4 de `papelDoNivel` + 3 de `papelDoUsuario` + 1 de pureza
 
 **Tests**: unit
 **Gate**: quick
