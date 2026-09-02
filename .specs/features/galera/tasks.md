@@ -620,16 +620,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Renderiza avatar, nome, tag de papel e caret para toda pessoa
-- [ ] Badge "VOCÊ" presente **só** para quem é `voce`, ausente (`findsNothing`) para os demais — o par que discrimina (GAL-07 AC4)
-- [ ] A sublinha é a de `GaleraTextos.sublinhaDe`; a Duda (sem dieta e sem bebida) renderiza **sem** sublinha
-- [ ] **GAL-08**: cada um dos quatro papéis mapeia para o `BoraStatus` de §5 — ANFITRIÃO amarelo, CO-ANFITRIÃO roxo com texto branco, CONVIDADO branco, SÓ VÊ `wa-bubble`/`text-2`. Quatro asserções **contra o token do enum**, nunca contra literal de cor *(L-008)*
-- [ ] O caret usa a constante de `BoraExpandableRow` e difere entre aberto e fechado — teste nos dois estados
-- [ ] Tocar a linha emite a alternância; nada é decidido dentro do widget
-- [ ] Nome longo não estoura o layout (sem overflow no `tester.takeException()`), e duas homônimas renderizam como **duas** linhas distintas (Edge Case)
-- [ ] Nenhum literal de cor, fonte ou sombra
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 14 testes novos
+- [x] Renderiza avatar, nome, tag de papel e caret para toda pessoa
+- [x] Badge "VOCÊ" presente **só** para quem é `voce`, ausente (`findsNothing`) para os demais — o par que discrimina (GAL-07 AC4)
+- [x] A sublinha é a de `GaleraTextos.sublinhaDe`; a Duda (sem dieta e sem bebida) renderiza **sem** sublinha
+- [x] **GAL-08**: cada um dos quatro papéis mapeia para o `BoraStatus` de §5 — ANFITRIÃO amarelo, CO-ANFITRIÃO roxo com texto branco, CONVIDADO branco, SÓ VÊ `wa-bubble`/`text-2`. Quatro asserções **contra o token do enum**, nunca contra literal de cor *(L-008)*
+- [x] O caret usa a constante de `BoraExpandableRow` e difere entre aberto e fechado — teste nos dois estados
+- [x] Tocar a linha emite a alternância; nada é decidido dentro do widget
+- [x] Nome longo não estoura o layout (sem overflow no `tester.takeException()`), e duas homônimas renderizam como **duas** linhas distintas (Edge Case)
+- [x] Nenhum literal de cor, fonte ou sombra
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 14 testes novos
 
 **Tests**: widget
 **Gate**: full
