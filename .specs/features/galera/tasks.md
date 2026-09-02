@@ -703,15 +703,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Com a fixture RN-30 a faixa lê **exatamente** `💡 A lista já se ajusta às preferências: 1 veggie 🥗 · 1 sem porco 🚫 · 3 bebem 🍺`
-- [ ] O texto é comparado com **o retorno de `resumoDasPreferencias`**, não com literal reescrito — a asserção do literal existe uma vez, como caso da fixture (GAL-13 AC5, AC6)
-- [ ] Termo zerado é omitido — teste com só veggie, e teste com só bebem
-- [ ] **Nenhum termo maior que zero ⇒ a faixa não renderiza** (`findsNothing`, GAL-13 AC7)
-- [ ] Mudar a composição de preferências troca a string exibida — a faixa é derivada, nunca guardada
-- [ ] A borda é 2px e o fundo é o amarelo do token; nenhum literal de cor
-- [ ] A feature **não** recompõe a frase: um teste de varredura (fechado em T27) e a inspeção do arquivo garantem que só `'💡 '` é concatenado
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] Com a fixture RN-30 a faixa lê **exatamente** `💡 A lista já se ajusta às preferências: 1 veggie 🥗 · 1 sem porco 🚫 · 3 bebem 🍺`
+- [x] O texto é comparado com **o retorno de `resumoDasPreferencias`**, não com literal reescrito — a asserção do literal existe uma vez, como caso da fixture (GAL-13 AC5, AC6)
+- [x] Termo zerado é omitido — teste com só veggie, e teste com só bebem
+- [x] **Nenhum termo maior que zero ⇒ a faixa não renderiza** (`findsNothing`, GAL-13 AC7)
+- [x] Mudar a composição de preferências troca a string exibida — a faixa é derivada, nunca guardada
+- [x] A borda é 2px e o fundo é o amarelo do token; nenhum literal de cor
+- [x] A feature **não** recompõe a frase: um teste de varredura (fechado em T27) e a inspeção do arquivo garantem que só `'💡 '` é concatenado
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
