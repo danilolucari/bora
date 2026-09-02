@@ -275,14 +275,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `de([Ana, Léo, Ana])` devolve `Ana#0`, `Léo#0`, `Ana#1`, **na ordem do repositório** (A-15)
-- [ ] Duas chaves de mesmo nome e ocorrência são `==`; mesmo nome com ocorrência diferente **não** são; `hashCode` acompanha
-- [ ] `indiceEm` devolve o índice certo para **cada uma** das duas Anas — o teste que discrimina "chave por nome" de "chave por nome + ocorrência"
-- [ ] `indiceEm` devolve `null` para chave que não existe mais na lista (a pessoa sumiu entre abrir o painel e escrever)
-- [ ] Acrescentar pessoa **ao fim** não muda a chave de ninguém — a única mutação que o produto produz (RSVP acrescenta; remover não é oferecido, A-04)
-- [ ] Nenhum import de Flutter
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] `de([Ana, Léo, Ana])` devolve `Ana#0`, `Léo#0`, `Ana#1`, **na ordem do repositório** (A-15)
+- [x] Duas chaves de mesmo nome e ocorrência são `==`; mesmo nome com ocorrência diferente **não** são; `hashCode` acompanha
+- [x] `indiceEm` devolve o índice certo para **cada uma** das duas Anas — o teste que discrimina "chave por nome" de "chave por nome + ocorrência"
+- [x] `indiceEm` devolve `null` para chave que não existe mais na lista (a pessoa sumiu entre abrir o painel e escrever)
+- [x] Acrescentar pessoa **ao fim** não muda a chave de ninguém — a única mutação que o produto produz (RSVP acrescenta; remover não é oferecido, A-04)
+- [x] Nenhum import de Flutter
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 8 testes novos (11)
 
 **Tests**: unit
 **Gate**: quick
