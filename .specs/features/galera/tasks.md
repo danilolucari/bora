@@ -675,16 +675,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Painel de não-anfitrião tem as três seções **nesta ordem**: NÍVEL DE ACESSO, RESTRIÇÃO ALIMENTAR, BEBIDA (GAL-10 AC2)
-- [ ] "NÍVEL DE ACESSO" oferece exatamente `CONVIDADO`, `CO-ANFITRIÃO`, `SÓ VÊ` — **`ANFITRIÃO` não é oferecido em lugar nenhum** (GAL-18 na UI)
-- [ ] O ativo de "NÍVEL DE ACESSO" e o de "BEBIDA" são pretos (`ink`), afirmado contra o token
-- [ ] **GAL-16**: painel do anfitrião exibe a nota `👑 Anfitrião manda em tudo — acesso fixo.` **e as três seções estão ausentes da árvore** (`findsNothing`) — não desabilitadas. É o par que discrimina de "desabilitado"
-- [ ] O toggle "BEBIDA" alterna entre `BEBE 🍺` e `NÃO BEBE 🚫` e emite a alternância
-- [ ] Escolher dieta/bebida/papel emite o evento correspondente com a **chave** da pessoa
-- [ ] **GAL-27 AC2**: com `podeGerenciarPapeis: false`, "NÍVEL DE ACESSO" some da árvore e RESTRIÇÃO ALIMENTAR + BEBIDA **continuam**; com `true`, as três estão presentes
-- [ ] Nenhum literal de cor, fonte ou sombra
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 16 testes novos
+- [x] Painel de não-anfitrião tem as três seções **nesta ordem**: NÍVEL DE ACESSO, RESTRIÇÃO ALIMENTAR, BEBIDA (GAL-10 AC2)
+- [x] "NÍVEL DE ACESSO" oferece exatamente `CONVIDADO`, `CO-ANFITRIÃO`, `SÓ VÊ` — **`ANFITRIÃO` não é oferecido em lugar nenhum** (GAL-18 na UI)
+- [x] O ativo de "NÍVEL DE ACESSO" e o de "BEBIDA" são pretos (`ink`), afirmado contra o token
+- [x] **GAL-16**: painel do anfitrião exibe a nota `👑 Anfitrião manda em tudo — acesso fixo.` **e as três seções estão ausentes da árvore** (`findsNothing`) — não desabilitadas. É o par que discrimina de "desabilitado"
+- [x] O toggle "BEBIDA" alterna entre `BEBE 🍺` e `NÃO BEBE 🚫` e emite a alternância
+- [x] Escolher dieta/bebida/papel emite o evento correspondente com a **chave** da pessoa
+- [x] **GAL-27 AC2**: com `podeGerenciarPapeis: false`, "NÍVEL DE ACESSO" some da árvore e RESTRIÇÃO ALIMENTAR + BEBIDA **continuam**; com `true`, as três estão presentes
+- [x] Nenhum literal de cor, fonte ou sombra
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 16 testes novos
 
 **Tests**: widget
 **Gate**: full
