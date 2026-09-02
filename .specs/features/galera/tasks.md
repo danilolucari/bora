@@ -591,17 +591,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Renderiza, na ordem de T-05: label "LINK PRA CONVIDAR", a URL, "COPIAR 🔗", "QUEM ABRIR O LINK PODE…", o segmented com **exatamente três** opções — `SÓ VER`, `EDITAR LISTA`, `CO-ANFITRIÃO`
-- [ ] O fundo é `BoraColors.ink` e o acento é o roxo — afirmado **contra o token**, não contra literal de cor
-- [ ] Com a fixture, a URL na tela é `bora.app/c/rafa18`
-- [ ] Percorrer os três níveis troca a nota para a de RN-23 correspondente — três asserções literais (GAL-02)
-- [ ] Tocar uma opção emite o evento de nível; tocar a **já ativa** não emite (GAL-28 na UI)
-- [ ] Trocar de nível **não** exibe toast algum
-- [ ] **GAL-27 AC1**: com `podeConfigurarNivel: false` o segmented some da árvore (`findsNothing`) e URL + "COPIAR 🔗" **continuam**; com `true` os três estão presentes — o par que discrimina
-- [ ] `codigo` vazio ⇒ card sem URL e "COPIAR 🔗" inerte, sem copy nova (`design.md` §14)
-- [ ] Nenhum literal de cor, fonte ou sombra no arquivo
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 14 testes novos
+- [x] Renderiza, na ordem de T-05: label "LINK PRA CONVIDAR", a URL, "COPIAR 🔗", "QUEM ABRIR O LINK PODE…", o segmented com **exatamente três** opções — `SÓ VER`, `EDITAR LISTA`, `CO-ANFITRIÃO`
+- [x] O fundo é `BoraColors.ink` e o acento é o roxo — afirmado **contra o token**, não contra literal de cor
+- [x] Com a fixture, a URL na tela é `bora.app/c/rafa18`
+- [x] Percorrer os três níveis troca a nota para a de RN-23 correspondente — três asserções literais (GAL-02)
+- [x] Tocar uma opção emite o evento de nível; tocar a **já ativa** não emite (GAL-28 na UI)
+- [x] Trocar de nível **não** exibe toast algum
+- [x] **GAL-27 AC1**: com `podeConfigurarNivel: false` o segmented some da árvore (`findsNothing`) e URL + "COPIAR 🔗" **continuam**; com `true` os três estão presentes — o par que discrimina
+- [x] `codigo` vazio ⇒ card sem URL e "COPIAR 🔗" inerte, sem copy nova (`design.md` §14)
+- [x] Nenhum literal de cor, fonte ou sombra no arquivo
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 14 testes novos
 
 **Tests**: widget
 **Gate**: full
