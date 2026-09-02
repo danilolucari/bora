@@ -7,6 +7,7 @@ import 'package:bora/features/galera/presentation/galera_textos.dart';
 import 'package:bora/features/galera/presentation/pages/galera_page.dart';
 import 'package:bora/features/galera/presentation/widgets/card_do_link.dart';
 import 'package:bora/features/galera/presentation/widgets/galera_compacta.dart';
+import 'package:bora/features/galera/presentation/widgets/galera_expandida.dart';
 import 'package:bora/features/galera/presentation/widgets/linha_de_pessoa.dart';
 import 'package:bora/features/galera/presentation/widgets/painel_da_pessoa.dart';
 import 'package:flutter/material.dart';
@@ -93,9 +94,16 @@ Future<void> _tocar(WidgetTester tester, Finder alvo) async {
   await tester.pumpAndSettle();
 }
 
-/// O estado que a tela está desenhando agora.
-GaleraState _estado(WidgetTester tester) =>
-    tester.widget<GaleraCompacta>(find.byType(GaleraCompacta)).estado;
+/// O estado que a tela está desenhando agora, venha ele do compacto ou do
+/// expandido.
+GaleraState _estado(WidgetTester tester) {
+  final compacta = find.byType(GaleraCompacta);
+  if (compacta.evaluate().isNotEmpty) {
+    return tester.widget<GaleraCompacta>(compacta).estado;
+  }
+
+  return tester.widget<GaleraExpandida>(find.byType(GaleraExpandida)).estado;
+}
 
 /// Redimensiona a janela **com a tela montada** — sem `pumpWidget` novo, que
 /// é o que faz a asserção ser sobre a sobrevivência do estado (GAL-23 AC3).

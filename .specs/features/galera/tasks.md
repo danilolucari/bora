@@ -788,16 +788,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] A 1180×800: duas colunas, a esquerda com **370px** medidos (`tester.getSize`), o card do link dentro dela
-- [ ] **GAL-22 AC2**: o CTA "+ CONVIDAR MAIS GENTE 🔗" está na coluna **esquerda**, abaixo do card, e **não existe** `BoraFooterBar` na árvore (`findsNothing`, W-R2/A-17)
-- [ ] A 390×820 o rodapé fixo **volta** e a coluna de 370px não existe — o par que discrimina
-- [ ] **GAL-23 AC3**: cruzar de 1180 para 890 preserva o accordion aberto e o nível selecionado (mesma montagem, só resize)
-- [ ] **GAL-23 AC4**: nenhum scroll horizontal em 1180, 900 e 390 — afirmado pela ausência de overflow e pelo `ScrollController` do eixo horizontal inexistente
-- [ ] **GAL-23 AC5**: a mesma mudança feita no compacto aparece no expandido — mesmo bloc, mesma fonte (teste que altera e redimensiona)
-- [ ] Todo elemento clicável tem estado de hover no expandido (GAL-22 AC6)
-- [ ] Nenhum literal de cor, fonte ou sombra
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] A 1180×800: duas colunas, a esquerda com **370px** medidos (`tester.getSize`), o card do link dentro dela
+- [x] **GAL-22 AC2**: o CTA "+ CONVIDAR MAIS GENTE 🔗" está na coluna **esquerda**, abaixo do card, e **não existe** `BoraFooterBar` na árvore (`findsNothing`, W-R2/A-17)
+- [x] A 390×820 o rodapé fixo **volta** e a coluna de 370px não existe — o par que discrimina
+- [x] **GAL-23 AC3**: cruzar de 1180 para 890 preserva o accordion aberto e o nível selecionado (mesma montagem, só resize)
+- [x] **GAL-23 AC4**: nenhum scroll horizontal em 1180, 900 e 390 — afirmado pela ausência de overflow e pelo `ScrollController` do eixo horizontal inexistente
+- [x] **GAL-23 AC5**: a mesma mudança feita no compacto aparece no expandido — mesmo bloc, mesma fonte (teste que altera e redimensiona)
+- [x] Todo elemento clicável tem estado de hover no expandido (GAL-22 AC6)
+- [x] Nenhum literal de cor, fonte ou sombra
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full

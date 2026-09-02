@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/design_system/design_system.dart';
 import '../../../../core/observability/app_logger.dart';
+import '../../../../core/responsive/layout_mode.dart';
 import '../../../../core/responsive/responsive_builder.dart';
 import '../../data/area_de_transferencia_do_sistema.dart';
 import '../../domain/area_de_transferencia.dart';
@@ -10,6 +11,7 @@ import '../../domain/galera_repository.dart';
 import '../bloc/galera_bloc.dart';
 import '../galera_textos.dart';
 import '../widgets/galera_compacta.dart';
+import '../widgets/galera_expandida.dart';
 
 /// T-05 e W-04 — a galera da festa (GAL-03, GAL-05, GAL-23, GAL-25, GAL-27).
 ///
@@ -86,12 +88,10 @@ class GaleraPage extends StatelessWidget {
                   estado.galera?.pessoas ?? const [],
                 );
 
-                // O ramo expandido de W-04 entra com `GaleraExpandida`; até
-                // lá os dois modos desenham T-05, que é a tela que a spec-
-                // fonte dá para o celular e o piso do web.
                 return ResponsiveBuilder(
-                  builder: (context, modo) =>
-                      _compacta(context, estado, capacidades),
+                  builder: (context, modo) => modo == LayoutMode.compact
+                      ? _compacta(context, estado, capacidades)
+                      : _expandida(context, estado, capacidades),
                 );
               },
             ),
@@ -107,6 +107,25 @@ class GaleraPage extends StatelessWidget {
     CapacidadesDaGalera capacidades,
   ) =>
       GaleraCompacta(
+        estado: estado,
+        capacidades: capacidades,
+        aoCopiar: () => _emitir(context, const LinkCopiado()),
+        aoEscolherNivel: (nivel) => _emitir(context, NivelEscolhido(nivel)),
+        aoAlternarLinha: (chave) => _emitir(context, LinhaAlternada(chave)),
+        aoEscolherPapel: (chave, papel) =>
+            _emitir(context, PapelEscolhido(chave, papel)),
+        aoEscolherDieta: (chave, dieta) =>
+            _emitir(context, DietaEscolhida(chave, dieta)),
+        aoAlternarBebida: (chave, bebe) =>
+            _emitir(context, BebidaAlternada(chave, bebe)),
+      );
+
+  GaleraExpandida _expandida(
+    BuildContext context,
+    GaleraState estado,
+    CapacidadesDaGalera capacidades,
+  ) =>
+      GaleraExpandida(
         estado: estado,
         capacidades: capacidades,
         aoCopiar: () => _emitir(context, const LinkCopiado()),

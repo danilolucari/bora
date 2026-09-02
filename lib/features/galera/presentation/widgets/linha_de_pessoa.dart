@@ -22,7 +22,7 @@ import '../galera_textos.dart';
 /// **Nenhuma cor é escolhida aqui.** A tag vem de
 /// [GaleraTextos.statusDoPapel], e é o enum do design system que fixa o par de
 /// cores de cada papel (GAL-08).
-class LinhaDePessoa extends StatelessWidget {
+class LinhaDePessoa extends StatefulWidget {
   const LinhaDePessoa({
     required this.pessoa,
     required this.aberta,
@@ -36,6 +36,20 @@ class LinhaDePessoa extends StatelessWidget {
   /// O vão curto entre o nome e o badge, e entre a tag e o caret.
   static double get vaoCurto => BoraSpacing.tag.left;
 
+  /// O fundo em repouso: a superfície branca do card de §5.
+  ///
+  /// Opaco de propósito: a sombra dura do sistema não é recortada como a do
+  /// CSS, e sobre fundo transparente ela apareceria por cima do conteúdo.
+  static const Color fundoEmRepouso = BoraColors.white;
+
+  /// O fundo sob o ponteiro — **GAL-22 AC6**, o hover que W-04 exige de todo
+  /// elemento clicável.
+  ///
+  /// `paper`, e não uma cor nova: é o mesmo par que §5 já fixa para o hover do
+  /// botão secundário sobre branco. A linha ganha estado de hover reusando o
+  /// token, sem acrescentar regra visual que o arquivo 02 não escreve.
+  static const Color fundoNoHover = BoraColors.paper;
+
   final Pessoa pessoa;
 
   /// Se o painel desta pessoa está à mostra — muda só o caret. É propriedade,
@@ -46,57 +60,84 @@ class LinhaDePessoa extends StatelessWidget {
   final VoidCallback onAlternar;
 
   @override
+  State<LinhaDePessoa> createState() => _LinhaDePessoaState();
+}
+
+/// O estado é **só o hover** (GAL-22 AC6): se a linha está aberta continua
+/// sendo propriedade, porque "1 aberta por vez" é regra entre irmãs e mora no
+/// bloc.
+class _LinhaDePessoaState extends State<LinhaDePessoa> {
+  bool _sobHover = false;
+
+  void _pairar(bool valor) {
+    if (_sobHover == valor) return;
+    setState(() => _sobHover = valor);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final pessoa = widget.pessoa;
     final sublinha = GaleraTextos.sublinhaDe(pessoa);
 
-    return GestureDetector(
-      // O alvo é a linha inteira, não só o texto (§5).
-      behavior: HitTestBehavior.opaque,
-      onTap: onAlternar,
-      child: Padding(
-        padding: BoraSpacing.linhaLista,
-        child: Row(
-          children: [
-            BoraAvatar(nome: pessoa.nome),
-            SizedBox(width: vao),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
+    return MouseRegion(
+      // W-04 e §4: o ponteiro diz que a linha é clicável antes do toque.
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => _pairar(true),
+      onExit: (_) => _pairar(false),
+      child: GestureDetector(
+        // O alvo é a linha inteira, não só o texto (§5).
+        behavior: HitTestBehavior.opaque,
+        onTap: widget.onAlternar,
+        child: ColoredBox(
+          color: _sobHover
+              ? LinhaDePessoa.fundoNoHover
+              : LinhaDePessoa.fundoEmRepouso,
+          child: Padding(
+            padding: BoraSpacing.linhaLista,
+            child: Row(
+              children: [
+                BoraAvatar(nome: pessoa.nome),
+                SizedBox(width: LinhaDePessoa.vao),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Flexible(
-                        child: Text(
-                          pessoa.nome,
-                          style: BoraTextStyles.linhaLista,
-                          // Nome longo trunca; estourar o card seria pior que
-                          // não caber (Edge Case da `spec.md`).
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              pessoa.nome,
+                              style: BoraTextStyles.linhaLista,
+                              // Nome longo trunca; estourar o card seria pior
+                              // que não caber (Edge Case da `spec.md`).
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (pessoa.voce) ...[
+                            SizedBox(width: LinhaDePessoa.vaoCurto),
+                            const _BadgeVoce(),
+                          ],
+                        ],
                       ),
-                      if (pessoa.voce) ...[
-                        SizedBox(width: vaoCurto),
-                        const _BadgeVoce(),
-                      ],
+                      if (sublinha != null)
+                        Text(sublinha, style: BoraTextStyles.sublinhaLista),
                     ],
                   ),
-                  if (sublinha != null)
-                    Text(sublinha, style: BoraTextStyles.sublinhaLista),
-                ],
-              ),
+                ),
+                SizedBox(width: LinhaDePessoa.vao),
+                BoraStatusTag(status: GaleraTextos.statusDoPapel(pessoa.papel)),
+                SizedBox(width: LinhaDePessoa.vaoCurto),
+                Text(
+                  widget.aberta
+                      ? BoraExpandableRow.caretAberto
+                      : BoraExpandableRow.caretFechado,
+                  style: BoraTextStyles.linhaLista,
+                ),
+              ],
             ),
-            SizedBox(width: vao),
-            BoraStatusTag(status: GaleraTextos.statusDoPapel(pessoa.papel)),
-            SizedBox(width: vaoCurto),
-            Text(
-              aberta
-                  ? BoraExpandableRow.caretAberto
-                  : BoraExpandableRow.caretFechado,
-              style: BoraTextStyles.linhaLista,
-            ),
-          ],
+          ),
         ),
       ),
     );
