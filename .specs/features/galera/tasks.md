@@ -380,16 +380,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `alterarPapel` troca o papel da pessoa endereçada; o papel de **todas** as outras permanece idêntico, item a item
-- [ ] **GAL-18**: `alterarPapel` cujo alvo tem papel corrente `anfitriao` **não grava** (contagem de gravações inalterada) e registra no logger; a festa continua com **exatamente 1** anfitrião depois
-- [ ] Nenhuma assinatura da porta permite atribuir `PapelNaFesta.anfitriao` — e há teste que tenta e prova que o registro não muda
-- [ ] **GAL-04**: `definirNivelDoLink` muda `convite.nivel` e deixa **toda** a lista de `pessoas` idêntica — comparação item a item, não "a lista ainda tem 5"
-- [ ] `definirNivelDoLink` **não** toca `codigo`
-- [ ] **GAL-09**: depois de cada uma das **quatro** escritas, `ResumoDeFesta.confirmados` da mesma festa continua inalterado **e igual** à contagem de confirmados de `GaleraDaFesta` — 4 com a fixture
-- [ ] **Idempotência (GAL-28)**: papel igual e nível igual ⇒ nenhuma gravação, por contagem
-- [ ] Falha de `salvarFesta` ⇒ log registrado, exceção não vaza para quem chamou
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 14 testes novos
+- [x] `alterarPapel` troca o papel da pessoa endereçada; o papel de **todas** as outras permanece idêntico, item a item
+- [x] **GAL-18**: `alterarPapel` cujo alvo tem papel corrente `anfitriao` **não grava** (contagem de gravações inalterada) e registra no logger; a festa continua com **exatamente 1** anfitrião depois
+- [x] Nenhuma assinatura da porta permite atribuir `PapelNaFesta.anfitriao` — e há teste que tenta e prova que o registro não muda
+- [x] **GAL-04**: `definirNivelDoLink` muda `convite.nivel` e deixa **toda** a lista de `pessoas` idêntica — comparação item a item, não "a lista ainda tem 5"
+- [x] `definirNivelDoLink` **não** toca `codigo`
+- [x] **GAL-09**: depois de cada uma das **quatro** escritas, `ResumoDeFesta.confirmados` da mesma festa continua inalterado **e igual** à contagem de confirmados de `GaleraDaFesta` — 4 com a fixture
+- [x] **Idempotência (GAL-28)**: papel igual e nível igual ⇒ nenhuma gravação, por contagem
+- [x] Falha de `salvarFesta` ⇒ log registrado, exceção não vaza para quem chamou
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 14 testes novos
 
 **Tests**: unit
 **Gate**: quick

@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../../../fixtures/rn30_estado_inicial_tipado.dart';
 import '../../../support/festa_em_edicao_repository_fake.dart';
+import '../../../support/recording_app_logger.dart';
 
 const String _arquivo =
     'lib/features/galera/data/galera_repositorio_sobre_festas.dart';
@@ -93,7 +94,7 @@ void main() {
 
   void semear(FestaEmEdicao festa) {
     fake = FestaEmEdicaoRepositoryFake(festas: {_id: festa});
-    porta = GaleraRepositorioSobreFestas(fake);
+    porta = GaleraRepositorioSobreFestas(fake, RecordingAppLogger());
   }
 
   Future<GaleraDaFesta> lerGalera() async =>
