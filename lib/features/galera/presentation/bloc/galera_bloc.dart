@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/calculo/calculo.dart';
 import '../../../../core/observability/app_logger.dart';
+import '../../domain/area_de_transferencia.dart';
 import '../../domain/chave_de_pessoa.dart';
 import '../../domain/galera_da_festa.dart';
 import '../../domain/galera_repository.dart';
+import '../galera_textos.dart';
 import 'galera_event.dart';
 import 'galera_state.dart';
 
@@ -33,7 +35,7 @@ const String _nome = 'galera';
 /// "carregar": RN-28 exige que a confirmação que chega com a tela aberta
 /// reflita sem refresh, e não haveria quem disparasse o evento nesse momento.
 class GaleraBloc extends Bloc<GaleraEvent, GaleraState> {
-  GaleraBloc(this._festaId, this._galera, this._logger)
+  GaleraBloc(this._festaId, this._galera, this._area, this._logger)
       : super(const GaleraState()) {
     on<GaleraRecebida>(_aoReceberGalera);
     on<ObservacaoFalhou>(_aoFalhar);
@@ -42,6 +44,7 @@ class GaleraBloc extends Bloc<GaleraEvent, GaleraState> {
     on<BebidaAlternada>(_aoAlternarBebida);
     on<PapelEscolhido>(_aoEscolherPapel);
     on<NivelEscolhido>(_aoEscolherNivel);
+    on<LinkCopiado>(_aoCopiarLink);
 
     _inscricao = _galera.observarGalera(_festaId).listen(
           (galera) => add(GaleraRecebida(galera)),
@@ -52,6 +55,7 @@ class GaleraBloc extends Bloc<GaleraEvent, GaleraState> {
 
   final String _festaId;
   final GaleraRepository _galera;
+  final AreaDeTransferencia _area;
   final AppLogger _logger;
 
   late final StreamSubscription<GaleraDaFesta?> _inscricao;
@@ -193,6 +197,40 @@ class GaleraBloc extends Bloc<GaleraEvent, GaleraState> {
     await _escrever(
       () => _galera.definirNivelDoLink(_festaId, evento.nivel),
     );
+  }
+
+  /// O link foi mandado copiar — GAL-03, GAL-05.
+  ///
+  /// **Só o sucesso incrementa** [GaleraState.copiasConcluidas], e é o
+  /// incremento que o `BlocListener` da página traduz em toast (§8.2). Assim,
+  /// na falha não existe toast de sucesso porque não existe transição — e
+  /// nenhuma copy de erro precisa ser inventada (GAL-05).
+  ///
+  /// Contador, e não `bool`: dois toques seguidos têm de produzir dois toasts,
+  /// e com um booleano o segundo não mudaria o estado.
+  ///
+  /// **Festa sem código não copia** e não incrementa: copiar `bora.app/c/`
+  /// seco entregaria um link quebrado. É o estado honesto de uma festa criada
+  /// antes de a spec 09 gerar códigos, e não tem copy própria — não há AC para
+  /// ele (SPEC_PRECISION_GAP declarado no `design.md` §14).
+  Future<void> _aoCopiarLink(
+    LinkCopiado evento,
+    Emitter<GaleraState> emit,
+  ) async {
+    final galera = _galeraCarregada;
+    if (galera == null) return;
+
+    final codigo = galera.convite.codigo;
+    if (codigo.isEmpty) return;
+
+    try {
+      await _area.copiar(GaleraTextos.urlDoConvite(codigo));
+    } catch (erro, stack) {
+      _logger.logError(erro, stack, name: _nome);
+      return;
+    }
+
+    emit(state.copyWith(copiasConcluidas: state.copiasConcluidas + 1));
   }
 
   /// A leitura corrente, ou `null` se a tela ainda não carregou ou falhou.

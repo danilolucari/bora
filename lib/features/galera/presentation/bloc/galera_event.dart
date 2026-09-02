@@ -72,6 +72,16 @@ class NivelEscolhido extends GaleraEvent {
   final NivelDoLink nivel;
 }
 
+/// O link foi mandado copiar — GAL-03.
+///
+/// **Um evento só para os dois botões** de T-05, o "COPIAR 🔗" do card e o
+/// "+ CONVIDAR MAIS GENTE 🔗" do rodapé: é o que impede AC6 e AC7 de
+/// divergirem. Não carrega a URL — quem a monta é o bloc, a partir da festa
+/// corrente, para que a tela não tenha como copiar uma URL de outra festa.
+class LinkCopiado extends GaleraEvent {
+  const LinkCopiado();
+}
+
 /// O stream do repositório falhou — GAL-25.
 class ObservacaoFalhou extends GaleraEvent {
   const ObservacaoFalhou(this.erro, this.stackTrace);

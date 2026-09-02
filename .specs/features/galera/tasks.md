@@ -536,14 +536,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `LinkCopiado` escreve na porta **a URL completa** da festa corrente; com a fixture, `bora.app/c/rafa18`
-- [ ] Sucesso ⇒ `copiasConcluidas` incrementa de 1
-- [ ] **Duas cópias seguidas ⇒ contador em 2** — o par que discrimina de um `bool copiou`, que perderia o segundo toast (`design.md` §8.2)
-- [ ] **GAL-05**: falha da área de transferência ⇒ contador **inalterado**, `logger.logError` registrado, estado sem campo de erro novo
-- [ ] `LinkCopiado` com festa sem código (`codigo` vazio) ⇒ não copia e não incrementa (`design.md` §14)
-- [ ] O evento é **o mesmo** para os dois botões da tela — não existe segundo evento de cópia (é o que impede GAL-03 AC6 e AC7 de divergirem)
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] `LinkCopiado` escreve na porta **a URL completa** da festa corrente; com a fixture, `bora.app/c/rafa18`
+- [x] Sucesso ⇒ `copiasConcluidas` incrementa de 1
+- [x] **Duas cópias seguidas ⇒ contador em 2** — o par que discrimina de um `bool copiou`, que perderia o segundo toast (`design.md` §8.2)
+- [x] **GAL-05**: falha da área de transferência ⇒ contador **inalterado**, `logger.logError` registrado, estado sem campo de erro novo
+- [x] `LinkCopiado` com festa sem código (`codigo` vazio) ⇒ não copia e não incrementa (`design.md` §14)
+- [x] O evento é **o mesmo** para os dois botões da tela — não existe segundo evento de cópia (é o que impede GAL-03 AC6 e AC7 de divergirem)
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: quick

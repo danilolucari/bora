@@ -6,6 +6,7 @@ import 'package:bora/features/galera/domain/galera_da_festa.dart';
 import 'package:bora/features/galera/presentation/bloc/galera_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../../../support/area_de_transferencia_falsa.dart';
 import '../../../../support/galera_de_teste.dart';
 import '../../../../support/galera_repository_fake.dart';
 import '../../../../support/recording_app_logger.dart';
@@ -66,7 +67,8 @@ void main() {
     GaleraRepositoryFake repositorio, {
     String festaId = idDaFestaDeTeste,
   }) {
-    final bloc = GaleraBloc(festaId, repositorio, logger);
+    final bloc =
+        GaleraBloc(festaId, repositorio, AreaDeTransferenciaFalsa(), logger);
     addTearDown(() async {
       if (!bloc.isClosed) await bloc.close();
     });
