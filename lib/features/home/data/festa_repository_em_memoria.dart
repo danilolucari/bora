@@ -74,6 +74,8 @@ class FestaRepositoryEmMemoria
         return FestaEmEdicao(
           festa: resumo.festa,
           composicao: resumo.composicao,
+          despesas: resumo.despesas,
+          convite: resumo.convite,
         );
       });
 
@@ -92,6 +94,8 @@ class FestaRepositoryEmMemoria
         id: id,
         festa: rascunho.festa,
         composicao: rascunho.composicao,
+        despesas: rascunho.despesas,
+        convite: rascunho.convite,
       ),
     ]);
 
@@ -104,6 +108,13 @@ class FestaRepositoryEmMemoria
   /// montar grava o que o anfitrião mexe, nunca contador de RSVP, que é dado
   /// de outra origem (AD-022). Sobrescrevê-los aqui apagaria a confirmação que
   /// chegou enquanto a tela estava aberta.
+  ///
+  /// **Grava os quatro campos que o editor possui** — identidade, composição,
+  /// despesas (AD-030) e convite (AD-031). Omitir um deles é o defeito que
+  /// esta emenda conserta: o campo voltava ao default no round-trip, em
+  /// silêncio, porque o `ResumoDeFesta` reconstruído não o carregava. Quem
+  /// acrescentar um quinto campo a `FestaEmEdicao` acrescenta aqui também — o
+  /// teste de round-trip por campo é o que cobra.
   ///
   /// **Id inexistente é no-op observável**: nada é emitido e nenhuma festa
   /// fantasma nasce. Criar por engano aqui poria na Home um rolê que o
@@ -124,6 +135,8 @@ class FestaRepositoryEmMemoria
       pessoas: atual.pessoas,
       total: atual.total,
       composicao: festa.composicao,
+      despesas: festa.despesas,
+      convite: festa.convite,
     );
 
     emitir(atualizada);
