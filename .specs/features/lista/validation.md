@@ -442,3 +442,117 @@ Cinco mutações de produção (M18, M19, M19′, M16, M2), uma mutação de tes
 **O que falta**: um único gap Minor. O fixer foi honesto ao renomear em vez de fingir cobertura, e as asserções que ele acrescentou são estritamente mais fortes — mas o raciocínio de equivalência parou no eco puro e não considerou a escrita externa coincidente, que discrimina.
 
 **Next steps**: fechar o GAP-4 por uma das duas saídas acima (iteração 3 de 3) e re-verificar só esse mutante.
+
+---
+
+## Re-verificação — iteração 3 (final)
+
+**Date**: 2026-09-02
+**Diff dos fixes desta iteração**: `761a82a..HEAD` (3 commits: `ebdb0ca` GAP-4, `3762e7e` P1-3 AC4, `135ad11` handoff). Diff completo da feature: `fc744b5..HEAD`.
+**Verifier**: sub-agente independente, iteração 3 — a **última** do laço fix→re-verify. Escopo: os dois commits novos re-mutados do zero, os 3 gaps da iteração 2 re-plantados, uma amostra de regressão de 3 mutações da iteração 1, e a auditoria do diff.
+
+**Veredito**: ✅ **PASS** — os mutantes exigidos morreram, cada um com o conjunto **exato** de testes que a spec prevê; os 3 gaps da iteração 2 seguem fechados; a amostra de regressão continua morrendo; nada foi afrouxado.
+
+### Superfície do diff desde a iteração 2
+
+`git diff --stat 761a82a..HEAD` toca 5 arquivos: `lib/features/lista/presentation/bloc/lista_bloc.dart` (+11/−9), dois arquivos de teste (+105/−14), `.specs/features/lista/spec.md` (+2/−1) e `.specs/STATE.md` (handoff).
+
+- **As 14 linhas removidas em `test/` são todas comentário** — o bloco de 11 linhas que afirmava "mutante equivalente" no grupo LIST-34, mais 3 linhas do parágrafo seguinte, reescritas. **Nenhuma asserção saiu, nenhum `test(` ou `group(` foi apagado ou renomeado**: o diff de nomes tem só `+` (1 `test` novo em LIST-34, 1 `group` + 2 `test` novos em LIST-12).
+- Contagem **1930 → 1933 (+3)**, e os 3 são exatamente os 3 testes novos. Varredura por `skip:`/`solo:` em `test/features/lista/**` e `test/core/routing/**`: **zero**.
+- **`spec.md` não alterou nenhum AC.** As 2 linhas acrescentadas são um bloco de citação **abaixo** do AC4 (registro datado da decisão), e o texto do AC4 continua byte a byte o mesmo; a única linha modificada é a célula "Notas" da linha LIST-12 da matriz de rastreabilidade. Nenhum SHALL foi reescrito, enfraquecido ou removido.
+
+### Os mutantes dos dois commits novos — re-plantados por mim
+
+Cada mutação aplicada no arquivo real, `flutter test` inteiro rodado, `git checkout -- <arquivo>` e `git status --porcelain` conferido a cada volta.
+
+| # | Mutação re-plantada | Morta? | Quantos | Quais testes morreram |
+|---|---|---|---|---|
+| **N1 (GAP-4, reversão do fix)** | `lista_bloc.dart` — o arquivo inteiro restaurado de `761a82a`, ou seja, o campo `_ultimaGravada` de volta e a 1ª guarda comparando com ele | ✅ **Morta** | **1** | `lista_carrinho_test.dart` — LIST-34 "escrita externa que devolve o valor que gravamos chega à tela" |
+| **N2 (GAP-4, 2ª guarda)** | `lista_bloc.dart:97` — removida `if (_gravacoesEmVoo > 0) return;` | ✅ **Morta** | **1** | `lista_carrinho_test.dart` — LIST-34 "eco atrasado no meio de uma gravação não regride o estado" |
+| **N3 (P1-3 AC4, leitura rival)** | `item_de_lista.dart:72` — `editado` passa a ser "override **diferente** do automático": `(quantidadeOverride != null && quantidadeOverride != quantidadeAutomatica) \|\| (precoOverride != null && precoOverride != precoBase)` | ✅ **Morta** | **2** | `lista_overrides_test.dart` — LIST-12 "subir e voltar ao valor automático mantém o override e a marca" **e** "só o RESTAURAR apaga a marca do ajuste desfeito" |
+
+**3/3 mortos.** Os dois números importam:
+
+- **N1 e N2 são discriminados por testes distintos, um cada.** As duas guardas de `_aoReceberFesta` têm sensor **separado** — nenhuma está de carona na outra. É exatamente o que faltava na iteração 1 (M2 sobrevivia) e na iteração 2 (a 1ª guarda continuava sem sensor).
+- **N3 mata 2 e só 2**, os dois testes novos do grupo LIST-12, e **nenhum outro** dos 1933. O mutante não é grosseiro: a leitura rival de `editado` é indistinguível para o resto da suíte, o que confirma que o sensor mira precisamente a cláusula ambígua em vez de morder por acidente. E não é falso: se `+1`/`−1` não devolvesse a quantidade ao automático, a pré-condição `expect(item.quantidade, closeTo(automatica, 1e-9))` do primeiro teste falharia; ela passa, então o cenário exercido é o real.
+
+### Sonda extra — a 1ª guarda **na forma nova** é, aí sim, equivalente
+
+Removi a 1ª guarda por inteiro (`if (evento.festa != null && evento.festa == state.festa) return;` apagada): **1933 passaram, 0 falharam**. Isso **não** é um gap, e é a diferença de estrutura que fecha o GAP-4:
+
+- na forma antiga a guarda comparava com `_ultimaGravada` e **descartava escrita externa legítima** — comportamento observável, e portanto exigia sensor. Ele agora existe (N1);
+- na forma nova ela compara com `state.festa`, e o desfecho é o mesmo com ou sem ela: `_estadoCom(evento.festa)` reproduz um `ListaState` igual ao corrente e o `emit` do próprio bloc o descarta pela igualdade. É economia de recálculo, **e o doc de `_aoReceberFesta` declara exatamente isso** ("a guarda só poupa o recálculo"). O comentário do grupo LIST-34 também foi reescrito e não afirma mais equivalência onde não havia.
+
+Ou seja: o fix não escondeu o mutante — ele **moveu o comportamento observável para onde há teste** e deixou inerte só a parte que de fato é inerte, com a alegação de inércia agora verdadeira e verificada.
+
+### Os 3 gaps da iteração 2 — re-plantados, seguem fechados
+
+| # | Mutação re-plantada | Morta? | Quantos | Quem matou |
+|---|---|---|---|---|
+| M18 (GAP-1) | `lista_page.dart:148` — `apenasOQueFalta: false` fixo | ✅ **Morta** | **1** | `lista_page_test.dart` — LIST-25 "a sheet aberta em COMPRAR pede só o que falta, e o subtotal reflete só ele" |
+| M19 (GAP-2) | `lista_page.dart:147` — `enderecoDaFesta: 'Endereco Mutante'` | ✅ **Morta** | **1** | `lista_page_test.dart` — LIST-21 "a linha 📍 e o pedido carregam o local da festa aberta" |
+| M19′ (GAP-2, mutante esperto) | `lista_page.dart:147` — `enderecoDaFesta: 'Laje do Rafa — Vila Madalena'` (a constante **é** o literal de RN-30) | ✅ **Morta** | **1** | o mesmo teste LIST-21 |
+| M16 (GAP-3) | `lista_bloc.dart:378` — `_itemAjustavel` percorre `resultado.todosOsItens` | ✅ **Morta** | **2** | `lista_overrides_test.dart` — RN-10, "ajustar carvao…" e "ajustar coposEPratos não grava override nem toca a porta" |
+
+**4/4 mortos.** Nenhuma regressão: o fix do GAP-4, único a tocar `lib/` desde a iteração 2, não afrouxou nenhum dos anteriores.
+
+### Amostra de regressão da iteração 1 — 3 mutações de alto valor
+
+| # | Mutação | Morta? | Quantos | Quem matou |
+|---|---|---|---|---|
+| M13 | `regras/totais.dart:17` — `itensCobraveis` devolve **todos** os itens (Copos & pratos entra no dinheiro) | ✅ **Morta** | **21** | `totais_test.dart` (LIST-04, o predicado da AD-010), `faixa_de_preco_test.dart` (as três: Copos fora das pontas, 244,60/342,60, override não move a faixa) e mais 17 |
+| M11a | infrator plantado em `lib/features/lista/presentation/widgets/` com o cifrão **escapado** — `Text('R\$ ${total}')`, a forma real no disco | ✅ **Morta** | **1** | `lista_sem_formula_test.dart` — LIST-07 "nenhum arquivo viola nenhuma das cinco regras de §13" |
+| M12 | `card_de_comprar.dart:37` — `ordemDosCorredores` com PADARIA e BEBIDAS trocados | ✅ **Morta** | **3** | `card_de_comprar_test.dart` — LIST-16 nos dois viewports **e** "a lista literal é a de RN-27" |
+
+**3/3 mortos.** Os 17/21 da iteração 1 continuam de pé — e o diff novo (um único arquivo de produção, `lista_bloc.dart`) não toca nenhuma das superfícies que eles cobrem.
+
+### O spec-precision gap que devia continuar aberto — continua
+
+**P1-5 AC9 ("volta no mesmo modo")**: **aberto, de propósito, e ninguém inventou leitura.** A única ocorrência de `ModoDaLista.comprar` em `lista_page_test.dart` é a **linha 178**, dentro do teste de travessia de viewport de P2-2 AC6 (`reason: 'W-R3: o modo ativo atravessa a fronteira de AD-007'`) — nada a ver com o retorno do overlay. Nenhum teste de `overlay_de_pedido_test.dart` afirma modo. O gap segue registrado e não fechado, como o usuário decidiu.
+
+O outro gap, **P1-3 AC4 2ª cláusula**, deixou de ser spec-precision gap: a decisão do usuário está datada no corpo do AC em `spec.md`, na matriz de rastreabilidade e em comentário no teste, e a leitura escolhida está **travada por sensor** (N3).
+
+### Nada foi afrouxado
+
+| Verificação | Resultado |
+|---|---|
+| Linhas removidas em `test/` | ✅ 14, **todas comentário** — o bloco de "mutante equivalente" que a iteração 2 apontou como incorreto |
+| Asserção enfraquecida, `reason` removido, `findsAny` introduzido | ✅ nenhum |
+| `skip:` / `solo:` | ✅ zero em `test/features/lista/**` e `test/core/routing/**` |
+| Teste apagado ou renomeado para prometer menos | ✅ nenhum — o diff de nomes é 100% `+` |
+| Contagem | ✅ 1930 → **1933** (+3), e os 3 são os 3 novos |
+| `spec.md` alterou algum AC | ✅ **não** — só um bloco de citação abaixo do AC4 e uma célula "Notas" da matriz |
+| O comentário incorreto de LIST-34 foi corrigido | ✅ reescrito; não afirma mais equivalência onde a iteração 2 provou que não havia |
+| A sequência da porta no teste novo é legítima | ✅ `FestaEmEdicaoRepositoryFake.emitir` (`test/support/festa_em_edicao_repository_fake.dart:80-88`) grava `_festas[id] = festa` **e só então** `_controllerDe(id).add(festa)` — cada emissão é o valor corrente da porta, sem gravação em voo. Não é cenário fabricado |
+
+### Gate (rodado por mim, com a árvore restaurada)
+
+- `flutter test` → **1933 passaram, 0 falharam, 0 pulados** (exit 0)
+- `flutter analyze` → **`No issues found!`** (exit 0)
+- `git status --porcelain` → só `?? .vscode/`, **diretório não rastreado que já estava lá antes desta verificação começar** e que não pertence à feature. Nenhum arquivo rastreado modificado.
+
+### Integridade da árvore
+
+Onze mutações nesta iteração: N1, N2, N3, a sonda extra da 1ª guarda, M18, M19, M19′, M16, M13, M11a e M12. Todas aplicadas no arquivo real e revertidas uma a uma com `git checkout -- <arquivo>` (ou `rm`, para o infrator plantado do M11a), com `git status --porcelain` conferido a cada volta. **Nada foi consertado por esta verificação.** Nenhum arquivo do repositório ficou modificado, exceto este `validation.md`.
+
+### Traceability — atualização da iteração 3
+
+| Requisito | Status iteração 2 | Novo status |
+|---|---|---|
+| **LIST-34** (supressão de eco) | ❌ Needs Fix | ✅ **Verified** — as duas guardas com sensor **separado** (N1, N2); a forma nova da 1ª é inerte e declarada como tal |
+| **LIST-12** (ponto vermelho) | ⚠️ spec-precision gap | ✅ **Verified** — leitura decidida, registrada e travada (N3) |
+| LIST-21, LIST-25, RN-10/override nos essenciais | ✅ Verified | ✅ **Verified** (re-confirmado: M18, M19, M19′, M16) |
+| LIST-01..LIST-20, LIST-22..LIST-33, LIST-35 | ✅ Verified | ✅ **Verified** (amostra M13, M11a, M12 re-confirmada) |
+| **P1-5 AC9** ("mesmo modo") | ⚠️ aberto por decisão do usuário | ⚠️ **aberto, de propósito** — registrado, não bloqueante |
+
+### Summary da iteração 3
+
+**Overall**: ✅ **PASS**. O laço fecha com 61/61 AC defendidos ou explicitamente decididos, e com todos os mutantes exigidos morrendo na minha mão.
+
+**O que o GAP-4 virou**: o fix não é cosmético. Ele **trocou uma semântica defeituosa** — a guarda que descartava escrita externa legítima e deixava a tela obsoleta — pela que o doc sempre alegou ter, e promoveu a sonda B da iteração 2 a teste permanente. Que a reversão para `_ultimaGravada` mate exatamente esse teste, e que a remoção da 2ª guarda mate exatamente o outro, prova que as duas guardas são discriminadas **independentemente**. Que a remoção da 1ª guarda na forma nova não mate nada é o desfecho **correto e declarado**, não um furo.
+
+**O que o P1-3 AC4 virou**: nenhuma mudança de comportamento, e é o certo — a decisão do usuário foi pela semântica que `core/calculo` já carregava, e mudar `ItemDeLista.editado` para resolver dúvida de uma tela contaminaria uma entidade compartilhada. O que faltava era a **decisão explícita** e o **sensor**, e os dois entraram. O mutante da leitura rival mata 2 testes e só 2 — mira certo, sem morder por acidente.
+
+**Resta aberto, sem bloquear**: `P1-5 AC9` ("volta no mesmo modo"), por decisão do usuário, e os spec-precision gaps já auditados na iteração 1 (`"1 itens"`, os três acentos de D-4, a falta de copy para falha). Todos registrados, nenhum silenciado.
+
+**Recomendação**: a feature `lista` está **pronta para merge**.
