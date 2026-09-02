@@ -56,6 +56,56 @@ void main() {
       );
     });
 
+    // Defeito visto rodando o app em 2026-09-01, invisível para toda a suíte:
+    // com o fundo transparente, a sombra dura de §4 — do mesmo tamanho do
+    // botão, deslocada só 4px e **sem blur** — aparece ATRAVÉS do botão e
+    // pinta o retângulo inteiro de `ink`, engolindo o rótulo. `find.text`
+    // continua achando o texto, porque ele está lá; ele só não é legível.
+    //
+    // O protótipo em HTML nunca mostrou isso: em CSS o `box-shadow` externo é
+    // recortado para fora da borda. O `BoxShadow` do Flutter não recorta.
+    //
+    // §5 põe a sombra dura no **hover** ("Hover: fundo paper ou sombra dura"),
+    // nunca no repouso — então repouso transparente não tem sombra.
+    testWidgets('em repouso transparente não desenha sombra dura',
+        (tester) async {
+      await pumpComponent(
+        tester,
+        BoraSecondaryButton(rotulo: 'agora não', onPressed: () {}),
+      );
+
+      final decoracao = _decoracao(tester);
+
+      expect(decoracao.color, Colors.transparent);
+      expect(
+        decoracao.boxShadow,
+        isNull,
+        reason: 'sombra dura sem blur atrás de fundo transparente aparece '
+            'através do botão e esconde o rótulo — §5 põe a sombra no hover',
+      );
+    });
+
+    testWidgets('no branco a sombra dura fica, porque o fundo é opaco',
+        (tester) async {
+      await pumpComponent(
+        tester,
+        BoraSecondaryButton(
+          rotulo: 'agora não',
+          fundoBranco: true,
+          onPressed: () {},
+        ),
+      );
+
+      final decoracao = _decoracao(tester);
+
+      expect(decoracao.color, BoraColors.white);
+      expect(
+        decoracao.boxShadow,
+        isNotNull,
+        reason: 'fundo opaco tapa a sombra: §4 vale normalmente',
+      );
+    });
+
     testWidgets('fundoBranco pinta o fundo de branco', (tester) async {
       await pumpComponent(
         tester,
@@ -95,11 +145,19 @@ void main() {
       expect(_decoracao(tester).color, Colors.transparent);
     });
 
+    // Observado na variante `fundoBranco`, a única que carrega sombra: sobre
+    // fundo transparente a sombra é desligada de propósito (ver o teste "em
+    // repouso transparente não desenha sombra dura"). As três asserções
+    // abaixo são as originais, sem mudança.
     testWidgets('a sombra continua dura, sem blur e sem radius',
         (tester) async {
       await pumpComponent(
         tester,
-        BoraSecondaryButton(rotulo: 'agora não', onPressed: () {}),
+        BoraSecondaryButton(
+          rotulo: 'agora não',
+          fundoBranco: true,
+          onPressed: () {},
+        ),
       );
 
       final sombra = _decoracao(tester).boxShadow!.single;

@@ -53,13 +53,24 @@ class _BoraSecondaryButtonState extends State<BoraSecondaryButton> {
     return widget.fundoBranco ? BoraColors.white : Colors.transparent;
   }
 
+  /// A sombra dura só existe sobre fundo **opaco**.
+  ///
+  /// `BoxShadow` do Flutter não é recortado para fora da borda como o
+  /// `box-shadow` do CSS: com fundo transparente, uma sombra sem blur do
+  /// mesmo tamanho do botão aparece **através** dele e pinta o retângulo
+  /// inteiro de `ink`, escondendo o rótulo. §5 põe a sombra dura no hover
+  /// ("Hover: fundo paper ou sombra dura"), não no repouso — e no hover o
+  /// fundo já é `paper`, que é opaco.
+  BoraAccent? get _acento =>
+      _fundo == Colors.transparent ? null : BoraAccent.ink;
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
       onEnter: (_) => _pairar(true),
       onExit: (_) => _pairar(false),
       child: BoraPressSink(
-        acento: BoraAccent.ink,
+        acento: _acento,
         onPressed: widget.onPressed,
         fundo: _fundo,
         padding: BoraSpacing.botao,
