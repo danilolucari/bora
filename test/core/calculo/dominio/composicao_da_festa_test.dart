@@ -1,6 +1,7 @@
 import 'package:bora/core/calculo/dominio/chave_item.dart';
 import 'package:bora/core/calculo/dominio/composicao_da_festa.dart';
 import 'package:bora/core/calculo/dominio/contagem_de_pessoas.dart';
+import 'package:bora/core/calculo/dominio/dieta.dart';
 import 'package:bora/core/calculo/dominio/item_de_lista.dart';
 import 'package:bora/core/calculo/dominio/papel_na_festa.dart';
 import 'package:bora/core/calculo/dominio/pessoa.dart';
@@ -198,6 +199,158 @@ void main() {
       expect(copia.itensSelecionados, original.itensSelecionados);
       expect(copia.overrides, original.overrides);
       expect(copia.noCarrinho, {ChaveItem.cerveja});
+    });
+  });
+
+  group('GAL-15 — copyWith preserva todo campo que a chamada não informa', () {
+    // `noCarrinho` tem os seus três casos no grupo CALC-05 acima
+    // (`copyWith preserva o conjunto não informado`, `copyWith substitui o
+    // conjunto informado, inclusive por um vazio` e `copyWith preserva os
+    // demais campos e troca só o informado`) e não é reescrito aqui.
+    final outraContagem = ContagemDePessoas(homens: 5, mulheres: 1);
+
+    test('trocar a contagem preserva os cinco campos restantes', () {
+      final original = _composicao(
+        overrides: {ChaveItem.bovina: const OverrideDeItem(quantidade: 9)},
+        noCarrinho: {ChaveItem.cerveja},
+      );
+
+      final copia = original.copyWith(contagem: outraContagem);
+
+      expect(copia.contagem, outraContagem);
+      expect(copia.duracaoHoras, original.duracaoHoras);
+      expect(copia.pessoas, original.pessoas);
+      expect(copia.itensSelecionados, original.itensSelecionados);
+      expect(copia.overrides, original.overrides);
+      expect(copia.noCarrinho, original.noCarrinho);
+    });
+
+    test('trocar a duração preserva os cinco campos restantes', () {
+      final original = _composicao(
+        overrides: {ChaveItem.bovina: const OverrideDeItem(quantidade: 9)},
+        noCarrinho: {ChaveItem.cerveja},
+      );
+
+      final copia = original.copyWith(duracaoHoras: 8);
+
+      expect(copia.duracaoHoras, 8);
+      expect(copia.contagem, original.contagem);
+      expect(copia.pessoas, original.pessoas);
+      expect(copia.itensSelecionados, original.itensSelecionados);
+      expect(copia.overrides, original.overrides);
+      expect(copia.noCarrinho, original.noCarrinho);
+    });
+
+    test('trocar as pessoas preserva os cinco campos restantes', () {
+      final original = _composicao(
+        overrides: {ChaveItem.bovina: const OverrideDeItem(quantidade: 9)},
+        noCarrinho: {ChaveItem.cerveja},
+      );
+
+      final copia = original.copyWith(pessoas: const [_rafa]);
+
+      expect(copia.pessoas, const [_rafa]);
+      expect(copia.contagem, original.contagem);
+      expect(copia.duracaoHoras, original.duracaoHoras);
+      expect(copia.itensSelecionados, original.itensSelecionados);
+      expect(copia.overrides, original.overrides);
+      expect(copia.noCarrinho, original.noCarrinho);
+    });
+
+    test('trocar os itens selecionados preserva os cinco campos restantes', () {
+      final original = _composicao(
+        overrides: {ChaveItem.bovina: const OverrideDeItem(quantidade: 9)},
+        noCarrinho: {ChaveItem.cerveja},
+      );
+
+      final copia = original.copyWith(itensSelecionados: {ChaveItem.agua});
+
+      expect(copia.itensSelecionados, {ChaveItem.agua});
+      expect(copia.contagem, original.contagem);
+      expect(copia.duracaoHoras, original.duracaoHoras);
+      expect(copia.pessoas, original.pessoas);
+      expect(copia.overrides, original.overrides);
+      expect(copia.noCarrinho, original.noCarrinho);
+    });
+
+    test('trocar os overrides preserva os cinco campos restantes', () {
+      final original = _composicao(
+        overrides: {ChaveItem.bovina: const OverrideDeItem(quantidade: 9)},
+        noCarrinho: {ChaveItem.cerveja},
+      );
+
+      final copia = original.copyWith(
+        overrides: {ChaveItem.frango: const OverrideDeItem(quantidade: 2)},
+      );
+
+      expect(copia.overrides, {
+        ChaveItem.frango: const OverrideDeItem(quantidade: 2),
+      });
+      expect(copia.contagem, original.contagem);
+      expect(copia.duracaoHoras, original.duracaoHoras);
+      expect(copia.pessoas, original.pessoas);
+      expect(copia.itensSelecionados, original.itensSelecionados);
+      expect(copia.noCarrinho, original.noCarrinho);
+    });
+
+    test('sem argumento nenhum devolve uma composição igual à original', () {
+      final original = _composicao(
+        overrides: {ChaveItem.bovina: const OverrideDeItem(quantidade: 9)},
+        noCarrinho: {ChaveItem.cerveja},
+      );
+
+      expect(original.copyWith(), original);
+      expect(original.copyWith().hashCode, original.hashCode);
+    });
+  });
+
+  group('GAL-15 AC12 — o override sobrevive à troca de quem está na festa', () {
+    test('trocar pessoas deixa o mapa de overrides idêntico', () {
+      final overrides = {
+        ChaveItem.bovina: const OverrideDeItem(quantidade: 9),
+        ChaveItem.cerveja: const OverrideDeItem(quantidade: 24),
+      };
+      final original = _composicao(overrides: overrides);
+
+      final depois = original.copyWith(
+        pessoas: [_rafa, _bia.copyWith(dieta: Dieta.veggie)],
+      );
+
+      expect(
+        depois.overrides,
+        overrides,
+        reason: 'a palavra explícita do usuário (RN-12) não é revogada por '
+            'alguém declarar uma preferência (RN-21)',
+      );
+    });
+  });
+
+  group('GAL-15 — coleção vazia substitui de verdade, e não é "não '
+      'informado"', () {
+    test('pessoas: [] esvazia a lista em vez de preservá-la', () {
+      final original = _composicao();
+
+      expect(original.pessoas, isNotEmpty);
+      expect(original.copyWith(pessoas: const []).pessoas, isEmpty);
+    });
+
+    test('itensSelecionados: {} esvazia o conjunto em vez de preservá-lo', () {
+      final original = _composicao();
+
+      expect(original.itensSelecionados, isNotEmpty);
+      expect(
+        original.copyWith(itensSelecionados: const {}).itensSelecionados,
+        isEmpty,
+      );
+    });
+
+    test('overrides: {} limpa o mapa em vez de preservá-lo', () {
+      final original = _composicao(
+        overrides: {ChaveItem.bovina: const OverrideDeItem(quantidade: 9)},
+      );
+
+      expect(original.overrides, isNotEmpty);
+      expect(original.copyWith(overrides: const {}).overrides, isEmpty);
     });
   });
 }

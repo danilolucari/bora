@@ -221,15 +221,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `copyWith` aceita **todos** os campos da composição e preserva os não informados — um teste por campo, não um teste que troca tudo de uma vez
-- [ ] `overrides` sobrevive a `copyWith(pessoas: ...)`: composição com override, troca de `pessoas`, override **idêntico** depois — é o AC12 de GAL-15 na camada onde ele é verdade
-- [ ] Substituir um campo por valor **vazio** (`{}` / `[]`) funciona e não é confundido com "não informado"
-- [ ] Um teste afirma que a composição devolvida é `==` à original quando `copyWith()` é chamado **sem argumento nenhum**
-- [ ] Nenhuma aritmética, nenhum campo novo, nenhuma regra — a emenda é estrutural (a proibição da `spec.md` é sobre fórmula de RN-xx)
-- [ ] O doc do arquivo registra que este método é a defesa contra apagar em silêncio campo que outra spec acrescentar (`noCarrinho` de `lista`)
-- [ ] **Arquivo de colisão com `lista` (E-b dela)** — a emenda é aditiva
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 6 testes novos
+- [x] `copyWith` aceita **todos** os campos da composição e preserva os não informados — um teste por campo, não um teste que troca tudo de uma vez *(cinco testes novos; `noCarrinho` já tem os seus em `composicao_da_festa_test.dart:170-199`, escritos pela spec 06, e não é reescrito)*
+- [x] `overrides` sobrevive a `copyWith(pessoas: ...)`: composição com override, troca de `pessoas`, override **idêntico** depois — é o AC12 de GAL-15 na camada onde ele é verdade
+- [x] Substituir um campo por valor **vazio** (`{}` / `[]`) funciona e não é confundido com "não informado"
+- [x] Um teste afirma que a composição devolvida é `==` à original quando `copyWith()` é chamado **sem argumento nenhum**
+- [x] Nenhuma aritmética, nenhum campo novo, nenhuma regra — a emenda é estrutural (a proibição da `spec.md` é sobre fórmula de RN-xx)
+- [x] O doc do arquivo registra que este método é a defesa contra apagar em silêncio campo que outra spec acrescentar (`noCarrinho` de `lista`)
+- [x] **Arquivo de colisão com `lista` (E-b dela)** — a emenda é aditiva
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 6 testes novos (10). **Nota de execução**: o `copyWith` em si já tinha chegado com a E-b da spec 06 (`70ded5a`), cobrindo os seis campos; esta task acrescenta o doc da defesa, o SPEC_DEVIATION de E-3 e a cobertura que a Done-when exige
 
 **Tests**: unit
 **Gate**: build
