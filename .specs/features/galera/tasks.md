@@ -648,15 +648,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Renderiza emoji + rótulo literal de RN-21 (A-13)
-- [ ] Estado ativo usa `fundo: primary, texto: ink`; inativo usa o par neutro — afirmado **contra os tokens**
-- [ ] O press afunda `translate(2px, 2px)` com a sombra caindo de 4px para 2px (arquivo 02 §CTA)
-- [ ] Tocar emite a escolha; tocar o **já ativo** não emite (GAL-28)
-- [ ] A geometria do `BoraSegmentedControl` **não** é replicada — são três botões numa linha, como T-05 desenha (`design.md` §5.3)
-- [ ] O doc do arquivo registra que uma variante `BoraSegmentedControl(acentoAtivo:)` é candidata ao design system numa spec futura, e por que não é feita aqui
-- [ ] Nenhum literal de cor, fonte ou sombra
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] Renderiza emoji + rótulo literal de RN-21 (A-13)
+- [x] Estado ativo usa `fundo: primary, texto: ink`; inativo usa o par neutro — afirmado **contra os tokens**
+- [x] O press afunda `translate(2px, 2px)` com a sombra caindo de 4px para 2px (arquivo 02 §CTA)
+- [x] Tocar emite a escolha; tocar o **já ativo** não emite (GAL-28)
+- [x] A geometria do `BoraSegmentedControl` **não** é replicada — são três botões numa linha, como T-05 desenha (`design.md` §5.3)
+- [x] O doc do arquivo registra que uma variante `BoraSegmentedControl(acentoAtivo:)` é candidata ao design system numa spec futura, e por que não é feita aqui
+- [x] Nenhum literal de cor, fonte ou sombra
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
