@@ -4,4 +4,10 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Emuladores do Firebase falam HTTP puro, e o Android 9+ bloqueia texto
+         claro por padrão. Sem isto, autenticar contra o emulador falha com
+         "Cleartext HTTP traffic to 10.0.2.2 not permitted".
+         A exceção vale só para os hosts do emulador, e só nesta build. -->
+    <application android:networkSecurityConfig="@xml/network_security_config"/>
 </manifest>
