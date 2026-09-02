@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 30,
+  "next_id": 36,
   "lessons": [
     {
       "id": "L-001",
@@ -526,6 +526,114 @@
       ],
       "created": "2026-08-31T19:30:00Z",
       "last_seen": "2026-08-31T19:30:00Z"
+    },
+    {
+      "id": "L-030",
+      "key": "surviving_mutant::teste de widget que monta o pr prio gatilho um gesturedetector local com bloc do pr prio teste n o exercita a fia o da p gina o valor que a p gina passa de verdade fica livre para ser fixado sem matar teste abra pela rota real e cuidado com helper cujo nome promete rota e n o abre nenhuma",
+      "text": "Teste de widget que monta o próprio gatilho (um GestureDetector local com bloc do próprio teste) não exercita a fiação da página: o valor que a página passa de verdade fica livre para ser fixado sem matar teste — abra pela rota real, e cuidado com helper cujo nome promete rota e não abre nenhuma.",
+      "signal": "surviving_mutant",
+      "scope": "test/widget",
+      "status": "candidate",
+      "features": [
+        "lista"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "GAP-1 lista_page.dart:145 (test/widget)"
+      ],
+      "created": "2026-09-02T12:42:42Z",
+      "last_seen": "2026-09-02T12:42:42Z"
+    },
+    {
+      "id": "L-031",
+      "key": "surviving_mutant::valor afirmado que coincide com um default uma fixture ou o literal da spec n o discrimina o mutante que fixa esse mesmo literal sobrevive escolha um valor distinto de todo default e desconfie inclusive da receita prescrita por um verifier",
+      "text": "Valor afirmado que coincide com um default, uma fixture ou o literal da spec não discrimina: o mutante que fixa esse mesmo literal sobrevive. Escolha um valor distinto de todo default — e desconfie inclusive da receita prescrita por um Verifier.",
+      "signal": "surviving_mutant",
+      "scope": "test/widget",
+      "status": "candidate",
+      "features": [
+        "lista"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "GAP-2 lista_page.dart:144 (test/widget)"
+      ],
+      "created": "2026-09-02T12:42:42Z",
+      "last_seen": "2026-09-02T12:42:42Z"
+    },
+    {
+      "id": "L-032",
+      "key": "surviving_mutant::duas guardas no mesmo handler precisam de sensor separado uma morre de carona na outra e o furo passa por duas itera es mute cada guarda isoladamente",
+      "text": "Duas guardas no mesmo handler precisam de sensor separado: uma morre de carona na outra e o furo passa por duas iterações. Mute cada guarda isoladamente.",
+      "signal": "surviving_mutant",
+      "scope": "lib/bloc",
+      "status": "candidate",
+      "features": [
+        "lista"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "GAP-4 lista_bloc.dart _aoReceberFesta (lib/bloc)"
+      ],
+      "created": "2026-09-02T12:42:42Z",
+      "last_seen": "2026-09-02T12:42:42Z"
+    },
+    {
+      "id": "L-033",
+      "key": "surviving_mutant::equival ncia de mutante n o se prova pela su te continuar verde isso a hip tese n o a prova prove procurando o caminho que discrimina aqui a guarda parecia inerte e na verdade descartava escrita externa leg tima",
+      "text": "Equivalência de mutante não se prova pela suíte continuar verde — isso é a hipótese, não a prova. Prove procurando o caminho que discrimina; aqui a guarda parecia inerte e na verdade descartava escrita externa legítima.",
+      "signal": "surviving_mutant",
+      "scope": "verificação",
+      "status": "candidate",
+      "features": [
+        "lista"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "iteração 2, alegação de equivalência do GAP-4 (verificação)"
+      ],
+      "created": "2026-09-02T12:42:42Z",
+      "last_seen": "2026-09-02T12:42:42Z"
+    },
+    {
+      "id": "L-034",
+      "key": "ac_gap::find text acha texto ileg vel teste de rvore n o prova que o pixel d para ler bot o secund rio renderizou como bloco preto por 1900 testes e dois verifiers rode o app antes de dar uma tela por pronta",
+      "text": "find.text acha texto ilegível: teste de árvore não prova que o pixel dá para ler. Botão secundário renderizou como bloco preto por ~1900 testes e dois Verifiers — rode o app antes de dar uma tela por pronta.",
+      "signal": "ac_gap",
+      "scope": "test/widget",
+      "status": "candidate",
+      "features": [
+        "design-system"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "BoraSecondaryButton, achado com a skill run em 2026-09-01 (test/widget)"
+      ],
+      "created": "2026-09-02T12:42:56Z",
+      "last_seen": "2026-09-02T12:42:56Z"
+    },
+    {
+      "id": "L-035",
+      "key": "spec_deviation::boxshadow do flutter n o recortado para fora da borda como o box shadow do css sombra sem blur atr s de fundo transparente aparece atrav s do widget e tapa o conte do ao portar sombra dura de prot tipo html o fundo tem de ser opaco",
+      "text": "BoxShadow do Flutter não é recortado para fora da borda como o box-shadow do CSS: sombra sem blur atrás de fundo transparente aparece através do widget e tapa o conteúdo. Ao portar sombra dura de protótipo HTML, o fundo tem de ser opaco.",
+      "signal": "spec_deviation",
+      "scope": "lib/design_system",
+      "status": "candidate",
+      "features": [
+        "design-system"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "bora_surface.dart decoracaoDe + fundo transparente (lib/design_system)"
+      ],
+      "created": "2026-09-02T12:42:56Z",
+      "last_seen": "2026-09-02T12:42:56Z"
     }
   ]
 }

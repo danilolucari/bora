@@ -188,6 +188,42 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: M8 — montar_expandido.dart:150 (test/**/widgets)
 - last seen: 2026-08-31T19:30:00Z
 
+### L-030 — Teste de widget que monta o próprio gatilho (um GestureDetector local com bloc do próprio teste) não exercita a fiação da página: o valor que a página passa de verdade fica livre para ser fixado sem matar teste — abra pela rota real, e cuidado com helper cujo nome promete rota e não abre nenhuma.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `test/widget` · harmful: 0
+- features: lista
+- evidence: GAP-1 lista_page.dart:145 (test/widget)
+- last seen: 2026-09-02T12:42:42Z
+
+### L-031 — Valor afirmado que coincide com um default, uma fixture ou o literal da spec não discrimina: o mutante que fixa esse mesmo literal sobrevive. Escolha um valor distinto de todo default — e desconfie inclusive da receita prescrita por um Verifier.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `test/widget` · harmful: 0
+- features: lista
+- evidence: GAP-2 lista_page.dart:144 (test/widget)
+- last seen: 2026-09-02T12:42:42Z
+
+### L-032 — Duas guardas no mesmo handler precisam de sensor separado: uma morre de carona na outra e o furo passa por duas iterações. Mute cada guarda isoladamente.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `lib/bloc` · harmful: 0
+- features: lista
+- evidence: GAP-4 lista_bloc.dart _aoReceberFesta (lib/bloc)
+- last seen: 2026-09-02T12:42:42Z
+
+### L-033 — Equivalência de mutante não se prova pela suíte continuar verde — isso é a hipótese, não a prova. Prove procurando o caminho que discrimina; aqui a guarda parecia inerte e na verdade descartava escrita externa legítima.
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `verificação` · harmful: 0
+- features: lista
+- evidence: iteração 2, alegação de equivalência do GAP-4 (verificação)
+- last seen: 2026-09-02T12:42:42Z
+
+### L-034 — find.text acha texto ilegível: teste de árvore não prova que o pixel dá para ler. Botão secundário renderizou como bloco preto por ~1900 testes e dois Verifiers — rode o app antes de dar uma tela por pronta.
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `test/widget` · harmful: 0
+- features: design-system
+- evidence: BoraSecondaryButton, achado com a skill run em 2026-09-01 (test/widget)
+- last seen: 2026-09-02T12:42:56Z
+
+### L-035 — BoxShadow do Flutter não é recortado para fora da borda como o box-shadow do CSS: sombra sem blur atrás de fundo transparente aparece através do widget e tapa o conteúdo. Ao portar sombra dura de protótipo HTML, o fundo tem de ser opaco.
+- signal: `spec_deviation` · recurrence: 1 feature(s) · scope: `lib/design_system` · harmful: 0
+- features: design-system
+- evidence: bora_surface.dart decoracaoDe + fundo transparente (lib/design_system)
+- last seen: 2026-09-02T12:42:56Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
