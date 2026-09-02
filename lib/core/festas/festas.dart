@@ -21,3 +21,4 @@ library;
 
 export 'dominio/festa_em_edicao.dart';
 export 'dominio/festa_em_edicao_repository.dart';
+export 'dominio/nivel_do_link.dart';

@@ -167,14 +167,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Os três valores existem com as chaves de serialização do `design.md` §6.1, e **nenhuma** delas é derivada de `name` — chave é contrato de dado, `name` é detalhe de linguagem
-- [ ] `porChave` devolve o valor para cada uma das três chaves e `null` para chave desconhecida
-- [ ] `resolver(null)` e `resolver('qualquer-coisa')` devolvem **`soVer`** — os dois casos com teste próprio (A-12, menor privilégio)
-- [ ] `resolver` das três chaves válidas devolve o nível correspondente
-- [ ] `padraoDeFestaNova` é **`editarLista`**, e um teste afirma que ele **difere** de `resolver(null)` — o par que discrimina as duas situações que a A-12 separou de propósito
-- [ ] Nenhum import de Flutter no arquivo
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 8 testes novos
+- [x] Os três valores existem com as chaves de serialização do `design.md` §6.1, e **nenhuma** delas é derivada de `name` — chave é contrato de dado, `name` é detalhe de linguagem
+- [x] `porChave` devolve o valor para cada uma das três chaves e `null` para chave desconhecida
+- [x] `resolver(null)` e `resolver('qualquer-coisa')` devolvem **`soVer`** — os dois casos com teste próprio (A-12, menor privilégio)
+- [x] `resolver` das três chaves válidas devolve o nível correspondente
+- [x] `padraoDeFestaNova` é **`editarLista`**, e um teste afirma que ele **difere** de `resolver(null)` — o par que discrimina as duas situações que a A-12 separou de propósito
+- [x] Nenhum import de Flutter no arquivo
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 8 testes novos (10). **Desvio declarado**: `test/core/festas/dominio/festa_em_edicao_repository_test.dart` afirma a contagem de arquivos de `dominio/` (`hasLength(2)`); o arquivo novo a torna 3. Só o número mudou — a asserção que discrimina (`exportados == arquivosDeDominio`) segue exata
 
 **Tests**: unit
 **Gate**: build
