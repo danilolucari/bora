@@ -139,7 +139,7 @@ abstract class GaleraRepository {
     test('a varredura morde: uma escrita de status é reportada', () {
       const infrator = '''
 abstract class GaleraRepository {
-  Future<void> confirmarPresenca(String f, ChaveDePessoa q, StatusDePresenca status);
+  Future<void> confirmar(String f, ChaveDePessoa q, StatusDePresenca status);
 }
 ''';
 

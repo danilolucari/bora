@@ -351,17 +351,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `observarGalera` mapeia `FestaEmEdicao?` em `GaleraDaFesta?`, propagando o `convite` e a composição inteira; `null` continua `null`
-- [ ] `alterarDieta` troca a dieta **da pessoa endereçada pela chave** e de **nenhuma outra** — afirmado com duas homônimas na lista
-- [ ] `alterarBebida` idem para `bebe`
-- [ ] A escrita lê o registro por `observarFesta(id).first` **na hora** — um teste que altera o registro por fora entre a leitura da tela e a escrita prova que o valor novo **não** é sobrescrito
-- [ ] A escrita usa `copyWith` e **preserva `overrides`** — composição com override, `alterarDieta`, override idêntico depois (GAL-15 AC12 no ponto de escrita)
-- [ ] **GAL-14 afirmado a jusante, sobre o registro depois da escrita**, chamando `CalculadoraDaFesta.calcular`: (a) tornar alguém veggie faz aparecer "Legumes p/ grelha (kit veggie)" e desfazer faz sumir; (b) tirar o "sem porco" de todos traz a carne suína selecionada de volta, e pôr de novo a remove; (c) desmarcar a bebida de alguém **reduz** a cerveja, e o valor bate com o que `calcular` devolve — nunca com número copiado
-- [ ] **Idempotência (GAL-28)**: `alterarDieta` com a dieta já vigente e `alterarBebida` com o mesmo valor **não** chamam `salvarFesta` — afirmado por **contagem de gravações** num duplo que conta
-- [ ] Chave que não existe mais no registro ⇒ **nenhuma** gravação, nenhuma exceção
-- [ ] Nenhuma constante de RN-03/RN-05/RN-21 neste arquivo — a aritmética é toda de `core/calculo`
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 16 testes novos
+- [x] `observarGalera` mapeia `FestaEmEdicao?` em `GaleraDaFesta?`, propagando o `convite` e a composição inteira; `null` continua `null`
+- [x] `alterarDieta` troca a dieta **da pessoa endereçada pela chave** e de **nenhuma outra** — afirmado com duas homônimas na lista
+- [x] `alterarBebida` idem para `bebe`
+- [x] A escrita lê o registro por `observarFesta(id).first` **na hora** — um teste que altera o registro por fora entre a leitura da tela e a escrita prova que o valor novo **não** é sobrescrito
+- [x] A escrita usa `copyWith` e **preserva `overrides`** — composição com override, `alterarDieta`, override idêntico depois (GAL-15 AC12 no ponto de escrita)
+- [x] **GAL-14 afirmado a jusante, sobre o registro depois da escrita**, chamando `CalculadoraDaFesta.calcular`: (a) tornar alguém veggie faz aparecer "Legumes p/ grelha (kit veggie)" e desfazer faz sumir; (b) tirar o "sem porco" de todos traz a carne suína selecionada de volta, e pôr de novo a remove; (c) desmarcar a bebida de alguém **reduz** a cerveja, e o valor bate com o que `calcular` devolve — nunca com número copiado
+- [x] **Idempotência (GAL-28)**: `alterarDieta` com a dieta já vigente e `alterarBebida` com o mesmo valor **não** chamam `salvarFesta` — afirmado por **contagem de gravações** num duplo que conta
+- [x] Chave que não existe mais no registro ⇒ **nenhuma** gravação, nenhuma exceção
+- [x] Nenhuma constante de RN-03/RN-05/RN-21 neste arquivo — a aritmética é toda de `core/calculo`
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 16 testes novos
 
 **Tests**: unit
 **Gate**: quick
