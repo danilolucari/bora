@@ -760,16 +760,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `GaleraPage({required festaId, required galera, required logger, area = const AreaDeTransferenciaDoSistema()})` com `static const Key pageKey = Key('galera')` (AD-014)
-- [ ] O bloc é criado **acima** do `ResponsiveBuilder` — teste que cruza 900px e afirma que o painel aberto e o nível selecionado **sobrevivem**, sem `pumpWidget` novo (GAL-23 AC3/AC5)
-- [ ] **GAL-03 AC6**: tocar "COPIAR 🔗" grava a URL completa na porta de área de transferência **e** mostra o toast `LINK COPIADO 🔗`; a duração é a de `BoraToast` (2200 ms de RN-29), afirmada pelo componente, não redigitada
-- [ ] **GAL-03 AC7**: tocar "+ CONVIDAR MAIS GENTE 🔗" produz **o mesmo** efeito — mesma URL na porta, mesmo toast
-- [ ] Duas cópias seguidas ⇒ **um toast por vez**, o segundo substituindo o primeiro (RN-29, GAL-28)
-- [ ] **GAL-05**: com a porta de área de transferência falhando, **nenhum** toast é exibido (`findsNothing`), a falha é registrada no logger e a URL continua visível na tela
-- [ ] `podeConfigurarNivel` e `podeGerenciarPapeis` saem de `papelDoUsuario` + `pode(...)` de `permissoes.dart` — a página **não** decide permissão por conta própria
-- [ ] **GAL-27 AC3**: montar duas vezes com o mesmo repositório, trocando só quem é `voce` (Rafa ⇒ presentes; Ana co-anfitriã ⇒ ausentes) — o par que discrimina
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 16 testes novos
+- [x] `GaleraPage({required festaId, required galera, required logger, area = const AreaDeTransferenciaDoSistema()})` com `static const Key pageKey = Key('galera')` (AD-014)
+- [x] O bloc é criado **acima** do `ResponsiveBuilder` — teste que cruza 900px e afirma que o painel aberto e o nível selecionado **sobrevivem**, sem `pumpWidget` novo (GAL-23 AC3/AC5)
+- [x] **GAL-03 AC6**: tocar "COPIAR 🔗" grava a URL completa na porta de área de transferência **e** mostra o toast `LINK COPIADO 🔗`; a duração é a de `BoraToast` (2200 ms de RN-29), afirmada pelo componente, não redigitada
+- [x] **GAL-03 AC7**: tocar "+ CONVIDAR MAIS GENTE 🔗" produz **o mesmo** efeito — mesma URL na porta, mesmo toast
+- [x] Duas cópias seguidas ⇒ **um toast por vez**, o segundo substituindo o primeiro (RN-29, GAL-28)
+- [x] **GAL-05**: com a porta de área de transferência falhando, **nenhum** toast é exibido (`findsNothing`), a falha é registrada no logger e a URL continua visível na tela
+- [x] `podeConfigurarNivel` e `podeGerenciarPapeis` saem de `papelDoUsuario` + `pode(...)` de `permissoes.dart` — a página **não** decide permissão por conta própria
+- [x] **GAL-27 AC3**: montar duas vezes com o mesmo repositório, trocando só quem é `voce` (Rafa ⇒ presentes; Ana co-anfitriã ⇒ ausentes) — o par que discrimina
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 16 testes novos
 
 **Tests**: widget
 **Gate**: full
