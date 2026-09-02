@@ -196,15 +196,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `ConviteDaFesta.vazio` tem `codigo` vazio e `nivel == NivelDoLink.padraoDeFestaNova`
-- [ ] Igualdade profunda afirmada nos **dois** sentidos: dois convites de mesmo código e nível são `==`; trocar **só** o código separa; trocar **só** o nível separa; `hashCode` acompanha nos três casos
-- [ ] `copyWith` preserva o campo não informado e substitui o informado — inclusive `codigo: ''`
-- [ ] O campo `convite` de `FestaEmEdicao` tem default — **nenhum** call site existente quebra e **nenhum** teste existente é editado
-- [ ] Duas `FestaEmEdicao` idênticas exceto pelo `convite` são **diferentes** — sem isso a emissão do stream após `definirNivelDoLink` seria engolida como eco
-- [ ] `copyWith` de `FestaEmEdicao` preserva o `convite` não informado
-- [ ] **Este é arquivo de colisão com `lista` (E-c dela)**: a emenda é aditiva e o doc do arquivo registra as duas
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] `ConviteDaFesta.vazio` tem `codigo` vazio e `nivel == NivelDoLink.padraoDeFestaNova`
+- [x] Igualdade profunda afirmada nos **dois** sentidos: dois convites de mesmo código e nível são `==`; trocar **só** o código separa; trocar **só** o nível separa; `hashCode` acompanha nos três casos
+- [x] `copyWith` preserva o campo não informado e substitui o informado — inclusive `codigo: ''`
+- [x] O campo `convite` de `FestaEmEdicao` tem default — **nenhum** call site existente quebra e **nenhum** teste existente é editado
+- [x] Duas `FestaEmEdicao` idênticas exceto pelo `convite` são **diferentes** — sem isso a emissão do stream após `definirNivelDoLink` seria engolida como eco
+- [x] `copyWith` de `FestaEmEdicao` preserva o `convite` não informado
+- [x] **Este é arquivo de colisão com `lista` (E-c dela)**: a emenda é aditiva e o doc do arquivo registra as duas
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 10 testes novos (13). **Desvio declarado**: a contagem de arquivos de `dominio/` no teste do barrel vai a 4 — só o número; a asserção que discrimina segue exata
 
 **Commit**: `feat(festas): põe o convite (código e nível) no registro da festa`
 

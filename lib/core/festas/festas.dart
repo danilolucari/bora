@@ -19,6 +19,7 @@
 /// mesmo store; no M2 vira Firestore.
 library;
 
+export 'dominio/convite_da_festa.dart';
 export 'dominio/festa_em_edicao.dart';
 export 'dominio/festa_em_edicao_repository.dart';
 export 'dominio/nivel_do_link.dart';

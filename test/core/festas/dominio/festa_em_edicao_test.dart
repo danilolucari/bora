@@ -79,6 +79,11 @@ const Despesa _gelo = Despesa(
   descricao: 'Gelo',
   valor: 30,
 );
+const ConviteDaFesta _convite = ConviteDaFesta(
+  codigo: 'rafa18',
+  nivel: NivelDoLink.editarLista,
+);
+
 const Despesa _pedido = Despesa(
   quemPagou: 'BIA',
   descricao: 'Pedido no Zé',
@@ -330,6 +335,84 @@ void main() {
         [_gelo, _pedido],
       );
       expect(original.copyWith(despesas: const []).despesas, isEmpty);
+    });
+  });
+
+  group('AD-031 — o convite entra na festa sem quebrar quem já existia', () {
+    test('o campo tem default: festa montada sem convite nasce com o vazio',
+        () {
+      final emEdicao =
+          FestaEmEdicao(festa: _festa(), composicao: _composicaoPadrao());
+
+      expect(emEdicao.convite, ConviteDaFesta.vazio);
+    });
+
+    test('duas festas idênticas exceto pelo convite são diferentes', () {
+      final semLink =
+          FestaEmEdicao(festa: _festa(), composicao: _composicaoPadrao());
+      final comLink = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        convite: _convite,
+      );
+
+      expect(
+        comLink,
+        isNot(semLink),
+        reason: 'sem isto, gravar um nível novo produziria uma festa igual à '
+            'anterior e a emissão do stream seria engolida como eco',
+      );
+      expect(comLink.hashCode, isNot(semLink.hashCode));
+    });
+
+    test('trocar só o nível do convite separa as duas', () {
+      final a = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        convite: _convite,
+      );
+      final b = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        convite: _convite.copyWith(nivel: NivelDoLink.coAnfitriao),
+      );
+
+      expect(a, isNot(b));
+    });
+
+    test('copyWith preserva o convite não informado e substitui o informado',
+        () {
+      final original = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        convite: _convite,
+      );
+
+      expect(original.copyWith(festa: _festa(nome: 'OUTRO')).convite, _convite);
+      expect(original.copyWith().convite, _convite);
+      expect(
+        original.copyWith(convite: ConviteDaFesta.vazio).convite,
+        ConviteDaFesta.vazio,
+      );
+    });
+
+    test('trocar o convite preserva a festa, a composição e as despesas', () {
+      final original = FestaEmEdicao(
+        festa: _festa(),
+        composicao: _composicaoPadrao(),
+        despesas: const [_gelo],
+        convite: _convite,
+      );
+
+      final novo = original.copyWith(
+        convite: _convite.copyWith(nivel: NivelDoLink.soVer),
+      );
+
+      expect(novo.festa, original.festa);
+      expect(novo.composicao, original.composicao);
+      expect(novo.despesas, original.despesas);
+      expect(novo.convite.nivel, NivelDoLink.soVer);
+      expect(novo.convite.codigo, original.convite.codigo);
     });
   });
 }
