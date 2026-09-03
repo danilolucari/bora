@@ -319,29 +319,27 @@ worker.
 | 4 — copy e widgets de T-05 | T17–T22 | `fc4394d`..`3b38ce3` | → 2335 |
 | 5 — telas, rota, guards | T23–T27 | `00e012e`..`9874ae5` | → **2439** |
 
-### ⚠️ Um `validation.md` PARCIAL de autoria incerta foi encontrado e REMOVIDO do repo
+### O `validation.md` em `.specs/features/galera/` está sendo escrito AO VIVO
 
-Ao encerrar a sessão apareceu um `.specs/features/galera/validation.md` **não
-rastreado, que nenhum Verifier despachado escreveu** — o orquestrador nunca despachou
-um. A hipótese mais provável é o worker do Batch 5 tendo excedido o escopo.
+**Correção de um erro do orquestrador**, registrada para não se repetir. Às 22:14 apareceu
+um `validation.md` não rastreado; o orquestrador concluiu "autoria incerta, provavelmente
+um worker excedendo escopo", **moveu o arquivo para fora do repo** e commitou uma nota
+dizendo que o cabeçalho dele podia estar mentindo.
 
-**Não é uma validação, e não podia ficar onde estava:**
+**Estava errado.** O orquestrador não percebeu que o relógio já tinha passado das 21:40 e
+que **a retomada agendada havia disparado**: a sessão headless subiu às 21:40:00, leu o
+handoff de 19:03, e fez exatamente o que ele mandava — despachou o Verifier. O arquivo era
+o Verifier **escrevendo incrementalmente em disco**, como o próprio contrato exige. O
+cabeçalho que se declara independente é **verdadeiro**.
 
-- O cabeçalho se declara "sub-agente independente (autor ≠ verificador)" e afirma que
-  "nenhuma alegação dos batch workers foi aceita". **Se quem escreveu foi um worker, as
-  duas frases são falsas** — e é impossível conferir isso depois do fato.
-- **O veredito nunca foi preenchido** (`(preenchido ao fim)`), e o arquivo para antes da
-  seção do sensor. **O sensor de discriminação — a parte que de fato discrimina — nunca
-  rodou.**
+O arquivo foi **restaurado**. A cópia do estado às 22:14 ficou no scratchpad da sessão
+como `validation-parcial-autoria-incerta.md` (nome agora enganoso).
 
-Ele foi movido para o scratchpad da sessão como
-`validation-parcial-autoria-incerta.md` (35 KB, 167 linhas) em vez de apagado: o
-mapeamento por AC com `file:line` pode ter valor. Mas **o Verifier de verdade tem de
-começar do zero**, sem ler esse arquivo — cobertura re-derivada por quem não implementou
-nada é o ponto inteiro do author ≠ verifier, e um relatório pronto ancora quem o lê.
-
-Se o Verifier novo quiser conferir aquele material **depois** de formar o próprio
-julgamento, tudo bem. Antes, não.
+**A lição, que vale mais que o incidente:** quando duas sessões podem tocar o mesmo
+repositório, **um arquivo inesperado é sinal de trabalho em andamento, não de lixo**.
+Confira `Get-ScheduledTaskInfo`/`.claude/logs/` e os processos **antes** de mover ou
+apagar qualquer coisa — e confira as horas de verdade, em vez de assumir quanto tempo
+passou.
 
 ### PRÓXIMO PASSO: o Verifier de `galera`
 
