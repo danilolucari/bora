@@ -127,6 +127,22 @@ void main() {
       expect(repositorio.niveis, [(_idDoBloc, NivelDoLink.coAnfitriao)]);
       expect(repositorio.escritas, 1);
     });
+
+    test('e numa festa que ainda não tem pessoa nomeada nenhuma, igual',
+        () async {
+      // P1-2 AC4, literal: "a tela não tem nenhuma pessoa nomeada e o nível é
+      // alterado ⇒ o comportamento é o mesmo — só o nível muda". O teste
+      // acima diz "sem pessoa nenhuma" no sentido de *o evento não carrega
+      // chave*; aqui a **festa** é que está vazia.
+      final (bloc, repositorio) =
+          await carregado(galeraDeTeste(pessoas: const []));
+
+      bloc.add(const NivelEscolhido(NivelDoLink.coAnfitriao));
+      await assentar();
+
+      expect(repositorio.niveis, [(_idDoBloc, NivelDoLink.coAnfitriao)]);
+      expect(repositorio.escritas, 1);
+    });
   });
 
   group('A fonte da verdade continua sendo o stream', () {

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:bora/core/calculo/calculo.dart';
 import 'package:bora/core/design_system/design_system.dart';
 import 'package:bora/core/festas/festas.dart';
+import 'package:bora/features/galera/domain/chave_de_pessoa.dart';
 import 'package:bora/features/galera/domain/galera_da_festa.dart';
 import 'package:bora/features/galera/presentation/galera_textos.dart';
 import 'package:bora/features/galera/presentation/pages/galera_page.dart';
@@ -34,6 +35,22 @@ const Size _janelaExpandida = Size(1180, 800);
 const Size _abaixoDaFronteira = Size(890, 800);
 
 const String _urlDaFixture = 'bora.app/c/rafa18';
+
+/// A chave da Ana na fixture — co-anfitriã, `dieta: tudo`, `bebe: true`.
+///
+/// Todo valor pedido nos gestos abaixo é **distinto** do que ela já tem: com o
+/// valor vigente, GAL-28 mandaria não escrever, e "não escreveu" deixaria de
+/// separar o fio cortado do fio ligado.
+const ChaveDePessoa _ana = ChaveDePessoa('Ana', 0);
+
+/// A mesma fixture com [nome] no lugar de "você" — é assim que a tela passa a
+/// ser a de quem **não** é o anfitrião (GAL-27, RN-22).
+GaleraDaFesta _galeraComVoce(String nome) => galeraDeTeste(
+      pessoas: [
+        for (final pessoa in galeraDeTeste().pessoas)
+          pessoa.copyWith(voce: pessoa.nome == nome),
+      ],
+    );
 
 class _Palco {
   const _Palco(this.porta, this.area);
@@ -314,6 +331,148 @@ void main() {
             '1 veggie 🥗 · 1 sem porco 🚫 · 3 bebem 🍺'),
         findsOneWidget,
       );
+    });
+  });
+
+  group('GAL-11, GAL-12, GAL-17 e GAL-04 — o gesto a 1180 chega à porta', () {
+    // Os seis fios que a `GaleraExpandida` liga entre a árvore e o bloc só
+    // eram exercitados **a 390px**, e o expandido se limitava a afirmar que a
+    // travessia dos 900 preserva o estado. Cortado qualquer um deles, a suíte
+    // inteira continuava verde (sensor do Verifier, M25–M28). Estes testes
+    // fazem o gesto **na tela de 1180** e afirmam a escrita na porta.
+    testWidgets('a dieta escolhida no expandido vira alterarDieta',
+        (tester) async {
+      final palco = await _abrir(tester);
+
+      await _tocar(tester, _linhaDe('Ana'));
+      await _tocar(
+        tester,
+        find.descendant(
+          of: _painelDe('Ana'),
+          matching: find.text(GaleraTextos.rotuloDaDieta(Dieta.veggie)),
+        ),
+      );
+
+      expect(find.byType(GaleraExpandida), findsOneWidget);
+      expect(palco.porta.dietas, [(idDaFestaDeTeste, _ana, Dieta.veggie)]);
+      expect(palco.porta.escritas, 1);
+    });
+
+    testWidgets('a bebida alternada no expandido vira alterarBebida',
+        (tester) async {
+      final palco = await _abrir(tester);
+
+      await _tocar(tester, _linhaDe('Ana'));
+      await _tocar(
+        tester,
+        find.descendant(
+          of: _painelDe('Ana'),
+          matching: find.text(GaleraTextos.naoBebe),
+        ),
+      );
+
+      expect(find.byType(GaleraExpandida), findsOneWidget);
+      expect(palco.porta.bebidas, [(idDaFestaDeTeste, _ana, false)]);
+      expect(palco.porta.escritas, 1);
+    });
+
+    testWidgets('o papel escolhido no expandido vira alterarPapel',
+        (tester) async {
+      final palco = await _abrir(tester);
+
+      await _tocar(tester, _linhaDe('Ana'));
+      await _tocar(
+        tester,
+        find.descendant(
+          of: _painelDe('Ana'),
+          matching: find.text(GaleraTextos.rotuloDoPapel(PapelNaFesta.soVe)),
+        ),
+      );
+
+      expect(find.byType(GaleraExpandida), findsOneWidget);
+      expect(palco.porta.papeis, [(idDaFestaDeTeste, _ana, PapelNaFesta.soVe)]);
+      expect(palco.porta.escritas, 1);
+    });
+
+    testWidgets('o nível escolhido no card do rail vira definirNivelDoLink',
+        (tester) async {
+      final palco = await _abrir(tester);
+
+      // Escopado ao card: `rotuloDoPapel(coAnfitriao)` e
+      // `rotuloDoNivel(coAnfitriao)` são a mesma string, e a tag da Ana já traz
+      // uma delas na lista.
+      await _tocar(
+        tester,
+        find.descendant(
+          of: find.byType(CardDoLink),
+          matching:
+              find.text(GaleraTextos.rotuloDoNivel(NivelDoLink.coAnfitriao)),
+        ),
+      );
+
+      expect(find.byType(GaleraExpandida), findsOneWidget);
+      expect(
+        palco.porta.niveis,
+        [(idDaFestaDeTeste, NivelDoLink.coAnfitriao)],
+      );
+      expect(palco.porta.escritas, 1);
+    });
+  });
+
+  group('GAL-27 no expandido — RN-22 não se contorna pelo layout', () {
+    // A regra existe, é correta e é testada — mas só o compacto montava os
+    // painéis quando ela foi verificada. No expandido, `podeConfigurarNivel` e
+    // `podeGerenciarPapeis` podiam ser trocados por `true` sem que nada
+    // notasse: um co-anfitrião no computador veria (e usaria) os dois
+    // controles que a A-19 reserva ao anfitrião.
+    testWidgets('o co-anfitrião não vê o segmented do nível no card',
+        (tester) async {
+      await _abrir(tester, galera: _galeraComVoce('Ana'));
+
+      expect(find.byType(GaleraExpandida), findsOneWidget);
+      expect(
+        find.descendant(
+          of: find.byType(CardDoLink),
+          matching: find.byType(BoraSegmentedControl),
+        ),
+        findsNothing,
+      );
+      expect(find.text(GaleraTextos.quemAbrirPode), findsOneWidget);
+    });
+
+    testWidgets('o anfitrião vê — o par que discrimina', (tester) async {
+      await _abrir(tester);
+
+      expect(
+        find.descendant(
+          of: find.byType(CardDoLink),
+          matching: find.byType(BoraSegmentedControl),
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('o co-anfitrião não vê "NÍVEL DE ACESSO" no painel',
+        (tester) async {
+      await _abrir(tester, galera: _galeraComVoce('Ana'));
+
+      await _tocar(tester, _linhaDe('Bia'));
+
+      expect(_painelDe('Bia'), findsOneWidget);
+      expect(find.text(GaleraTextos.secaoNivelDeAcesso), findsNothing);
+      expect(find.text(GaleraTextos.secaoRestricao), findsOneWidget);
+      expect(find.text(GaleraTextos.secaoBebida), findsOneWidget);
+    });
+
+    testWidgets('o anfitrião vê as três seções — o par que discrimina',
+        (tester) async {
+      await _abrir(tester);
+
+      await _tocar(tester, _linhaDe('Bia'));
+
+      expect(find.text(GaleraTextos.secaoNivelDeAcesso), findsOneWidget);
+      expect(find.text(GaleraTextos.secaoRestricao), findsOneWidget);
+      expect(find.text(GaleraTextos.secaoBebida), findsOneWidget);
     });
   });
 

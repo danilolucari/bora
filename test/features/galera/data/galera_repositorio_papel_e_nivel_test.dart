@@ -171,6 +171,25 @@ void main() {
       expect((await lerConvite()).codigo, 'rafa18');
     });
 
+    test('festa sem nenhuma pessoa nomeada grava o nível do mesmo jeito',
+        () async {
+      // P1-2 AC4: a festa recém-criada, antes de convidar alguém, é onde o
+      // anfitrião mais naturalmente ajusta o nível — e era o único caminho
+      // sem defesa (sensor do Verifier, M19). Nada além do nível muda.
+      fake = FestaEmEdicaoRepositoryFake(festas: {_id: _festa(const [])});
+      porta = GaleraRepositorioSobreFestas(fake, logger);
+
+      await porta.definirNivelDoLink(_id, NivelDoLink.coAnfitriao);
+
+      expect(fake.salvas, hasLength(1));
+
+      final convite = await lerConvite();
+      expect(convite.nivel, NivelDoLink.coAnfitriao);
+      expect(convite.codigo, 'rafa18');
+      expect((await lerComposicao()).pessoas, isEmpty);
+      expect(logger.erros, isEmpty);
+    });
+
     test('festa que não existe não grava nem lança', () async {
       await porta.definirNivelDoLink('nao-existe', NivelDoLink.soVer);
 
