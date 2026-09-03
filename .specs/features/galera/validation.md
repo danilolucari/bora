@@ -1,11 +1,11 @@
 # A galera — Validation
 
-**Date**: 2026-09-02 (iteração 1) · **2026-09-03** (iteração 2 — re-verificação, ao fim deste arquivo)
+**Date**: 2026-09-02 (iteração 1) · **2026-09-03** (iterações 2 e **3 — final**, ao fim deste arquivo)
 **Spec**: `.specs/features/galera/spec.md` (GAL-01..GAL-28)
 **Diff range**: `main...HEAD` na branch `feature/galera` — 30 commits, 68 arquivos, `+10910 / −329` linhas
 **Verifier**: sub-agente independente (autor ≠ verificador). Cobertura re-derivada do zero a partir da `spec.md`, regra **evidence-or-zero**. Nenhuma alegação dos batch workers foi aceita — inclusive os autoexames de discriminação que eles relataram.
 
-**Veredito**: ❌ **FAIL** — fechado na **iteração 2** (ver §Re-verificação). Gate verde (2449/0, `analyze` limpo), **58/61 critérios ✅**, **0 ❌**, **3 ⚠️** declarados, e **1 mutante sobrevivente novo** (V2) — falha **de teste, não de produto**: nenhuma linha de `lib/` está errada hoje. A regra de `validate.md` ("surviving mutants are fix tasks — do not mark the feature done") é o que decide o veredito. **1 Fix Major + 2 Minor** em §Fix Plans; resta **1** iteração das 3.
+**Veredito**: ✅ **PASS** — fechado na **iteração 3, a final** (ver §Re-verificação — iteração 3). Gate verde (**2451/0**, `analyze` limpo), **59/61 critérios ✅**, **0 ❌**, **2 ⚠️** intrínsecos e declarados, e **nenhum mutante sobrevivente** — acumulado de **55 mutações, 55 mortas**. Os três Fix Plans da iteração 2 foram executados test-only (`b8b3c75`, zero linhas de `lib/`) e cada um matou o mutante que devia, com o conjunto exato de testes previsto. **A spec 07 está liberada para o merge em `main`.** O histórico das iterações 1 e 2 fica abaixo, intacto — o veredito ainda por lá escrito é o **daquele momento**.
 
 ---
 
@@ -623,3 +623,332 @@ dois.
 **Next steps**: executar os 3 fixes (todos test-only, nenhuma linha de `lib/` muda) e despachar a
 **iteração 3** — a última das 3 antes de escalar. O critério de PASS da iteração 3 é objetivo:
 V2 morre, V1 derruba 17 testes em `galera_expandida_test.dart` em vez de 14, e o gate segue verde.
+
+---
+
+## Re-verificação — iteração 3 (final)
+
+**Date**: 2026-09-03
+**Diff dos fixes desta iteração**: `956d6d7..HEAD` — dois commits, `2ea649b` (lições) e
+**`b8b3c75`** ("fecha os três gaps que a iteração 2 apontou"), que é o objeto da auditoria.
+Diff completo da feature: `main..HEAD`.
+**Verifier**: sub-agente independente, iteração 3 — a **última** do laço fix→re-verify. Não
+implementei nada e não aceitei como prova nada do corpo de `b8b3c75`, do `STATE.md` nem do
+relatório da iteração 2. Harness de mutação **escrito do zero** (`scratchpad/it3/mutar.py`);
+`scratchpad/sensor_fixes.py` não foi lido nem reaproveitado. Escopo espelhado da
+`## Re-verificação — iteração 3 (final)` de `.specs/features/lista/validation.md`: auditoria da
+superfície do diff, re-plantio das três mutações exigidas, amostra de regressão dos sete da
+iteração 2, ataque à honestidade dos três testes novos, e gate por exit code.
+
+**Veredito**: ✅ **PASS** — os três mutantes exigidos morrem, cada um com o conjunto **exato** de
+testes que os Fix Plans previram; os 7 mutantes da iteração 2 continuam morrendo, um teste cada;
+os três testes novos resistiram ao ataque de honestidade, inclusive a duas sondas que eu escrevi
+para tentar mostrá-los tautológicos; e o gate é verde por exit code.
+
+### Superfície do diff desde a iteração 2 — o commit **é** test-only
+
+`git diff 956d6d7..HEAD --numstat`: **5 arquivos**, `+244 / −6`.
+
+| Arquivo | numstat | Natureza |
+|---|---|---|
+| `.specs/LESSONS.md` | +24 / −0 | lições da iteração 2 (`2ea649b`) |
+| `.specs/lessons.json` | +73 / −1 | idem |
+| `test/core/routing/galera_route_test.dart` | +115 / −0 | Fix 2 — grupo novo, **puramente aditivo** |
+| `test/features/galera/data/galera_repositorio_papel_e_nivel_test.dart` | +29 / −5 | Fix 1 |
+| `test/features/galera/presentation/widgets/galera_expandida_test.dart` | +3 / −0 | Fix 3 — as três âncoras |
+
+- **`git diff 956d6d7..HEAD --name-only -- lib/` devolve vazio.** A alegação "test-only" de
+  `b8b3c75` **procede** — verificada por mim, no `--name-only`, não no corpo do commit. Nenhuma
+  linha de produção mudou, o que também significa que os 42 mutantes já mortos das iterações 1 e
+  2 não podem ter mudado de status por mudança de produto.
+- **`git diff 956d6d7..HEAD -- .specs/features/galera/spec.md .specs/STATE.md` é vazio.** Nenhum
+  AC foi reescrito, enfraquecido ou removido para caber no fix — o denominador desta iteração é o
+  mesmo **61** da iteração 2, e as duas decisões pendentes do usuário continuam pendentes no
+  `STATE.md` (§396-402), intocadas.
+- **As 5 linhas removidas em `test/` vêm todas de um só lugar** — o teste da festa vazia
+  (`galera_repositorio_papel_e_nivel_test.dart:174`): as asserções campo-a-campo
+  (`convite.nivel`, `convite.codigo`, mais a linha em branco e a leitura auxiliar) foram
+  **substituídas por uma asserção mais forte**, a igualdade do registro inteiro a menos do nível.
+  É o oposto de afrouxamento, e o teste continua afirmando `pessoas isEmpty` e
+  `logger.erros isEmpty` por cima. Nenhum `test(` ou `group(` foi apagado ou renomeado; o diff de
+  nomes é 100% `+`.
+- **Contagem 2449 → 2451 (+2)**, e os dois são os dois `test(` novos. As três âncoras do Fix 3
+  são asserções acrescentadas a testes que já existiam, então não somam — o que bate.
+- Varredura por `skip:` / `solo:` no diff: **zero**.
+
+### As três mutações exigidas — re-plantadas por mim, do zero
+
+Protocolo por mutação: `git status --porcelain` **vazio** conferido antes → escrita **em bytes**
+no arquivo real → `flutter test` da suíte inteira → restauro **em bytes** do conteúdo lido →
+**md5 conferido contra o original** → `git status --porcelain` conferido depois.
+`git checkout --` **não foi usado** em momento nenhum.
+
+> **A armadilha de fim de linha, de novo — e desta vez ela mordeu antes de sujar qualquer
+> coisa.** A primeira rodada de V2 abortou com *"âncora aparece 0x"*: as âncoras do meu script
+> estavam em LF e os arquivos no disco estão em **CRLF** (`core.autocrlf=true`). É o mesmo modo
+> de falha que a iteração 2 registrou, com desfecho melhor — abortou na conferência da âncora,
+> **antes** de escrever. O harness passou a adaptar a âncora ao que o arquivo realmente tem, de
+> modo que escrita e restauro gravam os mesmos bytes que li. Nenhuma rodada deixou a árvore suja.
+> **Conferi o `.specs/LESSONS.md` e a iteração 2 não destilou lição para este incidente** — só o
+> narrou no relatório. Como ele reincidiu, virou lição agora (§Lições).
+
+| # | Mutação re-plantada | Morta? | Suíte | Quais testes morreram |
+|---|---|---|---|---|
+| **V2** (Fix 1) | `galera_repositorio_sobre_festas.dart` — a escrita de `definirNivelDoLink` acrescenta `composicao: festa.composicao.copyWith(itensSelecionados: const <ChaveItem>{})`: trocar o nível **apaga a lista de compras inteira** | ✅ **Morta** | 2449 **+2** | `galera_repositorio_papel_e_nivel_test.dart` — GAL-04 › *"e o registro gravado é o de antes a menos do nível — nada mais"* **e** GAL-04 › *"festa sem nenhuma pessoa nomeada grava o nível do mesmo jeito"* |
+| **M7** (Fix 2) | o mesmo arquivo — a escrita rebaixa **todas** as pessoas a `PapelNaFesta.soVe` | ✅ **Morta** | 2448 **+3** | `galera_route_test.dart` — **P1-2 AC2** › *"os três níveis, e as cinco tags idênticas em cada um"* · `galera_repositorio_papel_e_nivel_test.dart` — GAL-04 › *"toda a lista de pessoas continua idêntica — item a item"* **e** GAL-04 › *"e o registro gravado é o de antes a menos do nível — nada mais"* |
+| **V1** (Fix 3) | `galera_page.dart` — o `ResponsiveBuilder` sempre escolhe `_compacta` | ✅ **Morta** | 2434 **+17** | os 17 abaixo, **todos** em `galera_expandida_test.dart` |
+
+**3/3 mortos, cada um com o conjunto que o Fix Plan exigia.** Os três critérios objetivos que o
+Summary da iteração 2 fixou estão cumpridos, e nenhum foi cumprido por acidente:
+
+- **V2 morre pelos dois testes de igualdade**, não por um. O do caso povoado e o da festa vazia
+  mordem os dois — a fragilidade estava nos dois caminhos e os dois foram fechados.
+- **M7 derruba o teste novo de `galera_route_test.dart`**, que é exatamente o que o Fix 2 pedia
+  como prova de que o fio ponta-a-ponta existe. Ele cai **junto com** os dois testes de
+  adaptador, e não no lugar deles: a defesa é em profundidade, não substituição.
+- **V1 derruba 17 e não 14.** O delta é exatamente **+3**, e os três são nominalmente os que o
+  Fix 3 nomeou.
+
+**V1 — os 17, na íntegra:**
+
+| # | Teste em `galera_expandida_test.dart` |
+|---|---|
+| 1–3 | GAL-22 AC1 — *"a 1180 a tela é a expandida, e o compacto não existe"* · *"a coluna esquerda mede exatamente 370px"* · *"o card do link mora dentro da coluna esquerda"* |
+| 4–6 | GAL-22 AC2 — *"o CTA está na coluna esquerda, abaixo do card"* · *"nenhum rodapé fixo existe na árvore"* · *"o CTA do rail copia a mesma URL de RN-23"* |
+| 7 | GAL-23 AC3 — *"900 é expandido e 890 é compacto — a fronteira de AD-007"* |
+| 8 | GAL-23 AC5 — *"a dieta trocada a 390 aparece na tela expandida"* |
+| 9–12 | GAL-11/12/17/04 — os quatro gestos a 1180 (dieta, bebida, papel, nível) |
+| 13 | GAL-27 — *"o co-anfitrião não vê o segmented do nível no card"* (já ancorado antes) |
+| **14** | GAL-27 — *"o anfitrião vê — o par que discrimina"* ← **âncora nova** |
+| **15** | GAL-27 — *"o co-anfitrião não vê 'NÍVEL DE ACESSO' no painel"* ← **âncora nova** |
+| **16** | GAL-27 — *"o anfitrião vê as três seções — o par que discrimina"* ← **âncora nova** |
+| 17 | GAL-22 AC6 — *"o CTA e o COPIAR trazem o hover do BoraPressSink"* |
+
+Nenhum teste de fora de `galera_expandida_test.dart` cai sob V1 — a sonda mira a fronteira de
+AD-007 e não morde por acidente. As três âncoras foram para os testes certos: os `:443`, `:455` e
+`:467` que o Fix 3 nomeou, e não para vizinhos de nome parecido.
+
+### Amostra de regressão — os 7 mutantes da iteração 2, re-plantados
+
+| # | Mutação | Morta? | Suíte | Quem matou |
+|---|---|---|---|---|
+| M25 | `galera_expandida.dart` — `podeGerenciarPapeis` → `true` | ✅ | 2450 +1 | GAL-27 › *"o co-anfitrião não vê 'NÍVEL DE ACESSO' no painel"* |
+| M26 | `galera_expandida.dart` — `podeConfigurarNivel` → `true` | ✅ | 2450 +1 | GAL-27 › *"o co-anfitrião não vê o segmented do nível no card"* |
+| M27 | `galera_expandida.dart` — `aoEscolherDieta` → no-op | ✅ | 2450 +1 | GAL-11/12/17/04 › *"a dieta escolhida no expandido vira alterarDieta"* |
+| M28a | `galera_expandida.dart` — `onEscolherNivel` → no-op | ✅ | 2450 +1 | GAL-11/12/17/04 › *"o nível escolhido no card do rail vira definirNivelDoLink"* |
+| M28b | `galera_expandida.dart` — `aoEscolherPapel` → no-op | ✅ | 2450 +1 | GAL-11/12/17/04 › *"o papel escolhido no expandido vira alterarPapel"* |
+| M28c | `galera_expandida.dart` — `aoAlternarBebida` → no-op | ✅ | 2450 +1 | GAL-11/12/17/04 › *"a bebida alternada no expandido vira alterarBebida"* |
+| M19 | `galera_repositorio_sobre_festas.dart` — `if (festa.composicao.pessoas.isEmpty) return;` | ✅ | 2450 +1 | GAL-04 › *"festa sem nenhuma pessoa nomeada grava o nível do mesmo jeito"* |
+
+**7/7 mortos, um teste cada — e os mesmos sete testes da iteração 2.** O commit novo **não
+afrouxou nada**: a discriminação não mudou de dono, não apareceu redundância, e nenhum mutante
+passou a morrer "de carona" num teste novo. A cobertura mínima suficiente que a iteração 2
+observou continua exatamente mínima e exatamente suficiente. Vale notar que M19 e o segundo
+teste que mata V2 são **o mesmo teste**, agora com duas responsabilidades — a reescrita do Fix 1
+o fortaleceu sem desarmar o que ele já pegava.
+
+### A honestidade dos três testes novos — o risco desta iteração
+
+#### 1. O teste de igualdade compara o registro **inteiro**, e por valor
+
+`galera_repositorio_papel_e_nivel_test.dart` › *"e o registro gravado é o de antes a menos do
+nível — nada mais"*:
+
+```dart
+expect(fake.salvas.single.$2,
+       antes.copyWith(convite: antes.convite.copyWith(nivel: NivelDoLink.coAnfitriao)));
+```
+
+- **Não é objeto comparado consigo mesmo.** `antes` vem de uma chamada de `_festa()` distinta da
+  que semeou o fake, e o lado esquerdo é o registro que o adaptador **construiu**. Nos dois lados
+  há instâncias diferentes, então o atalho `identical(this, other)` de `FestaEmEdicao.==` não
+  dispara. No teste da festa vazia `antes` **é** o objeto semeado, mas o adaptador só grava via
+  `copyWith`, que produz instância nova — e o esperado também é um `copyWith`. Em nenhum dos dois
+  a comparação degenera.
+- **A igualdade é profunda de verdade, e cobre exatamente o que V2 ataca.**
+  `FestaEmEdicao.==` (`lib/core/festas/dominio/festa_em_edicao.dart:87-95`) compara `festa`,
+  `composicao`, `despesas` (`listaIgual`) e `convite`. `ComposicaoDaFesta.==`
+  (`composicao_da_festa.dart:104-112`) compara `contagem`, `duracaoHoras`, `pessoas`,
+  **`itensSelecionados`**, `overrides` e `noCarrinho` — os cinco campos que a iteração 2 apontou
+  como descobertos. `Festa.==` (`festa.dart:58-66`) compara os seis campos de identidade;
+  `ConviteDaFesta.==` (`convite_da_festa.dart:42-46`) compara `codigo` e `nivel`. Nenhum é
+  identidade de referência, e todos têm teste próprio em
+  `test/core/festas/dominio/festa_em_edicao_test.dart` (grupos de `==`/`hashCode` e de
+  `copyWith`) e `convite_da_festa_test.dart`.
+- **E morde**: V2 (que só mexe em `itensSelecionados`) e M7 (que só mexe em `pessoas`) matam este
+  teste. Uma asserção que comparasse menos que o registro inteiro não pegaria as duas.
+
+#### 2. O teste ponta-a-ponta de P1-2 AC2 — o `runAsync` investigado a fundo
+
+O cheiro é real e eu o ataquei com duas sondas próprias, além de M7. As quatro perguntas:
+
+**Ele torna o teste sensível a timing?** **Não, e o motivo é estrutural.** O fio inteiro é
+memória: `FestaRepositoryEmMemoria.salvarFesta` monta a lista nova e chama `emitir`
+**sincronamente**, e `emitir` faz `_mudancas.add` num `StreamController.broadcast`. O adaptador
+faz `await observarFesta(id).first` sobre um `Stream.multi` que entrega o estado corrente no
+mesmo turno. Não há timer, delay, I/O nem `Future` de duração real em lugar nenhum do caminho —
+só microtasks. `runAsync(() => Future.delayed(Duration.zero))` drena a fila de microtasks
+inteira **antes** de o timer-zero disparar, então um único turno basta de forma determinística.
+Não é um `sleep` torcendo por uma corrida.
+
+**Ele passaria se o toque não chegasse a lugar nenhum?** **Não** — e isso está provado por
+mutação, não por leitura. Sonda **V8**, escrita por mim: `galera_compacta.dart:138`
+`onEscolherNivel: aoEscolherNivel` → `(_) {}`, ou seja, o gesto do segmented **morre na
+apresentação e nunca vira evento**. Resultado: **2450 +1**, e o único teste que cai em toda a
+suíte de 2451 é justamente *"os três níveis, e as cinco tags idênticas em cada um"*. Ou seja: o
+teste novo não só não passa com o toque indo a lugar nenhum — ele é, hoje, o **único** sensor do
+repositório para essa junta no layout compacto.
+
+**Há asserção provando que houve round-trip?** **Sim, e ela é o coração do teste.**
+`expect(_nivelNoCard(tester), nivel)` lê o `indiceAtivo` do `BoraSegmentedControl` dentro do
+`CardDoLink`, e esse índice vem de `NivelDoLink.values.indexOf(convite.nivel)`
+(`card_do_link.dart:110`) — quer dizer, do estado do bloc, que só muda quando a gravação volta
+pelo stream. Sem round-trip o card continuaria em `editarLista` (o nível da fixture) e a
+asserção ficaria vermelha na primeira volta do laço. Duas confirmações empíricas:
+
+- **Sonda V7** (minha): removi a linha do `runAsync` do teste. Ele **não** vira verde silencioso
+  — fica **vermelho** (2448 +3), e ainda derruba os dois testes vizinhos do arquivo por async
+  vazando entre casos. Isto é o que interessa: o dreno é **fail-closed**. Se um dia a porta
+  ganhar I/O de verdade e um turno deixar de bastar, o desfecho será um vermelho (lento — o
+  `pumpAndSettle` estoura o timeout de 10 min —, mas vermelho), **nunca** um falso verde.
+- **M7**, que muta o **adaptador**, mata este teste. Só é possível se a escrita realmente
+  atravessa `segmented → bloc → GaleraRepositorioSobreFestas → registro → stream → tag`.
+
+**A lista de tags é heterogênea?** **Sim, e o teste exige isso explicitamente**, em vez de
+torcer: `expect(antes.toSet(), hasLength(greaterThan(1)), reason: 'lista homogênea passaria
+mesmo com todo mundo rebaixado')`. A guarda não é decorativa — a fixture de RN-30 tem anfitrião,
+co-anfitrião, convidados e só-vê, e M7 (que rebaixa todo mundo a `soVe`, tornando a lista
+homogênea) mata o teste. Se a fixture regredir para papéis uniformes, a guarda quebra o teste em
+vez de deixá-lo virar tautologia.
+
+Dois reforços que o autor pôs e que valem registro: o laço começa em `coAnfitriao` enquanto a
+fixture nasce em `editarLista`, então **nenhuma das três voltas é um no-op** de GAL-28 (nem a
+guarda do card em `card_do_link.dart:65` nem a do adaptador em `:124` engolem o gesto); e
+`expect(logger.erros, isEmpty)` impede que uma gravação que explodisse virasse um "nada mudou"
+indistinguível de sucesso.
+
+**Uma ressalva honesta, que não é gap**: o teste roda a 390×820, então prova AC2 no **compacto**.
+No expandido a mesma junta é coberta por M28a (o gesto do card do rail) e V6 (a tag lendo
+`pessoa.papel`), da iteração 2 — juntas, não ponta-a-ponta. AC2 não pede as duas travessias, e a
+spec ancora a garantia no comportamento, não no layout.
+
+#### 3. As três âncoras foram para os testes certos
+
+Confirmado pelo diff (as três linhas caem em `:443`, `:459` e `:472` do arquivo novo, que são os
+`:443`, `:455` e `:467` do arquivo velho) **e** pelo comportamento: V1 agora derruba 17, e os
+três nomes novos na lista são exatamente *"o anfitrião vê — o par que discrimina"*, *"o
+co-anfitrião não vê 'NÍVEL DE ACESSO' no painel"* e *"o anfitrião vê as três seções — o par que
+discrimina"*. Nenhuma âncora foi para um teste que já a tinha, e nenhuma sobrou.
+
+### Sondas próprias desta iteração
+
+| # | Sonda | Alvo | Resultado |
+|---|---|---|---|
+| **V7** | remover o `await tester.runAsync(...)` do teste novo de P1-2 AC2 | o dreno é hack de "fazer passar" ou requisito real? | **Requisito real e fail-closed** — 2448 +3 (o próprio teste e dois vizinhos, por vazamento de async). Sem o dreno o teste **não** fica verde |
+| **V8** | `galera_compacta.dart:138` — `onEscolherNivel` → no-op | o teste novo passaria com o toque indo a lugar nenhum? | **Não** — 2450 +1, e o único teste que cai na suíte inteira é o novo. Ele é o único sensor dessa junta no compacto |
+
+**Sensor da iteração 3: 12 mutações · 12 mortas · 0 sobreviventes.**
+**Acumulado: 55 mutações · 55 mortas · 0 sobreviventes vivos.**
+
+### Os não-fixes seguem abertos, e nenhum foi fechado à força
+
+| Item | Situação conferida por mim | Veredito |
+|---|---|---|
+| **P1-2 AC3** — "nenhum aviso sobre convidados já dentro" | Nada no diff toca essa cláusula. Continua uma **negativa aberta**, não enumerável, e a A-09 continua tendo decidido não criar copy para ela. Nenhum teste novo finge cobri-la | ⚠️ **aberto, de propósito** — spec-precision gap intrínseco. Não bloqueia |
+| **P2-1 AC6** — `BoraSegmentedControl` sem hover | `git diff 956d6d7..HEAD -- lib/core/design_system/` é vazio; o componente segue intocado. É território da spec 01 (dívida 4 do `STATE.md`) | ⚠️ **aberto** — fora da fronteira desta spec. Não bloqueia |
+| **Os dois SPEC_DEVIATION** (três acentos por tela; rodapé sem `BoraFooterBar`) | `.specs/STATE.md` não mudou desde `956d6d7`; os dois continuam registrados nos §396-402 como pendentes | **Decisão do usuário**, não do Verifier. Não entram no veredito |
+
+Nenhum dos três foi "resolvido" por um teste que inventasse a leitura que falta. É o desfecho
+correto: o Fix Plan da iteração 2 os classificou como não-fixes, e o autor obedeceu.
+
+### Gate (rodado por mim, por exit code, com a árvore limpa)
+
+| Comando | Saída | Exit |
+|---|---|---|
+| `flutter test` | `00:30 +2451: All tests passed!` | **0** |
+| `flutter analyze` | `No issues found! (ran in 2.0s)` | **0** |
+
+Baseline `main` 1935 → **2451**, delta **+516**. Medido, não lido do handoff.
+`dart format` **não foi executado**.
+
+### Integridade da árvore
+
+| Momento | `git status --porcelain` |
+|---|---|
+| Antes da primeira mutação | **vazio** (conferido) |
+| Entre cada uma das 12 mutações | **vazio** — o harness confere antes de cada escrita e aborta se não estiver, e confere de novo depois do restauro, com **md5 contra o original** |
+| Na tentativa abortada de V2 (âncora LF vs. arquivo CRLF) | **vazio** — abortou **antes** de escrever |
+| Ao final de todas as mutações | **vazio** (conferido) |
+| Antes de escrever este relatório | **vazio** |
+
+`git checkout --` **não foi usado** sobre a árvore de trabalho. Nenhuma mutação ficou no disco.
+Nada foi consertado por esta verificação. A única alteração que este Verifier deixa na árvore é
+este arquivo.
+
+### Traceability — atualização da iteração 3
+
+| Requisito / critério | Status iteração 2 | Novo status |
+|---|---|---|
+| **GAL-04 / P1-2 AC4** (escreve **só** o nível) | ❌ sobrevivente V2 | ✅ **Verified** — V2 morta pelos dois testes de igualdade-a-menos-do-nível |
+| **P1-2 AC2** (o nível não retroage sobre o papel) | ⚠️ cadeia verificada junta a junta | ✅ **Verified** — teste ponta-a-ponta em `galera_route_test.dart`, com round-trip provado (V8) e dreno fail-closed (V7); M7 o mata |
+| **GAL-27 / RN-22 no expandido** | ✅ Verified, ancoragem pendente | ✅ **Verified** — os quatro testes ancorados; V1 derruba 17 |
+| GAL-01..GAL-03, GAL-05..GAL-26, GAL-28 | ✅ Verified | ✅ **Verified** (amostra M25–M28c, M19 re-confirmada) |
+| **P1-2 AC3** (negativa aberta) | ⚠️ | ⚠️ **aberto, de propósito** — A-09, não bloqueante |
+| **P2-1 AC6** (`BoraSegmentedControl`) | ⚠️ | ⚠️ **aberto** — dívida da spec 01, fora da fronteira |
+
+| Momento | Total | ✅ | ❌ | ⚠️ |
+|---|---|---|---|---|
+| Iteração 1 (números corrigidos) | 61 | 57 | 1 | 3 |
+| Iteração 2 | 61 | 58 | 0 | 3 |
+| **Iteração 3** | **61** | **59** | **0** | **2** |
+
+### Lições
+
+O veredito é PASS e o produto não gerou sinal novo — nenhum mutante sobreviveu, nenhum AC falhou, nenhum `SPEC_DEVIATION` novo. A **única** falha fundamentada desta iteração foi de **ferramenta de verificação**: o harness abortou porque as âncoras estavam em LF e os arquivos no disco estão em CRLF. O mesmo incidente já tinha acontecido na iteração 2 (lá ele chegou a sujar a árvore) e **não havia sido destilado** — só narrado. Reincidência documentada duas vezes é exatamente o que a camada de lições existe para capturar, então registrei: **L-040** (`gate_fail`, escopo `test/verification`).
+
+Nada mais foi registrado: PASS limpo não inventa lição.
+
+### Summary da iteração 3
+
+**Overall**: ✅ **PASS**. **A spec 07 `galera` está liberada para o merge em `main`.**
+
+**Spec-anchored check**: **59/61 ✅** · **0 ❌** · **2 ⚠️** (os dois intrínsecos: uma negativa
+aberta da spec-fonte e uma dívida da spec 01).
+**Sensor (iteração 3)**: 12 mutações · **12 mortas · 0 sobreviventes**.
+**Sensor (acumulado)**: 55 mutações · 55 mortas · **0 sobreviventes vivos**.
+**Gate**: `flutter test` **2451 passaram, 0 falharam, 0 pulados** (exit 0) · `flutter analyze`
+**zero issues** (exit 0).
+
+**O que os três fixes viraram, lido por mim:**
+
+- **Fix 1** trocou uma asserção parcial por uma **total**. O teste velho enumerava campos e
+  deixava cinco de fora; o novo compara o registro inteiro contra `antes.copyWith(convite: …)` e,
+  por construção, cobre também o sexto campo que alguém acrescentar amanhã a `FestaEmEdicao` —
+  desde que ele entre no `==`, o que a própria entidade documenta como obrigação. É a asserção
+  certa para a classe de defeito ("perda silenciosa de estado de outra spec no round-trip"), e
+  não um teste apertado só o bastante para matar V2.
+- **Fix 2** é o único que valia o risco de virar teatro, e não virou. As duas sondas que escrevi
+  para desmascará-lo — tirar o dreno (V7) e cortar o fio na apresentação (V8) — dizem o oposto:
+  o dreno é necessário e falha para o lado vermelho, e o teste é o único sensor da junta no
+  compacto. A guarda de heterogeneidade está escrita no próprio teste, com `reason` dizendo
+  exatamente o que ela impede.
+- **Fix 3** custou três linhas e comprou o que prometia: V1 sai de 14 para 17, e os três nomes
+  novos são os três testes que a iteração 2 mostrou passando no layout errado.
+
+**Continua aberto, e nada disto bloqueia o merge:**
+
+1. **P1-2 AC3** — "nenhum aviso sobre convidados já dentro" é negativa aberta; a A-09 decidiu não
+   criar copy, e inventar a asserção exigiria inventar a copy. Spec-precision gap intrínseco.
+2. **P2-1 AC6 / `BoraSegmentedControl` sem hover** — `core/design_system/` está fora da fronteira
+   desta spec. Dívida 4 do `STATE.md`, território da spec 01.
+3. **Os dois SPEC_DEVIATION** — três acentos por tela (contra os 2 do arquivo 02 §8) e rodapé sem
+   `BoraFooterBar`. São **decisão do usuário**, ainda pendente; não são gap de teste e nenhum
+   agente os decidiu.
+4. **A conferência visual nunca foi feita.** Todo o veredito desta feature é por teste
+   automatizado e leitura de código: ninguém rodou o app e olhou T-05 nem W-04 contra o arquivo
+   02. Sombras duras, `border-radius: 0`, os pesos de Archivo e o comportamento de press
+   continuam garantidos só pelos testes de widget que os afirmam — o que é uma garantia real, mas
+   não é o olho humano.
+
+**Recomendação**: a feature `galera` está **pronta para merge**. O laço fix→re-verify fecha em
+três iterações com 61/61 critérios defendidos ou explicitamente decididos e nenhum mutante vivo.

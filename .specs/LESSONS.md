@@ -248,6 +248,12 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: validation.md §Auditoria dos desvios declarados — 6 marcadores SPEC_DEVIATION, handoff contava 2 (process)
 - last seen: 2026-09-03T10:38:45Z
 
+### L-040 — Neste repo o checkout é CRLF (core.autocrlf=true): ferramenta que edita arquivo por bytes deve casar a âncora com o fim de linha real e regravar os mesmos bytes que leu, ou o restauro deixa a árvore suja com git diff vazio.
+- signal: `gate_fail` · recurrence: 1 feature(s) · scope: `test/verification` · harmful: 0
+- features: galera
+- evidence: .specs/features/galera/validation.md — incidente de fim de linha, iterações 2 e 3 (harness de mutação) (test/verification)
+- last seen: 2026-09-03T12:22:14Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.

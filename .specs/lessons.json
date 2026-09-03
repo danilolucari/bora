@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 40,
+  "next_id": 41,
   "lessons": [
     {
       "id": "L-001",
@@ -706,6 +706,24 @@
       ],
       "created": "2026-09-03T10:38:45Z",
       "last_seen": "2026-09-03T10:38:45Z"
+    },
+    {
+      "id": "L-040",
+      "key": "gate_fail::neste repo o checkout crlf core autocrlf true ferramenta que edita arquivo por bytes deve casar a ncora com o fim de linha real e regravar os mesmos bytes que leu ou o restauro deixa a rvore suja com git diff vazio",
+      "text": "Neste repo o checkout é CRLF (core.autocrlf=true): ferramenta que edita arquivo por bytes deve casar a âncora com o fim de linha real e regravar os mesmos bytes que leu, ou o restauro deixa a árvore suja com git diff vazio.",
+      "signal": "gate_fail",
+      "scope": "test/verification",
+      "status": "candidate",
+      "features": [
+        "galera"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        ".specs/features/galera/validation.md — incidente de fim de linha, iterações 2 e 3 (harness de mutação) (test/verification)"
+      ],
+      "created": "2026-09-03T12:22:14Z",
+      "last_seen": "2026-09-03T12:22:14Z"
     }
   ]
 }
