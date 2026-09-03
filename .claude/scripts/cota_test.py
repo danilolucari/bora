@@ -5,7 +5,9 @@ Cada caso sai de um critério do CLAUDE.md, não da implementação:
 
 - a tabela de gatilho (`<70` seguir, `70..84` atenção, `>=85` parar);
 - "gatilho só pela janela de sessão (5h)" — semana em 97% com sessão em 5% é SEGUIR;
-- "cache velho ou janela virada → INCERTO, pedir /usage, não decidir no escuro";
+- "cache velho com a janela aberta → INCERTO, mas sem pedir /usage: quem
+  conserta é a próxima resposta da API";
+- "janela virada com cache anterior ao reset → SEGUIR provisório com 0%";
 - e a regra que faltava: **falha do monitor é INCERTO, nunca PARAR**, porque
   `PARAR` divide o exit code 1 com o traceback do Python.
 
@@ -130,15 +132,30 @@ def main() -> int:
     )
 
     print("Os guardas de confiabilidade")
+    # Cache buscado agora trazendo uma janela que morreu 4 min atrás: leitura
+    # fresca com janela morta é inconsistência do servidor, não cache velho.
     checar(
-        "janela de 5h já virada é INCERTO",
+        "janela virada com cache posterior ao reset é INCERTO",
         _cache(five_hour={"utilization": 55, "resets_at": _iso(minutes=-4)}),
         INCERTO,
-        "já resetou",
+        "inconsistente",
+    )
+    # O caso que de fato acontece: máquina parada, janela virou no meio. O cache
+    # é anterior ao reset, então qualquer gasto na janela nova teria regravado o
+    # cache — 0% deduzido, SEGUIR provisório, sem pedir /usage a ninguém.
+    virada = _cache(five_hour={"utilization": 55, "resets_at": _iso(minutes=-40)})
+    virada["cachedUsageUtilization"]["fetchedAtMs"] = _agora_ms() - 90 * 60 * 1000
+    checar(
+        "janela virada com cache anterior ao reset é SEGUIR provisório",
+        virada, SEGUIR, "provisório", "/usage",
     )
     velho = _cache(five_hour={"utilization": 20, "resets_at": _iso(hours=3)})
     velho["cachedUsageUtilization"]["fetchedAtMs"] = _agora_ms() - 31 * 60 * 1000
-    checar("cache parado há 31 min é INCERTO", velho, INCERTO, "/usage", "o monitor falhou")
+    # O INCERTO continua; o que sai é a ordem de pedir /usage por causa dele.
+    checar(
+        "cache parado há 31 min é INCERTO sem pedir /usage",
+        velho, INCERTO, "não peça /usage", "o monitor falhou",
+    )
     checar(
         "cache sem a janela de sessão é INCERTO",
         _cache(seven_day={"utilization": 40, "resets_at": _iso(days=2)}),

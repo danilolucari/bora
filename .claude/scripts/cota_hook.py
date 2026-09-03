@@ -38,6 +38,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from cota import (  # noqa: E402
     CODIGOS_QUE_UM_CACHE_NOVO_CONSERTA,
+    CODIGOS_QUE_USAGE_DIAGNOSTICA,
     ESPERA_APOS_RESET_MIN,
     LIMITE_PARAR,
     horario_de_retomada,
@@ -189,7 +190,16 @@ def main() -> int:
             if veredito != "SEGUIR" and not herdado
             else None
         )
-        if herdado:
+        if leitura.get("provisorio"):
+            # A janela virou com a máquina parada. O 0% é dedução da virada, não
+            # medição — dizer isso evita tanto o falso conforto de um verde
+            # medido quanto o pedido de /usage que o turno seguinte já conserta.
+            fecho = (
+                "A janela de 5h virou enquanto a máquina estava parada, então este 0% "
+                "é o que a virada garante, não uma medição: a primeira resposta da API "
+                "troca por um número medido. Não peça /usage por causa disto."
+            )
+        elif herdado:
             fecho = (
                 f"Este número é herdado da sessão anterior ({leitura.get('cache_idade_min', '?')} "
                 "min) porque o cache só é regravado quando o Claude Code recebe resposta da "
@@ -266,10 +276,27 @@ def main() -> int:
                     "INCERTO anterior; o monitor volta ao silêncio até mudar de faixa.",
                 )
             else:  # INCERTO
+                # Duas famílias de INCERTO, dois remédios opostos — e dizer o
+                # remédio errado foi o que ensinou a pedir /usage à toa. Cache
+                # quebrado nenhuma resposta da API conserta, então ali /usage é
+                # diagnóstico legítimo; o resto se conserta sozinho no próximo
+                # turno, e interromper o usuário por isso é puro atrito.
+                if leitura.get("motivo_codigo") in CODIGOS_QUE_USAGE_DIAGNOSTICA:
+                    remedio = (
+                        "Isto é cache quebrado, não cache velho: nenhuma resposta da "
+                        "API conserta. Peça /usage ao usuário UMA vez, como "
+                        "diagnóstico, e siga sem abrir task longa."
+                    )
+                else:
+                    remedio = (
+                        "Este hook roda logo depois de uma resposta da API, que é o "
+                        "que regrava o cache — então isto não é falta de refresh. "
+                        "NÃO peça /usage: siga sem abrir task longa e trate como "
+                        "defeito do monitor se repetir em várias chamadas seguidas."
+                    )
                 saida = _contexto(
                     evento,
-                    f"COTA INCERTO — {leitura.get('motivo', '')}. Isto NÃO é verde: "
-                    "peça ao usuário para rodar /usage antes de abrir trabalho longo.",
+                    f"COTA INCERTO — {leitura.get('motivo', '')} {remedio}",
                     f"cota: incerto — {leitura.get('motivo', '')}",
                 )
 

@@ -85,7 +85,7 @@ porque esperar só atrasaria o mesmo `INCERTO`.
 | `SEGUIR` | < 70% | Trabalhar normalmente |
 | `ATENCAO` | 70–84% | Fechar a task corrente; **não abrir task longa**; preparar o handoff |
 | `PARAR` | ≥ 85% | Protocolo de pausa, imediatamente |
-| `INCERTO` | — | Cache ausente, velho (>30 min) ou de janela já encerrada. **Pedir `/usage` ao usuário** e não decidir no escuro |
+| `INCERTO` | — | Cache ausente, malformado, ou velho (>30 min) com a janela ainda aberta. **Siga** sem abrir task longa: a próxima chamada de ferramenta corrige sozinha. Só é defeito se persistir por várias chamadas |
 
 ## Qual janela decide
 
@@ -111,10 +111,15 @@ sem a janela que decide, não há decisão.
 Dois falsos-verdes já aconteceram neste projeto e o script cobre os dois:
 
 1. **Cache congelado** — `fetchedAtMs` parado. Número velho repetido para
-   sempre parece "tudo bem" e não é. Acima de 30 min → `INCERTO`.
+   sempre parece "tudo bem" e não é. Acima de 30 min **com a janela ainda
+   aberta** → `INCERTO` (se a janela virou, quem manda é o guarda 2).
 2. **Janela já virada** — `resets_at` no passado com a porcentagem antiga
    ainda em cache. Aconteceu em 2026-08-26 03:54 UTC: o cache marcava 55% de
-   uma janela encerrada 4 minutos antes. → `INCERTO`.
+   uma janela encerrada 4 minutos antes. A resposta depende de **quando o cache
+   foi buscado**: se ele é *anterior* ao reset, o veredito é `SEGUIR` provisório
+   com 0% — a janela nova nasceu depois daquela leitura, e gasto nela teria
+   regravado o cache; se é *posterior* e ainda traz a janela morta, é leitura
+   inconsistente do servidor → `INCERTO`.
 3. **Falha do próprio monitor** — `PARAR` é o exit code 1, que é também o que o
    Python devolve ao morrer de traceback. Um defeito no script ficava
    indistinguível de "pare e escreva o handoff": em 2026-09-01 um
@@ -126,15 +131,25 @@ Pela mesma razão, `resets_at` ilegível ou **sem fuso** também é `INCERTO`: s
 ele o guarda 2 não roda, e chutar um fuso erraria por horas justamente no
 cálculo que decide se a janela virou.
 
-`INCERTO` **não é `SEGUIR`**. Peça ao usuário para rodar `/usage`, que força a
-atualização do cache, e verifique de novo — exceto no `SessionStart`, onde
-cache velho é o estado normal (a sessão ainda não falou com a API) e a leitura
-se corrige sozinha na primeira chamada de ferramenta.
+## `INCERTO` não é motivo para interromper o usuário
+
+`INCERTO` **não é `SEGUIR`** — mas pedir `/usage` quase nunca é a resposta. Quem
+regrava o cache é **qualquer** resposta da API, e o próximo turno provoca uma de
+graça: `/usage` nunca foi especial, era só a forma manual de fazer o que o
+trabalho já faz sozinho. Então **siga**, não abra task longa, e deixe a próxima
+chamada de ferramenta trazer o número — o `PostToolUse` fala uma vez quando o
+verde substitui o `INCERTO`, justamente para ninguém precisar conferir à mão.
+
+Pedir `/usage` fica para os casos que uma resposta da API **não** conserta,
+porque não são falta de atualização e sim cache quebrado: `cachedUsageUtilization`
+ausente, `fetchedAtMs` faltando, `resets_at` ilegível, cache sem a janela de 5h,
+ou falha do próprio monitor. Aí o `/usage` é diagnóstico — a pergunta é se o
+Claude Code está gravando o cache —, não refresh.
 
 ## Testes
 
 ```bash
-python .claude/scripts/cota_test.py   # 18 casos, sem dependência externa
+python .claude/scripts/cota_test.py   # 23 casos, sem dependência externa
 ```
 
 Cada caso sai de um critério deste arquivo, não da implementação: a tabela de

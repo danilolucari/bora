@@ -26,6 +26,13 @@ que vem entre uma e outra. `--esperar` existe para não precisar do ritual:
 quando a leitura sai velha, o script fica relendo o arquivo até o Claude Code
 gravar um `fetchedAtMs` novo, dentro do orçamento dado.
 
+Pela mesma razão, cache velho **não** manda pedir `/usage`: quem regrava o cache
+é qualquer resposta da API, e o próximo turno provoca uma de graça. `/usage` só
+é resposta para cache quebrado (ausente, sem `fetchedAtMs`, `resets_at` ilegível,
+sem a janela de 5h), que nenhuma resposta da API conserta. E quando a janela de
+5h virou com o cache anterior ao reset, o veredito é `SEGUIR` marcado
+`provisorio` com 0% — ver o guarda 1 em `_ler_uma_vez`.
+
 Uso:
     python .claude/scripts/cota.py             # relatório legível
     python .claude/scripts/cota.py --curto     # uma linha
@@ -36,7 +43,7 @@ Saída (exit code):
     0  SEGUIR    - abaixo de 70%
     0  ATENCAO   - 70..84%, fechar a task corrente e evitar abrir task longa
     1  PARAR     - >= 85%: escrever handoff, commitar, agendar retomada, pausar
-    2  INCERTO   - cache ausente, velho ou de janela já encerrada
+    2  INCERTO   - cache ausente, malformado, ou velho com a janela ainda aberta
 """
 
 from __future__ import annotations
@@ -72,6 +79,18 @@ INTERVALO_RELEITURA_S = 0.2
 # mais para dar o mesmo INCERTO.
 CODIGOS_QUE_UM_CACHE_NOVO_CONSERTA = {"cache_velho", "janela_virada"}
 
+# O outro lado da moeda: os INCERTO que **nenhuma** resposta da API conserta,
+# porque não são cache velho e sim cache quebrado ou ausente. Só nestes o
+# `/usage` ainda é resposta — e como diagnóstico ("o Claude Code está
+# conseguindo gravar o cache?"), nunca como refresh.
+CODIGOS_QUE_USAGE_DIAGNOSTICA = {
+    "sem_cache",
+    "sem_fetched_at",
+    "reset_ilegivel",
+    "sem_janelas",
+    "sem_sessao",
+}
+
 # Nome legível de cada janela, para a mensagem dizer o que estourou.
 NOMES = {
     "five_hour": "sessão (5h)",
@@ -84,6 +103,12 @@ NOMES = {
     "weekly_all": "semana (7d)",
     "weekly_opus": "semana Opus (7d)",
 }
+
+# A frase única para os casos acima, para o hook e o relatório não divergirem.
+DIAGNOSTICO_USAGE = (
+    "Rode /usage — aqui ele é diagnóstico (o Claude Code está gravando o cache?), "
+    "não refresh."
+)
 
 # A única janela que dispara veredito. Tudo o mais é informativo.
 NOME_SESSAO = "sessão (5h)"
@@ -215,7 +240,7 @@ def _ler_uma_vez(caminho: str) -> dict:
             "motivo_codigo": "sem_fetched_at",
             "motivo": (
                 "o cache não trouxe `fetchedAtMs`, então não dá para saber se o "
-                "número é fresco. Rode /usage para atualizar."
+                "número é fresco. " + DIAGNOSTICO_USAGE
             ),
         }
     idade_min = (agora - dt.datetime.fromtimestamp(
@@ -236,7 +261,7 @@ def _ler_uma_vez(caminho: str) -> dict:
             "motivo_codigo": "reset_ilegivel",
             "motivo": (
                 f"a janela de 5h veio com `resets_at` ilegível ({reseta_sessao!r}), "
-                "então não dá para saber se ela já virou. Rode /usage."
+                "então não dá para saber se ela já virou. " + DIAGNOSTICO_USAGE
             ),
         }
 
@@ -254,25 +279,53 @@ def _ler_uma_vez(caminho: str) -> dict:
         "semana_reseta_em_local": _local((uso.get("seven_day") or {}).get("resets_at")),
     }
 
-    # Guarda 1: a janela de 5h já virou. O número em cache é da janela que
-    # fechou e não descreve a atual — foi o caso real de 2026-08-26 03:54 UTC,
-    # com o cache marcando 55% de uma janela encerrada 4 min antes.
+    # Guarda 1: a janela de 5h já virou, então o `utilization` em cache descreve
+    # a janela que fechou, nunca a atual. O que fazer com isso depende de quando
+    # o cache foi buscado — foi o caso real de 2026-08-26 03:54 UTC, com o cache
+    # marcando 55% de uma janela encerrada 4 min antes.
+    #
+    # Cache **anterior** ao reset não é escuro: a janela nova nasceu depois desta
+    # leitura, e qualquer gasto nela teria vindo de uma resposta da API — que
+    # teria regravado o cache. Logo o gasto observado na janela nova é zero. O
+    # veredito sai da tabela normal com 0%, marcado `provisorio`, e a primeira
+    # resposta da API troca o zero deduzido por um medido. O buraco conhecido é
+    # gasto vindo de **outra máquina** na mesma conta: a mesma exposição que o
+    # número herdado do SessionStart já aceita, e que fecha no mesmo instante.
+    #
+    # Cache **posterior** ao reset ainda trazendo a janela encerrada é outra
+    # coisa — leitura fresca com janela morta. Aí ninguém sabe de nada.
     if faltam_min is not None and faltam_min <= 0:
-        estado["veredito"] = "INCERTO"
         estado["motivo_codigo"] = "janela_virada"
-        estado["motivo"] = (
-            "a janela de 5h já resetou e o cache ainda é da janela anterior "
-            f"({estado['sessao_pct']}%). Rode /usage ou faça uma chamada para atualizar."
-        )
-        return estado
+        if buscado_ms / 1000 <= reseta.timestamp():
+            estado["provisorio"] = True
+            estado["sessao_pct"] = 0
+            for janela in janelas:
+                if janela["janela"] == NOME_SESSAO:
+                    janela["pct"] = 0
+            estado["nota"] = (
+                f"provisório: a janela virou às {estado['reseta_em_local']} e o cache "
+                "é anterior a isso, então o 0% é o que a virada garante, não uma "
+                "medição. A próxima resposta da API mede de verdade"
+            )
+        else:
+            estado["veredito"] = "INCERTO"
+            estado["motivo"] = (
+                "a janela de 5h já resetou, mas o cache é posterior ao reset e ainda "
+                f"traz a janela encerrada ({estado['sessao_pct']}%) — leitura "
+                "inconsistente. " + DIAGNOSTICO_USAGE
+            )
+            return estado
 
-    # Guarda 2: número congelado.
-    if idade_min > IDADE_MAXIMA_MIN:
+    # Guarda 2: número congelado. Não vale para o caso provisório acima, em que a
+    # idade do cache deixou de importar: o número velho já foi trocado pelo zero
+    # que a virada da janela garante.
+    if idade_min > IDADE_MAXIMA_MIN and not estado.get("provisorio"):
         estado["veredito"] = "INCERTO"
         estado["motivo_codigo"] = "cache_velho"
         estado["motivo"] = (
-            f"cache parado há {idade_min:.0f} min (máx {IDADE_MAXIMA_MIN}). "
-            "Rode /usage para atualizar."
+            f"cache parado há {idade_min:.0f} min (máx {IDADE_MAXIMA_MIN}) com a "
+            "janela ainda aberta. Se corrige sozinho na próxima resposta da API — "
+            "não peça /usage por causa disto."
         )
         return estado
 
@@ -290,7 +343,7 @@ def _ler_uma_vez(caminho: str) -> dict:
         estado["motivo_codigo"] = "sem_sessao"
         estado["motivo"] = (
             "o cache não trouxe a janela de sessão (5h), que é a única que "
-            "decide. Rode /usage para atualizar."
+            "decide. " + DIAGNOSTICO_USAGE
         )
         return estado
 
@@ -304,6 +357,11 @@ def _ler_uma_vez(caminho: str) -> dict:
     else:
         estado["veredito"] = "SEGUIR"
         estado["motivo"] = f"{gatilho['janela']} em {gatilho['pct']}%"
+
+    # A nota do guarda 1 sobrevive à tabela de veredito: sem ela o relatório
+    # diria "sessão (5h) em 0%" sem contar que o zero é deduzido, não medido.
+    if estado.get("nota"):
+        estado["motivo"] += f" — {estado['nota']}"
 
     return estado
 
@@ -393,7 +451,10 @@ def _relatar() -> int:
             else:
                 marca = "(informativa)"
             _imprimir(f"  {janela['janela']:<20}: {janela['pct']:>3}% {marca}")
-        if estado.get("reseta_em_local"):
+        # No caso provisório o reset da 5h está no passado: imprimir "faltam
+        # -40 min" e um "retomar em" já vencido parece defeito. O motivo já diz
+        # a que horas a janela virou, que é a informação que sobra de útil.
+        if estado.get("reseta_em_local") and not estado.get("provisorio"):
             _imprimir(
                 f"  reseta em (5h)      : {estado['reseta_em_local']} "
                 f"(faltam {estado['faltam_min']} min)"
@@ -404,7 +465,7 @@ def _relatar() -> int:
             _imprimir(f"  cache idade         : {estado['cache_idade_min']} min")
         if estado.get("esperou_s"):
             _imprimir(f"  esperei             : {estado['esperou_s']}s por um cache novo")
-        if estado.get("retomar_em"):
+        if estado.get("retomar_em") and not estado.get("provisorio"):
             gatilho = estado.get("gatilho") or {}
             _imprimir(
                 f"  retomar em          : {estado['retomar_em']} "
