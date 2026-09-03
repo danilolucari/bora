@@ -8,6 +8,10 @@ Cada caso sai de um critério do CLAUDE.md, não da implementação:
 - "cache velho ou janela virada → INCERTO, pedir /usage, não decidir no escuro";
 - e a regra que faltava: **falha do monitor é INCERTO, nunca PARAR**, porque
   `PARAR` divide o exit code 1 com o traceback do Python.
+
+O último bloco cobre `--esperar`, que existe para matar o ritual de "rodar duas
+vezes": o cache só é regravado quando o Claude Code recebe resposta da API, e
+era essa resposta — não a segunda rodada — que consertava o número.
 """
 
 from __future__ import annotations
@@ -19,6 +23,8 @@ import os
 import subprocess
 import sys
 import tempfile
+import threading
+import time
 
 def print(*partes: object) -> None:  # noqa: A001 — saída legível no console do Windows
     texto = " ".join(str(parte) for parte in partes)
@@ -46,18 +52,32 @@ def _cache(**janelas: dict) -> dict:
     return {"cachedUsageUtilization": {"fetchedAtMs": _agora_ms(), "utilization": janelas}}
 
 
-def _rodar(conteudo) -> tuple[int, str]:
-    """Roda o cota.py de verdade, como o hook roda: subprocesso e exit code."""
-    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8") as arq:
+def _escrever(caminho: str, conteudo) -> None:
+    with io.open(caminho, "w", encoding="utf-8") as arq:
         arq.write(conteudo if isinstance(conteudo, str) else json.dumps(conteudo))
+
+
+def _rodar(conteudo, *args: str, durante=None) -> tuple[int, str, float]:
+    """Roda o cota.py de verdade, como o hook roda: subprocesso e exit code.
+
+    `durante` é chamado com o caminho do arquivo logo depois que o processo
+    sobe — é assim que os casos de `--esperar` simulam o Claude Code gravando
+    um cache novo no meio da espera.
+    """
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8") as arq:
         caminho = arq.name
+    _escrever(caminho, conteudo)
     try:
         ambiente = dict(os.environ, COTA_ARQUIVO=caminho, PYTHONIOENCODING="utf-8")
+        if durante is not None:
+            threading.Thread(target=durante, args=(caminho,), daemon=True).start()
+        comeco = time.monotonic()
         saida = subprocess.run(
-            [sys.executable, COTA], capture_output=True, text=True,
+            [sys.executable, COTA, *args], capture_output=True, text=True,
             encoding="utf-8", errors="replace", env=ambiente,
         )
-        return saida.returncode, (saida.stdout or "") + (saida.stderr or "")
+        duracao = time.monotonic() - comeco
+        return saida.returncode, (saida.stdout or "") + (saida.stderr or ""), duracao
     finally:
         os.unlink(caminho)
 
@@ -69,7 +89,7 @@ def checar(
     deve_conter: str | None = None,
     nao_conter: str | None = None,
 ) -> None:
-    codigo, texto = _rodar(conteudo)
+    codigo, texto, _ = _rodar(conteudo)
     if codigo != exit_esperado:
         falhas.append(f"{nome}: exit {codigo}, esperado {exit_esperado}\n{texto.strip()}")
         return
@@ -167,6 +187,49 @@ def main() -> int:
         INCERTO,
         "o monitor falhou",
     )
+
+    print("`--esperar` no lugar de rodar o script duas vezes")
+    velho_esperando = _cache(five_hour={"utilization": 20, "resets_at": _iso(hours=3)})
+    velho_esperando["cachedUsageUtilization"]["fetchedAtMs"] = _agora_ms() - 31 * 60 * 1000
+
+    def _regravar(caminho: str) -> None:
+        # O que o Claude Code faz ao receber resposta da API — e o que, antes,
+        # só acontecia por acaso entre a primeira e a segunda rodada do script.
+        time.sleep(0.6)
+        _escrever(caminho, _cache(five_hour={"utilization": 71, "resets_at": _iso(hours=3)}))
+
+    codigo, texto, duracao = _rodar(velho_esperando, "--esperar", "8", durante=_regravar)
+    if codigo != SEGUIR or "71%" not in texto or "ATENCAO" not in texto:
+        falhas.append(f"cache regravado durante a espera: exit {codigo}\n{texto.strip()}")
+    elif duracao > 6:
+        falhas.append(f"a espera não terminou assim que o cache mudou ({duracao:.1f}s)")
+    else:
+        print("  ok  cache regravado durante a espera vira a leitura boa, sem segunda rodada")
+
+    codigo, texto, duracao = _rodar(velho_esperando, "--esperar", "2")
+    if codigo != INCERTO or "esperei 2s" not in texto:
+        falhas.append(f"espera vencida devia ser INCERTO explícito: exit {codigo}\n{texto.strip()}")
+    elif duracao < 1.8:
+        falhas.append(f"a espera de 2s durou só {duracao:.1f}s")
+    else:
+        print("  ok  espera vencida continua INCERTO, e diz que esperou")
+
+    # Esperar só faz sentido para o que uma gravação nova conserta. Cache
+    # ausente não melhora com o tempo, e segurar o hook por isso seria pagar
+    # o atraso para dar o mesmo INCERTO.
+    codigo, texto, duracao = _rodar({}, "--esperar", "8")
+    if codigo != INCERTO:
+        falhas.append(f"sem cache com --esperar: exit {codigo}\n{texto.strip()}")
+    elif duracao > 3:
+        falhas.append(f"segurou {duracao:.1f}s esperando um cache que nunca vem")
+    else:
+        print("  ok  INCERTO que espera nenhuma não conserta volta na hora")
+
+    codigo, texto, duracao = _rodar(sessao(20), "--esperar", "8")
+    if codigo != SEGUIR or duracao > 3:
+        falhas.append(f"leitura fresca não devia esperar ({duracao:.1f}s, exit {codigo})")
+    else:
+        print("  ok  leitura fresca não espera nada")
 
     print()
     if falhas:

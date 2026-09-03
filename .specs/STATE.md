@@ -246,12 +246,21 @@
 - **Status**: active
 
 
+### AD-031
+- **Decision**: O modelo de acesso do BORA tem duas metades e elas moram em lugares diferentes. O **dado** — `enum NivelDoLink` e `ConviteDaFesta { codigo, nivel }`, campo de `FestaEmEdicao` — mora em `lib/core/festas/dominio/`. A **regra** — `enum Capacidade` (as oito de RN-22), `capacidadesDe(PapelNaFesta)`, `pode(papel, capacidade)` e `papelDoNivel(NivelDoLink)` — mora em `lib/features/galera/domain/permissoes.dart`, em Dart puro, sem import de Flutter. **Nenhuma feature reimplementa a tabela**: `convite`, `convidado` e `custos` consultam estas funções, e as security rules do Firestore da spec 09 são a tradução desta mesma tabela para o servidor. O papel do anfitrião não é atribuível nem removível por nenhum caminho de código.
+- **Reason**: RN-22 é herdada por três specs (roadmap §5). Se não nascer consultável, nasce copiada — e três cópias divergem uma a uma sem que nenhum teste perceba. A separação dado/regra repete o que `core/calculo/dominio/papel_na_festa.dart` já declara por escrito para o mesmo par de conceitos ("só o enum: a tabela é domínio de `galera`"), e mantém `core/festas/` sem importar feature nenhuma. O nível sobe para `core/` porque tem dois consumidores fora da `galera` (o `codigo` na spec 08, o `nivel` na spec 09) — a mesma condição que motivou a AD-019 e a AD-029.
+- **Trade-off**: as specs 08/09/10 passam a importar de `features/galera/domain/`, acoplamento feature↔feature que a AD-019 evitou em outro contexto. É sancionado pela GAL-19 AC7, que nomeia a pasta, e fica como candidato à promoção para `core/` no M2 — junto com a promoção de `FestaRepository` que a AD-029 já prevê.
+- **Scope**: specs 07 `galera`, 08 `convite`, 09 `convidado` e 10 `custos`; e toda decisão futura de "quem pode o quê".
+- **Date**: 2026-09-02
+- **Status**: active
+
+
 ### Reserva de numeração — AD-029..AD-036 (propostas, **não** ativas)
 
-Os designs das seis specs restantes propuseram oito decisões. A **AD-029** e a **AD-030** já
-foram gravadas acima, na primeira task do Execute de `montar` e de `lista`; as seis restantes
-continuam **propostas** — o log ativo para na **AD-030**. Cada uma é gravada como AD completa na **primeira
-task do Execute** da sua spec, na ordem da coluna "Depende de" do ROADMAP §2. Quem executar
+Os designs das seis specs restantes propuseram oito decisões. A **AD-029**, a **AD-030** e a
+**AD-031** já foram gravadas acima, na primeira task do Execute de `montar`, de `lista` e de
+`galera`; as cinco restantes continuam **propostas** — o log ativo para na **AD-031**. Cada uma
+é gravada como AD completa na **primeira task do Execute** da sua spec, na ordem da coluna "Depende de" do ROADMAP §2. Quem executar
 fora dessa ordem **renumera a sua**, nunca a anterior. Esta tabela existe para que sessões
 paralelas não reivindiquem o mesmo número — foi o que já aconteceu uma vez (`19f77a7`,
 AD-023 → AD-029).
@@ -260,7 +269,7 @@ AD-023 → AD-029).
 |---|---|---|---|
 | ~~**AD-029**~~ | 05 `montar` | ✅ **registrada acima** — porta de edição da festa em `lib/core/festas/` (`FestaEmEdicao`, `FestaEmEdicaoRepository`), falando só em tipos de `core/calculo` | `montar/design.md` §Tech Decisions |
 | ~~**AD-030**~~ | 06 `lista` | ✅ **registrada acima** — o estado de lista da festa (overrides, carrinho, despesas) mora nas entidades de `core/`, nunca na feature | `lista/design.md` §12 |
-| **AD-031** | 07 `galera` | O **dado** do acesso (`codigo`, `NivelDoLink`) em `core/festas/`; a **regra** RN-22 × RN-23 em `features/galera/domain/permissoes.dart`, consultável e nunca reimplementada | `galera/design.md` §12 |
+| ~~**AD-031**~~ | 07 `galera` | ✅ **registrada acima** — o **dado** do acesso (`codigo`, `NivelDoLink`) em `core/festas/`; a **regra** RN-22 × RN-23 em `features/galera/domain/permissoes.dart`, consultável e nunca reimplementada | `galera/design.md` §12 |
 | **AD-032** | 08 `convite` | `share_plus` como canal único de saída de texto, atrás da porta `CompartilhadorDeTexto`, com o mapeamento de `ShareResultStatus` num lugar só | `convite/design.md` §12 |
 | **AD-033** | 09 `convidado` | Forma do dado no Firestore e fronteira de escrita: **um documento por festa**, `convites/{codigo}` como índice, RSVP escrito **só** pela Cloud Function. Traz `cloud_functions` ao `pubspec.yaml` | `convidado/design.md` §13 |
 | **AD-034** | 09 `convidado` | Identidade do portador do link: uid da auth anônima persistido no dispositivo, e **usuário anônimo do Firebase nunca vira `UsuarioLogado`** | `convidado/design.md` §13 |
@@ -274,101 +283,193 @@ CVD-31 AC7 manda. Entram no corpo da AD-033.
 
 ## Handoff
 
-> **SNAPSHOT — 2026-09-02.** O **M1 está fechado**: a spec 06 `lista` foi construída,
-> verificada em 3 iterações e **mergeada na `main`** (`e826261`). Árvore limpa.
-> Gate na `main`, conferido com exit code: **1935 verdes**, `flutter analyze` zero issues.
+> **SNAPSHOT — 2026-09-03, 00:55 BRT.** Spec 07 `galera`: Execute **27/27 + 1 fix**
+> fechado, e agora também os **gaps que o Verifier apontou, corrigidos**. Branch
+> **`feature/galera`**, árvore limpa, **36 commits** à frente da `main` (só o último
+> não empurrado). Gate conferido por exit code, não por relato: **2449 verdes**
+> (eram 2439), `flutter analyze` zero issues.
+>
+> **PRÓXIMO PASSO: a re-verificação — iteração 2 do Verifier.** Não foi despachada
+> por cota (**87%**, pausa em 85%; a janela de 5h reseta às 02:40 BRT). Retomada
+> headless agendada para **02:49:59 BRT**, e a ordem do usuário é explícita: *ao
+> resetar, retomar fazendo o Verifier*.
 
 ### Onde o projeto está
 
 | Spec | Execute | Verifier | Na `main`? |
 |---|---|---|---|
 | 00–05 (`fundacao`..`montar`) | ✅ | ✅ PASS | ✅ |
-| 06 `lista` | ✅ 27/27 | ✅ **PASS** (3 iterações) | ✅ `e826261` |
-| 07 `galera` | ⬜ **desbloqueada** — `tasks.md` pronto, 27 tasks, AD-031 na T1 | ⬜ | — |
+| 06 `lista` | ✅ 27/27 | ✅ PASS (3 iterações) | ✅ `e826261` |
+| 07 `galera` | ✅ **27/27 + 1 fix** | 🟡 **iteração 1 = FAIL; gaps corrigidos; falta re-verificar** | — `feature/galera` |
 | 08 `convite` · 09 `convidado` · 10 `custos` | ⬜ Tasks pendentes | ⬜ | — |
 
-Baseline: 1528 → **1935** (+407 nesta sessão).
+Baseline: 1935 (`main`) → **2449** (`feature/galera`), **+514**.
 
-### O que fechou nesta sessão
+### O que a iteração 1 do Verifier apurou
 
-**`lista`** — T-04 e W-04: modo PLANEJAR com leitura de mercado e régua de override,
-modo COMPRAR por corredor, e o pedido por delivery inteiro atrás da porta da AD-024
-(adaptador falso). **AD-030 registrada.** Verificado rodando: R$ 271, faixa real
-R$ 245–343, ≈R$ 45 por adulto e SUBTOTAL R$ 211 aparecem corretos nas duas viewports.
+Relatório em `.specs/features/galera/validation.md` (commit `b96507a`).
 
-**Conserto do `BoraSecondaryButton`** (`691186d`) — o botão renderizava como bloco
-preto com o rótulo **invisível**, em 4 chamadas de produção. `BoxShadow` do Flutter
-não é recortado para fora da borda como o `box-shadow` do CSS; com fundo transparente
-a sombra aparecia através do botão. §5 põe a sombra no hover, não no repouso.
-**Achado rodando o app**, não pela suíte.
+- **Critérios**: **54/57 ✅**, **1 ❌** (P1-2 AC4), **3 ⚠️**.
+- **Sensor de discriminação**: **25/30 mortas, 5 sobreviventes → FAIL**.
 
-### O Verifier: FAIL → FAIL → PASS, e o que valeu
+⚠️ **O `validation.md` está incompleto.** Tem **5 das ~11 seções** do formato de
+`lista` — vai até `## Discrimination Sensor` e para. O campo **Veredito** ainda diz
+"(preenchido ao fim)", e faltam `Auditoria dos desvios declarados`, `O que ninguém
+tinha verificado`, `Code Quality`, `Fix Plans`, `Requirement Traceability Update`,
+`Integridade da árvore` e `Summary`. A sessão headless que rodava o Verifier
+(`.claude/logs/retomada-20260902-214000.log`) foi cortada antes de fechá-lo.
 
-`.specs/features/lista/validation.md` tem as 3 iterações. O achado de maior valor foi
-um **defeito real de produto**: a 1ª guarda de supressão de eco comparava com
-`_ultimaGravada` e **descartava escrita externa legítima**, deixando a tela obsoleta —
-inofensivo no M1 (AD-016, sem escritor externo), viraria bug no M2 com `galera` e
-`convidado`. Um fixer alegou "mutante equivalente"; a iteração 2 **derrubou a alegação
-com uma sonda**. Corrigido por decisão do usuário (`ebdb0ca`): a comparação passa a ser
-com `state.festa`.
+### O que ESTA sessão fez — os cinco sobreviventes, corrigidos
 
-Na iteração 3 as **duas guardas passaram a ter sensor separado** — nenhuma morre de
-carona na outra, que era o furo das iterações 1 e 2.
+Commit **`457de00`** `test(galera): faz o gesto do web chegar à porta e cobre a
+festa vazia`. **Nenhuma linha de produção mudou** — os cinco sobreviventes eram
+buraco de cobertura, não defeito de comportamento. **+10 testes.**
 
-### Decisões do usuário registradas (2026-09-01/02)
+1. **M25/M26/M27/M28 — `GaleraExpandida` não tinha nenhum gesto a 1180px.** Todo
+   toque acontecia no compacto, e o expandido só afirmava que a travessia dos 900
+   preserva estado. Os seis fios que ela liga entre a árvore e o bloc podiam ser
+   cortados com a suíte verde. O grave era **de autorização**: com
+   `podeConfigurarNivel`/`podeGerenciarPapeis` trocados por `true`, um co-anfitrião
+   no computador via e usava os dois controles que RN-22 reserva ao anfitrião (mesma
+   classe de **L-034**). **8 testes novos** em
+   `test/features/galera/presentation/widgets/galera_expandida_test.dart`: os quatro
+   gestos (dieta, bebida, papel, nível) afirmados **na porta**, mais as duas guardas
+   de RN-22, cada uma **com o par que discrimina** (anfitrião vê / co-anfitrião não).
+2. **M19 — `definirNivelDoLink` podia recusar a gravação numa festa sem pessoa
+   nomeada** e ninguém percebia. É **P1-2 AC4**, o único ❌ da §Spec-Anchored. O teste
+   do bloc que se chamava "sem pessoa nenhuma" falava do **evento**, não da festa.
+   **2 testes novos**: `galera_repositorio_papel_e_nivel_test.dart` (grava uma vez, o
+   código do link intacto, `pessoas` vazia, sem log de erro) e
+   `galera_bloc_escritas_test.dart` (a festa vazia escreve igual).
 
-1. Guarda de eco compara com `state.festa`, não com a última gravada.
-2. **P1-3 AC4**: "editado" = **"tem override gravado"**. `+1` seguido de `−1` mantém o
-   ponto vermelho; só o RESTAURAR limpa. Registrado no corpo do AC em `spec.md`.
-3. `BoraSecondaryButton`: sombra só sobre fundo opaco; o teste da sombra dura passa a
-   observá-la na variante `fundoBranco`, com as três asserções intactas.
+**Sensor próprio, refeito depois do commit**: as **7 mutações** (M25, M26, M27,
+M28 em três fios separados, M19) replantadas uma a uma, **suíte inteira** a cada
+uma, restauração imediata pelo mesmo script, `git status --porcelain` conferido
+entre todas e ao final. **7/7 mortas**, e o relatório nomeia o teste que matou cada
+uma. O script está em `scratchpad/sensor.py` — protocolo de arquivo, sem
+`git checkout --`. **Ele não substitui o Verifier**: é autoexame do autor, exatamente
+o que o contrato manda não aceitar como prova.
 
-### ⚠️ O que falta, em ordem
+### O defeito que a fix task consertou — e que já estava na `main`
 
-1. **Conferência visual das telas ainda não vistas** — T-01, W-01, T-02, W-02, T-03 e
-   W-03. T-04 e W-04 **já foram vistas**. Foi olhando que apareceu o botão invisível,
-   que ~1900 testes e dois Verifiers não podiam pegar. **Faça isso antes de `galera`.**
-   Receita: `firebase emulators:start --only auth` (o Firestore **não** é preciso no M1
-   e é o único que exige JVM) + `flutter run -d web-server --web-port 8088`, e dirigir
-   com Playwright por coordenadas — Flutter web pinta em canvas, não há DOM.
-2. **Execute de `galera`** — 27 tasks, 5 batches sequenciais, AD-031 na T1 (conferir a
-   numeração na hora: o log ativo vai até **AD-030**).
-3. **Tasks das specs 08..10**, sem dependência de código.
+`FestaEmEdicao` tem quatro campos e três specs os escrevem, mas o `ResumoDeFesta` — o
+registro único por onde tudo passa (AD-029) — só carregava dois. `salvarFesta`
+reconstruía sem `despesas` (AD-030) e sem `convite` (AD-031); `observarFesta` devolvia
+os dois no default. No app rodando: **o carrinho da `lista` sumia** e
+`definirNivelDoLink` era **no-op** — GAL-04 não era verdade fora do duplo.
 
-### Spec-precision gap aberto de propósito
+Ficou invisível porque toda asserção das specs 06 e 07 passa por duplo, e **nenhum teste
+atravessava o adaptador que o M1 roda de verdade**. Mesma classe do botão invisível
+(L-034). Consertado em `3f521c2` por decisão do usuário. Emenda aditiva com default
+`const` — nenhum `const ResumoDeFesta(...)` da suíte da spec 04 mudou. Sensor: **4
+mutações, 4 mortas**.
 
-**P1-5 AC9** ("volta no mesmo modo") — sem asserção e sem leitura fixada. Decisão do
-usuário, não do agente.
+**Regra que fica:** quem acrescentar um quinto campo a `FestaEmEdicao` acrescenta ao
+`ResumoDeFesta` e aos três caminhos do adaptador.
+`test/features/home/data/festa_repository_em_memoria_round_trip_test.dart` é o que cobra.
+
+### Contrato da iteração 2 — a re-verificação
+
+Agente **novo**, que não implementou nada, e que **não aceita nada do que está escrito
+acima como prova**. É a **2ª de no máximo 3** iterações antes de escalar.
+
+- **Refazer as 7 mutações por conta própria** — o autoexame de `457de00` é do autor.
+  Protocolo: árvore limpa antes de cada uma → editar → **suíte inteira** → restaurar
+  imediato → `git status` entre todas e ao final. **Nunca `git checkout --` sobre
+  trabalho não commitado.**
+- **Conferir se os 10 testes novos não são tautológicos**: o par que discrimina de
+  cada guarda de RN-22 existe? O gesto a 1180 falharia se o fio fosse cortado *e* passa
+  por não ter atalho pelo compacto? A festa vazia afirma que **só** o nível mudou?
+- **Reabrir as 3 ⚠️** de P1-2 AC2/AC3 e P2-1 AC6 — nenhuma foi tocada por esta sessão.
+- **Fechar o `validation.md`**: as seis seções que faltam e o **Veredito**. Escrever
+  **incrementalmente em disco** (risco de limite) e commitar. Espelhar o formato de
+  `.specs/features/lista/validation.md`.
+- **O Verifier não conserta.** Gap vira task ranqueada para outro agente.
+- **NÃO rodar `dart format`** (ver avisos operacionais).
+
+**Não ler como omissão:** `efeitosDasPreferencias` e `resumoDasPreferencias`
+(`design.md` §7.4) — confirmar se a T22 os consome; se sim, está fechado.
+
+
+### ⚠️ Decisões pendentes do usuário sobre `galera`
+
+1. **Três acentos na tela**, contra o máximo de dois do `CLAUDE.md`: roxo e amarelo
+   estruturais, vermelho como estado ativo. Declarado no topo de `galera_compacta.dart`
+   (D-2/A-16). É violação **consciente** da regra do design system — aceitar ou corrigir
+   é decisão do usuário, não do agente.
+2. **Rodapé não usa `BoraFooterBar`**: o componente tem bloco de valor e T-05 não dá
+   número nenhum à tela. Composto dos tokens do próprio componente, mesmo caminho de
+   T-04. `SPEC_DEVIATION` declarado.
+
+### O que falta, em ordem
+
+1. **Re-verificação de `galera` (iteração 2)** — contrato acima. É o próximo passo, e
+   é obrigatório: **nunca perguntado ao usuário**.
+2. **Corrigir o que ela apontar**, e re-verificar (resta 1 iteração antes de escalar).
+3. **Conferência visual** — T-01, W-01, T-02, W-02, T-03, W-03 e agora T-05/W-05, nunca
+   vistas rodando. Receita: `firebase emulators:start --only auth` +
+   `flutter run -d web-server --web-port 8088`, dirigindo com Playwright por coordenadas
+   (Flutter web pinta em canvas, não há DOM). `flutter run -d chrome` **falha** nesta
+   máquina.
+4. **Merge de `feature/galera` em `main`** depois do PASS.
+5. **Tasks das specs 08..10**, sem dependência de código.
+
+
+### Avisos operacionais desta sessão
+
+1. **NÃO rode `dart format`.** O formatter do Dart 3.13 usa o estilo "tall" e reescreve
+   dezenas de arquivos já commitados. Um worker fez e teve de reverter.
+2. **Só o `/usage` interativo atualiza a cota.** Apurado por teste: não existe
+   `claude usage` no CLI, e uma sessão headless `claude -p` completa (auth ok, exit 0)
+   **não mexe** no `fetchedAtMs`. O monitor congela e **subestima** — numa leitura desta
+   sessão mostrou 78% com 91% real, e quem trouxe o número certo foi o
+   `agendar-retomada.ps1`. **Peça `/usage` na fronteira de cada batch.**
+3. **Regra do `git checkout --`** repetida em todo briefing; zero reincidência. Mantenha.
+4. **Duas sessões na mesma branch é risco real**: ao continuar trabalho manualmente,
+   **cancele a retomada agendada** (`agendar-retomada.ps1 -Cancelar`) antes que ela
+   dispare.
+
+### Spec-precision gaps abertos de propósito
+
+- **P1-5 AC9** de `lista` ("volta no mesmo modo") — sem asserção, decisão do usuário.
+- **`GaleraTextos.falha`** — nenhuma tela de `04`/`06` desenha a Galera falhando.
+- **Festa inexistente** (`null` do stream) cai em `falhou` sem copy própria e **sem log**
+  (ausência de dado não é exceção); há sensor afirmando o não-log.
+- **`codigo` vazio** — não copia, não incrementa o contador, card sem URL e botão inerte.
+- **Cor do badge "VOCÊ"** — T-05 nomeia o badge e não lhe dá cor.
+- **Bebida "não declarada"** — `indiceAtivo = -1`, nenhuma metade acesa.
+- **Posição da faixa amarela no expandido** — W-04 não a coloca; topo da coluna direita.
+- **Acento do toast** — T-05/RN-29 não fixam; default de `BoraToast`, como em `montar`.
 
 ### Dívidas anotadas (nenhuma bloqueia)
 
-1. **Scanner do guard duplicado** (~130 linhas) entre `formula_nao_vaza_test.dart` de
+1. **`buildAppRouter` agora pede SEIS portas obrigatórias.** Cresceu com a T26, como
+   previsto. Candidata a agregado — foi deliberadamente deixada fora das 27 tasks.
+2. **Scanner do guard duplicado** (~130 linhas) entre `formula_nao_vaza_test.dart` de
    `montar` e `lista_sem_formula_test.dart`. Extrair para `test/support/`.
-2. **`buildAppRouter` já pede 5 portas obrigatórias** e ganha uma por feature — vale um
-   agregado antes de `galera` acrescentar a sexta.
-3. **`setSurfaceSize` não altera o `MediaQuery.size`** nos testes, só a superfície de
-   render. Tela que decida layout por `MediaQuery` passa invisível pelo teste de
-   viewport. Hoje o projeto usa `ResponsiveBuilder` em tudo.
-4. **`ComposicaoDaFesta.copyWith` agora existe**; `montar_bloc.dart:367` e
+3. **`BoraSegmentedControl(acentoAtivo:)`** como variante do DS — `galera/design.md` §14.
+4. **`BoraSegmentedControl` não tem hover** (território da spec 01).
+5. **`BoraShadows` não tem `distanciaCardLink`** — o `CardDoLink` lê
+   `BoraShadows.cardLink.offset.dx` para não digitar o literal nem emendar `core/`.
+6. **`setSurfaceSize` não altera o `MediaQuery.size`**, só a superfície de render.
+7. **`ComposicaoDaFesta.copyWith` existe**; `montar_bloc.dart:367` e
    `rascunho_inicial.dart:56` ainda reconstroem campo a campo.
-5. **`test/architecture/calculo_isolation_test.dart:61`** escreve arquivo real dentro de
-   `lib/` e falha de forma intermitente sob concorrência. Aberta desde o M0.
-6. **`ListaTextos.itensNoCorredor(1)`** devolve `"1 itens"` — a spec-fonte escreve
-   `{N} itens` e não dá singular.
+8. **`test/architecture/calculo_isolation_test.dart:61`** escreve arquivo real dentro de
+   `lib/`; falha intermitente sob concorrência. Aberta desde o M0.
+9. **`ListaTextos.itensNoCorredor(1)`** devolve `"1 itens"`.
 
-### Lições registradas
+### Como retomar
 
-`L-030..L-035` (`36817b4`): o helper que promete rota e não abre; o valor afirmado que
-coincide com o default; duas guardas que morrem de carona; equivalência provada pela
-suíte verde em vez do caminho que discrimina; `find.text` acha texto ilegível; e o
-`BoxShadow` que não recorta como o CSS.
+```bash
+export PATH="$PATH:/c/SDKs/flutter/bin"
+git checkout feature/galera
+flutter test; echo "exit=$?"   # 2449
+flutter analyze                # zero issues
+# as 27 tasks estão marcadas em .specs/features/galera/tasks.md
+# PRÓXIMO: despachar a re-verificação (iteração 2, contrato acima).
+# Não peça permissão — é obrigatório, e é a ordem explícita do usuário.
+```
 
-### Nota de processo
-
-Um worker perdeu uma task inteira rodando `git checkout --` sobre trabalho **não
-commitado** durante checagem de mutação. A partir do Batch 3 a regra virou explícita no
-briefing — mutar só em cópia no scratchpad ou **depois** do commit — e não houve
-reincidência. Mantenha nos briefings seguintes.
 
 ## Histórico — sessão do M0
 

@@ -145,10 +145,10 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `AD-031` existe com os seis campos, `Status: active`, com o texto de `design.md` §12
-- [ ] **A numeração é conferida no momento de gravar**: a reserva dá AD-029 a `montar` e AD-030 a `lista`; se alguma delas ainda não gravou a sua, renumera-se **aqui**, nunca lá — e a linha correspondente da reserva sai
-- [ ] Nenhuma AD existente é editada (nada vira `superseded`)
-- [ ] Nenhum arquivo de código é tocado
+- [x] `AD-031` existe com os seis campos, `Status: active`, com o texto de `design.md` §12
+- [x] **A numeração é conferida no momento de gravar**: a reserva dá AD-029 a `montar` e AD-030 a `lista`; se alguma delas ainda não gravou a sua, renumera-se **aqui**, nunca lá — e a linha correspondente da reserva sai
+- [x] Nenhuma AD existente é editada (nada vira `superseded`)
+- [x] Nenhum arquivo de código é tocado
 
 **Tests**: none (camada "Documentação / spec")
 **Gate**: none
@@ -167,14 +167,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Os três valores existem com as chaves de serialização do `design.md` §6.1, e **nenhuma** delas é derivada de `name` — chave é contrato de dado, `name` é detalhe de linguagem
-- [ ] `porChave` devolve o valor para cada uma das três chaves e `null` para chave desconhecida
-- [ ] `resolver(null)` e `resolver('qualquer-coisa')` devolvem **`soVer`** — os dois casos com teste próprio (A-12, menor privilégio)
-- [ ] `resolver` das três chaves válidas devolve o nível correspondente
-- [ ] `padraoDeFestaNova` é **`editarLista`**, e um teste afirma que ele **difere** de `resolver(null)` — o par que discrimina as duas situações que a A-12 separou de propósito
-- [ ] Nenhum import de Flutter no arquivo
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 8 testes novos
+- [x] Os três valores existem com as chaves de serialização do `design.md` §6.1, e **nenhuma** delas é derivada de `name` — chave é contrato de dado, `name` é detalhe de linguagem
+- [x] `porChave` devolve o valor para cada uma das três chaves e `null` para chave desconhecida
+- [x] `resolver(null)` e `resolver('qualquer-coisa')` devolvem **`soVer`** — os dois casos com teste próprio (A-12, menor privilégio)
+- [x] `resolver` das três chaves válidas devolve o nível correspondente
+- [x] `padraoDeFestaNova` é **`editarLista`**, e um teste afirma que ele **difere** de `resolver(null)` — o par que discrimina as duas situações que a A-12 separou de propósito
+- [x] Nenhum import de Flutter no arquivo
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 8 testes novos (10). **Desvio declarado**: `test/core/festas/dominio/festa_em_edicao_repository_test.dart` afirma a contagem de arquivos de `dominio/` (`hasLength(2)`); o arquivo novo a torna 3. Só o número mudou — a asserção que discrimina (`exportados == arquivosDeDominio`) segue exata
 
 **Tests**: unit
 **Gate**: build
@@ -196,15 +196,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `ConviteDaFesta.vazio` tem `codigo` vazio e `nivel == NivelDoLink.padraoDeFestaNova`
-- [ ] Igualdade profunda afirmada nos **dois** sentidos: dois convites de mesmo código e nível são `==`; trocar **só** o código separa; trocar **só** o nível separa; `hashCode` acompanha nos três casos
-- [ ] `copyWith` preserva o campo não informado e substitui o informado — inclusive `codigo: ''`
-- [ ] O campo `convite` de `FestaEmEdicao` tem default — **nenhum** call site existente quebra e **nenhum** teste existente é editado
-- [ ] Duas `FestaEmEdicao` idênticas exceto pelo `convite` são **diferentes** — sem isso a emissão do stream após `definirNivelDoLink` seria engolida como eco
-- [ ] `copyWith` de `FestaEmEdicao` preserva o `convite` não informado
-- [ ] **Este é arquivo de colisão com `lista` (E-c dela)**: a emenda é aditiva e o doc do arquivo registra as duas
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] `ConviteDaFesta.vazio` tem `codigo` vazio e `nivel == NivelDoLink.padraoDeFestaNova`
+- [x] Igualdade profunda afirmada nos **dois** sentidos: dois convites de mesmo código e nível são `==`; trocar **só** o código separa; trocar **só** o nível separa; `hashCode` acompanha nos três casos
+- [x] `copyWith` preserva o campo não informado e substitui o informado — inclusive `codigo: ''`
+- [x] O campo `convite` de `FestaEmEdicao` tem default — **nenhum** call site existente quebra e **nenhum** teste existente é editado
+- [x] Duas `FestaEmEdicao` idênticas exceto pelo `convite` são **diferentes** — sem isso a emissão do stream após `definirNivelDoLink` seria engolida como eco
+- [x] `copyWith` de `FestaEmEdicao` preserva o `convite` não informado
+- [x] **Este é arquivo de colisão com `lista` (E-c dela)**: a emenda é aditiva e o doc do arquivo registra as duas
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 10 testes novos (13). **Desvio declarado**: a contagem de arquivos de `dominio/` no teste do barrel vai a 4 — só o número; a asserção que discrimina segue exata
 
 **Commit**: `feat(festas): põe o convite (código e nível) no registro da festa`
 
@@ -221,15 +221,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `copyWith` aceita **todos** os campos da composição e preserva os não informados — um teste por campo, não um teste que troca tudo de uma vez
-- [ ] `overrides` sobrevive a `copyWith(pessoas: ...)`: composição com override, troca de `pessoas`, override **idêntico** depois — é o AC12 de GAL-15 na camada onde ele é verdade
-- [ ] Substituir um campo por valor **vazio** (`{}` / `[]`) funciona e não é confundido com "não informado"
-- [ ] Um teste afirma que a composição devolvida é `==` à original quando `copyWith()` é chamado **sem argumento nenhum**
-- [ ] Nenhuma aritmética, nenhum campo novo, nenhuma regra — a emenda é estrutural (a proibição da `spec.md` é sobre fórmula de RN-xx)
-- [ ] O doc do arquivo registra que este método é a defesa contra apagar em silêncio campo que outra spec acrescentar (`noCarrinho` de `lista`)
-- [ ] **Arquivo de colisão com `lista` (E-b dela)** — a emenda é aditiva
-- [ ] Gate `build` passa; exit code conferido
-- [ ] Nenhum teste existente editado; ≥ 6 testes novos
+- [x] `copyWith` aceita **todos** os campos da composição e preserva os não informados — um teste por campo, não um teste que troca tudo de uma vez *(cinco testes novos; `noCarrinho` já tem os seus em `composicao_da_festa_test.dart:170-199`, escritos pela spec 06, e não é reescrito)*
+- [x] `overrides` sobrevive a `copyWith(pessoas: ...)`: composição com override, troca de `pessoas`, override **idêntico** depois — é o AC12 de GAL-15 na camada onde ele é verdade
+- [x] Substituir um campo por valor **vazio** (`{}` / `[]`) funciona e não é confundido com "não informado"
+- [x] Um teste afirma que a composição devolvida é `==` à original quando `copyWith()` é chamado **sem argumento nenhum**
+- [x] Nenhuma aritmética, nenhum campo novo, nenhuma regra — a emenda é estrutural (a proibição da `spec.md` é sobre fórmula de RN-xx)
+- [x] O doc do arquivo registra que este método é a defesa contra apagar em silêncio campo que outra spec acrescentar (`noCarrinho` de `lista`)
+- [x] **Arquivo de colisão com `lista` (E-b dela)** — a emenda é aditiva
+- [x] Gate `build` passa; exit code conferido
+- [x] Nenhum teste existente editado; ≥ 6 testes novos (10). **Nota de execução**: o `copyWith` em si já tinha chegado com a E-b da spec 06 (`70ded5a`), cobrindo os seis campos; esta task acrescenta o doc da defesa, o SPEC_DEVIATION de E-3 e a cobertura que a Done-when exige
 
 **Tests**: unit
 **Gate**: build
@@ -248,15 +248,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] As oito capacidades existem com os nomes do `design.md` §6.3
-- [ ] **As 32 células de RN-22 são afirmadas uma a uma, com valores escritos à mão** — 4 papéis × 8 capacidades, `pode(...)` esperado `true`/`false` em cada. **Nunca** um laço sobre o mapa, que compararia a tabela consigo mesma e passaria com ela inteira errada
-- [ ] ANFITRIÃO tem as oito; CO-ANFITRIÃO tem seis e **não** tem `gerenciarPapeis` nem `configurarNivelDoLink` (A-19); CONVIDADO tem quatro; SÓ VÊ tem duas
-- [ ] `capacidadesDe` devolve conjunto **imutável** — tentar mutá-lo lança, e há teste que prova
-- [ ] `papelDoNivel`: `soVer → soVe`, `editarLista → convidado`, `coAnfitriao → coAnfitriao` — os três com teste próprio (GAL-20 AC5)
-- [ ] `papelDoUsuario` devolve o papel de quem está marcado `voce`; **sem ninguém marcado devolve `anfitriao`** — premissa P-1 do `design.md` §14, declarada no doc da função
-- [ ] **Zero import de Flutter** no arquivo (GAL-19 AC7) — afirmado aqui por inspeção e por varredura em T27
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 38 testes novos (32 células + as seis funções/ramos restantes)
+- [x] As oito capacidades existem com os nomes do `design.md` §6.3
+- [x] **As 32 células de RN-22 são afirmadas uma a uma, com valores escritos à mão** — 4 papéis × 8 capacidades, `pode(...)` esperado `true`/`false` em cada. **Nunca** um laço sobre o mapa, que compararia a tabela consigo mesma e passaria com ela inteira errada
+- [x] ANFITRIÃO tem as oito; CO-ANFITRIÃO tem seis e **não** tem `gerenciarPapeis` nem `configurarNivelDoLink` (A-19); CONVIDADO tem quatro; SÓ VÊ tem duas
+- [x] `capacidadesDe` devolve conjunto **imutável** — tentar mutá-lo lança, e há teste que prova
+- [x] `papelDoNivel`: `soVer → soVe`, `editarLista → convidado`, `coAnfitriao → coAnfitriao` — os três com teste próprio (GAL-20 AC5)
+- [x] `papelDoUsuario` devolve o papel de quem está marcado `voce`; **sem ninguém marcado devolve `anfitriao`** — premissa P-1 do `design.md` §14, declarada no doc da função
+- [x] **Zero import de Flutter** no arquivo (GAL-19 AC7) — afirmado aqui por inspeção e por varredura em T27
+- [x] Gate `quick` passa; exit code conferido (suíte inteira também: 2014 verdes)
+- [x] ≥ 38 testes novos — **46**: as 32 células + 6 de tamanho/imutabilidade/exclusivas + 4 de `papelDoNivel` + 3 de `papelDoUsuario` + 1 de pureza
 
 **Tests**: unit
 **Gate**: quick
@@ -275,14 +275,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `de([Ana, Léo, Ana])` devolve `Ana#0`, `Léo#0`, `Ana#1`, **na ordem do repositório** (A-15)
-- [ ] Duas chaves de mesmo nome e ocorrência são `==`; mesmo nome com ocorrência diferente **não** são; `hashCode` acompanha
-- [ ] `indiceEm` devolve o índice certo para **cada uma** das duas Anas — o teste que discrimina "chave por nome" de "chave por nome + ocorrência"
-- [ ] `indiceEm` devolve `null` para chave que não existe mais na lista (a pessoa sumiu entre abrir o painel e escrever)
-- [ ] Acrescentar pessoa **ao fim** não muda a chave de ninguém — a única mutação que o produto produz (RSVP acrescenta; remover não é oferecido, A-04)
-- [ ] Nenhum import de Flutter
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] `de([Ana, Léo, Ana])` devolve `Ana#0`, `Léo#0`, `Ana#1`, **na ordem do repositório** (A-15)
+- [x] Duas chaves de mesmo nome e ocorrência são `==`; mesmo nome com ocorrência diferente **não** são; `hashCode` acompanha
+- [x] `indiceEm` devolve o índice certo para **cada uma** das duas Anas — o teste que discrimina "chave por nome" de "chave por nome + ocorrência"
+- [x] `indiceEm` devolve `null` para chave que não existe mais na lista (a pessoa sumiu entre abrir o painel e escrever)
+- [x] Acrescentar pessoa **ao fim** não muda a chave de ninguém — a única mutação que o produto produz (RSVP acrescenta; remover não é oferecido, A-04)
+- [x] Nenhum import de Flutter
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 8 testes novos (11)
 
 **Tests**: unit
 **Gate**: quick
@@ -301,12 +301,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O bruto ganha `codigo: 'rafa18'` — literal de RN-23/RN-26b — e o nível inicial da festa do Rafa
-- [ ] A leitura tipada **deriva** os dois do bruto; nenhum literal de RN-30 é redigitado no arquivo tipado
-- [ ] O nível da fixture é `NivelDoLink.padraoDeFestaNova` (`editarLista`) e há teste que o afirma **contra a constante**, não contra o literal *(L-008)*
-- [ ] As asserções existentes da fixture (inclusive "todo valor é primitivo" e a ausência de `dieta`/`bebe` na Duda) continuam **intocadas** e verdes — a prova de mutação que a fundação já pagou não é reescrita
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 4 testes novos, 0 editados
+- [x] O bruto ganha `codigo: 'rafa18'` — literal de RN-23/RN-26b — e o nível inicial da festa do Rafa
+- [x] A leitura tipada **deriva** os dois do bruto; nenhum literal de RN-30 é redigitado no arquivo tipado
+- [x] O nível da fixture é `NivelDoLink.padraoDeFestaNova` (`editarLista`) e há teste que o afirma **contra a constante**, não contra o literal *(L-008)*
+- [x] As asserções existentes da fixture (inclusive "todo valor é primitivo" e a ausência de `dieta`/`bebe` na Duda) continuam **intocadas** e verdes — a prova de mutação que a fundação já pagou não é reescrita
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 4 testes novos (6), 0 editados — o diff da task é 74 inserções e 0 remoções
 
 **Tests**: unit
 **Gate**: quick
@@ -325,14 +325,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `confirmados` conta **exatamente** as pessoas nomeadas com status confirmado; com a fixture RN-30 dá **4**
-- [ ] O par que discrimina: uma composição com uma pessoa `recusou` e outra `pendente` conta **só** as confirmadas — recusou aparece em `pessoas` e **não** em `confirmados` (Edge Case)
-- [ ] `pessoas` devolve a lista da composição **na ordem dela**, sem reordenar (A-15)
-- [ ] A porta declara `observarGalera(festaId) → Stream<GaleraDaFesta?>` e **exatamente** quatro escritas: `alterarDieta`, `alterarBebida`, `alterarPapel`, `definirNivelDoLink`
-- [ ] **Nenhum** método da porta toca `status` de pessoa nem contador algum — é a forma que torna GAL-09 AC9 afirmável, e o doc da porta diz isso
-- [ ] Nenhum import de Flutter em `domain/`
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] `confirmados` conta **exatamente** as pessoas nomeadas com status confirmado; com a fixture RN-30 dá **4**
+- [x] O par que discrimina: uma composição com uma pessoa `recusou` e outra `pendente` conta **só** as confirmadas — recusou aparece em `pessoas` e **não** em `confirmados` (Edge Case)
+- [x] `pessoas` devolve a lista da composição **na ordem dela**, sem reordenar (A-15)
+- [x] A porta declara `observarGalera(festaId) → Stream<GaleraDaFesta?>` e **exatamente** quatro escritas: `alterarDieta`, `alterarBebida`, `alterarPapel`, `definirNivelDoLink`
+- [x] **Nenhum** método da porta toca `status` de pessoa nem contador algum — é a forma que torna GAL-09 AC9 afirmável, e o doc da porta diz isso
+- [x] Nenhum import de Flutter em `domain/`
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -351,17 +351,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `observarGalera` mapeia `FestaEmEdicao?` em `GaleraDaFesta?`, propagando o `convite` e a composição inteira; `null` continua `null`
-- [ ] `alterarDieta` troca a dieta **da pessoa endereçada pela chave** e de **nenhuma outra** — afirmado com duas homônimas na lista
-- [ ] `alterarBebida` idem para `bebe`
-- [ ] A escrita lê o registro por `observarFesta(id).first` **na hora** — um teste que altera o registro por fora entre a leitura da tela e a escrita prova que o valor novo **não** é sobrescrito
-- [ ] A escrita usa `copyWith` e **preserva `overrides`** — composição com override, `alterarDieta`, override idêntico depois (GAL-15 AC12 no ponto de escrita)
-- [ ] **GAL-14 afirmado a jusante, sobre o registro depois da escrita**, chamando `CalculadoraDaFesta.calcular`: (a) tornar alguém veggie faz aparecer "Legumes p/ grelha (kit veggie)" e desfazer faz sumir; (b) tirar o "sem porco" de todos traz a carne suína selecionada de volta, e pôr de novo a remove; (c) desmarcar a bebida de alguém **reduz** a cerveja, e o valor bate com o que `calcular` devolve — nunca com número copiado
-- [ ] **Idempotência (GAL-28)**: `alterarDieta` com a dieta já vigente e `alterarBebida` com o mesmo valor **não** chamam `salvarFesta` — afirmado por **contagem de gravações** num duplo que conta
-- [ ] Chave que não existe mais no registro ⇒ **nenhuma** gravação, nenhuma exceção
-- [ ] Nenhuma constante de RN-03/RN-05/RN-21 neste arquivo — a aritmética é toda de `core/calculo`
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 16 testes novos
+- [x] `observarGalera` mapeia `FestaEmEdicao?` em `GaleraDaFesta?`, propagando o `convite` e a composição inteira; `null` continua `null`
+- [x] `alterarDieta` troca a dieta **da pessoa endereçada pela chave** e de **nenhuma outra** — afirmado com duas homônimas na lista
+- [x] `alterarBebida` idem para `bebe`
+- [x] A escrita lê o registro por `observarFesta(id).first` **na hora** — um teste que altera o registro por fora entre a leitura da tela e a escrita prova que o valor novo **não** é sobrescrito
+- [x] A escrita usa `copyWith` e **preserva `overrides`** — composição com override, `alterarDieta`, override idêntico depois (GAL-15 AC12 no ponto de escrita)
+- [x] **GAL-14 afirmado a jusante, sobre o registro depois da escrita**, chamando `CalculadoraDaFesta.calcular`: (a) tornar alguém veggie faz aparecer "Legumes p/ grelha (kit veggie)" e desfazer faz sumir; (b) tirar o "sem porco" de todos traz a carne suína selecionada de volta, e pôr de novo a remove; (c) desmarcar a bebida de alguém **reduz** a cerveja, e o valor bate com o que `calcular` devolve — nunca com número copiado
+- [x] **Idempotência (GAL-28)**: `alterarDieta` com a dieta já vigente e `alterarBebida` com o mesmo valor **não** chamam `salvarFesta` — afirmado por **contagem de gravações** num duplo que conta
+- [x] Chave que não existe mais no registro ⇒ **nenhuma** gravação, nenhuma exceção
+- [x] Nenhuma constante de RN-03/RN-05/RN-21 neste arquivo — a aritmética é toda de `core/calculo`
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 16 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -380,16 +380,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `alterarPapel` troca o papel da pessoa endereçada; o papel de **todas** as outras permanece idêntico, item a item
-- [ ] **GAL-18**: `alterarPapel` cujo alvo tem papel corrente `anfitriao` **não grava** (contagem de gravações inalterada) e registra no logger; a festa continua com **exatamente 1** anfitrião depois
-- [ ] Nenhuma assinatura da porta permite atribuir `PapelNaFesta.anfitriao` — e há teste que tenta e prova que o registro não muda
-- [ ] **GAL-04**: `definirNivelDoLink` muda `convite.nivel` e deixa **toda** a lista de `pessoas` idêntica — comparação item a item, não "a lista ainda tem 5"
-- [ ] `definirNivelDoLink` **não** toca `codigo`
-- [ ] **GAL-09**: depois de cada uma das **quatro** escritas, `ResumoDeFesta.confirmados` da mesma festa continua inalterado **e igual** à contagem de confirmados de `GaleraDaFesta` — 4 com a fixture
-- [ ] **Idempotência (GAL-28)**: papel igual e nível igual ⇒ nenhuma gravação, por contagem
-- [ ] Falha de `salvarFesta` ⇒ log registrado, exceção não vaza para quem chamou
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 14 testes novos
+- [x] `alterarPapel` troca o papel da pessoa endereçada; o papel de **todas** as outras permanece idêntico, item a item
+- [x] **GAL-18**: `alterarPapel` cujo alvo tem papel corrente `anfitriao` **não grava** (contagem de gravações inalterada) e registra no logger; a festa continua com **exatamente 1** anfitrião depois
+- [x] Nenhuma assinatura da porta permite atribuir `PapelNaFesta.anfitriao` — e há teste que tenta e prova que o registro não muda
+- [x] **GAL-04**: `definirNivelDoLink` muda `convite.nivel` e deixa **toda** a lista de `pessoas` idêntica — comparação item a item, não "a lista ainda tem 5"
+- [x] `definirNivelDoLink` **não** toca `codigo`
+- [x] **GAL-09**: depois de cada uma das **quatro** escritas, `ResumoDeFesta.confirmados` da mesma festa continua inalterado **e igual** à contagem de confirmados de `GaleraDaFesta` — 4 com a fixture
+- [x] **Idempotência (GAL-28)**: papel igual e nível igual ⇒ nenhuma gravação, por contagem
+- [x] Falha de `salvarFesta` ⇒ log registrado, exceção não vaza para quem chamou
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 14 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -408,12 +408,12 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Um `FestaRepositoryEmMemoria` semeado pela fixture alimenta ao mesmo tempo a porta da Home e a da Galera, e o teste **não** cria segundo store
-- [ ] `alterarDieta` pela porta da Galera ⇒ a emissão seguinte de `observarFestas` (Home) carrega a composição nova — o par que discrimina de "dois registros paralelos"
-- [ ] A mesma escrita ⇒ `CalculadoraDaFesta.calcular` sobre o registro devolve a lista ajustada
-- [ ] Um teste **negativo declarado**: montar a Galera sobre um store próprio faz a asserção anterior falhar — a prova de que o teste morde (comentado no arquivo como o motivo de o desenho ser o B do §2.1, não executado como teste que falha)
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 6 testes novos
+- [x] Um `FestaRepositoryEmMemoria` semeado pela fixture alimenta ao mesmo tempo a porta da Home e a da Galera, e o teste **não** cria segundo store
+- [x] `alterarDieta` pela porta da Galera ⇒ a emissão seguinte de `observarFestas` (Home) carrega a composição nova — o par que discrimina de "dois registros paralelos"
+- [x] A mesma escrita ⇒ `CalculadoraDaFesta.calcular` sobre o registro devolve a lista ajustada
+- [x] Um teste **negativo declarado**: montar a Galera sobre um store próprio faz a asserção anterior falhar — a prova de que o teste morde (comentado no arquivo como o motivo de o desenho ser o B do §2.1, não executado como teste que falha)
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 6 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -432,13 +432,13 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] A porta é Dart puro, em `domain/`, sem import de Flutter
-- [ ] O adaptador é `const`-construível (chega à página por default, `design.md` §7.3)
-- [ ] Teste do adaptador intercepta o canal de plataforma e afirma que `Clipboard.setData` recebeu **exatamente** o texto passado
-- [ ] Falha do canal ⇒ a `Future` **completa com erro** (quem trata é o bloc, T16) — teste que prova, porque engolir o erro aqui apagaria GAL-05
-- [ ] Um duplo de teste (`AreaDeTransferenciaFalsa`) registra o que foi copiado e sabe falhar sob demanda — é o que T16 e T24 usam
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 6 testes novos
+- [x] A porta é Dart puro, em `domain/`, sem import de Flutter
+- [x] O adaptador é `const`-construível (chega à página por default, `design.md` §7.3)
+- [x] Teste do adaptador intercepta o canal de plataforma e afirma que `Clipboard.setData` recebeu **exatamente** o texto passado
+- [x] Falha do canal ⇒ a `Future` **completa com erro** (quem trata é o bloc, T16) — teste que prova, porque engolir o erro aqui apagaria GAL-05
+- [x] Um duplo de teste (`AreaDeTransferenciaFalsa`) registra o que foi copiado e sabe falhar sob demanda — é o que T16 e T24 usam
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 6 testes novos
 
 **Tests**: unit
 **Gate**: full
@@ -457,15 +457,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O bloc assina o stream **sem** evento de "carregar" — RN-28 chega sem a tela pedir
-- [ ] Estado inicial é `carregando`; emissão do repositório leva a `comFesta` com a galera dentro
-- [ ] Erro no stream ⇒ `situacao == falhou`, `logger.logError(name: 'galera')` registrado, e **o que já havia chegado continua no estado** (`copyWith`, como no `HomeBloc`)
-- [ ] `observarFesta` emitindo `null` (festa inexistente) ⇒ mesmo estado `falhou`, sem copy nova (`design.md` §14)
-- [ ] Igualdade de estado afirmada nos dois sentidos — dois estados iguais são `==`, trocar **qualquer** um dos quatro campos separa (sem isso, T14 e T22 reconstroem a tela a cada emissão)
-- [ ] `close()` cancela a assinatura — teste que prova que emissão depois do `close` não vira `add` em bloc fechado
-- [ ] O bloc **não navega** (AD-020) e não importa `go_router`
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 10 testes novos
+- [x] O bloc assina o stream **sem** evento de "carregar" — RN-28 chega sem a tela pedir
+- [x] Estado inicial é `carregando`; emissão do repositório leva a `comFesta` com a galera dentro
+- [x] Erro no stream ⇒ `situacao == falhou`, `logger.logError(name: 'galera')` registrado, e **o que já havia chegado continua no estado** (`copyWith`, como no `HomeBloc`)
+- [x] `observarFesta` emitindo `null` (festa inexistente) ⇒ mesmo estado `falhou`, sem copy nova (`design.md` §14)
+- [x] Igualdade de estado afirmada nos dois sentidos — dois estados iguais são `==`, trocar **qualquer** um dos quatro campos separa (sem isso, T14 e T22 reconstroem a tela a cada emissão)
+- [x] `close()` cancela a assinatura — teste que prova que emissão depois do `close` não vira `add` em bloc fechado
+- [x] O bloc **não navega** (AD-020) e não importa `go_router`
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 10 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -484,14 +484,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `LinhaAlternada(A)` com nada aberto ⇒ `aberta == A`; em seguida `LinhaAlternada(B)` ⇒ `aberta == B` e A fechada — **um** aberto por vez
-- [ ] `LinhaAlternada(A)` com A já aberta ⇒ `aberta == null`
-- [ ] **GAL-26**: emissão nova do stream **com uma pessoa acrescentada antes** da aberta na lista ⇒ `aberta` continua sendo **a mesma pessoa** — o par que discrimina chave de índice
-- [ ] Emissão nova em que a pessoa aberta **sumiu** ⇒ `aberta == null`, sem exceção
-- [ ] Emissão nova ⇒ a linha aberta **não** é fechada e nenhum campo de edição em curso é derrubado (o estado não guarda rascunho: a asserção é que `aberta` sobrevive e a lista nova está no estado)
-- [ ] Duas homônimas: abrir a segunda Ana mantém aberta **a segunda**, não a primeira
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] `LinhaAlternada(A)` com nada aberto ⇒ `aberta == A`; em seguida `LinhaAlternada(B)` ⇒ `aberta == B` e A fechada — **um** aberto por vez
+- [x] `LinhaAlternada(A)` com A já aberta ⇒ `aberta == null`
+- [x] **GAL-26**: emissão nova do stream **com uma pessoa acrescentada antes** da aberta na lista ⇒ `aberta` continua sendo **a mesma pessoa** — o par que discrimina chave de índice
+- [x] Emissão nova em que a pessoa aberta **sumiu** ⇒ `aberta == null`, sem exceção
+- [x] Emissão nova ⇒ a linha aberta **não** é fechada e nenhum campo de edição em curso é derrubado (o estado não guarda rascunho: a asserção é que `aberta` sobrevive e a lista nova está no estado)
+- [x] Duas homônimas: abrir a segunda Ana mantém aberta **a segunda**, não a primeira
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -510,14 +510,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Cada um dos quatro eventos chama **o método correspondente** da porta, com a chave e o valor certos — quatro testes, um por evento
-- [ ] O bloc **não** muta o estado por conta própria depois de escrever: a mudança só aparece quando o stream emite (teste que escreve e afirma o estado **inalterado** até a emissão)
-- [ ] Escolher a opção **já ativa** não chama a porta — a idempotência de GAL-28 tem guarda **nos dois lados**, bloc e adaptador
-- [ ] Escrita com `situacao != comFesta` (ainda carregando, ou falhou) não chama a porta
-- [ ] Falha da porta ⇒ `logger.logError` e o estado não muda; nenhuma copy de erro é inventada (`design.md` §10)
-- [ ] **Nenhuma aritmética** nova no bloc — só `efeitosDasPreferencias` e `resumoDasPreferencias` de `core/calculo`, chamados sem recomposição
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Cada um dos quatro eventos chama **o método correspondente** da porta, com a chave e o valor certos — quatro testes, um por evento
+- [x] O bloc **não** muta o estado por conta própria depois de escrever: a mudança só aparece quando o stream emite (teste que escreve e afirma o estado **inalterado** até a emissão)
+- [x] Escolher a opção **já ativa** não chama a porta — a idempotência de GAL-28 tem guarda **nos dois lados**, bloc e adaptador
+- [x] Escrita com `situacao != comFesta` (ainda carregando, ou falhou) não chama a porta
+- [x] Falha da porta ⇒ `logger.logError` e o estado não muda; nenhuma copy de erro é inventada (`design.md` §10)
+- [x] **Nenhuma aritmética** nova no bloc — só `efeitosDasPreferencias` e `resumoDasPreferencias` de `core/calculo`, chamados sem recomposição
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -536,14 +536,14 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `LinkCopiado` escreve na porta **a URL completa** da festa corrente; com a fixture, `bora.app/c/rafa18`
-- [ ] Sucesso ⇒ `copiasConcluidas` incrementa de 1
-- [ ] **Duas cópias seguidas ⇒ contador em 2** — o par que discrimina de um `bool copiou`, que perderia o segundo toast (`design.md` §8.2)
-- [ ] **GAL-05**: falha da área de transferência ⇒ contador **inalterado**, `logger.logError` registrado, estado sem campo de erro novo
-- [ ] `LinkCopiado` com festa sem código (`codigo` vazio) ⇒ não copia e não incrementa (`design.md` §14)
-- [ ] O evento é **o mesmo** para os dois botões da tela — não existe segundo evento de cópia (é o que impede GAL-03 AC6 e AC7 de divergirem)
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] `LinkCopiado` escreve na porta **a URL completa** da festa corrente; com a fixture, `bora.app/c/rafa18`
+- [x] Sucesso ⇒ `copiasConcluidas` incrementa de 1
+- [x] **Duas cópias seguidas ⇒ contador em 2** — o par que discrimina de um `bool copiou`, que perderia o segundo toast (`design.md` §8.2)
+- [x] **GAL-05**: falha da área de transferência ⇒ contador **inalterado**, `logger.logError` registrado, estado sem campo de erro novo
+- [x] `LinkCopiado` com festa sem código (`codigo` vazio) ⇒ não copia e não incrementa (`design.md` §14)
+- [x] O evento é **o mesmo** para os dois botões da tela — não existe segundo evento de cópia (é o que impede GAL-03 AC6 e AC7 de divergirem)
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -562,17 +562,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] **Todo** literal da tabela do `design.md` §9 afirmado, um teste por constante, contra o texto literal de T-05/RN-21/RN-23
-- [ ] As **três notas de RN-23** literais, caractere a caractere, uma por nível (GAL-02)
-- [ ] `urlDoConvite('rafa18') == 'bora.app/c/rafa18'`; a mesma função é a única fonte da URL exibida **e** da copiada (Edge Case do escape) — teste com código que exige escape afirma que as duas são a **mesma string**
-- [ ] `subtitulo`: singular e plural corretos nos dois termos; com a fixture dá **exatamente** `5 pessoas · 4 confirmadas`; com 1 e 1 dá `1 pessoa · 1 confirmada`; com 0 dá `nenhuma pessoa ainda` (A-08, A-10)
-- [ ] `sublinhaDe`: `{dieta} · bebe 🍺` e `{dieta} · não bebe 🚫`; dieta ausente ⇒ omite o termo; bebida ausente ⇒ omite o termo; **os dois ausentes ⇒ devolve `null`/vazio** (o caso da Duda, A-14)
-- [ ] Os rótulos de dieta são os de RN-21 com emoji (A-13): `🍖 Come de tudo`, `🥗 Veggie`, `🚫 Sem porco`
-- [ ] `linkCopiado` e os rótulos de papel vêm das constantes do design system — teste compara com **o token**, nunca com literal duplicado *(L-008)*
-- [ ] `faixa(resumo)` concatena `'💡 '` e **nada mais**; com resumo vazio devolve vazio
-- [ ] `falha` está documentado no arquivo como **SPEC_PRECISION_GAP** (`design.md` §14)
-- [ ] Gate `quick` passa; exit code conferido
-- [ ] ≥ 24 testes novos
+- [x] **Todo** literal da tabela do `design.md` §9 afirmado, um teste por constante, contra o texto literal de T-05/RN-21/RN-23
+- [x] As **três notas de RN-23** literais, caractere a caractere, uma por nível (GAL-02)
+- [x] `urlDoConvite('rafa18') == 'bora.app/c/rafa18'`; a mesma função é a única fonte da URL exibida **e** da copiada (Edge Case do escape) — teste com código que exige escape afirma que as duas são a **mesma string**
+- [x] `subtitulo`: singular e plural corretos nos dois termos; com a fixture dá **exatamente** `5 pessoas · 4 confirmadas`; com 1 e 1 dá `1 pessoa · 1 confirmada`; com 0 dá `nenhuma pessoa ainda` (A-08, A-10)
+- [x] `sublinhaDe`: `{dieta} · bebe 🍺` e `{dieta} · não bebe 🚫`; dieta ausente ⇒ omite o termo; bebida ausente ⇒ omite o termo; **os dois ausentes ⇒ devolve `null`/vazio** (o caso da Duda, A-14)
+- [x] Os rótulos de dieta são os de RN-21 com emoji (A-13): `🍖 Come de tudo`, `🥗 Veggie`, `🚫 Sem porco`
+- [x] `linkCopiado` e os rótulos de papel vêm das constantes do design system — teste compara com **o token**, nunca com literal duplicado *(L-008)*
+- [x] `faixa(resumo)` concatena `'💡 '` e **nada mais**; com resumo vazio devolve vazio
+- [x] `falha` está documentado no arquivo como **SPEC_PRECISION_GAP** (`design.md` §14)
+- [x] Gate `quick` passa; exit code conferido
+- [x] ≥ 24 testes novos
 
 **Tests**: unit
 **Gate**: quick
@@ -591,17 +591,17 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Renderiza, na ordem de T-05: label "LINK PRA CONVIDAR", a URL, "COPIAR 🔗", "QUEM ABRIR O LINK PODE…", o segmented com **exatamente três** opções — `SÓ VER`, `EDITAR LISTA`, `CO-ANFITRIÃO`
-- [ ] O fundo é `BoraColors.ink` e o acento é o roxo — afirmado **contra o token**, não contra literal de cor
-- [ ] Com a fixture, a URL na tela é `bora.app/c/rafa18`
-- [ ] Percorrer os três níveis troca a nota para a de RN-23 correspondente — três asserções literais (GAL-02)
-- [ ] Tocar uma opção emite o evento de nível; tocar a **já ativa** não emite (GAL-28 na UI)
-- [ ] Trocar de nível **não** exibe toast algum
-- [ ] **GAL-27 AC1**: com `podeConfigurarNivel: false` o segmented some da árvore (`findsNothing`) e URL + "COPIAR 🔗" **continuam**; com `true` os três estão presentes — o par que discrimina
-- [ ] `codigo` vazio ⇒ card sem URL e "COPIAR 🔗" inerte, sem copy nova (`design.md` §14)
-- [ ] Nenhum literal de cor, fonte ou sombra no arquivo
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 14 testes novos
+- [x] Renderiza, na ordem de T-05: label "LINK PRA CONVIDAR", a URL, "COPIAR 🔗", "QUEM ABRIR O LINK PODE…", o segmented com **exatamente três** opções — `SÓ VER`, `EDITAR LISTA`, `CO-ANFITRIÃO`
+- [x] O fundo é `BoraColors.ink` e o acento é o roxo — afirmado **contra o token**, não contra literal de cor
+- [x] Com a fixture, a URL na tela é `bora.app/c/rafa18`
+- [x] Percorrer os três níveis troca a nota para a de RN-23 correspondente — três asserções literais (GAL-02)
+- [x] Tocar uma opção emite o evento de nível; tocar a **já ativa** não emite (GAL-28 na UI)
+- [x] Trocar de nível **não** exibe toast algum
+- [x] **GAL-27 AC1**: com `podeConfigurarNivel: false` o segmented some da árvore (`findsNothing`) e URL + "COPIAR 🔗" **continuam**; com `true` os três estão presentes — o par que discrimina
+- [x] `codigo` vazio ⇒ card sem URL e "COPIAR 🔗" inerte, sem copy nova (`design.md` §14)
+- [x] Nenhum literal de cor, fonte ou sombra no arquivo
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 14 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -620,16 +620,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Renderiza avatar, nome, tag de papel e caret para toda pessoa
-- [ ] Badge "VOCÊ" presente **só** para quem é `voce`, ausente (`findsNothing`) para os demais — o par que discrimina (GAL-07 AC4)
-- [ ] A sublinha é a de `GaleraTextos.sublinhaDe`; a Duda (sem dieta e sem bebida) renderiza **sem** sublinha
-- [ ] **GAL-08**: cada um dos quatro papéis mapeia para o `BoraStatus` de §5 — ANFITRIÃO amarelo, CO-ANFITRIÃO roxo com texto branco, CONVIDADO branco, SÓ VÊ `wa-bubble`/`text-2`. Quatro asserções **contra o token do enum**, nunca contra literal de cor *(L-008)*
-- [ ] O caret usa a constante de `BoraExpandableRow` e difere entre aberto e fechado — teste nos dois estados
-- [ ] Tocar a linha emite a alternância; nada é decidido dentro do widget
-- [ ] Nome longo não estoura o layout (sem overflow no `tester.takeException()`), e duas homônimas renderizam como **duas** linhas distintas (Edge Case)
-- [ ] Nenhum literal de cor, fonte ou sombra
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 14 testes novos
+- [x] Renderiza avatar, nome, tag de papel e caret para toda pessoa
+- [x] Badge "VOCÊ" presente **só** para quem é `voce`, ausente (`findsNothing`) para os demais — o par que discrimina (GAL-07 AC4)
+- [x] A sublinha é a de `GaleraTextos.sublinhaDe`; a Duda (sem dieta e sem bebida) renderiza **sem** sublinha
+- [x] **GAL-08**: cada um dos quatro papéis mapeia para o `BoraStatus` de §5 — ANFITRIÃO amarelo, CO-ANFITRIÃO roxo com texto branco, CONVIDADO branco, SÓ VÊ `wa-bubble`/`text-2`. Quatro asserções **contra o token do enum**, nunca contra literal de cor *(L-008)*
+- [x] O caret usa a constante de `BoraExpandableRow` e difere entre aberto e fechado — teste nos dois estados
+- [x] Tocar a linha emite a alternância; nada é decidido dentro do widget
+- [x] Nome longo não estoura o layout (sem overflow no `tester.takeException()`), e duas homônimas renderizam como **duas** linhas distintas (Edge Case)
+- [x] Nenhum literal de cor, fonte ou sombra
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 14 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -648,15 +648,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Renderiza emoji + rótulo literal de RN-21 (A-13)
-- [ ] Estado ativo usa `fundo: primary, texto: ink`; inativo usa o par neutro — afirmado **contra os tokens**
-- [ ] O press afunda `translate(2px, 2px)` com a sombra caindo de 4px para 2px (arquivo 02 §CTA)
-- [ ] Tocar emite a escolha; tocar o **já ativo** não emite (GAL-28)
-- [ ] A geometria do `BoraSegmentedControl` **não** é replicada — são três botões numa linha, como T-05 desenha (`design.md` §5.3)
-- [ ] O doc do arquivo registra que uma variante `BoraSegmentedControl(acentoAtivo:)` é candidata ao design system numa spec futura, e por que não é feita aqui
-- [ ] Nenhum literal de cor, fonte ou sombra
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] Renderiza emoji + rótulo literal de RN-21 (A-13)
+- [x] Estado ativo usa `fundo: primary, texto: ink`; inativo usa o par neutro — afirmado **contra os tokens**
+- [x] O press afunda `translate(2px, 2px)` com a sombra caindo de 4px para 2px (arquivo 02 §CTA)
+- [x] Tocar emite a escolha; tocar o **já ativo** não emite (GAL-28)
+- [x] A geometria do `BoraSegmentedControl` **não** é replicada — são três botões numa linha, como T-05 desenha (`design.md` §5.3)
+- [x] O doc do arquivo registra que uma variante `BoraSegmentedControl(acentoAtivo:)` é candidata ao design system numa spec futura, e por que não é feita aqui
+- [x] Nenhum literal de cor, fonte ou sombra
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -675,16 +675,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Painel de não-anfitrião tem as três seções **nesta ordem**: NÍVEL DE ACESSO, RESTRIÇÃO ALIMENTAR, BEBIDA (GAL-10 AC2)
-- [ ] "NÍVEL DE ACESSO" oferece exatamente `CONVIDADO`, `CO-ANFITRIÃO`, `SÓ VÊ` — **`ANFITRIÃO` não é oferecido em lugar nenhum** (GAL-18 na UI)
-- [ ] O ativo de "NÍVEL DE ACESSO" e o de "BEBIDA" são pretos (`ink`), afirmado contra o token
-- [ ] **GAL-16**: painel do anfitrião exibe a nota `👑 Anfitrião manda em tudo — acesso fixo.` **e as três seções estão ausentes da árvore** (`findsNothing`) — não desabilitadas. É o par que discrimina de "desabilitado"
-- [ ] O toggle "BEBIDA" alterna entre `BEBE 🍺` e `NÃO BEBE 🚫` e emite a alternância
-- [ ] Escolher dieta/bebida/papel emite o evento correspondente com a **chave** da pessoa
-- [ ] **GAL-27 AC2**: com `podeGerenciarPapeis: false`, "NÍVEL DE ACESSO" some da árvore e RESTRIÇÃO ALIMENTAR + BEBIDA **continuam**; com `true`, as três estão presentes
-- [ ] Nenhum literal de cor, fonte ou sombra
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 16 testes novos
+- [x] Painel de não-anfitrião tem as três seções **nesta ordem**: NÍVEL DE ACESSO, RESTRIÇÃO ALIMENTAR, BEBIDA (GAL-10 AC2)
+- [x] "NÍVEL DE ACESSO" oferece exatamente `CONVIDADO`, `CO-ANFITRIÃO`, `SÓ VÊ` — **`ANFITRIÃO` não é oferecido em lugar nenhum** (GAL-18 na UI)
+- [x] O ativo de "NÍVEL DE ACESSO" e o de "BEBIDA" são pretos (`ink`), afirmado contra o token
+- [x] **GAL-16**: painel do anfitrião exibe a nota `👑 Anfitrião manda em tudo — acesso fixo.` **e as três seções estão ausentes da árvore** (`findsNothing`) — não desabilitadas. É o par que discrimina de "desabilitado"
+- [x] O toggle "BEBIDA" alterna entre `BEBE 🍺` e `NÃO BEBE 🚫` e emite a alternância
+- [x] Escolher dieta/bebida/papel emite o evento correspondente com a **chave** da pessoa
+- [x] **GAL-27 AC2**: com `podeGerenciarPapeis: false`, "NÍVEL DE ACESSO" some da árvore e RESTRIÇÃO ALIMENTAR + BEBIDA **continuam**; com `true`, as três estão presentes
+- [x] Nenhum literal de cor, fonte ou sombra
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 16 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -703,15 +703,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Com a fixture RN-30 a faixa lê **exatamente** `💡 A lista já se ajusta às preferências: 1 veggie 🥗 · 1 sem porco 🚫 · 3 bebem 🍺`
-- [ ] O texto é comparado com **o retorno de `resumoDasPreferencias`**, não com literal reescrito — a asserção do literal existe uma vez, como caso da fixture (GAL-13 AC5, AC6)
-- [ ] Termo zerado é omitido — teste com só veggie, e teste com só bebem
-- [ ] **Nenhum termo maior que zero ⇒ a faixa não renderiza** (`findsNothing`, GAL-13 AC7)
-- [ ] Mudar a composição de preferências troca a string exibida — a faixa é derivada, nunca guardada
-- [ ] A borda é 2px e o fundo é o amarelo do token; nenhum literal de cor
-- [ ] A feature **não** recompõe a frase: um teste de varredura (fechado em T27) e a inspeção do arquivo garantem que só `'💡 '` é concatenado
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 8 testes novos
+- [x] Com a fixture RN-30 a faixa lê **exatamente** `💡 A lista já se ajusta às preferências: 1 veggie 🥗 · 1 sem porco 🚫 · 3 bebem 🍺`
+- [x] O texto é comparado com **o retorno de `resumoDasPreferencias`**, não com literal reescrito — a asserção do literal existe uma vez, como caso da fixture (GAL-13 AC5, AC6)
+- [x] Termo zerado é omitido — teste com só veggie, e teste com só bebem
+- [x] **Nenhum termo maior que zero ⇒ a faixa não renderiza** (`findsNothing`, GAL-13 AC7)
+- [x] Mudar a composição de preferências troca a string exibida — a faixa é derivada, nunca guardada
+- [x] A borda é 2px e o fundo é o amarelo do token; nenhum literal de cor
+- [x] A feature **não** recompõe a frase: um teste de varredura (fechado em T27) e a inspeção do arquivo garantem que só `'💡 '` é concatenado
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 8 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -730,18 +730,18 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Header exibe `A GALERA` e o sub derivado; com a fixture, `5 pessoas · 4 confirmadas` (GAL-06)
-- [ ] Uma linha por pessoa nomeada, **na ordem do repositório** — a ordem é afirmada, não só a contagem (A-15)
-- [ ] **Um** painel aberto por vez: abrir a segunda linha fecha a primeira (`findsNothing` no conteúdo da primeira)
-- [ ] **GAL-09 AC9**: a tela **não** exibe contagem de pendentes nem representação do pendente sem nome — asserção de ausência sobre o texto "pendente" e sobre qualquer sexta linha
-- [ ] **GAL-24 AC1**: festa só com o anfitrião ⇒ uma linha, sub `1 pessoa · 1 confirmada`, faixa com o que sobrar
-- [ ] **GAL-24 AC2**: festa sem pessoa nomeada ⇒ sub `nenhuma pessoa ainda`, seção PESSOAS sem linhas e **sem copy inventada**, faixa ausente, card do link e CTA presentes e funcionais
-- [ ] **GAL-25**: com o repositório em falha, a tela mostra o estado de falha (`GaleraTextos.falha`) — **nunca** tela branca — e o card do link continua presente
-- [ ] O CTA do rodapé emite **o mesmo evento** de cópia que "COPIAR 🔗" (GAL-03 AC7)
-- [ ] A seção rola no documento, sem altura fixa e sem scroll horizontal a 390px
-- [ ] Nenhum literal de cor, fonte ou sombra
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 16 testes novos
+- [x] Header exibe `A GALERA` e o sub derivado; com a fixture, `5 pessoas · 4 confirmadas` (GAL-06)
+- [x] Uma linha por pessoa nomeada, **na ordem do repositório** — a ordem é afirmada, não só a contagem (A-15)
+- [x] **Um** painel aberto por vez: abrir a segunda linha fecha a primeira (`findsNothing` no conteúdo da primeira)
+- [x] **GAL-09 AC9**: a tela **não** exibe contagem de pendentes nem representação do pendente sem nome — asserção de ausência sobre o texto "pendente" e sobre qualquer sexta linha
+- [x] **GAL-24 AC1**: festa só com o anfitrião ⇒ uma linha, sub `1 pessoa · 1 confirmada`, faixa com o que sobrar
+- [x] **GAL-24 AC2**: festa sem pessoa nomeada ⇒ sub `nenhuma pessoa ainda`, seção PESSOAS sem linhas e **sem copy inventada**, faixa ausente, card do link e CTA presentes e funcionais
+- [x] **GAL-25**: com o repositório em falha, a tela mostra o estado de falha (`GaleraTextos.falha`) — **nunca** tela branca — e o card do link continua presente
+- [x] O CTA do rodapé emite **o mesmo evento** de cópia que "COPIAR 🔗" (GAL-03 AC7)
+- [x] A seção rola no documento, sem altura fixa e sem scroll horizontal a 390px
+- [x] Nenhum literal de cor, fonte ou sombra
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 16 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -760,16 +760,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] `GaleraPage({required festaId, required galera, required logger, area = const AreaDeTransferenciaDoSistema()})` com `static const Key pageKey = Key('galera')` (AD-014)
-- [ ] O bloc é criado **acima** do `ResponsiveBuilder` — teste que cruza 900px e afirma que o painel aberto e o nível selecionado **sobrevivem**, sem `pumpWidget` novo (GAL-23 AC3/AC5)
-- [ ] **GAL-03 AC6**: tocar "COPIAR 🔗" grava a URL completa na porta de área de transferência **e** mostra o toast `LINK COPIADO 🔗`; a duração é a de `BoraToast` (2200 ms de RN-29), afirmada pelo componente, não redigitada
-- [ ] **GAL-03 AC7**: tocar "+ CONVIDAR MAIS GENTE 🔗" produz **o mesmo** efeito — mesma URL na porta, mesmo toast
-- [ ] Duas cópias seguidas ⇒ **um toast por vez**, o segundo substituindo o primeiro (RN-29, GAL-28)
-- [ ] **GAL-05**: com a porta de área de transferência falhando, **nenhum** toast é exibido (`findsNothing`), a falha é registrada no logger e a URL continua visível na tela
-- [ ] `podeConfigurarNivel` e `podeGerenciarPapeis` saem de `papelDoUsuario` + `pode(...)` de `permissoes.dart` — a página **não** decide permissão por conta própria
-- [ ] **GAL-27 AC3**: montar duas vezes com o mesmo repositório, trocando só quem é `voce` (Rafa ⇒ presentes; Ana co-anfitriã ⇒ ausentes) — o par que discrimina
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 16 testes novos
+- [x] `GaleraPage({required festaId, required galera, required logger, area = const AreaDeTransferenciaDoSistema()})` com `static const Key pageKey = Key('galera')` (AD-014)
+- [x] O bloc é criado **acima** do `ResponsiveBuilder` — teste que cruza 900px e afirma que o painel aberto e o nível selecionado **sobrevivem**, sem `pumpWidget` novo (GAL-23 AC3/AC5)
+- [x] **GAL-03 AC6**: tocar "COPIAR 🔗" grava a URL completa na porta de área de transferência **e** mostra o toast `LINK COPIADO 🔗`; a duração é a de `BoraToast` (2200 ms de RN-29), afirmada pelo componente, não redigitada
+- [x] **GAL-03 AC7**: tocar "+ CONVIDAR MAIS GENTE 🔗" produz **o mesmo** efeito — mesma URL na porta, mesmo toast
+- [x] Duas cópias seguidas ⇒ **um toast por vez**, o segundo substituindo o primeiro (RN-29, GAL-28)
+- [x] **GAL-05**: com a porta de área de transferência falhando, **nenhum** toast é exibido (`findsNothing`), a falha é registrada no logger e a URL continua visível na tela
+- [x] `podeConfigurarNivel` e `podeGerenciarPapeis` saem de `papelDoUsuario` + `pode(...)` de `permissoes.dart` — a página **não** decide permissão por conta própria
+- [x] **GAL-27 AC3**: montar duas vezes com o mesmo repositório, trocando só quem é `voce` (Rafa ⇒ presentes; Ana co-anfitriã ⇒ ausentes) — o par que discrimina
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 16 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -788,16 +788,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] A 1180×800: duas colunas, a esquerda com **370px** medidos (`tester.getSize`), o card do link dentro dela
-- [ ] **GAL-22 AC2**: o CTA "+ CONVIDAR MAIS GENTE 🔗" está na coluna **esquerda**, abaixo do card, e **não existe** `BoraFooterBar` na árvore (`findsNothing`, W-R2/A-17)
-- [ ] A 390×820 o rodapé fixo **volta** e a coluna de 370px não existe — o par que discrimina
-- [ ] **GAL-23 AC3**: cruzar de 1180 para 890 preserva o accordion aberto e o nível selecionado (mesma montagem, só resize)
-- [ ] **GAL-23 AC4**: nenhum scroll horizontal em 1180, 900 e 390 — afirmado pela ausência de overflow e pelo `ScrollController` do eixo horizontal inexistente
-- [ ] **GAL-23 AC5**: a mesma mudança feita no compacto aparece no expandido — mesmo bloc, mesma fonte (teste que altera e redimensiona)
-- [ ] Todo elemento clicável tem estado de hover no expandido (GAL-22 AC6)
-- [ ] Nenhum literal de cor, fonte ou sombra
-- [ ] Gate `full` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] A 1180×800: duas colunas, a esquerda com **370px** medidos (`tester.getSize`), o card do link dentro dela
+- [x] **GAL-22 AC2**: o CTA "+ CONVIDAR MAIS GENTE 🔗" está na coluna **esquerda**, abaixo do card, e **não existe** `BoraFooterBar` na árvore (`findsNothing`, W-R2/A-17)
+- [x] A 390×820 o rodapé fixo **volta** e a coluna de 370px não existe — o par que discrimina
+- [x] **GAL-23 AC3**: cruzar de 1180 para 890 preserva o accordion aberto e o nível selecionado (mesma montagem, só resize)
+- [x] **GAL-23 AC4**: nenhum scroll horizontal em 1180, 900 e 390 — afirmado pela ausência de overflow e pelo `ScrollController` do eixo horizontal inexistente
+- [x] **GAL-23 AC5**: a mesma mudança feita no compacto aparece no expandido — mesmo bloc, mesma fonte (teste que altera e redimensiona)
+- [x] Todo elemento clicável tem estado de hover no expandido (GAL-22 AC6)
+- [x] Nenhum literal de cor, fonte ou sombra
+- [x] Gate `full` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: widget
 **Gate**: full
@@ -816,15 +816,15 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] O `builder` de `galera` deixa de montar `const GaleraPage()` e passa `festaId`, a porta e o logger
-- [ ] Abrir `/roles/:festaId/galera` **direto** renderiza a tela — sem depender do `FestaTabsShell` revestido, que é da spec 06 (A-18)
-- [ ] **AD-014**: o teste de rota afirma o **destino** por `rotaAtual()`, não pelo widget montado; e afirma `GaleraPage.pageKey` presente
-- [ ] `festaId` diferente chega diferente à página — teste com dois ids que prova que o parâmetro não é ignorado (foi exatamente o mutante que sobreviveu na fundação, L-001)
-- [ ] A rota continua atrás da guarda de sessão (AD-017): sem sessão, redireciona — teste que prova
-- [ ] `abrirApp` ganha o parâmetro **opcional com default**; **nenhum** teste existente é editado
-- [ ] O injector registra a porta como lazy singleton sobre a porta de edição, sem `dispose` próprio (o dono do ciclo de vida é a porta de leitura da Home, `design.md` §7.1)
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 8 testes novos, 0 editados
+- [x] O `builder` de `galera` deixa de montar `const GaleraPage()` e passa `festaId`, a porta e o logger
+- [x] Abrir `/roles/:festaId/galera` **direto** renderiza a tela — sem depender do `FestaTabsShell` revestido, que é da spec 06 (A-18)
+- [x] **AD-014**: o teste de rota afirma o **destino** por `rotaAtual()`, não pelo widget montado; e afirma `GaleraPage.pageKey` presente
+- [x] `festaId` diferente chega diferente à página — teste com dois ids que prova que o parâmetro não é ignorado (foi exatamente o mutante que sobreviveu na fundação, L-001)
+- [x] A rota continua atrás da guarda de sessão (AD-017): sem sessão, redireciona — teste que prova
+- [x] `abrirApp` ganha o parâmetro **opcional com default**; **nenhum** teste existente é editado
+- [x] O injector registra a porta como lazy singleton sobre a porta de edição, sem `dispose` próprio (o dono do ciclo de vida é a porta de leitura da Home, `design.md` §7.1)
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 8 testes novos, 0 editados
 
 **Tests**: widget (rota)
 **Gate**: build
@@ -843,16 +843,16 @@ Batches rodam **em sequência** — nenhum começa antes de o anterior reportar 
 **Tools**: MCP: NONE · Skill: NONE
 
 **Done when**:
-- [ ] Guard 1 — depois de remover comentários e literais de string, nenhum arquivo de `lib/features/galera/**` contém as constantes de RN-03/RN-05 (`0.4`, `0.3`, `0.15`, `0.5` e as demais), `adultosQueBebem` reescrito, `max(0, adultos -`, nem `math.`
-- [ ] Guard 2 — nenhum arquivo contém a frase `A lista já se ajusta às preferências` como **template com interpolação**; a frase inteira vem de `resumoDasPreferencias` (GAL-13 AC5)
-- [ ] Guard 3 — nenhum literal de cor (`0xFF...`, `Color(`), fonte ou sombra fora dos tokens
-- [ ] Guard 4 — nenhum arquivo de `lib/features/galera/domain/**` importa `package:flutter/` (GAL-19 AC7, a condição para a spec 09 traduzir a tabela em security rules)
-- [ ] **Cada uma das quatro regras tem teste contra trecho sintético infrator** — varredura verde contra código limpo não prova que morde *(a lição que o sensor da spec 04 e o L-007 já cobraram)*
-- [ ] A allowlist, se existir, libera **a forma exata**, nunca o arquivo inteiro *(L-007)*
-- [ ] A comparação de caminho normaliza o separador — guard que compara path com barra normal fica verde no POSIX e vermelho no Windows *(L-006)*
-- [ ] A falha nomeia o arquivo infrator na mensagem
-- [ ] Gate `build` passa; exit code conferido
-- [ ] ≥ 12 testes novos
+- [x] Guard 1 — depois de remover comentários e literais de string, nenhum arquivo de `lib/features/galera/**` contém as constantes de RN-03/RN-05 (`0.4`, `0.3`, `0.15`, `0.5` e as demais), `adultosQueBebem` reescrito, `max(0, adultos -`, nem `math.`
+- [x] Guard 2 — nenhum arquivo contém a frase `A lista já se ajusta às preferências` como **template com interpolação**; a frase inteira vem de `resumoDasPreferencias` (GAL-13 AC5)
+- [x] Guard 3 — nenhum literal de cor (`0xFF...`, `Color(`), fonte ou sombra fora dos tokens
+- [x] Guard 4 — nenhum arquivo de `lib/features/galera/domain/**` importa `package:flutter/` (GAL-19 AC7, a condição para a spec 09 traduzir a tabela em security rules)
+- [x] **Cada uma das quatro regras tem teste contra trecho sintético infrator** — varredura verde contra código limpo não prova que morde *(a lição que o sensor da spec 04 e o L-007 já cobraram)*
+- [x] A allowlist, se existir, libera **a forma exata**, nunca o arquivo inteiro *(L-007)*
+- [x] A comparação de caminho normaliza o separador — guard que compara path com barra normal fica verde no POSIX e vermelho no Windows *(L-006)*
+- [x] A falha nomeia o arquivo infrator na mensagem
+- [x] Gate `build` passa; exit code conferido
+- [x] ≥ 12 testes novos
 
 **Tests**: unit (varredura)
 **Gate**: build

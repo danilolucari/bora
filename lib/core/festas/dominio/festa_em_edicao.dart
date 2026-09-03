@@ -1,4 +1,5 @@
 import '../../calculo/calculo.dart';
+import 'convite_da_festa.dart';
 
 /// A festa **como montar precisa dela**: identidade + composição (AD-029).
 ///
@@ -18,11 +19,18 @@ import '../../calculo/calculo.dart';
 /// igualdade é **profunda** porque as duas partes já a têm, e é comparando
 /// duas festas em edição que um consumidor decide se precisa gravar ou
 /// recalcular.
+///
+/// **Duas emendas aditivas convivem aqui**, cada uma de uma spec e cada uma
+/// com default para não quebrar call site nenhum: [despesas] (spec 06 `lista`,
+/// AD-030) e [convite] (spec 07 `galera`, AD-031). Quem acrescentar a terceira
+/// segue a mesma forma — campo com default, dentro de `==`/`hashCode` e de
+/// [copyWith].
 class FestaEmEdicao {
   const FestaEmEdicao({
     required this.festa,
     required this.composicao,
     this.despesas = const [],
+    this.convite = ConviteDaFesta.vazio,
   });
 
   /// Nome, data, hora, local e duração — a identidade da festa.
@@ -48,16 +56,29 @@ class FestaEmEdicao {
   /// a tela Custos exibe.
   final List<Despesa> despesas;
 
+  /// O código do link e o nível de quem abrir — RN-23 · AD-031.
+  ///
+  /// **Fica aqui e não em [ComposicaoDaFesta]** pela mesma fronteira objetiva
+  /// da AD-030: `CalculadoraDaFesta.calcular` não consome convite. Quem grava
+  /// é a tela A Galera (o segmented de RN-23); quem lê na abertura do link é a
+  /// spec 09.
+  ///
+  /// Entra em `==`/`hashCode`: sem isso, gravar um nível novo produziria uma
+  /// festa **igual** à anterior e a emissão do stream seria engolida como eco.
+  final ConviteDaFesta convite;
+
   /// Copia trocando campos. O campo não informado é **preservado**.
   FestaEmEdicao copyWith({
     Festa? festa,
     ComposicaoDaFesta? composicao,
     List<Despesa>? despesas,
+    ConviteDaFesta? convite,
   }) =>
       FestaEmEdicao(
         festa: festa ?? this.festa,
         composicao: composicao ?? this.composicao,
         despesas: despesas ?? this.despesas,
+        convite: convite ?? this.convite,
       );
 
   @override
@@ -66,8 +87,10 @@ class FestaEmEdicao {
       other is FestaEmEdicao &&
           other.festa == festa &&
           other.composicao == composicao &&
-          listaIgual(other.despesas, despesas);
+          listaIgual(other.despesas, despesas) &&
+          other.convite == convite;
 
   @override
-  int get hashCode => Object.hash(festa, composicao, Object.hashAll(despesas));
+  int get hashCode =>
+      Object.hash(festa, composicao, Object.hashAll(despesas), convite);
 }

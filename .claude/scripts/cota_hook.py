@@ -37,6 +37,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from cota import (  # noqa: E402
+    CODIGOS_QUE_UM_CACHE_NOVO_CONSERTA,
     ESPERA_APOS_RESET_MIN,
     LIMITE_PARAR,
     horario_de_retomada,
@@ -49,6 +50,12 @@ ESTADO = os.path.join(PASTA_CLAUDE, ".cota-estado.json")
 
 # De quanto em quanto tempo o monitor volta a falar, por veredito.
 INTERVALO_S = {"ATENCAO": 300, "INCERTO": 900, "SEGUIR": None}
+
+# Quanto o PostToolUse aceita esperar por um cache regravado quando a leitura
+# sai velha. O hook roda logo depois de uma resposta da API, então na prática
+# o cache já está fresco; a espera cobre a corrida de estar gravando agora.
+# O timeout do hook em settings.json é 15s — este orçamento cabe folgado.
+ESPERA_HOOK_S = 2.0
 
 # Entradas de sessões que ninguém tocou há mais de um dia são lixo.
 VALIDADE_ESTADO_S = 24 * 3600
@@ -150,7 +157,7 @@ def main() -> int:
         entrada = {}
     sessao = entrada.get("session_id") or "sem-id"
 
-    leitura = ler_cota()
+    leitura = ler_cota(esperar_s=ESPERA_HOOK_S if evento == "PostToolUse" else 0.0)
     leitura["retomar_em"] = horario_de_retomada(leitura)
     veredito = leitura["veredito"]
 
@@ -169,23 +176,38 @@ def main() -> int:
     if evento == "SessionStart":
         # Toda sessão começa sabendo onde está — é isto que garante que
         # nenhuma sessão rode sem monitoria, mesmo se o CLAUDE.md não for lido.
+        #
+        # Só que aqui o cache velho é o **estado normal**, não anomalia: este
+        # hook roda antes da primeira resposta da API da sessão, e é a resposta
+        # que regrava o cache. Tratar isso como "rode /usage" produzia alarme
+        # falso toda vez que a máquina ficava um tempo parada — e ensinou o
+        # ritual de rodar o script duas vezes, em que a leitura certa só vinha
+        # porque entre as duas rodadas coube uma chamada à API.
+        herdado = leitura.get("motivo_codigo") in CODIGOS_QUE_UM_CACHE_NOVO_CONSERTA
         aviso = (
             f"cota: {veredito} — {leitura.get('motivo', '')}"
-            if veredito != "SEGUIR"
+            if veredito != "SEGUIR" and not herdado
             else None
         )
+        if herdado:
+            fecho = (
+                f"Este número é herdado da sessão anterior ({leitura.get('cache_idade_min', '?')} "
+                "min) porque o cache só é regravado quando o Claude Code recebe resposta da "
+                "API — o que ainda não aconteceu nesta sessão. Ele se corrige sozinho na "
+                "primeira chamada de ferramenta, e o monitor avisa se não estiver verde. "
+                "Não peça /usage nem rode o script duas vezes por causa disto."
+            )
+        elif veredito == "SEGUIR":
+            fecho = "Ela vai avisar sozinha; não precisa rodar o script à mão."
+        elif veredito == "PARAR":
+            fecho = _protocolo(leitura)
+        else:
+            fecho = f"Atenção: {leitura.get('motivo', '')}."
         saida = _contexto(
             evento,
             f"Monitoria de cota ARMADA (hooks PostToolUse + Stop, limite de pausa "
             f"{LIMITE_PARAR}%). Leitura atual: {veredito} — {_resumo(leitura)}. "
-            f"Cache com {leitura.get('cache_idade_min', '?')} min. "
-            + (
-                "Ela vai avisar sozinha; não precisa rodar o script à mão."
-                if veredito == "SEGUIR"
-                else _protocolo(leitura)
-                if veredito == "PARAR"
-                else f"Atenção: {leitura.get('motivo', '')}."
-            ),
+            f"Cache com {leitura.get('cache_idade_min', '?')} min. " + fecho,
             aviso,
         )
         minha["falou_em"] = agora
@@ -211,7 +233,12 @@ def main() -> int:
         if veredito == "PARAR":
             deve_falar = True
         elif intervalo is None:
-            deve_falar = False  # verde: silêncio, contexto não é de graça
+            # Verde é silêncio — contexto não é de graça. A exceção é o verde
+            # que **corrige** um INCERTO anterior (tipicamente o do
+            # SessionStart, herdado da sessão passada): esse número precisa
+            # chegar uma vez, senão a sessão inteira segue lembrando do valor
+            # velho e alguém acaba rodando o script à mão para conferir.
+            deve_falar = minha.get("veredito") == "INCERTO"
         else:
             deve_falar = mudou or desde_ultimo >= intervalo
 
@@ -230,6 +257,13 @@ def main() -> int:
                     f"NÃO abra task longa; prepare o handoff. A pausa dispara em "
                     f"{LIMITE_PARAR}%.",
                     f"cota: {leitura.get('motivo', '')}",
+                )
+            elif veredito == "SEGUIR":
+                saida = _contexto(
+                    evento,
+                    f"COTA OK — {_resumo(leitura)} (cache de "
+                    f"{leitura.get('cache_idade_min', '?')} min). Esta leitura substitui o "
+                    "INCERTO anterior; o monitor volta ao silêncio até mudar de faixa.",
                 )
             else:  # INCERTO
                 saida = _contexto(

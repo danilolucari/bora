@@ -9,6 +9,7 @@ import '../../features/convidado/presentation/pages/convidado_page.dart';
 import '../../features/convite/presentation/pages/convite_page.dart';
 import '../../features/custos/presentation/pages/custos_page.dart';
 import '../../features/entrar/presentation/pages/entrar_page.dart';
+import '../../features/galera/domain/galera_repository.dart';
 import '../../features/galera/presentation/pages/galera_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/lista/domain/pedido_repository.dart';
@@ -58,6 +59,7 @@ GoRouter buildAppRouter({
   required AutenticacaoRepository autenticacao,
   required FestaRepository festas,
   required FestaEmEdicaoRepository festasEmEdicao,
+  required GaleraRepository galera,
   required PedidoRepository pedidos,
   required AppLogger logger,
   String initialLocation = Routes.roles,
@@ -155,7 +157,12 @@ GoRouter buildAppRouter({
                     routes: [
                       GoRoute(
                         path: 'galera',
-                        builder: (context, state) => const GaleraPage(),
+                        builder: (context, state) => GaleraPage(
+                          festaId:
+                              state.pathParameters[Routes.paramFestaId]!,
+                          galera: galera,
+                          logger: logger,
+                        ),
                       ),
                     ],
                   ),

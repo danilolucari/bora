@@ -116,7 +116,7 @@ void main() {
           .map((f) => 'dominio/${f.uri.pathSegments.last}')
           .toSet();
 
-      expect(arquivosDeDominio, hasLength(2));
+      expect(arquivosDeDominio, hasLength(4));
       expect(
         exportados,
         arquivosDeDominio,

@@ -18,6 +18,7 @@
 library;
 
 import 'package:bora/core/calculo/calculo.dart';
+import 'package:bora/core/festas/festas.dart';
 
 import 'rn30_estado_inicial.dart';
 
@@ -31,6 +32,17 @@ final Festa festaRn30Tipada = Festa(
   hora: festaRn30['hora']! as String,
   local: festaRn30['local']! as String,
   duracaoHoras: festaRn30['duracaoHoras']! as int,
+);
+
+/// O convite da festa de RN-30, tipado — o código do link e o nível de quem
+/// abrir (RN-23).
+///
+/// O nível passa por `NivelDoLink.resolver`, e não por `porChave!`: é a mesma
+/// porta que o dado de produção vai atravessar, então a fixture exercita a
+/// resolução de verdade em vez de contorná-la.
+final ConviteDaFesta conviteRn30Tipado = ConviteDaFesta(
+  codigo: festaRn30['codigo']! as String,
+  nivel: NivelDoLink.resolver(festaRn30['nivelDoLink'] as String?),
 );
 
 /// As cinco pessoas nomeadas de RN-30, tipadas e **na ordem do bruto**.

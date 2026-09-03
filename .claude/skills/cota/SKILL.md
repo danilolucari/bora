@@ -47,10 +47,31 @@ mostra**. O Claude Code reescreve esse cache a cada resposta da API, e ele é da
 aqui também.
 
 ```bash
-python .claude/scripts/cota.py          # relatório
-python .claude/scripts/cota.py --curto  # uma linha
-python .claude/scripts/cota.py --json   # para script
+python .claude/scripts/cota.py             # relatório
+python .claude/scripts/cota.py --curto     # uma linha
+python .claude/scripts/cota.py --json      # para script
+python .claude/scripts/cota.py --esperar 3 # espera até 3s por um cache novo
 ```
+
+### Por que "rodar duas vezes" parecia consertar
+
+O cache **só é regravado quando o Claude Code recebe resposta da API**. Nenhuma
+rodada do script atualiza nada — ele lê um arquivo. Quando a leitura saía velha
+e a segunda rodada saía certa, quem consertou foi a resposta da API que coube
+**entre** as duas, não a repetição.
+
+Onde isso aparecia de verdade: no `SessionStart`. O hook roda antes da primeira
+resposta da API da sessão, então o número dali é o da sessão anterior. Em
+2026-09-03 ele relatou 54% com o valor real em 68%.
+
+Hoje: o `SessionStart` diz que o número é **herdado** e que se corrige sozinho
+na primeira chamada de ferramenta (sem pedir `/usage` à toa), e o `PostToolUse`
+**fala uma vez** quando o verde substitui aquele `INCERTO` — a leitura boa chega
+sem ninguém rodar nada. Fora dos hooks, use `--esperar SEG`: em vez de devolver
+`INCERTO` na hora, o script relê o arquivo a cada 200 ms até o `fetchedAtMs`
+mudar ou o orçamento acabar. Ele só espera pelo que uma gravação nova conserta
+(cache velho, janela virada); cache ausente ou sem a janela de 5h volta na hora,
+porque esperar só atrasaria o mesmo `INCERTO`.
 
 > **Nunca use `ccusage` para esta medida.** Ele soma `cacheReadInputTokens`,
 > que cresce a cada turno porque o contexto é relido inteiro, e não enxerga o
@@ -106,7 +127,9 @@ ele o guarda 2 não roda, e chutar um fuso erraria por horas justamente no
 cálculo que decide se a janela virou.
 
 `INCERTO` **não é `SEGUIR`**. Peça ao usuário para rodar `/usage`, que força a
-atualização do cache, e verifique de novo.
+atualização do cache, e verifique de novo — exceto no `SessionStart`, onde
+cache velho é o estado normal (a sessão ainda não falou com a API) e a leitura
+se corrige sozinha na primeira chamada de ferramenta.
 
 ## Testes
 

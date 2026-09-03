@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bora/core/calculo/calculo.dart';
+import 'package:bora/core/festas/festas.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'rn30_estado_inicial.dart';
@@ -214,6 +215,40 @@ void main() {
         expect(tipada.bebe, bruta['bebe']);
         expect(tipada.voce, bruta['voce']);
       }
+    });
+  });
+
+  group('GAL-01 — o convite tipado deriva do bruto', () {
+    test('o código é o do bruto, e é o literal de bora.app/c/rafa18', () {
+      expect(conviteRn30Tipado.codigo, 'rafa18');
+      expect(conviteRn30Tipado.codigo, festaRn30['codigo']);
+    });
+
+    test('o nível é o padrão de festa nova', () {
+      expect(
+        conviteRn30Tipado.nivel,
+        NivelDoLink.padraoDeFestaNova,
+        reason: 'contra a constante, não contra a chave: se o padrão de '
+            'produto mudar, este teste discorda',
+      );
+    });
+
+    test('o nível volta a ser exatamente a chave que estava no bruto', () {
+      expect(
+        conviteRn30Tipado.nivel.chave,
+        festaRn30['nivelDoLink'],
+        reason: 'derivação, não cópia: tipar não pode reinterpretar o dado',
+      );
+    });
+
+    test('o convite inteiro é o par que o bruto declara', () {
+      expect(
+        conviteRn30Tipado,
+        ConviteDaFesta(
+          codigo: festaRn30['codigo']! as String,
+          nivel: NivelDoLink.padraoDeFestaNova,
+        ),
+      );
     });
   });
 }

@@ -59,6 +59,21 @@ class ComposicaoDaFesta {
 
   /// Copia trocando campos. O campo não informado é **preservado**; informar
   /// uma coleção vazia a substitui de verdade.
+  ///
+  /// **É a defesa contra apagar em silêncio o campo que outra spec
+  /// acrescentar.** Quem escreve nesta composição troca um campo e conserva os
+  /// demais sem os conhecer: remontar a composição campo a campo no ponto de
+  /// escrita faria a próxima spec que acrescentasse um campo (como a `lista`
+  /// acrescentou [noCarrinho]) perdê-lo em toda escrita antiga, sem erro de
+  /// compilação e sem teste vermelho. Campo novo aqui entra **também** neste
+  /// método — é a mesma obrigação de `==`/`hashCode`.
+  ///
+  /// SPEC_DEVIATION (E-3 da spec 07 `galera`): a `spec.md` da `galera` põe
+  /// `lib/core/calculo/**` fora da fronteira dela, e esta emenda a atravessa.
+  /// Razão: a escrita da tela A Galera troca só `pessoas`, e sem `copyWith`
+  /// ela teria de remontar a composição — exatamente o buraco descrito acima.
+  /// A emenda é estrutural: nenhum campo novo, nenhuma aritmética, nenhuma
+  /// regra de `RN-xx`.
   ComposicaoDaFesta copyWith({
     ContagemDePessoas? contagem,
     int? duracaoHoras,

@@ -1,4 +1,5 @@
 import '../../../core/calculo/calculo.dart';
+import '../../../core/festas/festas.dart';
 
 /// A festa **como a Home precisa dela** — a entidade mais os números que só
 /// esta tela mostra (HOME-19).
@@ -23,6 +24,8 @@ class ResumoDeFesta {
     this.iniciais = const [],
     this.pessoas,
     this.total,
+    this.despesas = const [],
+    this.convite = ConviteDaFesta.vazio,
     ComposicaoDaFesta? composicao,
   })
       // O que o lint sugere (`this._composicao`) é impossível: parâmetro
@@ -72,6 +75,24 @@ class ResumoDeFesta {
   /// Quanto a festa deu — só para festa concluída (UC-24). Formatado por
   /// `MoneyFormatter` na tela, nunca aqui (RN-13).
   final double? total;
+
+  /// As despesas lançadas na festa — RN-20 · AD-030.
+  ///
+  /// A Home **não** as lê. Estão aqui pela mesma razão de [composicao]: o
+  /// registro da festa é **um só**. Sem este campo, `FestaEmEdicao.despesas`
+  /// não sobrevivia ao round-trip por [FestaRepositoryEmMemoria] — a `lista`
+  /// gravava o carrinho e o adaptador o descartava em silêncio, com a suíte
+  /// verde porque toda asserção da spec 06 passa por duplo.
+  ///
+  /// Compara **na ordem**, como em `FestaEmEdicao.despesas`.
+  final List<Despesa> despesas;
+
+  /// O código do link e o nível de quem abrir — RN-23 · AD-031.
+  ///
+  /// A Home **não** o lê. Mesma razão de [despesas]: sem o campo,
+  /// `definirNivelDoLink` era um no-op no app real — o segmented de T-05
+  /// mudava e o stream reemitia o nível antigo.
+  final ConviteDaFesta convite;
 
   /// `null` quando ninguém informou composição — ver [composicao].
   final ComposicaoDaFesta? _composicao;
@@ -127,6 +148,8 @@ class ResumoDeFesta {
           _mesmasIniciais(other.iniciais, iniciais) &&
           other.pessoas == pessoas &&
           other.total == total &&
+          _mesmasDespesas(other.despesas, despesas) &&
+          other.convite == convite &&
           // O default **resolvido** dos dois lados, nunca o campo cru: dois
           // resumos criados sem composição continuam iguais, que é o que faz
           // a suíte da spec 04 seguir intacta.
@@ -141,8 +164,19 @@ class ResumoDeFesta {
         Object.hashAll(iniciais),
         pessoas,
         total,
+        Object.hashAll(despesas),
+        convite,
         composicao,
       );
+
+  static bool _mesmasDespesas(List<Despesa> a, List<Despesa> b) {
+    if (identical(a, b)) return true;
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 
   static bool _mesmasIniciais(List<String> a, List<String> b) {
     if (identical(a, b)) return true;

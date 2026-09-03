@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/galera/data/galera_repositorio_sobre_festas.dart';
+import '../../features/galera/domain/galera_repository.dart';
 import '../../features/home/data/festa_repository_em_memoria.dart';
 import '../../features/home/domain/festa_repository.dart';
 import '../../features/lista/data/pedido_falso.dart';
@@ -76,6 +78,20 @@ Future<void> configureDependencies({
     () => getIt<FestaRepository>() as FestaEmEdicaoRepository,
   );
 
+  // A **terceira porta sobre a mesma instância**: a Galera é uma vista sobre o
+  // registro da festa, e não um store paralelo (`galera/design.md` §2.1). É o
+  // que faz a preferência mudada em T-05 mudar a lista da festa sem sincronia
+  // nenhuma — dois stores divergiriam sem que nada avisasse.
+  //
+  // Sem `dispose` próprio, pela mesma razão da porta de edição: quem detém o
+  // ciclo de vida do store é a porta de leitura da Home.
+  getIt.registerLazySingleton<GaleraRepository>(
+    () => GaleraRepositorioSobreFestas(
+      getIt<FestaEmEdicaoRepository>(),
+      getIt<AppLogger>(),
+    ),
+  );
+
   // A porta de pedido da AD-024. A **única** implementação do M1 é falsa, e a
   // ressalva de exposição pública mora no doc de `PedidoFalso`: com ela no
   // lugar, a tela Lista afirma "PEDIDO A CAMINHO!" sem pedido a caminho.
@@ -92,6 +108,7 @@ Future<void> configureDependencies({
               autenticacao: getIt<AutenticacaoRepository>(),
               festas: getIt<FestaRepository>(),
               festasEmEdicao: getIt<FestaEmEdicaoRepository>(),
+              galera: getIt<GaleraRepository>(),
               pedidos: getIt<PedidoRepository>(),
               logger: getIt<AppLogger>(),
             ),

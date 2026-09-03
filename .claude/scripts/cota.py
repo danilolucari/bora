@@ -18,10 +18,19 @@ quem decide se dá para seguir agora é a cota da sessão corrente. Escolha do
 usuário em 2026-08-28 — o teto semanal fica alto por dias seguidos e pausar
 por ele parava a sessão com a janela de 5h vazia.
 
+O cache **só é reescrito quando o Claude Code recebe uma resposta da API**.
+Antes da primeira resposta de uma sessão (é o caso do hook `SessionStart`) o
+que está no arquivo é o número da sessão anterior — daí a mania de "rodar duas
+vezes": a primeira chamada não conserta nada, quem conserta é a resposta da API
+que vem entre uma e outra. `--esperar` existe para não precisar do ritual:
+quando a leitura sai velha, o script fica relendo o arquivo até o Claude Code
+gravar um `fetchedAtMs` novo, dentro do orçamento dado.
+
 Uso:
-    python .claude/scripts/cota.py          # relatório legível
-    python .claude/scripts/cota.py --curto  # uma linha
-    python .claude/scripts/cota.py --json   # para script
+    python .claude/scripts/cota.py             # relatório legível
+    python .claude/scripts/cota.py --curto     # uma linha
+    python .claude/scripts/cota.py --json      # para script
+    python .claude/scripts/cota.py --esperar 3 # espera até 3s por um cache novo
 
 Saída (exit code):
     0  SEGUIR    - abaixo de 70%
@@ -38,6 +47,7 @@ import io
 import json
 import os
 import sys
+import time
 
 # COTA_ARQUIVO existe para os testes conseguirem simular 85% sem esperar
 # a conta chegar lá de verdade.
@@ -53,6 +63,14 @@ IDADE_MAXIMA_MIN = 30
 
 # Quanto esperar depois do reset antes de retomar (combinado com o usuário).
 ESPERA_APOS_RESET_MIN = 10
+
+# De quanto em quanto tempo reler o arquivo enquanto `--esperar` espera.
+INTERVALO_RELEITURA_S = 0.2
+
+# Os únicos INCERTO que uma gravação nova do Claude Code conserta. Esperar por
+# um cache ausente ou por um `utilization` sem a janela de 5h seria só demorar
+# mais para dar o mesmo INCERTO.
+CODIGOS_QUE_UM_CACHE_NOVO_CONSERTA = {"cache_velho", "janela_virada"}
 
 # Nome legível de cada janela, para a mensagem dizer o que estourou.
 NOMES = {
@@ -161,18 +179,23 @@ def _local(iso: str | None) -> str | None:
     return quando.astimezone().isoformat(timespec="seconds")
 
 
-def ler_cota(caminho: str = CAMINHO) -> dict:
-    """Devolve o estado da cota, já com os guardas de confiabilidade aplicados."""
+def _ler_uma_vez(caminho: str) -> dict:
+    """Uma leitura do arquivo, com os guardas de confiabilidade aplicados."""
     try:
         with io.open(caminho, encoding="utf-8") as arquivo:
             dados = json.load(arquivo)
     except (OSError, ValueError) as erro:
-        return {"veredito": "INCERTO", "motivo": f"não deu para ler {caminho}: {erro}"}
+        return {
+            "veredito": "INCERTO",
+            "motivo_codigo": "erro_leitura",
+            "motivo": f"não deu para ler {caminho}: {erro}",
+        }
 
     cache = dados.get("cachedUsageUtilization")
     if not cache:
         return {
             "veredito": "INCERTO",
+            "motivo_codigo": "sem_cache",
             "motivo": "cachedUsageUtilization ausente — a sessão já falou com a API nesta máquina?",
         }
 
@@ -189,6 +212,7 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
     if not isinstance(buscado_ms, (int, float)):
         return {
             "veredito": "INCERTO",
+            "motivo_codigo": "sem_fetched_at",
             "motivo": (
                 "o cache não trouxe `fetchedAtMs`, então não dá para saber se o "
                 "número é fresco. Rode /usage para atualizar."
@@ -209,6 +233,7 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
     if cinco_h and reseta is None:
         return {
             "veredito": "INCERTO",
+            "motivo_codigo": "reset_ilegivel",
             "motivo": (
                 f"a janela de 5h veio com `resets_at` ilegível ({reseta_sessao!r}), "
                 "então não dá para saber se ela já virou. Rode /usage."
@@ -225,6 +250,7 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
         "reseta_em_local": _local(reseta_sessao),
         "faltam_min": round(faltam_min, 1) if faltam_min is not None else None,
         "cache_idade_min": round(idade_min, 1),
+        "buscado_ms": buscado_ms,
         "semana_reseta_em_local": _local((uso.get("seven_day") or {}).get("resets_at")),
     }
 
@@ -233,6 +259,7 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
     # com o cache marcando 55% de uma janela encerrada 4 min antes.
     if faltam_min is not None and faltam_min <= 0:
         estado["veredito"] = "INCERTO"
+        estado["motivo_codigo"] = "janela_virada"
         estado["motivo"] = (
             "a janela de 5h já resetou e o cache ainda é da janela anterior "
             f"({estado['sessao_pct']}%). Rode /usage ou faça uma chamada para atualizar."
@@ -242,6 +269,7 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
     # Guarda 2: número congelado.
     if idade_min > IDADE_MAXIMA_MIN:
         estado["veredito"] = "INCERTO"
+        estado["motivo_codigo"] = "cache_velho"
         estado["motivo"] = (
             f"cache parado há {idade_min:.0f} min (máx {IDADE_MAXIMA_MIN}). "
             "Rode /usage para atualizar."
@@ -250,6 +278,7 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
 
     if not janelas:
         estado["veredito"] = "INCERTO"
+        estado["motivo_codigo"] = "sem_janelas"
         estado["motivo"] = "o cache não trouxe nenhuma janela de utilização"
         return estado
 
@@ -258,6 +287,7 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
     gatilho = next((j for j in janelas if j["janela"] == NOME_SESSAO), None)
     if gatilho is None:
         estado["veredito"] = "INCERTO"
+        estado["motivo_codigo"] = "sem_sessao"
         estado["motivo"] = (
             "o cache não trouxe a janela de sessão (5h), que é a única que "
             "decide. Rode /usage para atualizar."
@@ -275,6 +305,36 @@ def ler_cota(caminho: str = CAMINHO) -> dict:
         estado["veredito"] = "SEGUIR"
         estado["motivo"] = f"{gatilho['janela']} em {gatilho['pct']}%"
 
+    return estado
+
+
+def ler_cota(caminho: str = CAMINHO, esperar_s: float = 0.0) -> dict:
+    """O estado da cota; com `esperar_s`, espera o cache velho ser regravado.
+
+    O script não tem como forçar a atualização: quem escreve `fetchedAtMs` é o
+    Claude Code, ao receber resposta da API. Rodar duas vezes "funcionava" só
+    porque entre as duas rodadas cabia uma resposta da API. Aqui a segunda
+    rodada vira este laço — releitura a cada 200 ms até o número mudar ou o
+    orçamento acabar.
+
+    Espera **só** o que uma gravação nova conserta (`cache_velho`,
+    `janela_virada`). Cache ausente ou sem a janela de 5h não melhora com o
+    tempo, e segurar o hook por isso seria demorar para dar o mesmo INCERTO.
+    """
+    estado = _ler_uma_vez(caminho)
+    if esperar_s <= 0 or estado.get("motivo_codigo") not in CODIGOS_QUE_UM_CACHE_NOVO_CONSERTA:
+        return estado
+
+    marca = estado.get("buscado_ms")
+    limite = time.monotonic() + esperar_s
+    while time.monotonic() < limite:
+        time.sleep(min(INTERVALO_RELEITURA_S, max(0.0, limite - time.monotonic())))
+        novo = _ler_uma_vez(caminho)
+        if novo.get("buscado_ms") != marca:
+            novo["esperou_s"] = round(esperar_s - max(0.0, limite - time.monotonic()), 1)
+            return novo
+    estado["esperou_s"] = round(esperar_s, 1)
+    estado["motivo"] += f" (esperei {esperar_s:g}s por um cache novo e ele não veio)"
     return estado
 
 
@@ -305,9 +365,16 @@ def _relatar() -> int:
     analisador = argparse.ArgumentParser(description=__doc__)
     analisador.add_argument("--json", action="store_true")
     analisador.add_argument("--curto", action="store_true")
+    analisador.add_argument(
+        "--esperar",
+        type=float,
+        default=0.0,
+        metavar="SEG",
+        help="segundos a esperar por um cache novo quando a leitura sai velha",
+    )
     argumentos = analisador.parse_args()
 
-    estado = ler_cota()
+    estado = ler_cota(esperar_s=argumentos.esperar)
     estado["retomar_em"] = horario_de_retomada(estado)
     veredito = estado["veredito"]
 
@@ -335,6 +402,8 @@ def _relatar() -> int:
             _imprimir(f"  reseta em (7d)      : {estado['semana_reseta_em_local']}")
         if estado.get("cache_idade_min") is not None:
             _imprimir(f"  cache idade         : {estado['cache_idade_min']} min")
+        if estado.get("esperou_s"):
+            _imprimir(f"  esperei             : {estado['esperou_s']}s por um cache novo")
         if estado.get("retomar_em"):
             gatilho = estado.get("gatilho") or {}
             _imprimir(

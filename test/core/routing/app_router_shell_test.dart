@@ -1,6 +1,7 @@
 import 'package:bora/core/routing/app_shell.dart';
 import 'package:bora/core/routing/festa_tabs_shell.dart';
 import 'package:bora/core/routing/placeholder_page.dart';
+import 'package:bora/features/galera/presentation/pages/galera_page.dart';
 import 'package:bora/features/home/presentation/pages/home_page.dart';
 import 'package:bora/features/lista/presentation/pages/lista_page.dart';
 import 'package:bora/features/montar/presentation/pages/montar_page.dart';
@@ -27,6 +28,7 @@ Key _chaveDe(String id) => switch (id) {
       HomePage.id => HomePage.pageKey,
       MontarPage.id => MontarPage.pageKey,
       ListaPage.id => ListaPage.pageKey,
+      GaleraPage.id => GaleraPage.pageKey,
       _ => PlaceholderPage.keyFor(id),
     };
 
