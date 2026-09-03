@@ -283,15 +283,16 @@ CVD-31 AC7 manda. Entram no corpo da AD-033.
 
 ## Handoff
 
-> **SNAPSHOT — 2026-09-02, 19:05 BRT.** Spec 07 `galera` com o **Execute COMPLETO**:
-> **27/27 tasks**, mais uma fix task fora do plano. Branch **`feature/galera`**, 30
-> commits, **não mergeada e sem push**. Árvore limpa. Gate conferido pelo orquestrador
-> com exit code, independente do relato dos workers: **2439 verdes**, `flutter analyze`
-> zero issues.
+> **SNAPSHOT — 2026-09-03, 00:55 BRT.** Spec 07 `galera`: Execute **27/27 + 1 fix**
+> fechado, e agora também os **gaps que o Verifier apontou, corrigidos**. Branch
+> **`feature/galera`**, árvore limpa, **36 commits** à frente da `main` (só o último
+> não empurrado). Gate conferido por exit code, não por relato: **2449 verdes**
+> (eram 2439), `flutter analyze` zero issues.
 >
-> **Falta só o Verifier.** Não foi despachado por cota (`ATENCAO`, 75%, janela reseta
-> 21:30 BRT) — ele é task longa e cara, e interrompido não deixa nada aproveitável.
-> Retomada headless agendada para **21:39:59 BRT**.
+> **PRÓXIMO PASSO: a re-verificação — iteração 2 do Verifier.** Não foi despachada
+> por cota (**87%**, pausa em 85%; a janela de 5h reseta às 02:40 BRT). Retomada
+> headless agendada para **02:49:59 BRT**, e a ordem do usuário é explícita: *ao
+> resetar, retomar fazendo o Verifier*.
 
 ### Onde o projeto está
 
@@ -299,77 +300,55 @@ CVD-31 AC7 manda. Entram no corpo da AD-033.
 |---|---|---|---|
 | 00–05 (`fundacao`..`montar`) | ✅ | ✅ PASS | ✅ |
 | 06 `lista` | ✅ 27/27 | ✅ PASS (3 iterações) | ✅ `e826261` |
-| 07 `galera` | ✅ **27/27 + 1 fix** | ⬜ **é o próximo passo** | — `feature/galera` |
+| 07 `galera` | ✅ **27/27 + 1 fix** | 🟡 **iteração 1 = FAIL; gaps corrigidos; falta re-verificar** | — `feature/galera` |
 | 08 `convite` · 09 `convidado` · 10 `custos` | ⬜ Tasks pendentes | ⬜ | — |
 
-Baseline: 1935 (`main`) → **2439** (`feature/galera`), **+504**.
+Baseline: 1935 (`main`) → **2449** (`feature/galera`), **+514**.
 
-### `galera` — as cinco fases, todas fechadas
+### O que a iteração 1 do Verifier apurou
 
-Cada batch foi um worker sequencial; o orquestrador **conferiu o gate por conta
-própria** ao fim de cada um, sempre com exit code explícito, nunca pela palavra do
-worker.
+Relatório em `.specs/features/galera/validation.md` (commit `b96507a`).
 
-| Fase | Tasks | Commits | Testes |
-|---|---|---|---|
-| 1 — dado do acesso, RN-22 | T1–T7 | `01610c2`..`a6f568a` | → 2031 |
-| 2 — porta, adaptador, clipboard | T8–T12 | `90f9ed4`..`141d1fe` | → 2119 |
-| 3 — `GaleraBloc` | T13–T16 | `97155b7`..`2d41344` | → 2181 |
-| **fix — round-trip do registro** | — | `3f521c2` | → 2193 |
-| 4 — copy e widgets de T-05 | T17–T22 | `fc4394d`..`3b38ce3` | → 2335 |
-| 5 — telas, rota, guards | T23–T27 | `00e012e`..`9874ae5` | → **2439** |
+- **Critérios**: **54/57 ✅**, **1 ❌** (P1-2 AC4), **3 ⚠️**.
+- **Sensor de discriminação**: **25/30 mortas, 5 sobreviventes → FAIL**.
 
-### O `validation.md` em `.specs/features/galera/` está sendo escrito AO VIVO
+⚠️ **O `validation.md` está incompleto.** Tem **5 das ~11 seções** do formato de
+`lista` — vai até `## Discrimination Sensor` e para. O campo **Veredito** ainda diz
+"(preenchido ao fim)", e faltam `Auditoria dos desvios declarados`, `O que ninguém
+tinha verificado`, `Code Quality`, `Fix Plans`, `Requirement Traceability Update`,
+`Integridade da árvore` e `Summary`. A sessão headless que rodava o Verifier
+(`.claude/logs/retomada-20260902-214000.log`) foi cortada antes de fechá-lo.
 
-**Correção de um erro do orquestrador**, registrada para não se repetir. Às 22:14 apareceu
-um `validation.md` não rastreado; o orquestrador concluiu "autoria incerta, provavelmente
-um worker excedendo escopo", **moveu o arquivo para fora do repo** e commitou uma nota
-dizendo que o cabeçalho dele podia estar mentindo.
+### O que ESTA sessão fez — os cinco sobreviventes, corrigidos
 
-**Estava errado.** O orquestrador não percebeu que o relógio já tinha passado das 21:40 e
-que **a retomada agendada havia disparado**: a sessão headless subiu às 21:40:00, leu o
-handoff de 19:03, e fez exatamente o que ele mandava — despachou o Verifier. O arquivo era
-o Verifier **escrevendo incrementalmente em disco**, como o próprio contrato exige. O
-cabeçalho que se declara independente é **verdadeiro**.
+Commit **`457de00`** `test(galera): faz o gesto do web chegar à porta e cobre a
+festa vazia`. **Nenhuma linha de produção mudou** — os cinco sobreviventes eram
+buraco de cobertura, não defeito de comportamento. **+10 testes.**
 
-O arquivo foi **restaurado**. A cópia do estado às 22:14 ficou no scratchpad da sessão
-como `validation-parcial-autoria-incerta.md` (nome agora enganoso).
+1. **M25/M26/M27/M28 — `GaleraExpandida` não tinha nenhum gesto a 1180px.** Todo
+   toque acontecia no compacto, e o expandido só afirmava que a travessia dos 900
+   preserva estado. Os seis fios que ela liga entre a árvore e o bloc podiam ser
+   cortados com a suíte verde. O grave era **de autorização**: com
+   `podeConfigurarNivel`/`podeGerenciarPapeis` trocados por `true`, um co-anfitrião
+   no computador via e usava os dois controles que RN-22 reserva ao anfitrião (mesma
+   classe de **L-034**). **8 testes novos** em
+   `test/features/galera/presentation/widgets/galera_expandida_test.dart`: os quatro
+   gestos (dieta, bebida, papel, nível) afirmados **na porta**, mais as duas guardas
+   de RN-22, cada uma **com o par que discrimina** (anfitrião vê / co-anfitrião não).
+2. **M19 — `definirNivelDoLink` podia recusar a gravação numa festa sem pessoa
+   nomeada** e ninguém percebia. É **P1-2 AC4**, o único ❌ da §Spec-Anchored. O teste
+   do bloc que se chamava "sem pessoa nenhuma" falava do **evento**, não da festa.
+   **2 testes novos**: `galera_repositorio_papel_e_nivel_test.dart` (grava uma vez, o
+   código do link intacto, `pessoas` vazia, sem log de erro) e
+   `galera_bloc_escritas_test.dart` (a festa vazia escreve igual).
 
-**A lição, que vale mais que o incidente:** quando duas sessões podem tocar o mesmo
-repositório, **um arquivo inesperado é sinal de trabalho em andamento, não de lixo**.
-Confira `Get-ScheduledTaskInfo`/`.claude/logs/` e os processos **antes** de mover ou
-apagar qualquer coisa — e confira as horas de verdade, em vez de assumir quanto tempo
-passou.
-
-### PRÓXIMO PASSO: o Verifier de `galera`
-
-Obrigatório, nunca opcional, **nunca perguntado ao usuário** — é o passo de fechamento
-do Execute. Agente **novo**, que não implementou nada. Contrato:
-
-- **Não aceitar nenhuma alegação dos batch workers**, inclusive os autoexames de
-  discriminação que eles relataram. Self-check de autor não substitui o sensor.
-- Re-derivar a cobertura do `spec.md` (GAL-01..GAL-28) com **evidence-or-zero**:
-  critério sem `file:line` + expressão da asserção conta como **não coberto**.
-- **Sensor de discriminação** em estado descartável. Protocolo: árvore limpa antes de
-  cada mutação → editar → rodar → restaurar **imediato** → `git status` conferido entre
-  todas e ao final. **Nunca `git checkout --` sobre trabalho não commitado.**
-- **O Verifier não conserta.** Gap vira task ranqueada para outro agente. Laço
-  fix→re-verify limitado a **3 iterações** antes de escalar.
-- Escrever `.specs/features/galera/validation.md` **incrementalmente em disco** (risco de
-  limite) e commitá-lo. Espelhar o formato de `.specs/features/lista/validation.md`.
-- **NÃO rodar `dart format`** (ver avisos operacionais).
-
-**Pontos que o Verifier tem de atacar nesta spec:** as 32 células de RN-22 em
-`permissoes_test.dart` (escritas à mão, sem laço — conferir que discriminam mesmo); a
-**idempotência das quatro escritas por contagem de gravações**; as duas guardas de
-GAL-18 (recusa do alvo anfitrião **e** recusa de atribuir anfitrião) com **sensor
-separado para cada** (L-032); o `null` de `observarFesta`; a falha da área de
-transferência; a ausência dos três controles no não-anfitrião; os três guards de
-fronteira de T27 (se ainda mordem, com trecho infrator sintético); e o round-trip real
-do `3f521c2`.
-
-**Não ler como omissão:** `efeitosDasPreferencias` e `resumoDasPreferencias`
-(`design.md` §7.4) — confirmar se a T22 os consome; se sim, está fechado.
+**Sensor próprio, refeito depois do commit**: as **7 mutações** (M25, M26, M27,
+M28 em três fios separados, M19) replantadas uma a uma, **suíte inteira** a cada
+uma, restauração imediata pelo mesmo script, `git status --porcelain` conferido
+entre todas e ao final. **7/7 mortas**, e o relatório nomeia o teste que matou cada
+uma. O script está em `scratchpad/sensor.py` — protocolo de arquivo, sem
+`git checkout --`. **Ele não substitui o Verifier**: é autoexame do autor, exatamente
+o que o contrato manda não aceitar como prova.
 
 ### O defeito que a fix task consertou — e que já estava na `main`
 
@@ -389,6 +368,29 @@ mutações, 4 mortas**.
 `ResumoDeFesta` e aos três caminhos do adaptador.
 `test/features/home/data/festa_repository_em_memoria_round_trip_test.dart` é o que cobra.
 
+### Contrato da iteração 2 — a re-verificação
+
+Agente **novo**, que não implementou nada, e que **não aceita nada do que está escrito
+acima como prova**. É a **2ª de no máximo 3** iterações antes de escalar.
+
+- **Refazer as 7 mutações por conta própria** — o autoexame de `457de00` é do autor.
+  Protocolo: árvore limpa antes de cada uma → editar → **suíte inteira** → restaurar
+  imediato → `git status` entre todas e ao final. **Nunca `git checkout --` sobre
+  trabalho não commitado.**
+- **Conferir se os 10 testes novos não são tautológicos**: o par que discrimina de
+  cada guarda de RN-22 existe? O gesto a 1180 falharia se o fio fosse cortado *e* passa
+  por não ter atalho pelo compacto? A festa vazia afirma que **só** o nível mudou?
+- **Reabrir as 3 ⚠️** de P1-2 AC2/AC3 e P2-1 AC6 — nenhuma foi tocada por esta sessão.
+- **Fechar o `validation.md`**: as seis seções que faltam e o **Veredito**. Escrever
+  **incrementalmente em disco** (risco de limite) e commitar. Espelhar o formato de
+  `.specs/features/lista/validation.md`.
+- **O Verifier não conserta.** Gap vira task ranqueada para outro agente.
+- **NÃO rodar `dart format`** (ver avisos operacionais).
+
+**Não ler como omissão:** `efeitosDasPreferencias` e `resumoDasPreferencias`
+(`design.md` §7.4) — confirmar se a T22 os consome; se sim, está fechado.
+
+
 ### ⚠️ Decisões pendentes do usuário sobre `galera`
 
 1. **Três acentos na tela**, contra o máximo de dois do `CLAUDE.md`: roxo e amarelo
@@ -401,8 +403,9 @@ mutações, 4 mortas**.
 
 ### O que falta, em ordem
 
-1. **Verifier de `galera`** — ver contrato acima.
-2. **Corrigir os gaps que ele apontar**, e re-verificar (máx. 3 iterações).
+1. **Re-verificação de `galera` (iteração 2)** — contrato acima. É o próximo passo, e
+   é obrigatório: **nunca perguntado ao usuário**.
+2. **Corrigir o que ela apontar**, e re-verificar (resta 1 iteração antes de escalar).
 3. **Conferência visual** — T-01, W-01, T-02, W-02, T-03, W-03 e agora T-05/W-05, nunca
    vistas rodando. Receita: `firebase emulators:start --only auth` +
    `flutter run -d web-server --web-port 8088`, dirigindo com Playwright por coordenadas
@@ -410,6 +413,7 @@ mutações, 4 mortas**.
    máquina.
 4. **Merge de `feature/galera` em `main`** depois do PASS.
 5. **Tasks das specs 08..10**, sem dependência de código.
+
 
 ### Avisos operacionais desta sessão
 
@@ -457,12 +461,15 @@ mutações, 4 mortas**.
 ### Como retomar
 
 ```bash
+export PATH="$PATH:/c/SDKs/flutter/bin"
 git checkout feature/galera
-flutter test; echo "exit=$?"   # 2439
+flutter test; echo "exit=$?"   # 2449
 flutter analyze                # zero issues
 # as 27 tasks estão marcadas em .specs/features/galera/tasks.md
-# PRÓXIMO: despachar o Verifier (contrato acima). Não peça permissão — é obrigatório.
+# PRÓXIMO: despachar a re-verificação (iteração 2, contrato acima).
+# Não peça permissão — é obrigatório, e é a ordem explícita do usuário.
 ```
+
 
 ## Histórico — sessão do M0
 
