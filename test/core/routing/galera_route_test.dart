@@ -1,4 +1,5 @@
 import 'package:bora/core/calculo/calculo.dart';
+import 'package:bora/core/design_system/design_system.dart';
 import 'package:bora/core/di/injector.dart';
 import 'package:bora/core/festas/festas.dart';
 import 'package:bora/core/routing/festa_tabs_shell.dart';
@@ -11,6 +12,7 @@ import 'package:bora/features/galera/presentation/widgets/card_do_link.dart';
 import 'package:bora/features/galera/presentation/widgets/linha_de_pessoa.dart';
 import 'package:bora/features/home/data/festa_repository_em_memoria.dart';
 import 'package:bora/features/home/domain/festa_repository.dart';
+import 'package:bora/features/home/domain/resumo_de_festa.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -18,6 +20,7 @@ import '../../fixtures/rn30_estado_inicial_tipado.dart';
 import '../../support/app_de_teste.dart';
 import '../../support/festa_em_edicao_repository_fake.dart';
 import '../../support/galera_repository_fake.dart';
+import '../../support/recording_app_logger.dart';
 
 const Size _janelaCompacta = Size(390, 820);
 
@@ -71,7 +74,119 @@ Future<void> _abrir(
   );
 }
 
+/// Abre o app sobre o **store real** (`FestaRepositoryEmMemoria`), e não sobre
+/// o duplo.
+///
+/// É o único caminho em que a gravação **volta pelo stream**: o duplo registra
+/// `salvarFesta` e não reemite, então com ele o round-trip teria de ser
+/// simulado por `emitir` — e um teste que empurra o próprio resultado não
+/// prova que o gesto chegou lá. Aqui o fio é inteiro: segmented → bloc →
+/// `GaleraRepositorioSobreFestas` → registro → stream → tag.
+Future<RecordingAppLogger> _abrirSobreOStoreReal(WidgetTester tester) async {
+  final base = _festa();
+  final store = FestaRepositoryEmMemoria(
+    inicial: [
+      ResumoDeFesta(
+        id: _festaId,
+        festa: base.festa,
+        composicao: base.composicao,
+        convite: base.convite,
+      ),
+    ],
+  );
+
+  // O logger é nosso para que a falha do adaptador seja **visível**: ele
+  // registra e contém (`design.md` §10), então sem isto uma gravação que
+  // explodisse viraria um teste que "não mudou nada" — indistinguível de um
+  // teste que passou.
+  final logger = RecordingAppLogger();
+
+  addTearDown(() => tester.binding.setSurfaceSize(null));
+  await tester.binding.setSurfaceSize(_janelaCompacta);
+
+  await abrirApp(
+    tester,
+    Routes.galera(_festaId),
+    sessao: sessaoDeTeste,
+    festas: store,
+    galera: GaleraRepositorioSobreFestas(store, logger),
+  );
+
+  return logger;
+}
+
+/// Os status das tags **como a árvore os renderiza**, na ordem das linhas.
+///
+/// Lê o `BoraStatusTag` montado, e não `pessoa.papel`: papel é a entrada, tag
+/// é o desfecho que P1-2 AC2 promete não mexer.
+List<BoraStatus> _tagsRenderizadas(WidgetTester tester) => tester
+    .widgetList<BoraStatusTag>(
+      find.descendant(
+        of: find.byType(LinhaDePessoa),
+        matching: find.byType(BoraStatusTag),
+      ),
+    )
+    .map((tag) => tag.status)
+    .toList();
+
+/// O nível que o segmented do card mostra como ativo.
+NivelDoLink _nivelNoCard(WidgetTester tester) => NivelDoLink.values[tester
+    .widget<BoraSegmentedControl>(
+      find.descendant(
+        of: find.byType(CardDoLink),
+        matching: find.byType(BoraSegmentedControl),
+      ),
+    )
+    .indiceAtivo];
+
 void main() {
+  group('P1-2 AC2 — trocar o nível não mexe no papel de quem já entrou', () {
+    testWidgets('os três níveis, e as cinco tags idênticas em cada um',
+        (tester) async {
+      final logger = await _abrirSobreOStoreReal(tester);
+
+      final antes = _tagsRenderizadas(tester);
+
+      expect(antes, hasLength(5));
+      expect(
+        antes.toSet(),
+        hasLength(greaterThan(1)),
+        reason: 'lista homogênea passaria mesmo com todo mundo rebaixado',
+      );
+
+      for (final nivel in [
+        NivelDoLink.coAnfitriao,
+        NivelDoLink.soVer,
+        NivelDoLink.editarLista,
+      ]) {
+        final opcao = find.descendant(
+          of: find.byType(CardDoLink),
+          matching: find.text(GaleraTextos.rotuloDoNivel(nivel)),
+        );
+        await tester.ensureVisible(opcao);
+        await tester.pumpAndSettle();
+        await tester.tap(opcao);
+        await tester.pumpAndSettle();
+        // A gravação atravessa o store real, e o `FakeAsync` do widget tester
+        // não roda esse `await` sozinho — é a mesma razão que fez o grupo do
+        // injector, mais abaixo, usar `test` em vez de `testWidgets`. Sem este
+        // dreno o toque fica pendurado e o teste leria "não mudou nada", que é
+        // indistinguível de "a regra funcionou".
+        await tester.runAsync(() => Future<void>.delayed(Duration.zero));
+        await tester.pumpAndSettle();
+
+        expect(
+          _nivelNoCard(tester),
+          nivel,
+          reason: 'sem isto o teste passaria com o toque não chegando a lugar '
+              'nenhum — é o que prova que houve round-trip',
+        );
+        expect(_tagsRenderizadas(tester), antes);
+        expect(logger.erros, isEmpty);
+      }
+    });
+  });
+
   group('E-2 — /roles/{festaId}/galera monta a tela de T-05', () {
     testWidgets('a rota renderiza a Galera e a URL é a dela', (tester) async {
       await _abrir(tester);

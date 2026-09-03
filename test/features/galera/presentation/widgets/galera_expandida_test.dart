@@ -443,6 +443,7 @@ void main() {
     testWidgets('o anfitrião vê — o par que discrimina', (tester) async {
       await _abrir(tester);
 
+      expect(find.byType(GaleraExpandida), findsOneWidget);
       expect(
         find.descendant(
           of: find.byType(CardDoLink),
@@ -458,6 +459,7 @@ void main() {
 
       await _tocar(tester, _linhaDe('Bia'));
 
+      expect(find.byType(GaleraExpandida), findsOneWidget);
       expect(_painelDe('Bia'), findsOneWidget);
       expect(find.text(GaleraTextos.secaoNivelDeAcesso), findsNothing);
       expect(find.text(GaleraTextos.secaoRestricao), findsOneWidget);
@@ -470,6 +472,7 @@ void main() {
 
       await _tocar(tester, _linhaDe('Bia'));
 
+      expect(find.byType(GaleraExpandida), findsOneWidget);
       expect(find.text(GaleraTextos.secaoNivelDeAcesso), findsOneWidget);
       expect(find.text(GaleraTextos.secaoRestricao), findsOneWidget);
       expect(find.text(GaleraTextos.secaoBebida), findsOneWidget);

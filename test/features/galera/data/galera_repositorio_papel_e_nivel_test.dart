@@ -171,21 +171,45 @@ void main() {
       expect((await lerConvite()).codigo, 'rafa18');
     });
 
+    test('e o registro gravado é o de antes a menos do nível — nada mais',
+        () async {
+      // A asserção campo a campo acima cobre `pessoas` e o `codigo`, e deixa
+      // de fora todo o resto de `ComposicaoDaFesta` (`itensSelecionados`, os
+      // overrides, o carrinho, a contagem, a duração) e os campos de `festa`.
+      // Uma escrita destrutiva ali — apagar o carrinho da spec 06 ao trocar o
+      // nível — passava com a suíte verde (sonda V2 do Verifier). É a classe
+      // exata do defeito que `3f521c2` consertou.
+      final antes = _festa();
+
+      await porta.definirNivelDoLink(_id, NivelDoLink.coAnfitriao);
+
+      expect(fake.salvas, hasLength(1));
+      expect(
+        fake.salvas.single.$2,
+        antes.copyWith(
+          convite: antes.convite.copyWith(nivel: NivelDoLink.coAnfitriao),
+        ),
+      );
+    });
+
     test('festa sem nenhuma pessoa nomeada grava o nível do mesmo jeito',
         () async {
       // P1-2 AC4: a festa recém-criada, antes de convidar alguém, é onde o
       // anfitrião mais naturalmente ajusta o nível — e era o único caminho
       // sem defesa (sensor do Verifier, M19). Nada além do nível muda.
-      fake = FestaEmEdicaoRepositoryFake(festas: {_id: _festa(const [])});
+      final antes = _festa(const []);
+      fake = FestaEmEdicaoRepositoryFake(festas: {_id: antes});
       porta = GaleraRepositorioSobreFestas(fake, logger);
 
       await porta.definirNivelDoLink(_id, NivelDoLink.coAnfitriao);
 
       expect(fake.salvas, hasLength(1));
-
-      final convite = await lerConvite();
-      expect(convite.nivel, NivelDoLink.coAnfitriao);
-      expect(convite.codigo, 'rafa18');
+      expect(
+        fake.salvas.single.$2,
+        antes.copyWith(
+          convite: antes.convite.copyWith(nivel: NivelDoLink.coAnfitriao),
+        ),
+      );
       expect((await lerComposicao()).pessoas, isEmpty);
       expect(logger.erros, isEmpty);
     });
