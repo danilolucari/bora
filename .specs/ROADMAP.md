@@ -176,7 +176,9 @@ Porte segue o auto-sizing da skill (Pequeno / Médio / Grande / Complexo). "Disc
 | 05 | `montar` | `features/montar/` | T-03, W-03 · UC-03, UC-04 · RN-01..10, RN-21 (consumo) | Grande | ✅ feito | ✅ feito | ✅ feito | 01, 02, 04 |
 | — | **`montar` mergeada** | — | 24 tasks · Verifier **PASS** (re-verificado 2026-09-01) · 1528 testes · `--no-ff` | — | — | — | — | — |
 | 06 | `lista` | `features/lista/` | T-04, W-03/W-04 · UC-05, UC-06, UC-14, UC-15, UC-16 · RN-10, RN-11, RN-12, RN-27 | Grande | ✅ feito | ✅ feito | ✅ feito | 01, 02, 05 |
-| 07 | `galera` | `features/galera/` | T-05, W-04 · UC-11, UC-12, UC-13 · RN-21, RN-22, RN-23 | Grande | — | ✅ feito | ✅ feito | 01, 02, 04 |
+| — | **`lista` mergeada** | — | 27 tasks · Verifier PASS (3 iterações) · 1935 testes · `e826261` | — | — | — | — | — |
+| 07 | `galera` | `features/galera/` | T-05, W-04 · UC-11, UC-12, UC-13 · RN-21, RN-22, RN-23 | Grande | ✅ feito | ✅ feito | ✅ feito | 01, 02, 04 |
+| — | **`galera` mergeada** | — | 27 tasks + 1 fix · Verifier **PASS** na iteração 3 · sensor 55/55 · 2451 testes · `3ff81f5` | — | — | — | — | — |
 | 08 | `convite` | `features/convite/` | T-06, T-07, W-04 · UC-07, UC-17, UC-18 · RN-25, RN-26, RN-26b | **Complexo** | ✅ feito | ✅ feito | sim | 06, 07 |
 | 09 | `convidado` | `features/convidado/` | T-08, W-04 (standalone) · UC-08, UC-09, UC-10 · RN-20, RN-23 (consumo), RN-24, RN-28 | **Complexo** | ✅ feito | ✅ feito | sim | 02, 06, 07 |
 | 10 | `custos` | `features/custos/` | T-09, W-04 · UC-19..UC-23 · RN-14..RN-19 (consumo), RN-20 | Grande | ✅ feito | ✅ feito | sim | 02, 09 |

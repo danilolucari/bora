@@ -283,16 +283,16 @@ CVD-31 AC7 manda. Entram no corpo da AD-033.
 
 ## Handoff
 
-> **SNAPSHOT — 2026-09-03, 00:55 BRT.** Spec 07 `galera`: Execute **27/27 + 1 fix**
-> fechado, e agora também os **gaps que o Verifier apontou, corrigidos**. Branch
-> **`feature/galera`**, árvore limpa, **36 commits** à frente da `main` (só o último
-> não empurrado). Gate conferido por exit code, não por relato: **2449 verdes**
-> (eram 2439), `flutter analyze` zero issues.
+> **SNAPSHOT — 2026-09-03, 09:40 BRT.** Spec 07 `galera` **fechada e mergeada na
+> `main`** (`3ff81f5`, merge `--no-ff` de 41 commits). Verifier independente em
+> **PASS** na iteração 3 do laço fix→re-verify. Gate conferido na `main` por exit
+> code: **2451 verdes**, `flutter analyze` zero issues. Árvore limpa.
 >
-> **PRÓXIMO PASSO: a re-verificação — iteração 2 do Verifier.** Não foi despachada
-> por cota (**87%**, pausa em 85%; a janela de 5h reseta às 02:40 BRT). Retomada
-> headless agendada para **02:49:59 BRT**, e a ordem do usuário é explícita: *ao
-> resetar, retomar fazendo o Verifier*.
+> **A `main` local está ~42 commits à frente de `origin/main` e nada foi
+> empurrado** — push não foi pedido.
+>
+> **PRÓXIMO PASSO: Tasks das specs 08 `convite` e 09 `convidado`.** Não dependem de
+> código novo.
 
 ### Onde o projeto está
 
@@ -300,95 +300,40 @@ CVD-31 AC7 manda. Entram no corpo da AD-033.
 |---|---|---|---|
 | 00–05 (`fundacao`..`montar`) | ✅ | ✅ PASS | ✅ |
 | 06 `lista` | ✅ 27/27 | ✅ PASS (3 iterações) | ✅ `e826261` |
-| 07 `galera` | ✅ **27/27 + 1 fix** | 🟡 **iteração 1 = FAIL; gaps corrigidos; falta re-verificar** | — `feature/galera` |
+| 07 `galera` | ✅ 27/27 + 1 fix | ✅ **PASS (3 iterações)** | ✅ **`3ff81f5`** |
 | 08 `convite` · 09 `convidado` · 10 `custos` | ⬜ Tasks pendentes | ⬜ | — |
 
-Baseline: 1935 (`main`) → **2449** (`feature/galera`), **+514**.
+Baseline da `main`: 1935 → **2451** (+516).
 
-### O que a iteração 1 do Verifier apurou
+### Como o laço fix→re-verify de `galera` fechou
 
-Relatório em `.specs/features/galera/validation.md` (commit `b96507a`).
+Relatório completo em `.specs/features/galera/validation.md` — 11 seções, três
+iterações, veredito no topo.
 
-- **Critérios**: **54/57 ✅**, **1 ❌** (P1-2 AC4), **3 ⚠️**.
-- **Sensor de discriminação**: **25/30 mortas, 5 sobreviventes → FAIL**.
+| Iteração | Sensor | Veredito | O que achou |
+|---|---|---|---|
+| 1 (`b96507a`) | 25/30 · **5 sobreviventes** | ❌ FAIL | `GaleraExpandida` sem nenhum gesto a 1180px (4 mutantes, um deles **de autorização**: RN-22 contornável pelo layout) + `definirNivelDoLink` na festa vazia sem defesa |
+| 2 (`956d6d7`) | 13 · 12 mortas · **1 sobrevivente** | ❌ FAIL | Os 7 fixes do autor **procedem** (replantados por ele). Sobrevivente novo **V2**: trocar o nível do link podia **apagar o carrinho da `lista`** com os 2449 verdes. Recontou os critérios: são **61**, não 57 — a aritmética da iteração 1 não fechava |
+| 3 (`c594c3b`) | 12 · **12 mortas** | ✅ **PASS** | V2, M7 e V1 mortas com o conjunto exato de testes; os 7 da iteração 2 replantados como regressão, 7/7 mortas; os três testes novos resistiram ao escrutínio de tautologia |
 
-⚠️ **O `validation.md` está incompleto.** Tem **5 das ~11 seções** do formato de
-`lista` — vai até `## Discrimination Sensor` e para. O campo **Veredito** ainda diz
-"(preenchido ao fim)", e faltam `Auditoria dos desvios declarados`, `O que ninguém
-tinha verificado`, `Code Quality`, `Fix Plans`, `Requirement Traceability Update`,
-`Integridade da árvore` e `Summary`. A sessão headless que rodava o Verifier
-(`.claude/logs/retomada-20260902-214000.log`) foi cortada antes de fechá-lo.
+**Sensor acumulado: 55/55 mortas.** Nenhuma linha de produção estava errada — os
+três gaps da iteração 2 foram fechados **só com teste** (`b8b3c75`).
 
-### O que ESTA sessão fez — os cinco sobreviventes, corrigidos
+### Duas coisas desta rodada que valem mais que o resultado
 
-Commit **`457de00`** `test(galera): faz o gesto do web chegar à porta e cobre a
-festa vazia`. **Nenhuma linha de produção mudou** — os cinco sobreviventes eram
-buraco de cobertura, não defeito de comportamento. **+10 testes.**
-
-1. **M25/M26/M27/M28 — `GaleraExpandida` não tinha nenhum gesto a 1180px.** Todo
-   toque acontecia no compacto, e o expandido só afirmava que a travessia dos 900
-   preserva estado. Os seis fios que ela liga entre a árvore e o bloc podiam ser
-   cortados com a suíte verde. O grave era **de autorização**: com
-   `podeConfigurarNivel`/`podeGerenciarPapeis` trocados por `true`, um co-anfitrião
-   no computador via e usava os dois controles que RN-22 reserva ao anfitrião (mesma
-   classe de **L-034**). **8 testes novos** em
-   `test/features/galera/presentation/widgets/galera_expandida_test.dart`: os quatro
-   gestos (dieta, bebida, papel, nível) afirmados **na porta**, mais as duas guardas
-   de RN-22, cada uma **com o par que discrimina** (anfitrião vê / co-anfitrião não).
-2. **M19 — `definirNivelDoLink` podia recusar a gravação numa festa sem pessoa
-   nomeada** e ninguém percebia. É **P1-2 AC4**, o único ❌ da §Spec-Anchored. O teste
-   do bloc que se chamava "sem pessoa nenhuma" falava do **evento**, não da festa.
-   **2 testes novos**: `galera_repositorio_papel_e_nivel_test.dart` (grava uma vez, o
-   código do link intacto, `pessoas` vazia, sem log de erro) e
-   `galera_bloc_escritas_test.dart` (a festa vazia escreve igual).
-
-**Sensor próprio, refeito depois do commit**: as **7 mutações** (M25, M26, M27,
-M28 em três fios separados, M19) replantadas uma a uma, **suíte inteira** a cada
-uma, restauração imediata pelo mesmo script, `git status --porcelain` conferido
-entre todas e ao final. **7/7 mortas**, e o relatório nomeia o teste que matou cada
-uma. O script está em `scratchpad/sensor.py` — protocolo de arquivo, sem
-`git checkout --`. **Ele não substitui o Verifier**: é autoexame do autor, exatamente
-o que o contrato manda não aceitar como prova.
-
-### O defeito que a fix task consertou — e que já estava na `main`
-
-`FestaEmEdicao` tem quatro campos e três specs os escrevem, mas o `ResumoDeFesta` — o
-registro único por onde tudo passa (AD-029) — só carregava dois. `salvarFesta`
-reconstruía sem `despesas` (AD-030) e sem `convite` (AD-031); `observarFesta` devolvia
-os dois no default. No app rodando: **o carrinho da `lista` sumia** e
-`definirNivelDoLink` era **no-op** — GAL-04 não era verdade fora do duplo.
-
-Ficou invisível porque toda asserção das specs 06 e 07 passa por duplo, e **nenhum teste
-atravessava o adaptador que o M1 roda de verdade**. Mesma classe do botão invisível
-(L-034). Consertado em `3f521c2` por decisão do usuário. Emenda aditiva com default
-`const` — nenhum `const ResumoDeFesta(...)` da suíte da spec 04 mudou. Sensor: **4
-mutações, 4 mortas**.
-
-**Regra que fica:** quem acrescentar um quinto campo a `FestaEmEdicao` acrescenta ao
-`ResumoDeFesta` e aos três caminhos do adaptador.
-`test/features/home/data/festa_repository_em_memoria_round_trip_test.dart` é o que cobra.
-
-### Contrato da iteração 2 — a re-verificação
-
-Agente **novo**, que não implementou nada, e que **não aceita nada do que está escrito
-acima como prova**. É a **2ª de no máximo 3** iterações antes de escalar.
-
-- **Refazer as 7 mutações por conta própria** — o autoexame de `457de00` é do autor.
-  Protocolo: árvore limpa antes de cada uma → editar → **suíte inteira** → restaurar
-  imediato → `git status` entre todas e ao final. **Nunca `git checkout --` sobre
-  trabalho não commitado.**
-- **Conferir se os 10 testes novos não são tautológicos**: o par que discrimina de
-  cada guarda de RN-22 existe? O gesto a 1180 falharia se o fio fosse cortado *e* passa
-  por não ter atalho pelo compacto? A festa vazia afirma que **só** o nível mudou?
-- **Reabrir as 3 ⚠️** de P1-2 AC2/AC3 e P2-1 AC6 — nenhuma foi tocada por esta sessão.
-- **Fechar o `validation.md`**: as seis seções que faltam e o **Veredito**. Escrever
-  **incrementalmente em disco** (risco de limite) e commitar. Espelhar o formato de
-  `.specs/features/lista/validation.md`.
-- **O Verifier não conserta.** Gap vira task ranqueada para outro agente.
-- **NÃO rodar `dart format`** (ver avisos operacionais).
-
-**Não ler como omissão:** `efeitosDasPreferencias` e `resumoDasPreferencias`
-(`design.md` §7.4) — confirmar se a T22 os consome; se sim, está fechado.
+1. **A classe de defeito que se repete nesta feature é sempre a mesma**: a regra
+   existe, está correta e é testada — e o **fio que a liga à tela ou ao registro
+   real** não é afirmado por ninguém (L-034). Apareceu três vezes: o `ResumoDeFesta`
+   com dois dos quatro campos (`3f521c2`), os seis fios da `GaleraExpandida`, e a
+   escrita de `definirNivelDoLink` que podia levar o carrinho embora. Quem for
+   verificar as specs 08–10 deve mutar **o adaptador que o app roda**, não só o
+   duplo.
+2. **`tester.runAsync` foi necessário** para o teste ponta-a-ponta de P1-2 AC2: o
+   `FakeAsync` do widget tester **não roda sozinho** o `await` que o adaptador faz
+   sobre o store real — o toque chega à porta, a gravação fica pendurada, e o teste
+   lê "nada mudou", indistinguível de "a regra funcionou". O `galera_route_test.dart`
+   já documentava isso num comentário do grupo do injector. O Verifier confirmou por
+   sonda que o teste é **fail-closed** (sem o dreno ele fica vermelho, não verde).
 
 
 ### ⚠️ Decisões pendentes do usuário sobre `galera`
@@ -403,16 +348,24 @@ acima como prova**. É a **2ª de no máximo 3** iterações antes de escalar.
 
 ### O que falta, em ordem
 
-1. **Re-verificação de `galera` (iteração 2)** — contrato acima. É o próximo passo, e
-   é obrigatório: **nunca perguntado ao usuário**.
-2. **Corrigir o que ela apontar**, e re-verificar (resta 1 iteração antes de escalar).
-3. **Conferência visual** — T-01, W-01, T-02, W-02, T-03, W-03 e agora T-05/W-05, nunca
-   vistas rodando. Receita: `firebase emulators:start --only auth` +
-   `flutter run -d web-server --web-port 8088`, dirigindo com Playwright por coordenadas
-   (Flutter web pinta em canvas, não há DOM). `flutter run -d chrome` **falha** nesta
-   máquina.
-4. **Merge de `feature/galera` em `main`** depois do PASS.
-5. **Tasks das specs 08..10**, sem dependência de código.
+1. **Tasks das specs 08 `convite` e 09 `convidado`** — as duas têm `spec.md` e
+   `design.md`; falta o `tasks.md`. Não dependem de código novo. Depois delas,
+   10 `custos`.
+2. **Conferência visual — nunca feita, e agora é a maior dívida do projeto.**
+   T-01, W-01, T-02, W-02, T-03, W-03, T-05 e W-04 nunca foram vistas rodando:
+   **todo o veredito das sete specs é por teste e leitura de código**, e nenhum
+   teste da suíte afirma aparência. O Verifier de `galera` fez questão de
+   registrar isso no PASS. Receita: `firebase emulators:start --only auth` +
+   `flutter run -d web-server --web-port 8088`, dirigindo com Playwright por
+   coordenadas (Flutter web pinta em canvas, não há DOM). `flutter run -d chrome`
+   **falha** nesta máquina. ⚠️ **Obstáculo conhecido, ainda não resolvido**: em
+   produção a semente do `FestaRepositoryEmMemoria` é **vazia**, e a fixture RN-30
+   é dado de teste — então a T-05 populada (5 pessoas, tags, faixa amarela) **não
+   é alcançável** no app rodando sem criar a festa pela UI ou abrir um caminho de
+   semente para dev. Decidir qual antes de tentar.
+3. **As duas decisões de design system pendentes** (acima).
+4. **Push da `main`** — ~42 commits à frente de `origin/main`, nada empurrado.
+   Decisão do usuário.
 
 
 ### Avisos operacionais desta sessão
@@ -462,12 +415,10 @@ acima como prova**. É a **2ª de no máximo 3** iterações antes de escalar.
 
 ```bash
 export PATH="$PATH:/c/SDKs/flutter/bin"
-git checkout feature/galera
-flutter test; echo "exit=$?"   # 2449
-flutter analyze                # zero issues
-# as 27 tasks estão marcadas em .specs/features/galera/tasks.md
-# PRÓXIMO: despachar a re-verificação (iteração 2, contrato acima).
-# Não peça permissão — é obrigatório, e é a ordem explícita do usuário.
+git checkout main                # 3ff81f5 — galera já mergeada
+flutter test; echo "exit=$?"     # 2451
+flutter analyze                  # zero issues
+# PRÓXIMO: Tasks da spec 08 `convite` (spec.md e design.md prontos).
 ```
 
 
