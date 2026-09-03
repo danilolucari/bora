@@ -224,6 +224,30 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: bora_surface.dart decoracaoDe + fundo transparente (lib/design_system)
 - last seen: 2026-09-02T12:42:56Z
 
+### L-036 — Quando o codigo ou o nome do teste promete escrever SO um campo, afirme o registro inteiro igual ao anterior a menos daquele campo, nunca so o campo escrito
+- signal: `surviving_mutant` · recurrence: 1 feature(s) · scope: `repo-layer` · harmful: 0
+- features: galera
+- evidence: validation.md §Re-verificação — mutação V2, galera_repositorio_sobre_festas.dart:127 (repo-layer)
+- last seen: 2026-09-03T10:38:36Z
+
+### L-037 — Todo teste de um layout responsivo afirma qual widget de layout esta montado, senao ele passa testando o outro layout em silencio
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `presentation` · harmful: 0
+- features: galera
+- evidence: validation.md §Fix 3 — sonda V1, galera_expandida_test.dart:443,455,467 (presentation)
+- last seen: 2026-09-03T10:38:45Z
+
+### L-038 — Criterio garantido por dois elos separados precisa de um teste ponta-a-ponta alem do sensor em cada elo
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · scope: `presentation` · harmful: 0
+- features: galera
+- evidence: validation.md §Os tres ⚠️ — P1-2 AC2 (presentation)
+- last seen: 2026-09-03T10:38:45Z
+
+### L-039 — Conte os marcadores SPEC_DEVIATION por varredura do codigo, nunca pelo que o handoff lista
+- signal: `spec_deviation` · recurrence: 1 feature(s) · scope: `process` · harmful: 0
+- features: galera
+- evidence: validation.md §Auditoria dos desvios declarados — 6 marcadores SPEC_DEVIATION, handoff contava 2 (process)
+- last seen: 2026-09-03T10:38:45Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
